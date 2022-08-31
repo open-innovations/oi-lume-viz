@@ -1,6 +1,6 @@
 import Site from 'lume/core/site.ts';
-import { dirname } from "std/path/mod.ts";
 import { assets } from './config.ts';
+import { dirname, join } from 'std/path/mod.ts';
 
 interface Options {
   assetPath?: string;
@@ -12,22 +12,22 @@ export default function (options?: Options) {
 
   const assetPath = options?.assetPath?.trim().replace(/\/+$/, '') || '/assets';
 
-  function getLocalAssetPath(local: string): string {
-    return `${assetPath}/${local}`;
+  function getLocalPath(name: string, prefix: string) {
+    return join(prefix, name);
   }
 
-  function getRemoteAssetPath(local: string): string {
+  function getRemotePath(name: string, prefix: string) {
     const assetUrl = new URL(baseUrl.toString());
-    assetUrl.pathname = `${baseUrl.pathname}/assets/${local}`;
+    assetUrl.pathname = [baseUrl.pathname, prefix, name].join('/');
     return assetUrl.toString();
   }
-  
+
   return (site: Site) => {
     for (const asset of assets) {
-      const localAssetPath = getLocalAssetPath(asset);
-      const remoteAssetPath = getRemoteAssetPath(asset);
+      const localAssetPath = getLocalPath(asset, assetPath);
+      const remoteAssetPath = getRemotePath(asset, 'assets');
       site.remoteFile(localAssetPath, remoteAssetPath);
       site.copy(localAssetPath);
     }
-  }
+  };
 }
