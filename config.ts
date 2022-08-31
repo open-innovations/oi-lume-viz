@@ -4,3 +4,6 @@ export const assets = [
   'js/svg-map.js',
   'js/tabbed.js',
 ];
+
+export const components = [
+];
