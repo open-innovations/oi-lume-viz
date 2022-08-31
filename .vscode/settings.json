@@ -1,0 +1,4 @@
+{
+  "deno.codeLens.test": true,
+  "deno.enable": true
+}
