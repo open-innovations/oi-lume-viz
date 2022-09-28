@@ -1,6 +1,4 @@
 import { Dashboard } from '../lib/dashboard.js';
-import { loadDataFile } from '../lib/util.js';
-
 
 export const css = `
 .dashboard {
@@ -23,30 +21,35 @@ export const css = `
 
 function clone(a){ return JSON.parse(JSON.stringify(a)); }
 
-export default function ({ config, sources }) {
+// PRINCIPLE: pass in a config object and read data from it,
+//   rather than passing in an object with config as as parameter
+export default function ({
+  title,
+  panels,
+  data,
+  width,
+}) {
+  
+  if (!data) throw "No data source provided";
 
-	// Load the data from the sources
-	const csv = loadDataFile(config, sources);
+  // Clone the data to avoid mangling it
+	const csv = clone(data);
 
 	// Set the output to "?" as a default
 	let html = "?";
 
-	if(csv){
+  const configcopy = clone({
+    title: title,
+    panels: clone(panels),
+    data: clone(data),
+    width: width,
+  });
 
-		// Make a clone of the original config to avoid updating the contents elsewhere
-		const configcopy = clone(config);
+  // Create a new Line Chart
+  const dashboard = new Dashboard(configcopy,csv);
 
-		// Create a new Line Chart
-		let dashboard = new Dashboard(configcopy,csv);
+  // Get the output
+  if(dashboard) html = dashboard.getHTML();
 
-		// Get the output
-		if(dashboard) html = dashboard.getHTML();
-
-	}else{
-
-		console.warn('WARNING: No CSV contents at '+config.file);
-
-	}
-
-	return html;
+  return html;
 }
