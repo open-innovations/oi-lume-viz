@@ -6,5 +6,5 @@ export const assets = [
 ];
 
 export const components = [
-  'dashboard.js'
+  'dashboard.ts'
 ];

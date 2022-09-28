@@ -1,4 +1,4 @@
-import { Dashboard } from '../lib/dashboard.js';
+import { dashboard, DashboardOptions } from '../lib/dashboard.ts';
 
 export const css = `
 .dashboard {
@@ -19,37 +19,8 @@ export const css = `
 }
 `;
 
-function clone(a){ return JSON.parse(JSON.stringify(a)); }
-
-// PRINCIPLE: pass in a config object and read data from it,
-//   rather than passing in an object with config as as parameter
-export default function ({
-  title,
-  panels,
-  data,
-  width,
-}) {
-  
-  if (!data) throw "No data source provided";
-
-  // Clone the data to avoid mangling it
-	const csv = clone(data);
-
-	// Set the output to "?" as a default
-	let html = "?";
-
-  const configcopy = clone({
-    title: title,
-    panels: clone(panels),
-    data: clone(data),
-    width: width,
-  });
-
-  // Create a new Line Chart
-  const dashboard = new Dashboard(configcopy,csv);
-
-  // Get the output
-  if(dashboard) html = dashboard.getHTML();
-
+export default function (config: DashboardOptions) {
+  if (!config.data) throw "No data source provided";
+  const html = dashboard(config);
   return html;
 }
