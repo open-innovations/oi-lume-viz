@@ -1,3 +1,6 @@
+import scale from "../../lib/util/scale.ts";
+import zip from "../../lib/util/zip.ts";
+
 export const css = `
 .chart {
   --colour: black;
@@ -32,14 +35,6 @@ export const css = `
 /*
  * UTILITY FUNCTIONS
  */
-const scale = (
-  n: number,
-  inMin: number,
-  inMax: number,
-  outMin: number,
-  outMax: number
-) => ((n - inMin) * (outMax - outMin) / (inMax - inMin)) + outMin;
-
 const axes = (
   origin: [number, number],
   width: number,
@@ -58,16 +53,6 @@ const axes = (
   </g>`;
 };
 
-// deno-lint-ignore no-explicit-any
-function zip(...iterables: any[]) {
-  const maxLength = Math.max(...iterables.map(x => x.length));
-  const zipped: unknown[] = []
-  for (let i = 0; i < maxLength; i++) {
-    zipped.push(iterables.map(x => x[i] || undefined));
-  }
-  return zipped;
-}
-
 const markerFunctions: { [name: string]: MarkerFunction } = {
   circle: ([x, y], { r = 2, filled = true }) => `<circle class='marker ${filled && 'filled'}' cx=${x} cy=${y} r=${r} />`
 }
@@ -75,7 +60,6 @@ const markerFunctions: { [name: string]: MarkerFunction } = {
 /*
  * END OF UTILITY FUNCTIONS
  */
-
 
 type PlotDimensions = {
   xMax: number;
