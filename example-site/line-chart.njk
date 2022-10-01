@@ -1,0 +1,41 @@
+---
+config:
+  title: name
+  width: 30
+  height: 5
+  padding:
+    left: 2
+    bottom: 1.5
+  series:
+    - id: series1
+      label: Series 1
+      colour: red
+      yValues: [10, 20, 23, 47, 34, 55, 49, 20, 10, 5]
+      markerOptions: { r: 5, filled: false }
+    - id: series2
+      label: Series 2
+      colour: blue
+      yValues: [12, 22, 21, 45, 37, 57, 59, 30, 12, 2]
+      markerOptions: { r: 5 }
+    - id: series3
+      label: Series 3
+      colour: green
+      yValues: [15, 32, 24, 35, 31, 52, 19, 10, 1, 4]
+  plotArea: 
+    yMax: 65
+  categories: [A, B, C, D, E, F, G, H, I, J]
+---
+
+<style>
+  .chart { stroke-width: 2px; }
+</style>
+
+<h1>Line Chart</h1>
+
+{{ comp.oi.charts.chart.line(config) | safe }}
+
+<p>This chart was made with config:</p>
+
+<pre><code>
+{{ config | dump(2) }}
+</code></pre>
