@@ -165,7 +165,7 @@ type MarkerOptions = { [k: string]: (number | string | boolean) };
 type MarkerFunction = ((pos: [number, number], options: MarkerOptions) => string);
 type AxisOptions = {
   label?: string;
-  labelOffset: number;
+  labelOffset?: number;
   majorTick: number;
 }
 
@@ -205,11 +205,13 @@ export default (config: LineChartOptions) => {
 
   const xAxisOptions: AxisOptions = {
     majorTick: 1,
+    labelOffset: 40,
     ...config.xAxis,
   };
 
   const yAxisOptions: AxisOptions = {
     majorTick: 10,
+    labelOffset: 40,
     ...config.yAxis,
   };
 
