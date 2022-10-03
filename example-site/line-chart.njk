@@ -1,11 +1,9 @@
 ---
 config:
-  title: name
+  title: Sample Line Chart
   width: 30
   height: 5
-  padding:
-    left: 2
-    bottom: 1.5
+  padding: {}
   series:
     - id: series1
       label: Series 1
@@ -16,13 +14,20 @@ config:
       label: Series 2
       colour: blue
       yValues: [12, 22, 21, 45, 37, 57, 59, 30, 12, 2]
-      markerOptions: { r: 5 }
+      marker: 'square'
+      markerOptions: { s: 5 }
     - id: series3
       label: Series 3
       colour: green
-      yValues: [15, 32, 24, 35, 31, 52, 19, 10, 1, 4]
+      yValues: [15, 32, 24, 35, 31, 52, 19, 10, 1, 30]
+      markerOptions: { r: 10 }
+  xAxis:
+    label: Category
+  yAxis:
+    label: Value
+    majorTick: 25
   plotArea: 
-    yMax: 65
+    yMax: 100
   categories: [A, B, C, D, E, F, G, H, I, J]
 ---
 
