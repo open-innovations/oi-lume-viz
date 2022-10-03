@@ -45,6 +45,31 @@ export const css = `
   fill: var(--colour);
   stroke: none;
 }
+.chart .legend {
+  --width: 20rem;
+  width: var(--width);
+  overflow: visible;
+  height: 1px;
+}
+.chart .legend ul {
+  width: fit-content;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  margin-left: auto;
+  margin-right: auto;
+  background: #fff;
+  border: solid 1px var(--colour);
+  padding: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+}
+.chart .legend li {
+  display: flex;
+  align-items: center;
+}
 `;
 
 /*
@@ -55,7 +80,7 @@ export const css = `
  */
 const everyNth = (n: number) => (_: unknown, i: number) => i % n === 0;
 
-const axes = ({
+const drawAxes = ({
   origin,
   width,
   height,
@@ -135,6 +160,7 @@ type PlotDimensions = {
 
 type Series = {
   id: string;
+  label: string;
   xValues: number[];
   yValues: number[];
   colour: string;
@@ -153,6 +179,7 @@ type LineChartOptions = {
   yAxis: Partial<AxisOptions>;
   title: string,
   titleOffset: number,
+  legendWidth?: number,
 };
 
 type Padding = {
@@ -179,6 +206,7 @@ export default (config: LineChartOptions) => {
     categories,
     title,
     titleOffset = 1,
+    legendWidth = '15rem',
   } = config;
 
   if (categories === undefined) throw 'No categories provided';
@@ -225,19 +253,24 @@ export default (config: LineChartOptions) => {
     .map(x => (x + 0.5) * categoryWidth)
     .map(scaleX);
 
+  const getMarkerFunction = (series: Partial<Series>) => {
+    const { marker } = series;
+    let markerFunction: MarkerFunction = markerFunctions.circle;
+    if (typeof marker === 'function') markerFunction = marker;
+    if (typeof marker === 'string') markerFunction = markerFunctions[marker];
+    return markerFunction;
+  }
+
   const lines = series.map(s => {
     const yValues = s.yValues?.map(scaleY);
     if (yValues === undefined) throw 'No yValues in series';
     const {
       id,
       colour,
-      marker = markerFunctions.circle,
       markerOptions = {},
     } = s;
 
-    let markerFunction: MarkerFunction;
-    if (typeof marker === 'function') markerFunction = marker;
-    if (typeof marker === 'string') markerFunction = markerFunctions[marker];
+    const markerFunction = getMarkerFunction(s);
 
     const points = <[number, number][]>zip(xValues, yValues.slice(0, categories.length));
 
@@ -265,26 +298,41 @@ export default (config: LineChartOptions) => {
     y: scaleY((y * yAxisOptions.majorTick))
   }));
 
+  const axes = drawAxes({
+    origin,
+    width: width * SCALING_UNIT,
+    height: height * SCALING_UNIT,
+    xLabels,
+    xAxisOptions,
+    yLabels,
+    yAxisOptions,
+  });
+
+  const legend = `
+    <foreignObject class='legend' style='--width: ${legendWidth};'><ul>
+      ${series.map((s) => `<li>
+        <svg viewbox='-15 -10 30 20' class="series" style="height: 2em; --colour: ${s.colour}">
+        <path class="line" d="M-10,0 h20"/>
+        ${getMarkerFunction(s)([0, 0], { ...s.markerOptions, r: 3, s: 3 })}
+        </svg>
+        <span>${s.label}</span>
+      </li>`).join('')}
+    </ul></foreignObject>
+    `
+
   return `<svg class='chart' viewBox='
       ${-padding.left * SCALING_UNIT}
       ${-padding.top * SCALING_UNIT}
       ${(width + padding.left + padding.right) * SCALING_UNIT}
       ${(height + padding.top + padding.bottom) * SCALING_UNIT}
     ' role='document'>
-    ${ (title) && `
+    ${(title) && `
       <title>${title}</title>
-      <text class='title' x=${width * SCALING_UNIT / 2} dy='${ -titleOffset * SCALING_UNIT }'>${ title }</text>
+      <text class='title' x=${width * SCALING_UNIT / 2} dy='${-titleOffset * SCALING_UNIT}'>${title}</text>
     `}
-    ${axes({
-      origin,
-      width: width * SCALING_UNIT,
-      height: height * SCALING_UNIT,
-      xLabels,
-      xAxisOptions,
-      yLabels,
-      yAxisOptions,
-    })}
+    ${axes}
     ${lines}
+    ${legend}
   </svg>`;
 
 }
