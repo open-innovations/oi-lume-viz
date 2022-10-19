@@ -4,6 +4,8 @@ import zip from "../../lib/util/zip.ts";
 export const css = `
 .chart {
   --colour: #444;
+  --plot-background: unset;
+  background: var(--plot-background);
   vector-effect: non-scaling-stroke;
   stroke-linecap: round
 }
@@ -151,11 +153,12 @@ const markerFunctions: { [name: string]: MarkerFunction } = {
  * END OF UTILITY FUNCTIONS
  */
 
-type PlotDimensions = {
+type PlotOptions = {
   xMax: number;
   xMin: number;
   yMin: number;
   yMax: number;
+  colour?: string;
 };
 
 type Series = {
@@ -168,8 +171,13 @@ type Series = {
   markerOptions?: MarkerOptions;
 };
 
+type PlotTextOptions = {
+  colour?: string;
+}
+
 type LineChartOptions = {
-  plotArea?: Partial<PlotDimensions>;
+  plotArea?: Partial<PlotOptions>;
+  text?: Partial<PlotTextOptions>;
   series: Partial<Series>[];
   categories: string[];
   width?: number;
@@ -213,7 +221,7 @@ export default (config: LineChartOptions) => {
   if (series === undefined) throw 'No series provided';
 
   // Construct plotarea from defaults
-  const plotArea: PlotDimensions = {
+  const plotArea: PlotOptions = {
     xMin: 0,
     yMin: 0,
     // TODO Make max based on range
@@ -241,6 +249,10 @@ export default (config: LineChartOptions) => {
     majorTick: 10,
     labelOffset: 40,
     ...config.yAxis,
+  };
+
+  const textOptions: PlotTextOptions = {
+    ...config.text
   };
 
   const scaleX = (c: number) => scale(c, plotArea.xMin, plotArea.xMax, 0, width) * SCALING_UNIT;
@@ -320,7 +332,11 @@ export default (config: LineChartOptions) => {
     </ul></foreignObject>
     `
 
-  return `<svg class='chart' viewBox='
+  return `<svg class='chart' style='${
+    plotArea.colour && `--plot-background:${plotArea.colour};`
+  }${
+    textOptions.colour && `--colour:${textOptions.colour};`
+  }' viewBox='
       ${-padding.left * SCALING_UNIT}
       ${-padding.top * SCALING_UNIT}
       ${(width + padding.left + padding.right) * SCALING_UNIT}
