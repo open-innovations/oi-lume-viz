@@ -1,3 +1,4 @@
+import { SCALING_UNIT } from '../../lib/config.ts';
 import scale from "../../lib/util/scale.ts";
 import zip from "../../lib/util/zip.ts";
 
@@ -5,6 +6,7 @@ export const css = `
 .chart {
   --colour: #444;
   --plot-background: unset;
+  --label-transform: unset;
   background: var(--plot-background);
   vector-effect: non-scaling-stroke;
   stroke-linecap: round
@@ -20,20 +22,30 @@ export const css = `
 .chart .axis {
   stroke: var(--colour);
 }
-.chart .x-axis text {
+.chart .label {
   text-anchor: middle;
-  dominant-baseline: hanging;
-}
-.chart .y-axis text {
-  text-anchor: end;
-  dominant-baseline: middle;
+  dominant-baseline: central;
 }
 .chart .y-axis .label {
-  text-anchor: end;
-  dominant-baseline: middle;
   transform: rotate(-90deg);
   transform-box: fill-box;
   transform-origin: center center;
+}
+.chart .x-axis .tick-label {
+  text-anchor: middle;
+  dominant-baseline: hanging;
+}
+.chart .tick-label {
+  transform: var(--label-transform);
+}
+.chart *[data-rotated] .tick-label {
+  transform-box: fill-box;
+  transform-origin: center right;
+  text-anchor: end;
+}
+.chart .y-axis .tick-label {
+  text-anchor: end;
+  dominant-baseline: middle;
 }
 .series .line {
   fill: none;
@@ -101,26 +113,26 @@ const drawAxes = ({
   yAxisOptions: AxisOptions;
   tickSize?: number;
 }) => {
-  const defaultLabelOffset = 40;
+  const defaultTitleOffset = 2;
   const yTickPath = yLabels.map(({ y }) => `M${origin[0]},${y}h${-tickSize}`).join('');
   let yLabel = '';
-  if (yAxisOptions.label !== undefined)
+  if (yAxisOptions.title !== undefined)
     yLabel = `
         <text class='label'
-          x=${origin[0]} dx=${-(yAxisOptions.labelOffset || defaultLabelOffset)}
+          x=${origin[0]} dx=${-(yAxisOptions.titleOffset !== undefined ? yAxisOptions.titleOffset : defaultTitleOffset) * SCALING_UNIT}
           y=${height / 2}>
-            ${yAxisOptions.label}
+            ${yAxisOptions.title}
         </text>
     `;
 
   const xTickPath = xLabels.map(({ x }) => `M${x},${origin[1]}v${tickSize}`).join('');
   let xLabel = '';
-  if (xAxisOptions.label !== undefined)
+  if (xAxisOptions.title !== undefined)
     xLabel = `
         <text class='label'
           x=${width / 2}
-          y=${origin[1]} dy=${xAxisOptions.labelOffset || defaultLabelOffset}>
-            ${xAxisOptions.label}
+          y=${origin[1]} dy=${(xAxisOptions.titleOffset !== undefined ? xAxisOptions.titleOffset : defaultTitleOffset) * SCALING_UNIT}>
+            ${xAxisOptions.title}
         </text>
     `;
 
@@ -133,7 +145,9 @@ const drawAxes = ({
         ${yLabels.map(({ y, label }) => `<text class='tick-label' x=${origin[0]} y=${y} dx=${- tickSize * 2}>${label}</text>`).join('')}
         ${yLabel}
       </g>
-      <g class='x-axis'>
+      <g class='x-axis' style="${
+        xAxisOptions.labelRotate && `--label-transform: rotate(-${xAxisOptions.labelRotate}deg)`
+      }"${ xAxisOptions.labelRotate && ` data-rotated="45"`}>
         <title>X Axis</title>
         <path d='M ${origin.join(',')} h ${width}'/>
         <path d='${xTickPath}'/>
@@ -199,12 +213,11 @@ type Padding = {
 type MarkerOptions = { [k: string]: (number | string | boolean) };
 type MarkerFunction = ((pos: [number, number], options: MarkerOptions) => string);
 type AxisOptions = {
-  label?: string;
-  labelOffset?: number;
+  title?: string;
+  titleOffset?: number;
   majorTick: number;
+  labelRotate?: number;
 }
-
-const SCALING_UNIT = 30;
 
 export default (config: LineChartOptions) => {
   const {
@@ -241,13 +254,13 @@ export default (config: LineChartOptions) => {
 
   const xAxisOptions: AxisOptions = {
     majorTick: 1,
-    labelOffset: 40,
+    titleOffset: 2,
     ...config.xAxis,
   };
 
   const yAxisOptions: AxisOptions = {
     majorTick: 10,
-    labelOffset: 40,
+    titleOffset: 3,
     ...config.yAxis,
   };
 
