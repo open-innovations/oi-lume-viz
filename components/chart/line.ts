@@ -156,7 +156,7 @@ const drawAxes = ({
 };
 
 const markerFunctions: { [name: string]: MarkerFunction } = {
-  circle: ([x, y], { r = 2, filled = true }) => `<circle class='marker ${filled && 'filled'}' cx=${x} cy=${y} r=${r} />`,
+  circle: ([x, y], { s = 2, filled = true }) => `<circle class='marker ${filled && 'filled'}' cx=${x} cy=${y} r=${s} />`,
   square: ([x, y], { s = 2, filled = true }) => `<path class='marker ${filled && 'filled'}' d='M ${x},${y} m${-s},${-s} h ${2 * <number>s} v${2 * <number>s} h${-2 * <number>s} Z' />`
 }
 
@@ -211,7 +211,7 @@ type Padding = {
   left: number;
   right: number;
 }
-type MarkerOptions = { [k: string]: (number | string | boolean) };
+type MarkerOptions = { s?: number, [k: string]: (number | string | boolean | undefined) };
 type MarkerFunction = ((pos: [number, number], options: MarkerOptions) => string);
 type AxisOptions = {
   title?: string;
@@ -262,7 +262,7 @@ export default (config: LineChartOptions) => {
 
   const yAxisOptions: AxisOptions = {
     majorTick: 10,
-    titleOffset: 3,
+    titleOffset: 2,
     formatter: (x) => x.toString(),
     ...config.yAxis,
   };
@@ -346,7 +346,7 @@ export default (config: LineChartOptions) => {
       ${series.map((s) => `<li>
         <svg viewbox='-15 -10 30 20' class="series" style="height: 2em; --colour: ${s.colour}">
         <path class="line" d="M-10,0 h20"/>
-        ${getMarkerFunction(s)([0, 0], { ...s.markerOptions, r: 3, s: 3 })}
+        ${getMarkerFunction(s)([0, 0], { ...s.markerOptions, s: 3 })}
         </svg>
         <span>${s.label}</span>
       </li>`).join('')}
