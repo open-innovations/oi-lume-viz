@@ -360,10 +360,10 @@ export default (config: LineChartOptions) => {
       ${(width + padding.left + padding.right) * SCALING_UNIT}
       ${(height + padding.top + padding.bottom) * SCALING_UNIT}
     ' role='document'>
-    ${(title) && `
+    ${(title) ? `
       <title>${title}</title>
       <text class='title' x=${width * SCALING_UNIT / 2} dy='${-titleOffset * SCALING_UNIT}'>${title}</text>
-    `}
+    ` : '<title>Line Chart</title>'}
     ${axes}
     ${lines}
     ${legend}
