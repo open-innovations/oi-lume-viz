@@ -65,24 +65,21 @@ export const css = `
   overflow: visible;
   height: 1px;
 }
-.chart .legend ul {
-  width: fit-content;
-  max-width: 100%;
-  display: flex;
-  justify-content: center;
+.chart .legend * {
   margin: 0;
-  margin-left: auto;
-  margin-right: auto;
-  background: #fff;
-  border: solid 1px var(--colour);
+}
+.chart .legend ul {
+  max-width: 100%;
+  color: var(--colour);
   padding: 0.5rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
   list-style: none;
 }
 .chart .legend li {
   display: flex;
   align-items: center;
+}
+.chart .legend .series {
+  flex-shrink: 0;
 }
 `;
 
@@ -201,8 +198,12 @@ type LineChartOptions = {
   yAxis: Partial<AxisOptions>;
   title: string,
   titleOffset: number,
-  legendWidth?: number,
+  legend: Partial<LegendOptions>,
 };
+
+type LegendOptions = {
+  width: string;
+}
 
 type Padding = {
   top: number;
@@ -227,7 +228,6 @@ export default (config: LineChartOptions) => {
     categories,
     title,
     titleOffset = 1,
-    legendWidth = '15rem',
   } = config;
 
   if (categories === undefined) throw 'No categories provided';
@@ -267,6 +267,11 @@ export default (config: LineChartOptions) => {
   const textOptions: PlotTextOptions = {
     ...config.text
   };
+
+  const legendOptions: LegendOptions = {
+    width: '15rem',
+    ...config.legend,
+  }
 
   const scaleX = (c: number) => scale(c, plotArea.xMin, plotArea.xMax, 0, width) * SCALING_UNIT;
   const scaleY = (c: number) => (height - scale(c, plotArea.yMin, plotArea.yMax, 0, height)) * SCALING_UNIT;
@@ -334,7 +339,7 @@ export default (config: LineChartOptions) => {
   });
 
   const legend = `
-    <foreignObject class='legend' style='--width: ${legendWidth};'><ul>
+    <foreignObject class='legend' style='--width: ${legendOptions.width};'><ul>
       ${series.map((s) => `<li>
         <svg viewbox='-15 -10 30 20' class="series" style="height: 2em; --colour: ${s.colour}">
         <path class="line" d="M-10,0 h20"/>
