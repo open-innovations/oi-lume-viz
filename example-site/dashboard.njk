@@ -1,0 +1,36 @@
+---
+config:
+  title: name
+  value: numeric
+  units:
+    prefix: pre
+    postfix: post
+  note: footnote
+  data:
+    - name: Panel 1
+      numeric: 10
+      post: k
+      pre: $
+    - name: Panel 2
+      numeric: 20
+      post: " dB"
+      footnote: "This is very quiet"
+  panels:
+    - name: Panel 1
+      class: plum
+      colour: red
+    - name: Panel 2
+      class: cyan
+      scale: Viridis
+      min: 10
+      max: 25
+---
+
+<h1>Dashboard</h1>
+{{ comp.oi.charts.dashboard(config) | safe }}
+
+<p>This dashboard was made with config:</p>
+
+<pre><code>
+{{ config | dump(2) }}
+</code></pre>
