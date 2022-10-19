@@ -218,6 +218,7 @@ type AxisOptions = {
   titleOffset?: number;
   majorTick: number;
   labelRotate?: number;
+  formatter: (value: any) => string;
 }
 
 export default (config: LineChartOptions) => {
@@ -255,12 +256,14 @@ export default (config: LineChartOptions) => {
   const xAxisOptions: AxisOptions = {
     majorTick: 1,
     titleOffset: 2,
+    formatter: (x) => x.toString(),
     ...config.xAxis,
   };
 
   const yAxisOptions: AxisOptions = {
     majorTick: 10,
     titleOffset: 3,
+    formatter: (x) => x.toString(),
     ...config.yAxis,
   };
 
@@ -322,7 +325,7 @@ export default (config: LineChartOptions) => {
     return `<g ${style} id='${id}' class='series'>${line}${markers}</g>`;
   }).join('')
 
-  const xLabels = categories.filter(everyNth(xAxisOptions.majorTick)).map((label, index) => ({ x: scaleX((index + 0.5) * categoryWidth), label }))
+  const xLabels = categories.map(xAxisOptions.formatter).map((label, index) => ({ x: scaleX((index + 0.5) * categoryWidth), label })).filter(everyNth(xAxisOptions.majorTick));
   const yLabels = Array.from(Array(Math.floor((plotArea.yMax - plotArea.yMin) / yAxisOptions.majorTick) + 1).keys()).map(y => ({
     label: (y * yAxisOptions.majorTick).toString(),
     y: scaleY((y * yAxisOptions.majorTick))
