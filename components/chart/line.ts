@@ -6,10 +6,9 @@ export const css = `
 .chart {
   --colour: #444;
   --plot-background: unset;
-  --label-transform: unset;
   background: var(--plot-background);
   vector-effect: non-scaling-stroke;
-  stroke-linecap: round
+  stroke-linecap: round;
 }
 .chart text {
   fill: var(--colour);
@@ -26,21 +25,11 @@ export const css = `
   text-anchor: middle;
   dominant-baseline: central;
 }
-.chart .y-axis .label {
-  transform: rotate(-90deg);
-  transform-box: fill-box;
-  transform-origin: center center;
-}
 .chart .x-axis .tick-label {
   text-anchor: middle;
   dominant-baseline: hanging;
 }
-.chart .tick-label {
-  transform: var(--label-transform);
-}
-.chart *[data-rotated] .tick-label {
-  transform-box: fill-box;
-  transform-origin: center right;
+.chart .x-axis.rotated .tick-label {
   text-anchor: end;
 }
 .chart .y-axis .tick-label {
@@ -59,17 +48,18 @@ export const css = `
   fill: var(--colour);
   stroke: none;
 }
-.chart .legend {
+.chart .legend-container {
   --width: 20rem;
-  width: var(--width);
   overflow: visible;
+  width: 1px;
   height: 1px;
 }
-.chart .legend * {
+.chart .legend-container * {
   margin: 0;
 }
-.chart .legend ul {
-  max-width: 100%;
+.chart .legend {
+  width: var(--width);
+  display: block;
   color: var(--colour);
   padding: 0.5rem;
   list-style: none;
@@ -116,8 +106,11 @@ const drawAxes = ({
   if (yAxisOptions.title !== undefined)
     yLabel = `
         <text class='label'
-          x=${origin[0]} dx=${-(yAxisOptions.titleOffset !== undefined ? yAxisOptions.titleOffset : defaultTitleOffset) * SCALING_UNIT}
-          y=${height / 2}>
+          x=0 y=0
+          transform="translate(${
+            origin[0] -(yAxisOptions.titleOffset !== undefined ? yAxisOptions.titleOffset : defaultTitleOffset) * SCALING_UNIT
+          } ${height / 2}) rotate(-90)"
+          >
             ${yAxisOptions.title}
         </text>
     `;
@@ -142,13 +135,13 @@ const drawAxes = ({
         ${yLabels.map(({ y, label }) => `<text class='tick-label' x=${origin[0]} y=${y} dx=${- tickSize * 2}>${label}</text>`).join('')}
         ${yLabel}
       </g>
-      <g class='x-axis' style="${
-        xAxisOptions.labelRotate && `--label-transform: rotate(-${xAxisOptions.labelRotate}deg)`
-      }"${ xAxisOptions.labelRotate && ` data-rotated="45"`}>
+      <g class='x-axis${ xAxisOptions.labelRotate ? ' rotated' : ''}'>
         <title>X Axis</title>
         <path d='M ${origin.join(',')} h ${width}'/>
         <path d='${xTickPath}'/>
-        ${xLabels.map(({ x, label }) => `<text class='tick-label' x=${x} y=${origin[1]} dy=${tickSize * 2}>${label}</text>`).join('')}
+        ${xLabels.map(({ x, label }) => `<text class='tick-label' x=0 y=0 transform="translate(${x} ${origin[1] + tickSize * 2}) ${
+          xAxisOptions.labelRotate ? 'rotate(-' + xAxisOptions.labelRotate + ')' : ''
+        }">${label}</text>`).join('')}
         ${xLabel}
       </g>
     </g>
@@ -342,7 +335,7 @@ export default (config: LineChartOptions) => {
   });
 
   const legend = `
-    <foreignObject class='legend' style='--width: ${legendOptions.width};'><ul>
+    <foreignObject class='legend-container' style='--width: ${legendOptions.width};'><ul class='legend'>
       ${series.map((s) => `<li>
         <svg viewbox='-15 -10 30 20' class="series" style="height: 2em; --colour: ${s.colour}">
         <path class="line" d="M-10,0 h20"/>
