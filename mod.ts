@@ -1,5 +1,5 @@
 import Site from 'lume/core/site.ts';
-import { dirname, join as pathjoin } from 'std/path/mod.ts';
+import { dirname } from 'std/path/mod.ts';
 import { assets, components } from './config.ts';
 
 /**
@@ -9,6 +9,11 @@ interface Options {
   assetPath?: string;
   componentNamespace?: string;
 }
+
+/**
+ * Joins an array of strings into a path
+ */
+const pathjoin = (...array: string[]) => array.join('/');
 
 /**
  * Converts a namespace to a filessystem path
