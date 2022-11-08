@@ -1,6 +1,7 @@
 import Site from 'lume/core/site.ts';
 import { dirname } from 'std/path/mod.ts';
 import { assets, components } from './config.ts';
+import { setAssetPrefix } from './lib/util/paths.ts';
 
 /**
  * Options interface specifying available options to the module
@@ -54,6 +55,9 @@ export default function (options?: Options) {
   const componentNamespace = namespaceToPath(
     options?.componentNamespace || 'oi.charts'
   );
+
+  // Update the assetPrefix to allow for correct referencing of dependencies
+  setAssetPrefix(assetPath);
 
   /**
    * Function to return url for remote file to load from this repo

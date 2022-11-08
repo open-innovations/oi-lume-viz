@@ -1,4 +1,5 @@
 import { colourScales, contrastColour } from './colour.js';
+import { getAssetPath } from './util/paths.ts';
 
 export type DashboardOptions = {
   /** The data holding the values to be presented in the panels */
@@ -55,7 +56,8 @@ export function dashboard(config: DashboardOptions){
   if (!(value && columns.includes(value)))
     throw `Invalid value: No property named "${value}" in the data`;
   
-  const html = ['<div class="dashboard" data-dependencies="/assets/js/dashboard.js" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, '+(width||'250px')+'), 1fr));">'];
+  // Set asset path based on module config
+  const html = ['<div class="dashboard" data-dependencies="' + getAssetPath('/js/dashboard.js') + '" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, '+(width||'250px')+'), 1fr));">'];
 
   // Loop over the user-specified panels
   for(let p = 0 ; p < panels.length; p++){
