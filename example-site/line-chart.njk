@@ -1,49 +1,43 @@
 ---
-config:
-  title: Sample Line Chart
-  width: 30
-  height: 10
-  padding: {}
-  series:
-    - id: series1
-      label: Series 1
-      colour: red
-      yValues: [10, 20, 23, 47, 34, 55, 49, 20, 10, 5]
-      marker: 'circle'
-      markerOptions: { s: 5, filled: false }
-    - id: series2
-      label: Series 2
-      colour: blue
-      yValues: [12, 22, 21, 45, 37, 57, 59, 30, 12, 2]
-      marker: 'square'
-      markerOptions: { s: 5 }
-    - id: series3
-      label: Series 3
-      colour: green
-      yValues: [15, 32, 24, 35, 31, 52, 19, 10, 1, 30]
-      markerOptions: { s: 10 }
-  xAxis:
-    title: Category
-    labelRotate: 45
-  yAxis:
-    title: Value
-    majorTick: 25
-    titleOffset: 2
-  plotArea: 
-    yMax: 100
-  categories: [A, B, C, D, E, F, G, H, I, J]
+title: Line Chart
+component: graph.line
+layout: layout/sample-viz.njk
+configs:
+  -
+    title: Sample Line Chart
+    width: 30
+    height: 10
+    padding: {}
+    series:
+      - id: series1
+        label: Series 1
+        colour: red
+        yValues: [10, 20, 23, 47, 34, 55, 49, 20, 10, 5]
+        marker: 'circle'
+        markerOptions: { s: 5, filled: false }
+      - id: series2
+        label: Series 2
+        colour: blue
+        yValues: [12, 22, 21, 45, 37, 57, 59, 30, 12, 2]
+        marker: 'square'
+        markerOptions: { s: 5 }
+      - id: series3
+        label: Series 3
+        colour: green
+        yValues: [15, 32, 24, 35, 31, 52, 19, 10, 1, 30]
+        markerOptions: { s: 10 }
+    xAxis:
+      title: Category
+      labelRotate: 45
+    yAxis:
+      title: Value
+      majorTick: 25
+      titleOffset: 2
+    plotArea: 
+      yMax: 100
+    categories: [A, B, C, D, E, F, G, H, I, J]
 ---
 
 <style>
   .chart { stroke-width: 2px; }
 </style>
-
-<h1>Line Chart</h1>
-
-{{ comp.oi.charts.graph.line(config) | safe }}
-
-<p>This chart was made with config:</p>
-
-<pre class="b5-bg padded"><code>
-{{ config | dump(2) }}
-</code></pre>

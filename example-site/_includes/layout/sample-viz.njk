@@ -1,0 +1,14 @@
+---
+layout: layout/base.njk
+---
+
+{{ content | safe }}
+
+{% for config in configs %}
+  {% comp 'oi.charts.' + component, config %}{% endcomp %}
+
+  <p>This example was made with config:</p>
+
+  <pre class="b5-bg padded"><code>{{ config | dump(2) }}</code></pre>
+{% endfor %}
+
