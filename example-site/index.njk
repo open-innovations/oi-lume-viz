@@ -2,4 +2,12 @@
 title: OI Lume Viz
 ---
 
-Hello world!
+
+<h2>
+  Content of README
+</h2>
+{% set README -%}
+{% include 'README.md' %}
+{%- endset %}
+
+{{ README | md | safe }}
