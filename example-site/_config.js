@@ -18,6 +18,6 @@ site.use(charts({
 site.process(['.html'], autoDependency);
 
 console.log(path.resolve('README.md'));
-site.remoteFile('index.md', path.resolve('README.md'));
+site.remoteFile('_includes/README.md', path.resolve('README.md'));
 
 export default site;
