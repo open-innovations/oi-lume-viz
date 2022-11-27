@@ -1,0 +1,8 @@
+---
+title: Samples
+---
+<ul>
+{% for sample in search.pages('sample') | data %}
+  <li><a href="{{ sample.url }}">{{ sample.title }}</a></li>
+{% endfor %}
+</ul>
