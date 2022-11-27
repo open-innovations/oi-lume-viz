@@ -7,7 +7,8 @@ import {
   Stub,
   stub,
 } from 'std/testing/mock.ts';
-import { assets } from './config.ts';
+// TODO mock this call out
+import { assets, components } from './config.ts';
 
 import theModule from './mod.ts';
 
@@ -70,5 +71,19 @@ describe('module', () => {
 
     assertSpyCallArg(<Stub>fakeSite.remoteFile, 0, 0, `/fakePath/${assets[0]}`);
     assertSpyCallArg(<Stub>fakeSite.copy, 0, 0, `/fakePath/${assets[0]}`);
+  });
+
+  it('should default the component namespace to `oi`', () => {
+    theModule()(fakeSite);
+    // This is a bit fragile
+    assertSpyCallArg(<Stub>fakeSite.remoteFile, assets.length, 0, `_components/oi/${components[0]}`);
+  });
+
+  it('should allow the component namespace to be overriden `oi.components`', () => {
+    theModule({
+      componentNamespace: 'oi.components'
+    })(fakeSite);
+    // This is a bit fragile
+    assertSpyCallArg(<Stub>fakeSite.remoteFile, assets.length, 0, `_components/oi/components/${components[0]}`);
   });
 });

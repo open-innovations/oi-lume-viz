@@ -53,7 +53,7 @@ export default function (options?: Options) {
   const assetPath = options?.assetPath?.trim().replace(/\/+$/, '') || '/assets';
   // Get the file path for the component namespace (or `oi.charts` if not provided).
   const componentNamespace = namespaceToPath(
-    options?.componentNamespace || 'oi.charts'
+    options?.componentNamespace || 'oi'
   );
 
   // Update the assetPrefix to allow for correct referencing of dependencies

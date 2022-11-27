@@ -17,14 +17,14 @@ import oiCharts from 'oi-lume-charts/mod.ts';
 
 site.use(oiCharts({
   assetPath: 'assets/oi',
-  componentNamespace: 'oi.charts',
+  componentNamespace: 'oi',
 }));
 ```
 
 You can provide the following options:
 
 * `assetPath` path to locate the javascript assets that are loaded (**default:** `/assets`)
-* `componentNamespace` namespace where the charts are accessible e.g. `comp.oi.charts.dashboard()` (**default:** `oi.charts`)
+* `componentNamespace` namespace where the charts are accessible e.g. `comp.oi.dashboard()` (**default:** `oi`)
 
 ## Available Charts
 
