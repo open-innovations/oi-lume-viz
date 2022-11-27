@@ -12,7 +12,7 @@ site.loadAssets([".css"]);
 
 site.use(charts({
   assetPath: '/assets/oi',
-  componentNamespace: 'oi.charts',
+  componentNamespace: 'oi',
 }));
 
 site.process(['.html'], autoDependency);
