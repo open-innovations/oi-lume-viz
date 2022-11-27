@@ -1,6 +1,9 @@
 import { SCALING_UNIT } from '../../lib/config.ts';
 import scale from "../../lib/util/scale.ts";
 import zip from "../../lib/util/zip.ts";
+import { AxisOptions, drawAxes } from '../../lib/chart-parts/axis.ts';
+import { everyNth } from '../../lib/util/every-nth.ts';
+import { MarkerFunction, markerFunctions, MarkerOptions } from '../../lib/chart-parts/marker.ts';
 
 export const css = `
 .chart {
@@ -73,90 +76,6 @@ export const css = `
 }
 `;
 
-/*
- * UTILITY FUNCTIONS
- */
-/**
- * Creates a filter to select every nth item in an array
- */
-const everyNth = (n: number) => (_: unknown, i: number) => i % n === 0;
-
-const drawAxes = ({
-  origin,
-  width,
-  height,
-  xLabels,
-  xAxisOptions,
-  yLabels,
-  yAxisOptions,
-  tickSize = 10,
-}: {
-  origin: [number, number],
-  width: number,
-  height: number,
-  xLabels: { x: number, label: string }[];
-  xAxisOptions: AxisOptions;
-  yLabels: { y: number, label: string }[];
-  yAxisOptions: AxisOptions;
-  tickSize?: number;
-}) => {
-  const defaultTitleOffset = 2;
-  const yTickPath = yLabels.map(({ y }) => `M${origin[0]},${y}h${-tickSize}`).join('');
-  let yLabel = '';
-  if (yAxisOptions.title !== undefined)
-    yLabel = `
-        <text class='label'
-          x=0 y=0
-          transform="translate(${
-            origin[0] -(yAxisOptions.titleOffset !== undefined ? yAxisOptions.titleOffset : defaultTitleOffset) * SCALING_UNIT
-          } ${height / 2}) rotate(-90)"
-          >
-            ${yAxisOptions.title}
-        </text>
-    `;
-
-  const xTickPath = xLabels.map(({ x }) => `M${x},${origin[1]}v${tickSize}`).join('');
-  let xLabel = '';
-  if (xAxisOptions.title !== undefined)
-    xLabel = `
-        <text class='label'
-          x=${width / 2}
-          y=${origin[1]} dy=${(xAxisOptions.titleOffset !== undefined ? xAxisOptions.titleOffset : defaultTitleOffset) * SCALING_UNIT}>
-            ${xAxisOptions.title}
-        </text>
-    `;
-
-  return `
-    <g class='axis'>
-      <g class='y-axis'>
-        <title>Y Axis</title>
-        <path d='M ${origin.join(',')} v -${height}'/>
-        <path d='${yTickPath}'/>
-        ${yLabels.map(({ y, label }) => `<text class='tick-label' x=${origin[0]} y=${y} dx=${- tickSize * 2}>${label}</text>`).join('')}
-        ${yLabel}
-      </g>
-      <g class='x-axis${ xAxisOptions.labelRotate ? ' rotated' : ''}'>
-        <title>X Axis</title>
-        <path d='M ${origin.join(',')} h ${width}'/>
-        <path d='${xTickPath}'/>
-        ${xLabels.map(({ x, label }) => `<text class='tick-label' x=0 y=0 transform="translate(${x} ${origin[1] + tickSize * 2}) ${
-          xAxisOptions.labelRotate ? 'rotate(-' + xAxisOptions.labelRotate + ')' : ''
-        }">${label}</text>`).join('')}
-        ${xLabel}
-      </g>
-    </g>
-  `;
-};
-
-const markerFunctions: { [name: string]: MarkerFunction } = {
-  circle: ([x, y], { s = 2, filled = true }) => `<circle class='marker ${filled && 'filled'}' cx=${x} cy=${y} r=${s} />`,
-  square: ([x, y], { s = 2, filled = true }) => `<path class='marker ${filled && 'filled'}' d='M ${x},${y} m${-s},${-s} h ${2 * <number>s} v${2 * <number>s} h${-2 * <number>s} Z' />`
-}
-
-/*
- * END OF UTILITY FUNCTIONS
- */
-
 type PlotOptions = {
   xMax: number;
   xMin: number;
@@ -203,15 +122,6 @@ type Padding = {
   bottom: number;
   left: number;
   right: number;
-}
-type MarkerOptions = { s?: number, [k: string]: (number | string | boolean | undefined) };
-type MarkerFunction = ((pos: [number, number], options: MarkerOptions) => string);
-type AxisOptions = {
-  title?: string;
-  titleOffset?: number;
-  majorTick: number;
-  labelRotate?: number;
-  formatter: (value: any) => string;
 }
 
 export default (config: LineChartOptions) => {
@@ -346,11 +256,9 @@ export default (config: LineChartOptions) => {
     </ul></foreignObject>
     `
 
-  return `<svg class='chart' style='${
-    plotArea.colour && `--plot-background:${plotArea.colour};`
-  }${
-    textOptions.colour && `--colour:${textOptions.colour};`
-  }' viewBox='
+  return `<svg class='chart' style='${plotArea.colour && `--plot-background:${plotArea.colour};`
+    }${textOptions.colour && `--colour:${textOptions.colour};`
+    }' viewBox='
       ${-padding.left * SCALING_UNIT}
       ${-padding.top * SCALING_UNIT}
       ${(width + padding.left + padding.right) * SCALING_UNIT}

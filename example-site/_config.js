@@ -1,7 +1,7 @@
 import * as path from 'std/path/mod.ts';
 import lume from "lume/mod.ts";
 
-import charts from '../mod.ts';
+import oiComponents from '../mod.ts';
 import autoDependency from 'https://cdn.jsdelivr.net/gh/open-innovations/oi-lume-utils@0.2.0-pre/processors/auto-dependency.ts';
 
 const site = lume({
@@ -10,7 +10,7 @@ const site = lume({
 
 site.loadAssets([".css"]);
 
-site.use(charts({
+site.use(oiComponents({
   assetPath: '/assets/oi',
   componentNamespace: 'oi',
 }));
