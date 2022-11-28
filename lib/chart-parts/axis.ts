@@ -5,7 +5,7 @@ export type AxisOptions = {
   titleOffset?: number;
   majorTick: number;
   labelRotate?: number;
-  formatter: (value: unknown) => string;
+  formatter: (value: string | number) => string;
 }
 
 export function drawAxes({

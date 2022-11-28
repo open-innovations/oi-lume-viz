@@ -159,7 +159,7 @@ export default (config: LineChartOptions) => {
   const xAxisOptions: AxisOptions = {
     majorTick: 1,
     titleOffset: 2,
-    formatter: (x) => x.toString(),
+    formatter: (x: string | number) => x.toString(),
     ...config.xAxis,
   };
 
