@@ -1,0 +1,28 @@
+# hexjson: { layout: string; hexes: Record<string, HexDefinition> };
+# data?: Record<string, unknown>[];
+# bgColour: string;
+# colourScale: (value: number) => string;
+# hexScale: number;
+# labelProcessor: (label: string) => string;
+# margin: number;
+# matchKey?: string;
+# popup: (params: Record<string, string | number>) => string;
+# title?: string;
+# titleProp: string;
+# valueProp: string;
+
+- hexjson:
+    layout: odd-r
+    hexes:
+      E08000016: { n: Barnsley, colour: "#E6007C", q: 0, r: -2 }
+      E08000032: { n: Bradford, colour: "#FF6700", q: -1, r: 0 }
+      E08000033: { n: Calderdale, colour: "#0DBC37", q: -2, r: -1 }
+      E07000163: { n: Craven, colour: "#178CFF", q: -2, r: 1 }
+      E07000165: { n: Harrogate, colour: "#2f529f", q: -1, r: 1 }
+      E08000034: { n: Kirklees, colour: "#722EA5", q: -1, r: -1 }
+      E08000035: { n: Leeds, colour: "#F9BC26", q: 0, r: 0 }
+      E07000169: { n: Selby, colour: "#1DD3A7", q: 1, r: 0 }
+      E08000036: { n: Wakefield, colour: "#EF3AAB", q: 0, r: -1 }
+      E06000014: { n: York, colour: "#F92626", q: 0, r: 1 }
+  titleProp: n
+  valueProp: colour
