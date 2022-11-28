@@ -1,6 +1,7 @@
 import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
+import { ColourScale, getColourScale } from "../../lib/colour/scales.ts";
 
 /**
  * Hexmap styles
@@ -8,7 +9,7 @@ import { isEven } from "../../lib/util/is-even.ts";
 export const css = `
   .hexmap {
     --hex-bg: none;
-    --hex-fill: var(--l23-cyan);
+    --hex-fill: #aaaaaa;
     background: var(--hex-bg);
     vector-effect: non-scaling-stroke;
   }
@@ -24,24 +25,6 @@ type HexDefinition = {
   n: string;
   [key: string]: unknown;
 };
-
-type ColourScaleFunction = ((value: number) => string) | ((value: string) => string);
-type ColourScale = string | ColourScaleFunction;
-
-const colourScales: { [name: string]: ColourScaleFunction } = {
-  mapColour: (colour: string) => {
-    console.log(colour);
-    return colour;
-  },
-}
-
-const getColourScale = (scale: ColourScale): ColourScaleFunction => {
-  if (typeof scale == 'string') {
-    if (!(scale in colourScales)) throw 'Unknown colour scale';
-    return colourScales[scale as string];
-  }
-  return scale;
-}
 
 type HexmapOptions = {
   bgColour: string;
@@ -89,9 +72,6 @@ export default function ({
 
   // Generate a UUID to identify the hexes
   const uuid = crypto.randomUUID();
-  
-  // Calcualte the colour scale
-  const fillColour = getColourScale(colourScale);
 
   // Merge data into hexes
   // If the matchKey and data are defined
@@ -112,6 +92,9 @@ export default function ({
   const maxValue = Object.values(hexes)
     .map((h) => parseFloat(<string>h[valueProp]) || 0)
     .reduce((result, current) => Math.max(result, current), 0);
+
+  // Calculate the colour scale
+  const fillColour = getColourScale(colourScale)(maxValue);
 
   // Function to calculate if a given row should be shifted to the right
   const isShiftedRow = (r: number) => {
@@ -243,6 +226,7 @@ export default function ({
     const { x, y } = getCentre(config);
     const label = <string>config[titleProp];
     const value = <number>config[valueProp] || 0;
+    const fill = fillColour(config, valueProp);
 
     // Calculate the path based on the layout
     let hexPath: string | undefined = undefined;
@@ -281,12 +265,12 @@ export default function ({
           class="hex"
           transform="translate(${x} ${y})"
           data-auto-popup="${popup({ label, value })}"
-          data-value="${ value }"
+          data-value="${value}"
           role="listitem"
           aria-label="${label} value ${value}"
         >
         <path
-          style="--hex-fill: ${fillColour(value)}"
+          style="${ fill !== undefined ? `--hex-fill: ${fill}` : '' }"
           d="${hexPath}"
         />
         <text
