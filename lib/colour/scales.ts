@@ -12,7 +12,10 @@ export type ColourScaleGenerator = (max?: number) => ColourScaleFunction;
  * A colour scale function takes the context, and a value key and returns a string.
  * This string represents the CSS / HTML colour.
  */
-export type ColourScaleFunction = (context: { [name: string]: unknown }, valueKey: string) => string;
+export type ColourScaleFunction = (
+  context: { [name: string]: unknown },
+  valueKey: string,
+) => string;
 
 /**
  * Resolve a Colour scale to a Generator Function.
@@ -22,20 +25,18 @@ export type ColourScaleFunction = (context: { [name: string]: unknown }, valueKe
  * @returns A ColourScaleGenerator function
  */
 export const getColourScale = (
-  scale: ColourScale
+  scale: ColourScale,
 ): ColourScaleGenerator => {
-  if (typeof scale == 'string') {
-    if (!(scale in colourScales)) throw 'Unknown colour scale';
+  if (typeof scale == "string") {
+    if (!(scale in colourScales)) throw "Unknown colour scale";
     return colourScales[scale as string];
   }
   return scale;
-}
+};
 
-/**
- * 
- */
- export const colourScales: { [name: string]: ColourScaleGenerator } = {
+/** */
+export const colourScales: { [name: string]: ColourScaleGenerator } = {
   mapColour: () => (context: { [name: string]: unknown }, valueKey: string) => {
     return context[valueKey] as string;
   },
-}
+};
