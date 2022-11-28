@@ -1,9 +1,13 @@
-import { SCALING_UNIT } from '../../lib/config.ts';
+import { SCALING_UNIT } from "../../lib/config.ts";
 import scale from "../../lib/util/scale.ts";
 import zip from "../../lib/util/zip.ts";
-import { AxisOptions, drawAxes } from '../../lib/chart-parts/axis.ts';
-import { everyNth } from '../../lib/util/every-nth.ts';
-import { MarkerFunction, markerFunctions, MarkerOptions } from '../../lib/chart-parts/marker.ts';
+import { AxisOptions, drawAxes } from "../../lib/chart-parts/axis.ts";
+import { everyNth } from "../../lib/util/every-nth.ts";
+import {
+  MarkerFunction,
+  markerFunctions,
+  MarkerOptions,
+} from "../../lib/chart-parts/marker.ts";
 
 export const css = `
 .chart {
@@ -96,7 +100,7 @@ type Series = {
 
 type PlotTextOptions = {
   colour?: string;
-}
+};
 
 type LineChartOptions = {
   plotArea?: Partial<PlotOptions>;
@@ -108,21 +112,21 @@ type LineChartOptions = {
   padding?: Partial<Padding>;
   xAxis: Partial<AxisOptions>;
   yAxis: Partial<AxisOptions>;
-  title: string,
-  titleOffset: number,
-  legend: Partial<LegendOptions>,
+  title: string;
+  titleOffset: number;
+  legend: Partial<LegendOptions>;
 };
 
 type LegendOptions = {
   width: string;
-}
+};
 
 type Padding = {
   top: number;
   bottom: number;
   left: number;
   right: number;
-}
+};
 
 export default (config: LineChartOptions) => {
   const {
@@ -134,18 +138,18 @@ export default (config: LineChartOptions) => {
     titleOffset = 1,
   } = config;
 
-  if (categories === undefined) throw 'No categories provided';
-  if (series === undefined) throw 'No series provided';
+  if (categories === undefined) throw "No categories provided";
+  if (series === undefined) throw "No series provided";
 
   // Construct plotarea from defaults
   const plotArea: PlotOptions = {
     xMin: 0,
     yMin: 0,
-    // TODO Make max based on range
+    // TODO(@gilesdring) Make max based on range
     xMax: 100,
     yMax: 100,
-    ...config.plotArea
-  }
+    ...config.plotArea,
+  };
 
   // Set padding in relative
   const padding: Padding = {
@@ -153,7 +157,7 @@ export default (config: LineChartOptions) => {
     bottom: 2.5,
     left: 2.5,
     right: 1,
-    ...config.padding
+    ...config.padding,
   };
 
   const xAxisOptions: AxisOptions = {
@@ -171,35 +175,40 @@ export default (config: LineChartOptions) => {
   };
 
   const textOptions: PlotTextOptions = {
-    ...config.text
+    ...config.text,
   };
 
   const legendOptions: LegendOptions = {
-    width: '15rem',
+    width: "15rem",
     ...config.legend,
-  }
+  };
 
-  const scaleX = (c: number) => scale(c, plotArea.xMin, plotArea.xMax, 0, width) * SCALING_UNIT;
-  const scaleY = (c: number) => (height - scale(c, plotArea.yMin, plotArea.yMax, 0, height)) * SCALING_UNIT;
+  const scaleX = (c: number) =>
+    scale(c, plotArea.xMin, plotArea.xMax, 0, width) * SCALING_UNIT;
+  const scaleY = (c: number) =>
+    (height - scale(c, plotArea.yMin, plotArea.yMax, 0, height)) * SCALING_UNIT;
 
-  const origin: [number, number] = [scaleX(plotArea.xMin), scaleY(plotArea.yMin)];
+  const origin: [number, number] = [
+    scaleX(plotArea.xMin),
+    scaleY(plotArea.yMin),
+  ];
 
   const categoryWidth = plotArea.xMax / categories.length;
   const xValues = Array.from(Array(categories.length).keys())
-    .map(x => (x + 0.5) * categoryWidth)
+    .map((x) => (x + 0.5) * categoryWidth)
     .map(scaleX);
 
   const getMarkerFunction = (series: Partial<Series>) => {
     const { marker } = series;
     let markerFunction: MarkerFunction = markerFunctions.circle;
-    if (typeof marker === 'function') markerFunction = marker;
-    if (typeof marker === 'string') markerFunction = markerFunctions[marker];
+    if (typeof marker === "function") markerFunction = marker;
+    if (typeof marker === "string") markerFunction = markerFunctions[marker];
     return markerFunction;
-  }
+  };
 
-  const lines = series.map(s => {
+  const lines = series.map((s) => {
     const yValues = s.yValues?.map(scaleY);
-    if (yValues === undefined) throw 'No yValues in series';
+    if (yValues === undefined) throw "No yValues in series";
     const {
       id,
       colour,
@@ -208,30 +217,44 @@ export default (config: LineChartOptions) => {
 
     const markerFunction = getMarkerFunction(s);
 
-    const points = <[number, number][]>zip(xValues, yValues.slice(0, categories.length));
+    const points = <[number, number][]> zip(
+      xValues,
+      yValues.slice(0, categories.length),
+    );
 
-    let style = '';
+    let style = "";
     if (colour !== undefined) style += `--colour: ${colour}`;
-    if (style !== '') style = `style="${style}"`;
+    if (style !== "") style = `style="${style}"`;
 
     // Create the line
     const line = `<path
       class='line'
       d='
-        M ${points[0].join(',')}
-        ${points.slice(1).map(p => `L ${p.join(',')}`).join(' ')}
+        M ${points[0].join(",")}
+        ${points.slice(1).map((p) => `L ${p.join(",")}`).join(" ")}
       '></path>
     `;
-    const markers = points.map((p) => markerFunction(p, markerOptions)).join('')
+    const markers = points.map((p) => markerFunction(p, markerOptions)).join(
+      "",
+    );
 
-    // TODO ID should include a uuid as well to distinguish from other chart series
+    // TODO(@gilesdring) ID should include a uuid as well to distinguish from other chart series
     return `<g ${style} id='${id}' class='series'>${line}${markers}</g>`;
-  }).join('')
+  }).join("");
 
-  const xLabels = categories.map(xAxisOptions.formatter).map((label, index) => ({ x: scaleX((index + 0.5) * categoryWidth), label })).filter(everyNth(xAxisOptions.majorTick));
-  const yLabels = Array.from(Array(Math.floor((plotArea.yMax - plotArea.yMin) / yAxisOptions.majorTick) + 1).keys()).map(y => ({
+  const xLabels = categories.map(xAxisOptions.formatter).map((
+    label,
+    index,
+  ) => ({ x: scaleX((index + 0.5) * categoryWidth), label })).filter(
+    everyNth(xAxisOptions.majorTick),
+  );
+  const yLabels = Array.from(
+    Array(
+      Math.floor((plotArea.yMax - plotArea.yMin) / yAxisOptions.majorTick) + 1,
+    ).keys(),
+  ).map((y) => ({
     label: (y * yAxisOptions.majorTick).toString(),
-    y: scaleY((y * yAxisOptions.majorTick))
+    y: scaleY(y * yAxisOptions.majorTick),
   }));
 
   const axes = drawAxes({
@@ -246,31 +269,40 @@ export default (config: LineChartOptions) => {
 
   const legend = `
     <foreignObject class='legend-container' style='--width: ${legendOptions.width};'><ul class='legend'>
-      ${series.map((s) => `<li>
+      ${
+    series.map((s) =>
+      `<li>
         <svg viewbox='-15 -10 30 20' class="series" style="height: 2em; --colour: ${s.colour}">
         <path class="line" d="M-10,0 h20"/>
         ${getMarkerFunction(s)([0, 0], { ...s.markerOptions, s: 3 })}
         </svg>
         <span>${s.label}</span>
-      </li>`).join('')}
+      </li>`
+    ).join("")
+  }
     </ul></foreignObject>
-    `
+    `;
 
-  return `<svg class='chart' style='${plotArea.colour && `--plot-background:${plotArea.colour};`
-    }${textOptions.colour && `--colour:${textOptions.colour};`
-    }' viewBox='
+  return `<svg class='chart' style='${
+    plotArea.colour && `--plot-background:${plotArea.colour};`
+  }${textOptions.colour && `--colour:${textOptions.colour};`}' viewBox='
       ${-padding.left * SCALING_UNIT}
       ${-padding.top * SCALING_UNIT}
       ${(width + padding.left + padding.right) * SCALING_UNIT}
       ${(height + padding.top + padding.bottom) * SCALING_UNIT}
     ' role='document'>
-    ${(title) ? `
+    ${
+    (title)
+      ? `
       <title>${title}</title>
-      <text class='title' x=${width * SCALING_UNIT / 2} dy='${-titleOffset * SCALING_UNIT}'>${title}</text>
-    ` : '<title>Line Chart</title>'}
+      <text class='title' x=${width * SCALING_UNIT / 2} dy='${
+        -titleOffset * SCALING_UNIT
+      }'>${title}</text>
+    `
+      : "<title>Line Chart</title>"
+  }
     ${axes}
     ${lines}
     ${legend}
   </svg>`;
-
-}
+};

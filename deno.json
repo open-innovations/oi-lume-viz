@@ -5,5 +5,19 @@
     "build": "deno task lume",
     "serve": "deno task lume -s",
     "test": "deno test --allow-read --unstable"
+  },
+  "lint": {
+    "files": {
+      "include": [
+        "components/",
+        "lib/"
+      ],
+      "exclude": ["src/testdata/"]
+    },
+    "rules": {
+      "tags": ["recommended"],
+      "include": ["ban-untagged-todo"],
+      "exclude": ["no-unused-vars"]
+    }
   }
 }

@@ -41,14 +41,14 @@ type HexmapOptions = {
   valueProp: string;
 };
 
-// TODO set hex to something close to rems
+// TODO(@gilesdring) set hex to something close to rems
 /**
  * Function to render a hexmap
- * 
+ *
  * @param options HexmapOptions object
  */
 export default function ({
-  bgColour = 'none',
+  bgColour = "none",
   data,
   hexjson,
   hexScale = 1,
@@ -56,10 +56,10 @@ export default function ({
   margin: marginScale = 0.25,
   matchKey,
   popup = ({ label, value }) => `${label}: ${value}`,
-  title = 'Hexmap',
-  titleProp = 'n',
-  colourScale = 'mapColour',
-  valueProp = 'colour',
+  title = "Hexmap",
+  titleProp = "n",
+  colourScale = "mapColour",
+  valueProp = "colour",
 }: HexmapOptions) {
   // Capture the layout and hexes from the hexjson
   const layout = hexjson.layout;
@@ -88,9 +88,9 @@ export default function ({
   }
 
   // Find the biggest value in the hex map
-  // TODO Check if this works when the valueProp is a number
+  // TODO(@gilesdring) Check if this works when the valueProp is a number
   const maxValue = Object.values(hexes)
-    .map((h) => parseFloat(<string>h[valueProp]) || 0)
+    .map((h) => parseFloat(<string> h[valueProp]) || 0)
     .reduce((result, current) => Math.max(result, current), 0);
 
   // Calculate the colour scale
@@ -98,13 +98,13 @@ export default function ({
 
   // Function to calculate if a given row should be shifted to the right
   const isShiftedRow = (r: number) => {
-    if (layout === 'even-r' && isEven(r)) return true;
-    if (layout === 'odd-r' && !isEven(r)) return true;
+    if (layout === "even-r" && isEven(r)) return true;
+    if (layout === "odd-r" && !isEven(r)) return true;
     return false;
-  }
+  };
 
   // Calculate the left, right, top and bottom
-  const dimensions = Object.values(hexes)
+  const dimensions = Object.values<HexDefinition>(hexes)
     .map(({ q, r }) => ({ q, r }))
     .reduce(
       ({ left, right, top, bottom }, { q, r }) => ({
@@ -118,7 +118,7 @@ export default function ({
         right: -Infinity,
         top: Infinity,
         bottom: -Infinity,
-      }
+      },
     );
 
   // Length of side = width * tan(30deg)
@@ -128,20 +128,20 @@ export default function ({
   let rHeight: number;
   let qWidth: number;
   switch (layout) {
-    case 'odd-r':
-    case 'even-r':
+    case "odd-r":
+    case "even-r":
       // Row height is 1 and a half - there is a half a side length overlap
       rHeight = 1.5 * hexSide;
       // Column width is set by the hexWidth for point top hexes
       qWidth = hexCadence;
       break;
-    case 'odd-q':
-    case 'even-q':
+    case "odd-q":
+    case "even-q":
       rHeight = hexCadence;
       qWidth = 1.5 * hexSide;
       break;
     default:
-      throw 'Unsupported layout';
+      throw "Unsupported layout";
   }
 
   const getShim = () => {
@@ -152,15 +152,21 @@ export default function ({
     // Amount to adjust the width of the hexmap plot area
     let width = 0;
 
-    if (layout === 'odd-r' || layout === 'even-r') {
+    if (layout === "odd-r" || layout === "even-r") {
       // Work out if the left-hand column has only shifted rows. i.e. Left Outy Shift
       // If so, move left by half a quoloum
-      const unshiftedRowsInTheLeftColumn = Object.values(hexes).filter(({ q, r }) => (q === dimensions.left) && !isShiftedRow(r));
+      const unshiftedRowsInTheLeftColumn = Object.values<HexDefinition>(hexes)
+        .filter((
+          { q, r },
+        ) => (q === dimensions.left) && !isShiftedRow(r));
       if (unshiftedRowsInTheLeftColumn.length === 0) {
         x = -0.5;
         // Work out if the right-hand column has only unshifted rows. i.e. Right Inny Shift
         // If so, adjust width to account for extra
-        const shiftedRowsInTheRightColumn = Object.values(hexes).filter(({ q, r }) => (q === dimensions.right) && isShiftedRow(r));
+        const shiftedRowsInTheRightColumn = Object.values<HexDefinition>(hexes)
+          .filter((
+            { q, r },
+          ) => (q === dimensions.right) && isShiftedRow(r));
         if (shiftedRowsInTheRightColumn.length === 0) {
           width = -0.5;
         }
@@ -168,12 +174,12 @@ export default function ({
     }
 
     if (
-      (isEven(dimensions.top) && layout === 'even-q') ||
-      (!isEven(dimensions.left) && layout === 'odd-q')
-    ) y = 0.5
+      (isEven(dimensions.top) && layout === "even-q") ||
+      (!isEven(dimensions.left) && layout === "odd-q")
+    ) y = 0.5;
 
     return { x, y, width };
-  }
+  };
   const shim = getShim();
 
   // Overall width of svg (from centre of left-most to centre of right-most)
@@ -184,9 +190,9 @@ export default function ({
 
   /**
    * Calculate the row offset given the prevailing layout
-   * 
+   *
    * @param r row to calculate offset for
-   * @returns 
+   * @returns
    */
   const rOffset = (r: number) => {
     if (isShiftedRow(r)) return 0.5;
@@ -195,23 +201,23 @@ export default function ({
 
   /**
    * Calculate the quolom offset given the prevailing layout
-   * 
+   *
    * @param q row to calculate offset for
-   * @returns 
+   * @returns
    */
   const qOffset = (q: number) => {
-    if (layout === 'odd-q') return isEven(q) ? 0 : 0.5;
-    if (layout === 'even-q') return isEven(q) ? 0.5 : 0;
+    if (layout === "odd-q") return isEven(q) ? 0 : 0.5;
+    if (layout === "even-q") return isEven(q) ? 0.5 : 0;
     return 0;
   };
 
   /**
    * Calculate the centre of a hex given a q and r value.
-   * 
+   *
    * Uses rOffset formula to decide which to shift
-   * 
+   *
    * @param hexConfig - { q: number, r: number }
-   * @returns 
+   * @returns
    */
   function getCentre({ q, r }: HexDefinition) {
     const x = (q - dimensions.left + rOffset(r) + shim.x) * qWidth;
@@ -224,15 +230,15 @@ export default function ({
   const drawHex = (config: HexDefinition) => {
     const hexId = hexCounter();
     const { x, y } = getCentre(config);
-    const label = <string>config[titleProp];
-    const value = <number>config[valueProp] || 0;
+    const label = <string> config[titleProp];
+    const value = <number> config[valueProp] || 0;
     const fill = fillColour(config, valueProp);
 
     // Calculate the path based on the layout
     let hexPath: string | undefined = undefined;
     switch (layout) {
-      case 'odd-r':
-      case 'even-r':
+      case "odd-r":
+      case "even-r":
         hexPath = `
           M ${hexCadence / 2},${-hexSide / 2}
           v ${hexSide}
@@ -243,8 +249,8 @@ export default function ({
           Z
         `;
         break;
-      case 'odd-q':
-      case 'even-q':
+      case "odd-q":
+      case "even-q":
         hexPath = `
           M ${-hexSide / 2},${-hexCadence / 2}
           h ${hexSide}
@@ -256,10 +262,10 @@ export default function ({
         `;
         break;
       default:
-        throw 'Unsupported layout';
+        throw "Unsupported layout";
     }
 
-    // TODO this only supports pointy-top hexes at the moment
+    // TODO(@gilesdring) this only supports pointy-top hexes at the moment
     return `<g
           id="${uuid}-hex-${hexId}"
           class="hex"
@@ -270,7 +276,7 @@ export default function ({
           aria-label="${label} value ${value}"
         >
         <path
-          style="${ fill !== undefined ? `--hex-fill: ${fill}` : '' }"
+          style="${fill !== undefined ? `--hex-fill: ${fill}` : ""}"
           d="${hexPath}"
         />
         <text
@@ -285,10 +291,10 @@ export default function ({
       id="hexes-${uuid}"
       class="hexmap"
       viewBox="
-        ${- margin - qWidth / 2} ${- margin - hexSide}
+        ${-margin - qWidth / 2} ${-margin - hexSide}
         ${width + qWidth + 2 * margin} ${height + 2 * hexSide + 2 * margin}
       "
-      style="${bgColour ? `--hex-bg: ${bgColour}` : ''}"
+      style="${bgColour ? `--hex-bg: ${bgColour}` : ""}"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       data-dependencies="/assets/js/auto-popup.js"
@@ -296,7 +302,7 @@ export default function ({
       aria-labelledby="title-${uuid}"
     >
       <title id="title-${uuid}">${title}.</title>
-      ${Object.values(hexes).map(drawHex).join('')}
+      ${Object.values(hexes).map(drawHex).join("")}
     </svg>
   `;
 }

@@ -1,7 +1,7 @@
-import Site from 'lume/core/site.ts';
-import { dirname } from 'std/path/mod.ts';
-import { assets, components } from './config.ts';
-import { setAssetPrefix } from './lib/util/paths.ts';
+import Site from "lume/core/site.ts";
+import { dirname } from "std/path/mod.ts";
+import { assets, components } from "./config.ts";
+import { setAssetPrefix } from "./lib/util/paths.ts";
 
 /**
  * Options interface specifying available options to the module
@@ -14,33 +14,32 @@ interface Options {
 /**
  * Joins an array of strings into a path
  */
-const pathjoin = (...array: string[]) => array.join('/');
+const pathjoin = (...array: string[]) => array.join("/");
 
 /**
  * Converts a namespace to a filessystem path
- * 
+ *
  * Takes a dotted namespace string and converts into a file path string.
- * This reverses the logic applied 
- * 
+ * This reverses the logic applied
+ *
  * e.g. `oi.charts` will become 'oi/charts' assuming the OS file separator is `/`,
  * which the `pathjoin` function knows.
- * 
+ *
  * @param namespace
- * @returns string 
+ * @returns string
  */
 const namespaceToPath = (namespace: string) =>
-  pathjoin(...namespace.split('.').filter((x) => x));
-
+  pathjoin(...namespace.split(".").filter((x) => x));
 
 /**
  * This is the module load function. It takes a set of options and does lots of things...
- * 
+ *
  * This is called by `site.use(...)` in a Lume `_config.js` or `_config.ts`.
- * 
+ *
  * TODO document all the things it does here.
- * 
- * @param options 
- * @returns 
+ *
+ * @param options
+ * @returns
  */
 export default function (options?: Options) {
   // Work out where this file is imported from (it'll be local path or url) and create a new URL
@@ -50,10 +49,10 @@ export default function (options?: Options) {
 
   // Option processing
   // Get the asset path from options (which might not exist) and tidy up. Set to `/assets` if not provided.
-  const assetPath = options?.assetPath?.trim().replace(/\/+$/, '') || '/assets';
+  const assetPath = options?.assetPath?.trim().replace(/\/+$/, "") || "/assets";
   // Get the file path for the component namespace (or `oi.charts` if not provided).
   const componentNamespace = namespaceToPath(
-    options?.componentNamespace || 'oi'
+    options?.componentNamespace || "oi",
   );
 
   // Update the assetPrefix to allow for correct referencing of dependencies
@@ -61,14 +60,14 @@ export default function (options?: Options) {
 
   /**
    * Function to return url for remote file to load from this repo
-   * 
-   * @param prefix 
-   * @param name 
-   * @returns 
+   *
+   * @param prefix
+   * @param name
+   * @returns
    */
   function getRemotePath(prefix: string, name: string) {
     const assetUrl = new URL(baseUrl.toString());
-    assetUrl.pathname = [baseUrl.pathname, prefix, name].join('/');
+    assetUrl.pathname = [baseUrl.pathname, prefix, name].join("/");
     return assetUrl.toString();
   }
 
@@ -84,12 +83,12 @@ export default function (options?: Options) {
       // `localAssetPath` is where the file will reside in the built site
       const localAssetPath = pathjoin(
         assetPath,
-        asset
+        asset,
       );
       // `remoteAssetPath` is the source location for the file
       const remoteAssetPath = getRemotePath(
-        'assets',
-        asset
+        "assets",
+        asset,
       );
       // Register the asset as a remoteFile in the Lume site using this module.
       site.remoteFile(localAssetPath, remoteAssetPath);
@@ -104,16 +103,16 @@ export default function (options?: Options) {
       // Local component path - where the component will be in the site build context
       // Places in the component namespace so components can be accessed as `comp.oi.charts.<name>`
       const localComponentPath = pathjoin(
-        '_components',
+        "_components",
         componentNamespace,
-        component
+        component,
       );
       // Remote component path - source of the component in this module
       const remoteComponentPath = getRemotePath(
-        'components',
-        component
+        "components",
+        component,
       );
-      // Register the component file 
+      // Register the component file
       site.remoteFile(localComponentPath, remoteComponentPath);
     }
   };

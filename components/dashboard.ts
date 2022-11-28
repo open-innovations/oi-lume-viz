@@ -1,4 +1,4 @@
-import { dashboard, DashboardOptions } from '../lib/dashboard.ts';
+import { dashboard, DashboardOptions } from "../lib/dashboard.ts";
 
 export const css = `
 .dashboard {
