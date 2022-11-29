@@ -1,60 +1,10 @@
-import { Colour } from "./colour.ts";
-import type { Colour as ColourType } from "./types.ts";
+import { extractColours } from "./extract-colours.ts";
+import { getColourPercent } from "./get-colour-percent.ts";
 
-export type ColourScale = {
+export interface ColourScale {
   (value: number): string;
   orig: string;
   gradient: string;
-};
-
-type ColourScaleStop = {
-  v: number;
-  c: ColourType;
-  aspercent: boolean;
-};
-
-export function extractColours(gradient: string): ColourScaleStop[] {
-  const stops = gradient.match(
-    /(([a-z]{3,4}\([^\)]+\)|#[A-Fa-f0-9]{6}) \d+\%?)/g,
-  );
-  if (stops === null) throw "Can't parse gradient string";
-  const cs: ColourScaleStop[] = [];
-  for (let i = 0; i < stops.length; i++) {
-    let v = Infinity;
-    let aspercent = false;
-    stops[i].replace(/ (\d+\%?)$/, function (_, p1) {
-      if (p1.contains("%")) aspercent = true;
-      v = parseFloat(p1);
-      return "";
-    });
-    cs.push({ v, "c": Colour(stops[i]), aspercent });
-  }
-
-  return cs;
-}
-
-function getColourPercent(
-  pc: number,
-  a: Pick<ColourType, "rgb" | "alpha">,
-  b: Pick<ColourType, "rgb" | "alpha">,
-) {
-  pc /= 100;
-  if (typeof a.alpha !== "number") a.alpha = 1;
-  if (typeof b.alpha !== "number") b.alpha = 1;
-  const c = {
-    "r": (a.rgb[0] + (b.rgb[0] - a.rgb[0]) * pc),
-    "g": (a.rgb[1] + (b.rgb[1] - a.rgb[1]) * pc),
-    "b": (a.rgb[2] + (b.rgb[2] - a.rgb[2]) * pc),
-    "alpha": ((b.alpha - a.alpha) * pc + a.alpha),
-  };
-  // Rather than providing an extra parameter, providing a standard
-  // toString method on the object means that it can be called in a
-  // string context (or explicitly) to render the RGBA string.
-  c.toString = function () {
-    return "rgb" + (c.alpha && c.alpha < 1 ? "a" : "") + "(" + c.r + "," +
-      c.g + "," + c.b + (c.alpha && c.alpha < 1 ? "," + c.alpha : "") + ")";
-  };
-  return c;
 }
 
 /**
