@@ -8,5 +8,5 @@ export const assets = [
 export const components = [
   'dashboard.ts',
   'graph/line.ts',
-  'geospatial/hexmap.ts',
+  'map/hex_cartogram.ts',
 ];
