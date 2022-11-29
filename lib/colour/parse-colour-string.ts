@@ -30,6 +30,7 @@ export function validateNumberList(list: number[], options: {
 export function parseColourString(
   input: string,
 ): Pick<Colour, "hsl" | "rgb" | "hex"> {
+  if (typeof input !== "string") throw new TypeError("Invalid input type");
   let expectedLength = 3;
   let maxValues = [255, 255, 255];
   if (input.toLowerCase().indexOf("hsl") == 0) {

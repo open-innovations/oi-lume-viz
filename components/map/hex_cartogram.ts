@@ -1,7 +1,25 @@
 import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
-import { ColourScale, getColourScale } from "../../lib/colour/scales.ts";
+import { Colour } from "../../lib/colour/colour.ts";
+
+// This is a simple scale which returns the same value it was sent
+// Useful if the hexmap has a colour attribute
+const identityColourScale = (s: string) => s;
+
+function addTspan(str: string) {
+  // If string has no newlines, just return it
+  if (!str.includes("\n")) return str;
+
+  const tspan = str.split(/\n/);
+  // Build a new string
+  let newString = "";
+  for (let s = 0; s < tspan.length; s++) {
+    const dy = 3 * ((s + 0.5) - (tspan.length / 2));
+    newString += '<tspan y="' + dy + '%" x="0">' + tspan[s] + "</tspan>";
+  }
+  return newString;
+}
 
 /**
  * Hexmap styles
@@ -26,19 +44,25 @@ type HexDefinition = {
   [key: string]: unknown;
 };
 
+type ColourScaleFunction =
+  | ((property: string) => string)
+  | ((numeric: number) => string);
+
 type HexmapOptions = {
   bgColour: string;
-  colourScale: ColourScale;
+  colourScale: ColourScaleGenerator;
   data?: Record<string, unknown>[];
   hexjson: { layout: string; hexes: Record<string, HexDefinition> };
   hexScale: number;
   labelProcessor: (label: string) => string;
+  labelKey?: string;
   margin: number;
   matchKey?: string;
   popup: (params: Record<string, string | number>) => string;
   title?: string;
   titleProp: string;
   valueProp: string;
+  colourValueProp?: string;
 };
 
 // TODO(@gilesdring) set hex to something close to rems
@@ -49,17 +73,19 @@ type HexmapOptions = {
  */
 export default function ({
   bgColour = "none",
+  colourScale = identityColourScale,
   data,
   hexjson,
   hexScale = 1,
   labelProcessor = (label) => label.slice(0, 3),
   margin: marginScale = 0.25,
+  labelKey = "",
   matchKey,
   popup = ({ label, value }) => `${label}: ${value}`,
   title = "Hexmap",
   titleProp = "n",
-  colourScale = "mapColour",
   valueProp = "colour",
+  colourValueProp,
 }: HexmapOptions) {
   // Capture the layout and hexes from the hexjson
   const layout = hexjson.layout;
@@ -93,8 +119,14 @@ export default function ({
     .map((h) => parseFloat(<string> h[valueProp]) || 0)
     .reduce((result, current) => Math.max(result, current), 0);
 
-  // Calculate the colour scale
-  const fillColour = getColourScale(colourScale)(maxValue);
+  const fillColour = (input: number | string) => {
+    // If it's a string, just pass it to the colourScale function
+    if (typeof input === "string") return colourScale(input);
+    // If it's numeric, scale by the maxValue
+    if (typeof input === "number") return colourScale(input / maxValue);
+    // How did we get here???
+    throw new TypeError("Invalid type provided to fillColour function");
+  };
 
   // Function to calculate if a given row should be shifted to the right
   const isShiftedRow = (r: number) => {
@@ -141,7 +173,7 @@ export default function ({
       qWidth = 1.5 * hexSide;
       break;
     default:
-      throw "Unsupported layout";
+      throw new TypeError("Unsupported layout");
   }
 
   const getShim = () => {
@@ -230,9 +262,16 @@ export default function ({
   const drawHex = (config: HexDefinition) => {
     const hexId = hexCounter();
     const { x, y } = getCentre(config);
+
     const label = <string> config[titleProp];
+    let labelText = labelProcessor(label);
+    if (labelKey != "" && typeof config[labelKey] === "string") {
+      labelText = addTspan(config[labelKey] as string);
+    }
+
     const value = <number> config[valueProp] || 0;
-    const fill = fillColour(config, valueProp);
+    const colourValue =
+      <number | string> config[colourValueProp || valueProp] || value;
 
     // Calculate the path based on the layout
     let hexPath: string | undefined = undefined;
@@ -262,8 +301,10 @@ export default function ({
         `;
         break;
       default:
-        throw "Unsupported layout";
+        throw new TypeError("Unsupported layout");
     }
+    // TODO(@giles) Work out what the heck is going on!
+    const fill = fillColour(colourValue as never);
 
     // TODO(@gilesdring) this only supports pointy-top hexes at the moment
     return `<g
@@ -280,10 +321,11 @@ export default function ({
           d="${hexPath}"
         />
         <text
-          text-anchor="middle"
+        style="fill: ${(Colour(fill)).contrast};"
+        text-anchor="middle"
           dominant-baseline="middle"
           aria-hidden="true"
-          >${labelProcessor(label)}</text>
+          >${labelText}</text>
       </g>`;
   };
 
