@@ -1,7 +1,7 @@
 export type Colour = {
-  rgb: [number, number, number];
+  rgb: number[];
   hex: string;
-  hsl: [number, number, number];
+  hsl: number[];
   contrast: string;
   alpha?: number;
 };

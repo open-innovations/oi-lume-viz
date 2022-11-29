@@ -11,7 +11,7 @@ import {
 } from "./converters.ts";
 
 describe("d2h", () => {
-  it("should a number to hex", () => {
+  it("should convert a number to hex", () => {
     const result = d2h(23);
     assertEquals(result, "17");
   });
