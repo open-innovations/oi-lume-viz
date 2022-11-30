@@ -1,0 +1,36 @@
+name: Build site
+
+"on":
+  workflow_dispatch: {}
+  # workflow_run:
+  #   workflows: ["Update data"]
+  #   types:
+  #     - completed
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/build-site.yml'
+      - 'assets/**'
+      - 'components/**'
+      - 'example_site/**'
+      - 'lib/**'
+      - 'test/data/**'
+      - '_config.js'
+      - 'deno.json'
+      - 'import_map.json'
+      - 'mod.ts'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - run: deno task lume
+      - uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          build_dir: _site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
