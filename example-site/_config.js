@@ -20,4 +20,7 @@ site.process(['.html'], autoDependency);
 console.log(path.resolve('README.md'));
 site.remoteFile('_includes/README.md', path.resolve('README.md'));
 
+// Map test data to local site
+site.remoteFile('samples/chart/bar/_data/configs.yml', './test/data/bar-chart.yml');
+
 export default site;
