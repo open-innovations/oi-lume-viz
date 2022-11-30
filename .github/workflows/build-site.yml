@@ -12,13 +12,13 @@ name: Build site
       - '.github/workflows/build-site.yml'
       - 'assets/**'
       - 'components/**'
-      - 'example_site/**'
+      - 'mod.ts'
+      - 'config.ts'
       - 'lib/**'
       - 'test/data/**'
-      - '_config.js'
+      - 'example-site/**'
       - 'deno.json'
       - 'import_map.json'
-      - 'mod.ts'
 
 jobs:
   build:
