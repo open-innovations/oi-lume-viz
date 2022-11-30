@@ -5,6 +5,7 @@ import oiComponents from '../mod.ts';
 import autoDependency from 'https://cdn.jsdelivr.net/gh/open-innovations/oi-lume-utils@0.2.0-pre/processors/auto-dependency.ts';
 
 const site = lume({
+  location: new URL("https://open-innovations.github.io/oi-lume-charts/"),
   src: '.',
 });
 
