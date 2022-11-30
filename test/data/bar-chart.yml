@@ -1,0 +1,185 @@
+# One series
+- data:
+    - category: First category
+      series1: 20
+    - category: Second category
+      series1: 10
+    - category: Third category
+      series1: 45
+    - category: Fourth category
+      series1: 15
+  legend:
+    show: true     # Default to false
+    position: "top right"
+  axis:
+    x:
+      min: 0
+      max: 60
+      grid:
+        stroke-dasharray: "6 2"
+        stroke-width: 1
+      ticks:
+        - value: 10
+          label: 10%
+        - value: 20
+          label: 20%
+        - value: 30
+          label: 30%
+        - value: 40
+          label: 40%
+        - value: 50
+          label: 50%
+    y:
+      grid:
+        stroke-width: 0.5
+  category: category  # Category names come from 
+  series:
+    - title: Series One
+      value: series1
+# Two series
+- data:
+    - "Ethnic group": Ethnic Group A
+      "Female→Value (%)": 34
+      "Male→Value (%)": 23
+    - "Ethnic group": Ethnic Group B
+      "Female→Value (%)": 45
+      "Male→Value (%)": 35
+    - "Ethnic group": Ethnic Group C
+      "Female→Value (%)": 36
+      "Male→Value (%)": 10
+  legend:
+    show: true     # Default to false
+    position: "top right"
+  axis:
+    x:
+      min: 15
+      max: 58
+      grid:
+        stroke-dasharray: "6 2"
+        stroke-width: 1
+      ticks:
+        - value: 20
+          label: "20%"
+        - value: 30
+          label: "30%"
+        - value: 40
+          label: "40%"
+        - value: 50
+          label: "50%"
+    y:
+      grid:
+        stroke-width: 0.5
+  category: "Ethnic group"  # Category names come from 
+  columns:
+    - name: "Female Label"
+      template: "Female<br />{{ Ethnic group}}: {{ Female→Value (%) }}%"
+    - name: "Male Label"
+      template: "Male<br />{{ Ethnic group}}: {{ Male→Value (%) }}%"
+  series:
+    - title: "Female"
+      value: "Female→Value (%)"
+      tooltip: "Female Label"
+    - title: "Male"
+      value: "Male→Value (%)"
+      tooltip: "Male Label"
+# Multi series
+- data:
+    - Reason: Reason 1
+      School: 10
+      College: 15
+      University: 20
+    - Reason: Reason 2
+      School: 10
+      College: 15
+      University: 20
+    - Reason: Reason 3 
+      School: 10
+      College: 15
+      University: 20
+  summary: "Employers were not asked separately about each type of placement"
+  legend:
+    show: true     # Default to false
+    position: "top right"
+  axis:
+    x:
+      min: 0
+      max: 60
+      grid:
+        stroke-dasharray: "6 2"
+        stroke-width: 1
+      ticks:
+        - value: 10
+          label: "10%"
+        - value: 20
+          label: "20%"
+        - value: 30
+          label: "30%"
+        - value: 40
+          label: "40%"
+        - value: 50
+          label: "50%"
+    y:
+      grid:
+        stroke-width: 0.5
+  gap: 0.2
+  category: "Reason"  # Category names come from 
+  columns:
+    - name: "School Label"
+      template: "{{ Reason }}<br />School: {{ School }}%"
+    - name: "College Label"
+      template: "{{ Reason }}<br />College: {{ College }}%"
+    - name: "University Label"
+      template: "{{ Reason }}<br />University: {{ University }}%"
+  series:
+    - title: "School"
+      value: "School"
+      colour: "#E52E36"
+      tooltip: "School Label"
+    - title: "College"
+      value: "College"
+      colour: "#F7AB3D"
+      tooltip: "College Label"
+    - title: "University"
+      value: "University"
+      colour: "#69C2C9"
+      tooltip: "University Label"
+
+# - file: /data/example/dummy_stackedbarchart_apprenticeships.csv
+#   summary: "This is an approximate version of the real data created by trying to read values from a chart"
+#   legend:
+#     show: true     # Default to false
+#     position: "top right"
+#   axis:
+#     x:
+#       min: 0
+#       max: 600
+#       grid:
+#         stroke-dasharray: "6 2"
+#         stroke-width: 1
+#       ticks:
+#         - value: 100
+#           label: "100"
+#         - value: 200
+#           label: "200"
+#         - value: 300
+#           label: "300"
+#         - value: 400
+#           label: "400"
+#         - value: 500
+#           label: "500"
+#         - value: 600
+#           label: "600"
+#     y:
+#       grid:
+#         stroke-width: 0.5
+#   category: "Year"  # Category labels come from 
+#   series:
+#     - title: "Under 19"
+#       value: "Under 19"
+#       colour: "#69C2C9"
+#     - title: "19-24"
+#       value: "19-24"
+#       colour: "#7D2248"
+#     - title: "25+"
+#       value: "25+"
+#       colour: "#4A783C"

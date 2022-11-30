@@ -6,6 +6,7 @@ export const assets = [
 ];
 
 export const components = [
+  'chart/bar.ts',
   'dashboard.ts',
   'graph/line.ts',
   'map/hex_cartogram.ts',
