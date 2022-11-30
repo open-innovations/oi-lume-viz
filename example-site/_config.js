@@ -1,5 +1,6 @@
 import * as path from 'std/path/mod.ts';
 import lume from "lume/mod.ts";
+import basePath from "lume/plugins/base_path.ts";
 
 import oiComponents from '../mod.ts';
 import autoDependency from 'https://cdn.jsdelivr.net/gh/open-innovations/oi-lume-utils@0.2.0-pre/processors/auto-dependency.ts';
@@ -15,7 +16,7 @@ site.use(oiComponents({
   assetPath: '/assets/oi',
   componentNamespace: 'oi',
 }));
-
+site.use(basePath());
 site.process(['.html'], autoDependency);
 
 console.log(path.resolve('README.md'));
