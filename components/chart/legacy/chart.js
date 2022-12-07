@@ -7,12 +7,11 @@ import { textLength } from './text.js';
 
 const ns = 'http://www.w3.org/2000/svg';
 
-export function Chart(config){
+export function Chart(config,csv){
 	if(!config) config = {};
 	var lbl,id,svg,i,ax,key,seriesgroup,categoryoffset,seriesoffset;
 	lbl = 'categorychart';
 
-	// deno-lint-ignore no-this-alias
 	var _obj = this;
 
 	this.opt = {
@@ -99,23 +98,18 @@ export function Chart(config){
 			// Series
 			var data,datum,label;
 			for(s = 0; s < this.opt.series.length; s++){
-        // Removed option for setting colour by series name
 				mergeDeep(this.opt.series[s],{
-					'line':{'show':true,'color': (this.opt.series[s].colour||'')},
-					'points':{'size':1, 'color': (this.opt.series[s].colour||'')}
+					'line':{'show':true,'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')},
+					'points':{'size':1, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')}
 				});
 				data = [];
-        // Set up some references to replace accessing the complex CSV structure, which we can no longer rely on
-        const columns = getSeriesDetails(this.opt.series[s], this.opt);
-        // Iterate over all items in data
-				for(i = 0; i < this.opt.data.length; i++){
-          // Errr... my head hurts!
-					if(columns.xValues[i] >= this.opt.axis.x.min && columns.xValues[i] <= this.opt.axis.x.max){
-						categoryoffset = this.opt.data.length-i-1;
+				for(i = 0; i < csv.rows.length; i++){
+					if(csv.columns[this.opt.series[s].x][i] >= this.opt.axis.x.min && csv.columns[this.opt.series[s].x][i] <= this.opt.axis.x.max){
+						categoryoffset = csv.rows.length-i-1;
 						seriesoffset = (this.opt.series.length-s-1.5)*(0.8/this.opt.series.length);
-						label = this.opt.series[s].title+"\n"+columns.xValues[i]+': '+(columns.yValues[i]||"");
-						if(this.opt.series[s].tooltip && columns.columnNames.includes(this.opt.series[s].tooltip)) label = tooltips[i];
-						datum = {'x':columns.xValues[i],'y':columns.yValues[i],'title':label};
+						label = this.opt.series[s].title+"\n"+csv.columns[this.opt.series[s].x][i]+': '+(csv.columns[this.opt.series[s].y][i]||"");
+						if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
+						datum = {'x':csv.columns[this.opt.series[s].x][i],'y':csv.columns[this.opt.series[s].y][i],'title':label};
 						datum.data = {'series':this.opt.series[s].title};
 						data.push(datum);
 					}

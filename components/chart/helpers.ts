@@ -32,7 +32,7 @@ export function renderBar(config: BarChartOptions) {
     const chart = new StackedBarChart(config, csv);
     return chart.getSVG();
   }
-  const chart = new BarChart(config);
+  const chart = new BarChart(config, csv);
   return chart.getSVG();
 }
 

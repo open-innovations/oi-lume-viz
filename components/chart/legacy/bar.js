@@ -1,14 +1,15 @@
 import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength } from './text.js';
-import { getSeriesDetails } from '../helpers.ts';
 import { mergeDeep } from './util.js';
 
 const basefs = 17;
+const colours = {};
 
-// Expect config to provide data
-export function BarChart(config){
-	const opt = {
+// ORIGINAL FUNCTION BELOW
+export function BarChart(config,csv){
+
+	var opt = {
 		'type': 'bar-chart',
 		'padding':{'left':0,'top':0,'right':0,'bottom':0},
 		'left':0,
@@ -26,44 +27,36 @@ export function BarChart(config){
 		'duration': '0.3s',
 		'buildSeries': function(){
 			// Series
-      var data,datum,label,i,s,categoryoffset,seriesoffset;
+			var data,datum,label,i,s,categoryoffset,seriesoffset;
 			for(s = 0; s < this.opt.series.length; s++){
-        // Remove default colours for series name from here
 				mergeDeep(this.opt.series[s],{
-					'line':{'show':false,'color':(this.opt.series[s].colour||null)},
-					'points':{'show':false,'size':4, 'color': (this.opt.series[s].colour||null)},
-					'bars':{'show':true,'color':(this.opt.series[s].colour||null)},
-					'errorbars':{'stroke':(this.opt.series[s].colour||null),'stroke-width':2}
+					'line':{'show':false,'color':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
+					'points':{'show':false,'size':4, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
+					'bars':{'show':true,'color':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
+					'errorbars':{'stroke':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null),'stroke-width':2}
 				});
 				// Duplicate errors if only one error value given
 				if(this.opt.series[s].errors && this.opt.series[s].errors.length==1) this.opt.series[s].errors.push(this.opt.series[s].errors[0]);
 				data = [];
-        // csv no long available to us, use getSeriesDetails helper
-        const seriesInfo = getSeriesDetails(this.opt.series[s], this.opt)
-        // Iterare over opt.data instead of csv.rows
-				for(i = 0; i < this.opt.data.length; i++){
-					categoryoffset = this.opt.data.length-i-1;
+				for(i = 0; i < csv.rows.length; i++){
+					categoryoffset = csv.rows.length-i-1;
 					seriesoffset = ((this.opt.series.length/2)-s-0.5)*(0.8/this.opt.series.length);
-					label = this.opt.series[s].title+"\n"+(""+(seriesInfo.category[i]||"")).replace(/\\n/g,"")+': '+(isNaN(seriesInfo.value[i]) ? "?" : seriesInfo.value[i]);
+					label = this.opt.series[s].title+"\n"+(""+(csv.columns[this.opt.category][i]||"")).replace(/\\n/g,"")+': '+(isNaN(csv.columns[this.opt.series[s].value][i]) ? "?" : csv.columns[this.opt.series[s].value][i]);
 					// If the errors have values we add them to the label
-          // TODO(@giles) reintroduce error bars
-					// if(this.opt.series[s].errors){
-					// 	if(!isNaN(csv.columns[this.opt.series[s].errors[0]][i]) && !isNaN(csv.columns[this.opt.series[s].errors[1]][i])){
-					// 		if(csv.columns[this.opt.series[s].errors[0]][i]==csv.columns[this.opt.series[s].errors[1]][i]){
-					// 			label += (' ± '+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i]));
-					// 		}else{
-					// 			label += ' (+'+(isNaN(csv.columns[this.opt.series[s].errors[1]][i]) ? "0" : csv.columns[this.opt.series[s].errors[1]][i])+', -'+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i])+')';
-					// 		}
-					// 	}
-					// }
-          // Add tooltip
-          // TODO(@giles) reintroduce tooltip
-					// if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
-					const datum = {'x':(isNaN(seriesInfo.value[i]) ? null : seriesInfo.value[i]),'y':categoryoffset+seriesoffset,'title':label};
+					if(this.opt.series[s].errors){
+						if(!isNaN(csv.columns[this.opt.series[s].errors[0]][i]) && !isNaN(csv.columns[this.opt.series[s].errors[1]][i])){
+							if(csv.columns[this.opt.series[s].errors[0]][i]==csv.columns[this.opt.series[s].errors[1]][i]){
+								label += (' ± '+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i]));
+							}else{
+								label += ' (+'+(isNaN(csv.columns[this.opt.series[s].errors[1]][i]) ? "0" : csv.columns[this.opt.series[s].errors[1]][i])+', -'+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i])+')';
+							}
+						}
+					}
+					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
+					datum = {'x':(isNaN(csv.columns[this.opt.series[s].value][i]) ? null : csv.columns[this.opt.series[s].value][i]),'y':categoryoffset+seriesoffset,'title':label};
 					// Add errors if we have them
-          // TODO(@giles) reintroduce error bars, again
-					// if(this.opt.series[s].errors) datum.error = {'x':[csv.columns[this.opt.series[s].errors[0]][i],csv.columns[this.opt.series[s].errors[1]][i]]};
-					datum.data = {'category':seriesInfo.category[i],'series':this.opt.series[s].title};
+					if(this.opt.series[s].errors) datum.error = {'x':[csv.columns[this.opt.series[s].errors[0]][i],csv.columns[this.opt.series[s].errors[1]][i]]};
+					datum.data = {'category':csv.columns[this.opt.category][i],'series':this.opt.series[s].title};
 					data.push(datum);
 				}
 				this.series.push(new Series(s,this.opt.series[s],data,{'axis':this.opt.axis,'barsize':(this.opt.gap ? (1-Math.min(1,Math.max(0,parseFloat(this.opt.gap)))) : 1)*(0.8/this.opt.series.length)}));
@@ -77,12 +70,12 @@ export function BarChart(config){
 			for(i = 0; i < this.opt.axis.x.ticks.length; i++) this.opt.axis.x.labels[this.opt.axis.x.ticks[i].value] = this.opt.axis.x.ticks[i];
 			// Set y-axis range for categories
 			this.opt.axis.y.min = -0.5;
-			this.opt.axis.y.max = this.opt.data.length-0.5;
+			this.opt.axis.y.max = csv.rows.length-0.5;
 			// Build y-axis labels
-			for(i = 0 ; i < this.opt.data.length; i++){
-				this.opt.axis.y.labels[this.opt.data.length-i-1.5] = {'label':'','grid':true};
-				this.opt.axis.y.labels[this.opt.data.length-i-1] = {'label':(""+(this.opt.data[i][this.opt.category]||"")).replace(/\\n/g,"\n"),'ticksize':0,'grid':false,'data':{'category':this.opt.data[i][this.opt.category]},'font-weight':'bold'};
-				this.opt.axis.y.labels[this.opt.data.length-i-0.5] = {'label':'','grid':true};
+			for(i = 0 ; i < csv.rows.length; i++){
+				this.opt.axis.y.labels[csv.rows.length-i-1.5] = {'label':'','grid':true};
+				this.opt.axis.y.labels[csv.rows.length-i-1] = {'label':(""+(csv.rows[i][this.opt.category]||"")).replace(/\\n/g,"\n"),'ticksize':0,'grid':false,'data':{'category':csv.rows[i][this.opt.category]},'font-weight':'bold'};
+				this.opt.axis.y.labels[csv.rows.length-i-0.5] = {'label':'','grid':true};
 			}
 			return this;
 		},
@@ -125,7 +118,7 @@ export function BarChart(config){
 	};
 	mergeDeep(opt,config);
 
-	this.chart = new Chart(opt);
+	this.chart = new Chart(opt,csv);
 	this.getSVG = function(){ return this.chart.getSVG(); };
 	return this;
 }
