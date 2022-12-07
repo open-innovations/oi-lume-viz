@@ -144,42 +144,55 @@
       colour: "#69C2C9"
       tooltip: "University Label"
 
-# - file: /data/example/dummy_stackedbarchart_apprenticeships.csv
-#   summary: "This is an approximate version of the real data created by trying to read values from a chart"
-#   legend:
-#     show: true     # Default to false
-#     position: "top right"
-#   axis:
-#     x:
-#       min: 0
-#       max: 600
-#       grid:
-#         stroke-dasharray: "6 2"
-#         stroke-width: 1
-#       ticks:
-#         - value: 100
-#           label: "100"
-#         - value: 200
-#           label: "200"
-#         - value: 300
-#           label: "300"
-#         - value: 400
-#           label: "400"
-#         - value: 500
-#           label: "500"
-#         - value: 600
-#           label: "600"
-#     y:
-#       grid:
-#         stroke-width: 0.5
-#   category: "Year"  # Category labels come from 
-#   series:
-#     - title: "Under 19"
-#       value: "Under 19"
-#       colour: "#69C2C9"
-#     - title: "19-24"
-#       value: "19-24"
-#       colour: "#7D2248"
-#     - title: "25+"
-#       value: "25+"
-#       colour: "#4A783C"
+-
+  stacked: true
+  data:
+    - Year: 2018
+      u19: 10
+      19-24: 15
+      25+: 20
+    - Year: 2019
+      u19: 10
+      19-24: 35
+      25+: 45
+    - Year: 2020
+      u19: 10
+      19-24: 65
+      25+: 55
+  legend:
+    show: true     # Default to false
+    position: "top right"
+  axis:
+    x:
+      min: 0
+      max: 600
+      grid:
+        stroke-dasharray: "6 2"
+        stroke-width: 1
+      ticks:
+        - value: 100
+          label: "100"
+        - value: 200
+          label: "200"
+        - value: 300
+          label: "300"
+        - value: 400
+          label: "400"
+        - value: 500
+          label: "500"
+        - value: 600
+          label: "600"
+    y:
+      grid:
+        stroke-width: 0.5
+  category: "Year"  # Category labels come from 
+  series:
+    - title: "Under 19"
+      value: u19
+      colour: "#69C2C9"
+    - title: "19-24"
+      value: 19-24
+      colour: "#7D2248"
+    - title: "25+"
+      value: 25+
+      colour: "#4A783C"

@@ -6,14 +6,8 @@ import { mergeDeep } from './util.js';
 
 const basefs = 17;
 
-// Simple wrapper
-export function render(config) {
-  const chart = new BarChart(config);
-  return chart.getSVG();
-}
-
 // Expect config to provide data
-function BarChart(config){
+export function BarChart(config){
 	const opt = {
 		'type': 'bar-chart',
 		'padding':{'left':0,'top':0,'right':0,'bottom':0},

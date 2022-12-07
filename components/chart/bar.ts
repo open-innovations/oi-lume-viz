@@ -1,4 +1,4 @@
-import { render } from "./legacy/bar.js";
+import { renderBar } from "./helpers.ts";
 import { SeriesOptions } from "./types.ts";
 
 /**
@@ -9,6 +9,7 @@ export interface BarChartOptions {
   data: { [property: number]: unknown }[];
   /** Configuration of each of the series */
   series: Partial<SeriesOptions>[];
+  stacked: boolean;
 }
 
 /**
@@ -22,7 +23,9 @@ function checkOptions(options: BarChartOptions): void {
 
 export default function (config: Partial<BarChartOptions>): string {
   // We can optionally set defaults in this 
-  const defaults: Partial<BarChartOptions> = {};
+  const defaults: Partial<BarChartOptions> = {
+    stacked: false,
+  };
   // This might be a fragile merge!
   const options = {
     ...defaults,
@@ -33,7 +36,7 @@ export default function (config: Partial<BarChartOptions>): string {
   checkOptions(options);
 
   // Call the bar render function
-  const chart = render(options);
+  const chart = renderBar(options);
 
   return `<div class="chart" data-dependencies="/assets/js/chart.js">${chart}</div>`;
 }
