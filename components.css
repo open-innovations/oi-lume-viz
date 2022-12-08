@@ -1,0 +1,99 @@
+
+.dashboard {
+	--auto-dashboard-min-size: 200px;
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--auto-dashboard-min-size)), 1fr));
+	grid-gap: 1em;
+}
+.dashboard .panel h3 { color: inherit!important; font-weight: normal; font-size: 1em; }
+.panel { background: #efefef; padding: 1em; }
+.dashboard .bignum { font-size: 4em; line-height: 1.25em; font-weight: bold; text-align: center; display: block; margin-top: 0; }
+.dashboard .footnote { font-size: 0.7em; text-align: center; display: block; }
+@media screen and (max-width: 1200px) {
+	.dashboard { grid-gap: 1.5vw; }
+	.dashboard .panel { font-size: max(10px, 1.5vw); }
+	.dashboard .footnote { font-size: max(10px, 0.7em); }
+}
+
+
+.chart {
+  --colour: #444;
+  --plot-background: unset;
+  background: var(--plot-background);
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+}
+.chart text {
+  fill: var(--colour);
+  stroke: none;
+}
+.chart .title {
+  text-anchor: middle;
+  dominant-baseline: hanging;
+}
+.chart .axis {
+  stroke: var(--colour);
+}
+.chart .label {
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.chart .x-axis .tick-label {
+  text-anchor: middle;
+  dominant-baseline: hanging;
+}
+.chart .x-axis.rotated .tick-label {
+  text-anchor: end;
+}
+.chart .y-axis .tick-label {
+  text-anchor: end;
+  dominant-baseline: middle;
+}
+.series .line {
+  fill: none;
+  stroke: var(--colour);
+}
+.series .marker {
+  stroke: var(--colour);
+  fill: none;
+}
+.series .marker.filled {
+  fill: var(--colour);
+  stroke: none;
+}
+.chart .legend-container {
+  --width: 20rem;
+  overflow: visible;
+  width: 1px;
+  height: 1px;
+}
+.chart .legend-container * {
+  margin: 0;
+}
+.chart .legend {
+  width: var(--width);
+  display: block;
+  color: var(--colour);
+  padding: 0.5rem;
+  list-style: none;
+}
+.chart .legend li {
+  display: flex;
+  align-items: center;
+}
+.chart .legend .series {
+  flex-shrink: 0;
+}
+
+
+  .hexmap {
+    --hex-bg: none;
+    --hex-fill: #aaaaaa;
+    background: var(--hex-bg);
+    vector-effect: non-scaling-stroke;
+  }
+  .hexmap .hex path {
+    fill: var(--hex-fill);
+  }
+}

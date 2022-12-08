@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<link rel="icon" href="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='640' height='640' overflow='auto' viewBox='-32 -32 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cmask id='oi-person'%3E%3Cpath d='m-32-32h64v64h-12v-24a4 4 0 0 0 -4 -4h-8a4 4 0 0 0 -4 4v24h-36zm44 27m-8 0a8 8 0 1 0 16 0 8 8 0 1 0-16 0' fill='%23fff'%3E%3C/path%3E%3C/mask%3E%3Cg id='oi-logo' fill='%23FF6700'%3E%3Ccircle r='32' mask='url(%23oi-person)'%3E%3C/circle%3E%3C/g%3E%3C/svg%3E">
+	<title>Bar Chart</title>
+	<link rel="stylesheet" href="/oi-lume-charts/styles/reset.css">
+	<link rel="stylesheet" href="/oi-lume-charts/components.css">
+	<link rel="stylesheet" href="/oi-lume-charts/styles/style.css">
+<script src="/assets/js/chart.js" data-auto-dependency="true"></script></head>
+<body>
+	<div class="b6-bg">
+		<header>
+			<div class="b1-bg">
+				<div class="holder padded" style="text-align:center;">
+					<a href="https://open-innovations.org/"><svg width="80" height="80" overflow="auto" viewbox="-32 -32 64 64" xmlns="http://www.w3.org/2000/svg"><mask id="oi-person"><path d="m-32-32h64v64h-12v-24a4 4 0 0 0 -4 -4h-8a4 4 0 0 0 -4 4v24h-36zm44 27m-8 0a8 8 0 1 0 16 0 8 8 0 1 0-16 0" fill="#fff"></path></mask><g id="oi-logo" fill="#FF6700"><circle r="32" mask="url(#oi-person)"></circle></g></svg></a>
+          <h1>Bar Chart</h1>
+				</div>
+        <div class="holder padded">
+          <nav>
+  <ul>
+    <li><a href="/oi-lume-charts/samples/">Samples</a></li>
+  </ul>
+</nav>
+        </div>
+			</div>
+		</header>
+	</div>
+
+<div class="holder">
+
+
+
+  <div class="chart" data-dependencies="/assets/js/chart.js"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewbox="0 0 800 500" overflow="visible" style="max-width:100%;width:100%" preserveaspectratio="xMidyMin meet" data-type="bar-chart"><defs></defs><g class="axis-grid axis-grid-x"><text class="axis-grid-title" x="400" y="492" dx="0" text-anchor="middle" transform="" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" font-weight="bold"></text><path class="line" vector-effect="non-scaling-stroke" d="[object Object],[object Object]" style="display:block" stroke="#000000" stroke-width="1" stroke-dasharray=""></path><g data="10" transform="translate(264.47916666666663,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">10%</tspan></text></g><g data="20" transform="translate(371.5833333333333,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">20%</tspan></text></g><g data="30" transform="translate(478.6875,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">30%</tspan></text></g><g data="40" transform="translate(585.7916666666666,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">40%</tspan></text></g><g data="50" transform="translate(692.8958333333334,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">50%</tspan></text></g></g><g class="axis-grid axis-grid-y"><text class="axis-grid-title" x="16" y="250" dx="0" text-anchor="middle" transform="rotate(-90,16,250)" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" font-weight="bold"></text><path class="line" vector-effect="non-scaling-stroke" d="[object Object],[object Object]" style="display:block" stroke="#000000" stroke-width="1" stroke-dasharray=""></path><g data="-0.5" transform="translate(157.375,468)"><line x1="-5" x2="642.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="0" data-category="Fourth category" transform="translate(157.375,409.5)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Fourth category</tspan></text></g><g data="0.5" transform="translate(157.375,351)"><line x1="-5" x2="642.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="1" data-category="Third category" transform="translate(157.375,292.5)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Third category</tspan></text></g><g data="1.5" transform="translate(157.375,234)"><line x1="-5" x2="642.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="2" data-category="Second category" transform="translate(157.375,175.5)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Second category</tspan></text></g><g data="2.5" transform="translate(157.375,117)"><line x1="-5" x2="642.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="3" data-category="First category" transform="translate(157.375,58.5)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">First category</tspan></text></g><g data="3.5" transform="translate(157.375,0)"><line x1="-5" x2="642.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g></g><g class="data"><g clip-path="url(#clip-63849715)" data-series="1" class="series series-1"><path class="line" d="M371.58,58.5L264.48,175.5L639.34,292.5L318.03,409.5" style="display:none" stroke="#E55912" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="First category" data-series="1" tabindex="0" x="157.375" y="11.70000000000001" width="214.20833333333331" height="93.59999999999997" r="4" fill="#E55912" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Series One
+First category: 20</title></rect><rect data-i="1" data-category="Second category" data-series="1" tabindex="0" x="157.375" y="128.70000000000002" width="107.10416666666663" height="93.59999999999997" r="4" fill="#E55912" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Series One
+Second category: 10</title></rect><rect data-i="2" data-category="Third category" data-series="1" tabindex="0" x="157.375" y="245.70000000000002" width="481.96875" height="93.6" r="4" fill="#E55912" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Series One
+Third category: 45</title></rect><rect data-i="3" data-category="Fourth category" data-series="1" tabindex="0" x="157.375" y="362.7" width="160.65625" height="93.60000000000002" r="4" fill="#E55912" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Series One
+Fourth category: 15</title></rect></g></g><g class="legend"><rect x="662.9375" y="8.5" width="137.0625" height="34" stroke="#000000" stroke-width="1" fill="none"></rect><g data-series="1" class="data-series data-series-1" transform="translate(671.4375 17)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">Series One</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#E55912" stroke-width="0" stroke="#E55912"></circle></g></g></svg></div>
+
+  <p>This example was made with config:</p>
+
+  <pre class="b5-bg padded"><code>{
+  "data": [
+    {
+      "category": "First category",
+      "series1": 20
+    },
+    {
+      "category": "Second category",
+      "series1": 10
+    },
+    {
+      "category": "Third category",
+      "series1": 45
+    },
+    {
+      "category": "Fourth category",
+      "series1": 15
+    }
+  ],
+  "legend": {
+    "show": true,
+    "position": "top right"
+  },
+  "axis": {
+    "x": {
+      "min": 0,
+      "max": 60,
+      "grid": {
+        "stroke-dasharray": "6 2",
+        "stroke-width": 1
+      },
+      "ticks": [
+        {
+          "value": 10,
+          "label": "10%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 20,
+          "label": "20%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 30,
+          "label": "30%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 40,
+          "label": "40%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 50,
+          "label": "50%",
+          "font-weight": "bold"
+        }
+      ]
+    },
+    "y": {
+      "grid": {
+        "stroke-width": 0.5
+      }
+    }
+  },
+  "category": "category",
+  "series": [
+    {
+      "title": "Series One",
+      "value": "series1",
+      "id": 63849715,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": null
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": null
+      },
+      "bars": {
+        "show": true,
+        "color": null
+      },
+      "errorbars": {
+        "stroke": null,
+        "stroke-width": 2
+      }
+    }
+  ]
+}</code></pre>
+
+  <div class="chart" data-dependencies="/assets/js/chart.js"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewbox="0 0 800 500" overflow="visible" style="max-width:100%;width:100%" preserveaspectratio="xMidyMin meet" data-type="bar-chart"><defs></defs><g class="axis-grid axis-grid-x"><text class="axis-grid-title" x="400" y="492" dx="0" text-anchor="middle" transform="" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" font-weight="bold"></text><path class="line" vector-effect="non-scaling-stroke" d="[object Object],[object Object]" style="display:block" stroke="#000000" stroke-width="1" stroke-dasharray=""></path><g data="20" transform="translate(217.07558139534882,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">20%</tspan></text></g><g data="30" transform="translate(370.4767441860465,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">30%</tspan></text></g><g data="40" transform="translate(523.8779069767443,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">40%</tspan></text></g><g data="50" transform="translate(677.2790697674419,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">50%</tspan></text></g></g><g class="axis-grid axis-grid-y"><text class="axis-grid-title" x="16" y="250" dx="0" text-anchor="middle" transform="rotate(-90,16,250)" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" font-weight="bold"></text><path class="line" vector-effect="non-scaling-stroke" d="[object Object],[object Object]" style="display:block" stroke="#000000" stroke-width="1" stroke-dasharray=""></path><g data="-0.5" transform="translate(140.375,468)"><line x1="-5" x2="659.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="0" data-category="Ethnic Group C" transform="translate(140.375,390)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Ethnic Group C</tspan></text></g><g data="0.5" transform="translate(140.375,312.00000000000006)"><line x1="-5" x2="659.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="1" data-category="Ethnic Group B" transform="translate(140.375,234)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Ethnic Group B</tspan></text></g><g data="1.5" transform="translate(140.375,156.00000000000003)"><line x1="-5" x2="659.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="2" data-category="Ethnic Group A" transform="translate(140.375,77.99999999999999)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Ethnic Group A</tspan></text></g><g data="2.5" transform="translate(140.375,0)"><line x1="-5" x2="659.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g></g><g class="data"><g clip-path="url(#clip-84371506)" data-series="1" class="series series-1"><path class="line" d="M431.84,46.8L600.58,202.8L462.52,358.8" style="display:none" stroke="#E55912" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="Ethnic Group A" data-series="1" tabindex="0" x="140.375" y="15.599999999999945" width="291.46220930232556" height="62.40000000000004" r="4" fill="#E55912" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Female
+Ethnic Group A: 34</title></rect><rect data-i="1" data-category="Ethnic Group B" data-series="1" tabindex="0" x="140.375" y="171.60000000000002" width="460.20348837209303" height="62.39999999999998" r="4" fill="#E55912" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Female
+Ethnic Group B: 45</title></rect><rect data-i="2" data-category="Ethnic Group C" data-series="1" tabindex="0" x="140.375" y="327.59999999999997" width="322.1424418604651" height="62.400000000000034" r="4" fill="#E55912" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Female
+Ethnic Group C: 36</title></rect></g><g clip-path="url(#clip-84371506)" data-series="2" class="series series-2"><path class="line" d="M263.1,109.2L447.18,265.2L63.67,421.2" style="display:none" stroke="#005776" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="Ethnic Group A" data-series="2" tabindex="0" x="140.375" y="77.99999999999999" width="122.72093023255815" height="62.39999999999999" r="4" fill="#005776" fill-opacity="1" stroke="#005776" stroke-width="0"><title>Male
+Ethnic Group A: 23</title></rect><rect data-i="1" data-category="Ethnic Group B" data-series="2" tabindex="0" x="140.375" y="234" width="306.80232558139534" height="62.39999999999998" r="4" fill="#005776" fill-opacity="1" stroke="#005776" stroke-width="0"><title>Male
+Ethnic Group B: 35</title></rect><rect data-i="2" data-category="Ethnic Group C" data-series="2" tabindex="0" x="140.375" y="390" width="76.70058139534883" height="62.39999999999998" r="4" fill="#005776" fill-opacity="1" stroke="#005776" stroke-width="0"><title>Male
+Ethnic Group C: 10</title></rect></g></g><g class="legend"><rect x="687.375" y="8.5" width="112.625" height="51" stroke="#000000" stroke-width="1" fill="none"></rect><g data-series="1" class="data-series data-series-1" transform="translate(695.875 17)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">Female</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#E55912" stroke-width="0" stroke="#E55912"></circle></g><g data-series="2" class="data-series data-series-2" transform="translate(695.875 34)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">Male</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#005776" stroke-width="0" stroke="#005776"></circle></g></g></svg></div>
+
+  <p>This example was made with config:</p>
+
+  <pre class="b5-bg padded"><code>{
+  "data": [
+    {
+      "Ethnic group": "Ethnic Group A",
+      "Female→Value (%)": 34,
+      "Male→Value (%)": 23
+    },
+    {
+      "Ethnic group": "Ethnic Group B",
+      "Female→Value (%)": 45,
+      "Male→Value (%)": 35
+    },
+    {
+      "Ethnic group": "Ethnic Group C",
+      "Female→Value (%)": 36,
+      "Male→Value (%)": 10
+    }
+  ],
+  "legend": {
+    "show": true,
+    "position": "top right"
+  },
+  "axis": {
+    "x": {
+      "min": 15,
+      "max": 58,
+      "grid": {
+        "stroke-dasharray": "6 2",
+        "stroke-width": 1
+      },
+      "ticks": [
+        {
+          "value": 20,
+          "label": "20%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 30,
+          "label": "30%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 40,
+          "label": "40%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 50,
+          "label": "50%",
+          "font-weight": "bold"
+        }
+      ]
+    },
+    "y": {
+      "grid": {
+        "stroke-width": 0.5
+      }
+    }
+  },
+  "category": "Ethnic group",
+  "columns": [
+    {
+      "name": "Female Label",
+      "template": "Female&lt;br /&gt;{{ Ethnic group}}: {{ Female→Value (%) }}%"
+    },
+    {
+      "name": "Male Label",
+      "template": "Male&lt;br /&gt;{{ Ethnic group}}: {{ Male→Value (%) }}%"
+    }
+  ],
+  "series": [
+    {
+      "title": "Female",
+      "value": "Female→Value (%)",
+      "tooltip": "Female Label",
+      "id": 84371506,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": null
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": null
+      },
+      "bars": {
+        "show": true,
+        "color": null
+      },
+      "errorbars": {
+        "stroke": null,
+        "stroke-width": 2
+      }
+    },
+    {
+      "title": "Male",
+      "value": "Male→Value (%)",
+      "tooltip": "Male Label",
+      "id": 84371506,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": null
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": null
+      },
+      "bars": {
+        "show": true,
+        "color": null
+      },
+      "errorbars": {
+        "stroke": null,
+        "stroke-width": 2
+      }
+    }
+  ]
+}</code></pre>
+
+  <div class="chart" data-dependencies="/assets/js/chart.js"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewbox="0 0 800 500" overflow="visible" style="max-width:100%;width:100%" preserveaspectratio="xMidyMin meet" data-type="bar-chart"><defs></defs><g class="axis-grid axis-grid-x"><text class="axis-grid-title" x="400" y="492" dx="0" text-anchor="middle" transform="" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" font-weight="bold"></text><path class="line" vector-effect="non-scaling-stroke" d="[object Object],[object Object]" style="display:block" stroke="#000000" stroke-width="1" stroke-dasharray=""></path><g data="10" transform="translate(207.8125,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">10%</tspan></text></g><g data="20" transform="translate(326.25,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">20%</tspan></text></g><g data="30" transform="translate(444.6875,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">30%</tspan></text></g><g data="40" transform="translate(563.125,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">40%</tspan></text></g><g data="50" transform="translate(681.5625,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">50%</tspan></text></g></g><g class="axis-grid axis-grid-y"><text class="axis-grid-title" x="16" y="250" dx="0" text-anchor="middle" transform="rotate(-90,16,250)" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" font-weight="bold"></text><path class="line" vector-effect="non-scaling-stroke" d="[object Object],[object Object]" style="display:block" stroke="#000000" stroke-width="1" stroke-dasharray=""></path><g data="-0.5" transform="translate(89.375,468)"><line x1="-5" x2="710.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="0" data-category="Reason 3" transform="translate(89.375,390)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Reason 3</tspan></text></g><g data="0.5" transform="translate(89.375,312.00000000000006)"><line x1="-5" x2="710.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="1" data-category="Reason 2" transform="translate(89.375,234)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Reason 2</tspan></text></g><g data="1.5" transform="translate(89.375,156.00000000000003)"><line x1="-5" x2="710.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="2" data-category="Reason 1" transform="translate(89.375,77.99999999999999)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">Reason 1</tspan></text></g><g data="2.5" transform="translate(89.375,0)"><line x1="-5" x2="710.625" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g></g><g class="data"><g clip-path="url(#clip-94692344)" data-series="1" class="series series-1"><path class="line" d="M207.81,36.4L207.81,192.4L207.81,348.4" style="display:none" stroke="#E52E36" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="Reason 1" data-series="1" tabindex="0" x="89.375" y="19.760000000000023" width="118.4375" height="33.27999999999996" r="4" fill="#E52E36" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>School
+Reason 1: 10</title></rect><rect data-i="1" data-category="Reason 2" data-series="1" tabindex="0" x="89.375" y="175.76" width="118.4375" height="33.28" r="4" fill="#E52E36" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>School
+Reason 2: 10</title></rect><rect data-i="2" data-category="Reason 3" data-series="1" tabindex="0" x="89.375" y="331.76" width="118.4375" height="33.28000000000003" r="4" fill="#E52E36" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>School
+Reason 3: 10</title></rect></g><g clip-path="url(#clip-94692344)" data-series="2" class="series series-2"><path class="line" d="M267.03,78L267.03,234L267.03,390" style="display:none" stroke="#F7AB3D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="Reason 1" data-series="2" tabindex="0" x="89.375" y="61.36000000000003" width="177.65625" height="33.27999999999996" r="4" fill="#F7AB3D" fill-opacity="1" stroke="#005776" stroke-width="0"><title>College
+Reason 1: 15</title></rect><rect data-i="1" data-category="Reason 2" data-series="2" tabindex="0" x="89.375" y="217.35999999999999" width="177.65625" height="33.28000000000003" r="4" fill="#F7AB3D" fill-opacity="1" stroke="#005776" stroke-width="0"><title>College
+Reason 2: 15</title></rect><rect data-i="2" data-category="Reason 3" data-series="2" tabindex="0" x="89.375" y="373.36" width="177.65625" height="33.28000000000003" r="4" fill="#F7AB3D" fill-opacity="1" stroke="#005776" stroke-width="0"><title>College
+Reason 3: 15</title></rect></g><g clip-path="url(#clip-94692344)" data-series="3" class="series series-3"><path class="line" d="M326.25,119.6L326.25,275.6L326.25,431.6" style="display:none" stroke="#69C2C9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="Reason 1" data-series="3" tabindex="0" x="89.375" y="102.96000000000004" width="236.875" height="33.279999999999916" r="4" fill="#69C2C9" fill-opacity="1" stroke="#F7AB3D" stroke-width="0"><title>University
+Reason 1: 20</title></rect><rect data-i="1" data-category="Reason 2" data-series="3" tabindex="0" x="89.375" y="258.96" width="236.875" height="33.27999999999997" r="4" fill="#69C2C9" fill-opacity="1" stroke="#F7AB3D" stroke-width="0"><title>University
+Reason 2: 20</title></rect><rect data-i="2" data-category="Reason 3" data-series="3" tabindex="0" x="89.375" y="414.96000000000004" width="236.875" height="33.27999999999997" r="4" fill="#69C2C9" fill-opacity="1" stroke="#F7AB3D" stroke-width="0"><title>University
+Reason 3: 20</title></rect></g></g><g class="legend"><rect x="671.4375" y="8.5" width="128.5625" height="68" stroke="#000000" stroke-width="1" fill="none"></rect><g data-series="1" class="data-series data-series-1" transform="translate(679.9375 17)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">School</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#E52E36" stroke-width="0" stroke="#E55912"></circle></g><g data-series="2" class="data-series data-series-2" transform="translate(679.9375 34)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">College</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#F7AB3D" stroke-width="0" stroke="#005776"></circle></g><g data-series="3" class="data-series data-series-3" transform="translate(679.9375 51)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">University</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#69C2C9" stroke-width="0" stroke="#F7AB3D"></circle></g></g></svg></div>
+
+  <p>This example was made with config:</p>
+
+  <pre class="b5-bg padded"><code>{
+  "data": [
+    {
+      "Reason": "Reason 1",
+      "School": 10,
+      "College": 15,
+      "University": 20
+    },
+    {
+      "Reason": "Reason 2",
+      "School": 10,
+      "College": 15,
+      "University": 20
+    },
+    {
+      "Reason": "Reason 3",
+      "School": 10,
+      "College": 15,
+      "University": 20
+    }
+  ],
+  "summary": "Employers were not asked separately about each type of placement",
+  "legend": {
+    "show": true,
+    "position": "top right"
+  },
+  "axis": {
+    "x": {
+      "min": 0,
+      "max": 60,
+      "grid": {
+        "stroke-dasharray": "6 2",
+        "stroke-width": 1
+      },
+      "ticks": [
+        {
+          "value": 10,
+          "label": "10%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 20,
+          "label": "20%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 30,
+          "label": "30%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 40,
+          "label": "40%",
+          "font-weight": "bold"
+        },
+        {
+          "value": 50,
+          "label": "50%",
+          "font-weight": "bold"
+        }
+      ]
+    },
+    "y": {
+      "grid": {
+        "stroke-width": 0.5
+      }
+    }
+  },
+  "gap": 0.2,
+  "category": "Reason",
+  "columns": [
+    {
+      "name": "School Label",
+      "template": "{{ Reason }}&lt;br /&gt;School: {{ School }}%"
+    },
+    {
+      "name": "College Label",
+      "template": "{{ Reason }}&lt;br /&gt;College: {{ College }}%"
+    },
+    {
+      "name": "University Label",
+      "template": "{{ Reason }}&lt;br /&gt;University: {{ University }}%"
+    }
+  ],
+  "series": [
+    {
+      "title": "School",
+      "value": "School",
+      "colour": "#E52E36",
+      "tooltip": "School Label",
+      "id": 94692344,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": "#E52E36"
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": "#E52E36"
+      },
+      "bars": {
+        "show": true,
+        "color": "#E52E36"
+      },
+      "errorbars": {
+        "stroke": "#E52E36",
+        "stroke-width": 2
+      }
+    },
+    {
+      "title": "College",
+      "value": "College",
+      "colour": "#F7AB3D",
+      "tooltip": "College Label",
+      "id": 94692344,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": "#F7AB3D"
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": "#F7AB3D"
+      },
+      "bars": {
+        "show": true,
+        "color": "#F7AB3D"
+      },
+      "errorbars": {
+        "stroke": "#F7AB3D",
+        "stroke-width": 2
+      }
+    },
+    {
+      "title": "University",
+      "value": "University",
+      "colour": "#69C2C9",
+      "tooltip": "University Label",
+      "id": 94692344,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": "#69C2C9"
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": "#69C2C9"
+      },
+      "bars": {
+        "show": true,
+        "color": "#69C2C9"
+      },
+      "errorbars": {
+        "stroke": "#69C2C9",
+        "stroke-width": 2
+      }
+    }
+  ]
+}</code></pre>
+
+  <div class="chart" data-dependencies="/assets/js/chart.js"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewbox="0 0 800 500" overflow="visible" style="max-width:100%;width:100%" preserveaspectratio="xMidyMin meet" data-type="stacked-bar-chart"><defs></defs><g class="axis-grid axis-grid-x"><text class="axis-grid-title" x="400" y="492" dx="0" text-anchor="middle" transform="" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" font-weight="bold"></text><path class="line" vector-effect="non-scaling-stroke" d="[object Object],[object Object]" style="display:block" stroke="#000000" stroke-width="1" stroke-dasharray=""></path><g data="100" transform="translate(177.70833333333331,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">100</tspan></text></g><g data="200" transform="translate(302.16666666666663,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">200</tspan></text></g><g data="300" transform="translate(426.625,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">300</tspan></text></g><g data="400" transform="translate(551.0833333333333,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">400</tspan></text></g><g data="500" transform="translate(675.5416666666667,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">500</tspan></text></g><g data="600" transform="translate(800,468)"><line x1="0" x2="0" y1="5" y2="-468" stroke="#B2B2B2" stroke-width="1" stroke-dasharray="6 2"></line><text text-anchor="middle" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="hanging" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" dy="0" x="0" y="15">600</tspan></text></g></g><g class="axis-grid axis-grid-y"><text class="axis-grid-title" x="16" y="250" dx="0" text-anchor="middle" transform="rotate(-90,16,250)" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" font-weight="bold"></text><path class="line" vector-effect="non-scaling-stroke" d="[object Object],[object Object]" style="display:block" stroke="#000000" stroke-width="1" stroke-dasharray=""></path><g data="-0.5" transform="translate(53.25,468)"><line x1="-5" x2="746.75" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="0" data-category="2020" transform="translate(53.25,390)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">2020</tspan></text></g><g data="0.5" transform="translate(53.25,312.00000000000006)"><line x1="-5" x2="746.75" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="1" data-category="2019" transform="translate(53.25,234)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">2019</tspan></text></g><g data="1.5" transform="translate(53.25,156.00000000000003)"><line x1="-5" x2="746.75" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g><g data="2" data-category="2018" transform="translate(53.25,77.99999999999999)"><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-10">2018</tspan></text></g><g data="2.5" transform="translate(53.25,0)"><line x1="-5" x2="746.75" y1="0" y2="0" stroke="#B2B2B2" stroke-width="0.5" stroke-dasharray=""></line><text text-anchor="end" stroke="#000000" stroke-width="0" fill="#000000" dominant-baseline="middle" font-weight="bold"><tspan font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" y="0" x="-15"></tspan></text></g></g><g class="data"><g clip-path="url(#clip-53069313)" data-series="1" class="series series-1"><path class="line" d="M239.94,78L289.72,234L426.63,390" style="display:none" stroke="#69C2C9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="2018" data-series="1" tabindex="0" x="53.25" y="15.599999999999996" width="186.6875" height="124.79999999999998" r="4" fill="#69C2C9" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Under 19
+2018: 150</title></rect><rect data-i="1" data-category="2019" data-series="1" tabindex="0" x="53.25" y="171.60000000000002" width="236.4708333333333" height="124.79999999999995" r="4" fill="#69C2C9" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Under 19
+2019: 190</title></rect><rect data-i="2" data-category="2020" data-series="1" tabindex="0" x="53.25" y="327.59999999999997" width="373.375" height="124.80000000000001" r="4" fill="#69C2C9" fill-opacity="1" stroke="#E55912" stroke-width="0"><title>Under 19
+2020: 300</title></rect></g><g clip-path="url(#clip-53069313)" data-series="2" class="series series-2"><path class="line" d="M258.61,78L333.28,234L507.52,390" style="display:none" stroke="#7D2248" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="2018" data-series="2" tabindex="0" x="239.9375" y="15.599999999999996" width="18.668750000000045" height="124.79999999999998" r="4" fill="#7D2248" fill-opacity="1" stroke="#005776" stroke-width="0"><title>19-24
+2018: 15</title></rect><rect data-i="1" data-category="2019" data-series="2" tabindex="0" x="289.7208333333333" y="171.60000000000002" width="43.5604166666667" height="124.79999999999995" r="4" fill="#7D2248" fill-opacity="1" stroke="#005776" stroke-width="0"><title>19-24
+2019: 35</title></rect><rect data-i="2" data-category="2020" data-series="2" tabindex="0" x="426.625" y="327.59999999999997" width="80.89791666666662" height="124.80000000000001" r="4" fill="#7D2248" fill-opacity="1" stroke="#005776" stroke-width="0"><title>19-24
+2020: 65</title></rect></g><g clip-path="url(#clip-53069313)" data-series="3" class="series series-3"><path class="line" d="M283.5,78L389.29,234L575.98,390" style="display:none" stroke="#4A783C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="" fill="none" vector-effect="non-scaling-stroke"></path><rect data-i="0" data-category="2018" data-series="3" tabindex="0" x="258.60625000000005" y="15.599999999999996" width="24.89166666666665" height="124.79999999999998" r="4" fill="#4A783C" fill-opacity="1" stroke="#F7AB3D" stroke-width="0"><title>25+
+2018: 20</title></rect><rect data-i="1" data-category="2019" data-series="3" tabindex="0" x="333.28125" y="171.60000000000002" width="56.00625000000002" height="124.79999999999995" r="4" fill="#4A783C" fill-opacity="1" stroke="#F7AB3D" stroke-width="0"><title>25+
+2019: 45</title></rect><rect data-i="2" data-category="2020" data-series="3" tabindex="0" x="507.5229166666666" y="327.59999999999997" width="68.4520833333334" height="124.80000000000001" r="4" fill="#4A783C" fill-opacity="1" stroke="#F7AB3D" stroke-width="0"><title>25+
+2020: 55</title></rect></g></g><g class="legend"><rect x="676.75" y="8.5" width="123.25" height="68" stroke="#000000" stroke-width="1" fill="none"></rect><g data-series="1" class="data-series data-series-1" transform="translate(685.25 17)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">Under 19</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#69C2C9" stroke-width="0" stroke="#E55912"></circle></g><g data-series="2" class="data-series data-series-2" transform="translate(685.25 34)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">19-24</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#7D2248" stroke-width="0" stroke="#005776"></circle></g><g data-series="3" class="data-series data-series-3" transform="translate(685.25 51)"><text x="0" y="3.4" font-family="CenturyGothicStd,&quot;Century Gothic&quot;,sans-serif" text-anchor="start" dominant-baseline="hanging" font-weight="bold" fill="#000000" stroke-width="0"><tspan dx="34" dy="0">25+</tspan></text><path d="M0 0 L 1 0" class="line" stroke-width="3" stroke-linecap="round"></path><circle cx="12.75" cy="8.5" r="5" fill="#4A783C" stroke-width="0" stroke="#F7AB3D"></circle></g></g></svg></div>
+
+  <p>This example was made with config:</p>
+
+  <pre class="b5-bg padded"><code>{
+  "data": [
+    {
+      "Year": 2018,
+      "u19": 150,
+      "19-24": 15,
+      "25+": 20
+    },
+    {
+      "Year": 2019,
+      "u19": 190,
+      "19-24": 35,
+      "25+": 45
+    },
+    {
+      "Year": 2020,
+      "u19": 300,
+      "19-24": 65,
+      "25+": 55
+    }
+  ],
+  "stacked": true,
+  "legend": {
+    "show": true,
+    "position": "top right"
+  },
+  "axis": {
+    "x": {
+      "min": 0,
+      "max": 600,
+      "grid": {
+        "stroke-dasharray": "6 2",
+        "stroke-width": 1
+      },
+      "ticks": [
+        {
+          "value": 100,
+          "label": "100",
+          "font-weight": "bold"
+        },
+        {
+          "value": 200,
+          "label": "200",
+          "font-weight": "bold"
+        },
+        {
+          "value": 300,
+          "label": "300",
+          "font-weight": "bold"
+        },
+        {
+          "value": 400,
+          "label": "400",
+          "font-weight": "bold"
+        },
+        {
+          "value": 500,
+          "label": "500",
+          "font-weight": "bold"
+        },
+        {
+          "value": 600,
+          "label": "600",
+          "font-weight": "bold"
+        }
+      ]
+    },
+    "y": {
+      "grid": {
+        "stroke-width": 0.5
+      }
+    }
+  },
+  "category": "Year",
+  "series": [
+    {
+      "title": "Under 19",
+      "value": "u19",
+      "colour": "#69C2C9",
+      "id": 53069313,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": "#69C2C9"
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": "#69C2C9"
+      },
+      "bars": {
+        "show": true,
+        "color": "#69C2C9"
+      },
+      "errorbars": {
+        "stroke": "#69C2C9",
+        "stroke-width": 2
+      }
+    },
+    {
+      "title": "19-24",
+      "value": "19-24",
+      "colour": "#7D2248",
+      "id": 53069313,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": "#7D2248"
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": "#7D2248"
+      },
+      "bars": {
+        "show": true,
+        "color": "#7D2248"
+      },
+      "errorbars": {
+        "stroke": "#7D2248",
+        "stroke-width": 2
+      }
+    },
+    {
+      "title": "25+",
+      "value": "25+",
+      "colour": "#4A783C",
+      "id": 53069313,
+      "lbl": "categorychart",
+      "line": {
+        "show": false,
+        "color": "#4A783C"
+      },
+      "points": {
+        "show": false,
+        "size": 4,
+        "color": "#4A783C"
+      },
+      "bars": {
+        "show": true,
+        "color": "#4A783C"
+      },
+      "errorbars": {
+        "stroke": "#4A783C",
+        "stroke-width": 2
+      }
+    }
+  ]
+}</code></pre>
+
+
+
+</div>
+
+	<footer class="b1-bg">
+		<div class="holder doublepadded">
+			
+		</div>
+	</footer>
+
+
+
+
+</body></html>

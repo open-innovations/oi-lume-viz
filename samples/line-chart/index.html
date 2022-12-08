@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<link rel="icon" href="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='640' height='640' overflow='auto' viewBox='-32 -32 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cmask id='oi-person'%3E%3Cpath d='m-32-32h64v64h-12v-24a4 4 0 0 0 -4 -4h-8a4 4 0 0 0 -4 4v24h-36zm44 27m-8 0a8 8 0 1 0 16 0 8 8 0 1 0-16 0' fill='%23fff'%3E%3C/path%3E%3C/mask%3E%3Cg id='oi-logo' fill='%23FF6700'%3E%3Ccircle r='32' mask='url(%23oi-person)'%3E%3C/circle%3E%3C/g%3E%3C/svg%3E">
+	<title>Line Chart</title>
+	<link rel="stylesheet" href="/oi-lume-charts/styles/reset.css">
+	<link rel="stylesheet" href="/oi-lume-charts/components.css">
+	<link rel="stylesheet" href="/oi-lume-charts/styles/style.css">
+</head>
+<body>
+	<div class="b6-bg">
+		<header>
+			<div class="b1-bg">
+				<div class="holder padded" style="text-align:center;">
+					<a href="https://open-innovations.org/"><svg width="80" height="80" overflow="auto" viewbox="-32 -32 64 64" xmlns="http://www.w3.org/2000/svg"><mask id="oi-person"><path d="m-32-32h64v64h-12v-24a4 4 0 0 0 -4 -4h-8a4 4 0 0 0 -4 4v24h-36zm44 27m-8 0a8 8 0 1 0 16 0 8 8 0 1 0-16 0" fill="#fff"></path></mask><g id="oi-logo" fill="#FF6700"><circle r="32" mask="url(#oi-person)"></circle></g></svg></a>
+          <h1>Line Chart</h1>
+				</div>
+        <div class="holder padded">
+          <nav>
+  <ul>
+    <li><a href="/oi-lume-charts/samples/">Samples</a></li>
+  </ul>
+</nav>
+        </div>
+			</div>
+		</header>
+	</div>
+
+<div class="holder">
+<style>
+  .chart { stroke-width: 2px; }
+</style>
+
+
+
+  <svg class="chart" style="undefinedundefined" viewbox="
+      -75
+      -60
+      1005
+      435
+    " role="document">
+    
+      <title>Sample Line Chart</title>
+      <text class="title" x="450" dy="-30">Sample Line Chart</text>
+    
+    
+    <g class="axis">
+      <g class="y-axis">
+        <title>Y Axis</title>
+        <path d="M 0,300 v -300"></path>
+        <path d="M0,300h-10M0,225h-10M0,150h-10M0,75h-10M0,0h-10"></path>
+        <text class="tick-label" x="0" y="300" dx="-20">0</text><text class="tick-label" x="0" y="225" dx="-20">25</text><text class="tick-label" x="0" y="150" dx="-20">50</text><text class="tick-label" x="0" y="75" dx="-20">75</text><text class="tick-label" x="0" y="0" dx="-20">100</text>
+        
+        <text class="label" x="0" y="0" transform="translate(-60 150) rotate(-90)">
+            Value
+        </text>
+    
+      </g>
+      <g class="x-axis rotated">
+        <title>X Axis</title>
+        <path d="M 0,300 h 900"></path>
+        <path d="M45,300v10M135,300v10M225,300v10M315,300v10M405,300v10M495,300v10M585,300v10M675,300v10M765,300v10M855,300v10"></path>
+        <text class="tick-label" x="0" y="0" transform="translate(45 320) rotate(-45)">A</text><text class="tick-label" x="0" y="0" transform="translate(135 320) rotate(-45)">B</text><text class="tick-label" x="0" y="0" transform="translate(225 320) rotate(-45)">C</text><text class="tick-label" x="0" y="0" transform="translate(315 320) rotate(-45)">D</text><text class="tick-label" x="0" y="0" transform="translate(405 320) rotate(-45)">E</text><text class="tick-label" x="0" y="0" transform="translate(495 320) rotate(-45)">F</text><text class="tick-label" x="0" y="0" transform="translate(585 320) rotate(-45)">G</text><text class="tick-label" x="0" y="0" transform="translate(675 320) rotate(-45)">H</text><text class="tick-label" x="0" y="0" transform="translate(765 320) rotate(-45)">I</text><text class="tick-label" x="0" y="0" transform="translate(855 320) rotate(-45)">J</text>
+        
+        <text class="label" x="450" y="300" dy="60">
+            Category
+        </text>
+    
+      </g>
+    </g>
+  
+    <g style="--colour: red" id="series1" class="series"><path class="line" d="
+        M 45,270
+        L 135,240 L 225,231 L 315,159 L 405,198 L 495,135 L 585,153 L 675,240 L 765,270 L 855,285
+      "></path>
+    <circle class="marker false" cx="45" cy="270" r="5"></circle><circle class="marker false" cx="135" cy="240" r="5"></circle><circle class="marker false" cx="225" cy="231" r="5"></circle><circle class="marker false" cx="315" cy="159" r="5"></circle><circle class="marker false" cx="405" cy="198" r="5"></circle><circle class="marker false" cx="495" cy="135" r="5"></circle><circle class="marker false" cx="585" cy="153" r="5"></circle><circle class="marker false" cx="675" cy="240" r="5"></circle><circle class="marker false" cx="765" cy="270" r="5"></circle><circle class="marker false" cx="855" cy="285" r="5"></circle></g><g style="--colour: blue" id="series2" class="series"><path class="line" d="
+        M 45,264
+        L 135,234 L 225,237 L 315,165 L 405,189 L 495,129 L 585,122.99999999999999 L 675,210 L 765,264 L 855,294
+      "></path>
+    <path class="marker filled" d="M 45,264 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 135,234 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 225,237 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 315,165 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 405,189 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 495,129 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 585,122.99999999999999 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 675,210 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 765,264 m-5,-5 h 10 v10 h-10 Z"></path><path class="marker filled" d="M 855,294 m-5,-5 h 10 v10 h-10 Z"></path></g><g style="--colour: green" id="series3" class="series"><path class="line" d="
+        M 45,255
+        L 135,204 L 225,228 L 315,195 L 405,207 L 495,144 L 585,243 L 675,270 L 765,297 L 855,210
+      "></path>
+    <circle class="marker filled" cx="45" cy="255" r="10"></circle><circle class="marker filled" cx="135" cy="204" r="10"></circle><circle class="marker filled" cx="225" cy="228" r="10"></circle><circle class="marker filled" cx="315" cy="195" r="10"></circle><circle class="marker filled" cx="405" cy="207" r="10"></circle><circle class="marker filled" cx="495" cy="144" r="10"></circle><circle class="marker filled" cx="585" cy="243" r="10"></circle><circle class="marker filled" cx="675" cy="270" r="10"></circle><circle class="marker filled" cx="765" cy="297" r="10"></circle><circle class="marker filled" cx="855" cy="210" r="10"></circle></g>
+    
+    <foreignobject class="legend-container" style="--width: 15rem;"><ul class="legend">
+      <li>
+        <svg viewbox="-15 -10 30 20" class="series" style="height: 2em; --colour: red">
+        <path class="line" d="M-10,0 h20"></path>
+        <circle class="marker false" cx="0" cy="0" r="3"></circle>
+        </svg>
+        <span>Series 1</span>
+      </li><li>
+        <svg viewbox="-15 -10 30 20" class="series" style="height: 2em; --colour: blue">
+        <path class="line" d="M-10,0 h20"></path>
+        <path class="marker filled" d="M 0,0 m-3,-3 h 6 v6 h-6 Z"></path>
+        </svg>
+        <span>Series 2</span>
+      </li><li>
+        <svg viewbox="-15 -10 30 20" class="series" style="height: 2em; --colour: green">
+        <path class="line" d="M-10,0 h20"></path>
+        <circle class="marker filled" cx="0" cy="0" r="3"></circle>
+        </svg>
+        <span>Series 3</span>
+      </li>
+    </ul></foreignobject>
+    
+  </svg>
+
+  <p>This example was made with config:</p>
+
+  <pre class="b5-bg padded"><code>{
+  "title": "Sample Line Chart",
+  "width": 30,
+  "height": 10,
+  "padding": {},
+  "series": [
+    {
+      "id": "series1",
+      "label": "Series 1",
+      "colour": "red",
+      "yValues": [
+        10,
+        20,
+        23,
+        47,
+        34,
+        55,
+        49,
+        20,
+        10,
+        5
+      ],
+      "marker": "circle",
+      "markerOptions": {
+        "s": 5,
+        "filled": false
+      }
+    },
+    {
+      "id": "series2",
+      "label": "Series 2",
+      "colour": "blue",
+      "yValues": [
+        12,
+        22,
+        21,
+        45,
+        37,
+        57,
+        59,
+        30,
+        12,
+        2
+      ],
+      "marker": "square",
+      "markerOptions": {
+        "s": 5
+      }
+    },
+    {
+      "id": "series3",
+      "label": "Series 3",
+      "colour": "green",
+      "yValues": [
+        15,
+        32,
+        24,
+        35,
+        31,
+        52,
+        19,
+        10,
+        1,
+        30
+      ],
+      "markerOptions": {
+        "s": 10
+      }
+    }
+  ],
+  "xAxis": {
+    "title": "Category",
+    "labelRotate": 45
+  },
+  "yAxis": {
+    "title": "Value",
+    "majorTick": 25,
+    "titleOffset": 2
+  },
+  "plotArea": {
+    "yMax": 100
+  },
+  "categories": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J"
+  ]
+}</code></pre>
+
+
+
+</div>
+
+	<footer class="b1-bg">
+		<div class="holder doublepadded">
+			
+		</div>
+	</footer>
+
+
+
+
+</body></html>
