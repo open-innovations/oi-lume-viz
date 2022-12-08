@@ -5,7 +5,7 @@ layout: layout/base.njk
 {{ content | safe }}
 
 {% for config in configs %}
-  {% comp 'oi.' + component, config %}{% endcomp %}
+  {% comp 'oi.' + component, { "config": config } %}{% endcomp %}
 
   <p>This example was made with config:</p>
 

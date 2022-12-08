@@ -19,7 +19,7 @@ export const css = `
 }
 `;
 
-export default function (config: DashboardOptions) {
+export default function ({ config}: {config: DashboardOptions}) {
   if (!config.data) throw "No data source provided";
   const html = dashboard(config);
   return html;

@@ -72,21 +72,23 @@ type HexmapOptions = {
  * @param options HexmapOptions object
  */
 export default function ({
-  bgColour = "none",
-  colourScale = identityColourScale,
-  data,
-  hexjson,
-  hexScale = 1,
-  labelProcessor = (label) => label.slice(0, 3),
-  margin: marginScale = 0.25,
-  labelKey = "",
-  matchKey,
-  popup = ({ label, value }) => `${label}: ${value}`,
-  title = "Hexmap",
-  titleProp = "n",
-  valueProp = "colour",
-  colourValueProp,
-}: HexmapOptions) {
+  config: {
+    bgColour = "none",
+    colourScale = identityColourScale,
+    data,
+    hexjson,
+    hexScale = 1,
+    labelProcessor = (label) => label.slice(0, 3),
+    margin: marginScale = 0.25,
+    labelKey = "",
+    matchKey,
+    popup = ({ label, value }) => `${label}: ${value}`,
+    title = "Hexmap",
+    titleProp = "n",
+    valueProp = "colour",
+    colourValueProp,
+  }
+}: { config: HexmapOptions }) {
   // Capture the layout and hexes from the hexjson
   const layout = hexjson.layout;
   const hexes = clone(hexjson.hexes);

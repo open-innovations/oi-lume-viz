@@ -12,8 +12,9 @@ const site = lume({
 
 site.loadAssets([".css"]);
 
+// TODO(@giles) Make this work in all the places!
 site.use(oiComponents({
-  assetPath: '/assets/oi',
+  assetPath: '/assets',
   componentNamespace: 'oi',
 }));
 site.use(basePath());

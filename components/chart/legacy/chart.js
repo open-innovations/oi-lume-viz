@@ -1,5 +1,4 @@
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
-import { getSeriesDetails } from '../helpers.ts';
 import { Axis } from './axis.js';
 import { Series } from './series.js';
 import { add, svgEl, setAttr, addClasses, qs, roundTo } from './util.js';

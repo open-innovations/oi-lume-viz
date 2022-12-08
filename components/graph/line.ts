@@ -128,7 +128,7 @@ type Padding = {
   right: number;
 };
 
-export default (config: LineChartOptions) => {
+export default ({ config }: {config: LineChartOptions}) => {
   const {
     width = 24,
     height = 18,

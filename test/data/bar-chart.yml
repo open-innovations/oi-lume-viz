@@ -143,22 +143,21 @@
       value: "University"
       colour: "#69C2C9"
       tooltip: "University Label"
-
--
-  stacked: true
-  data:
+# Stacked Bar chart
+- data:
     - Year: 2018
-      u19: 10
+      u19: 150
       19-24: 15
       25+: 20
     - Year: 2019
-      u19: 10
+      u19: 190
       19-24: 35
       25+: 45
     - Year: 2020
-      u19: 10
+      u19: 300
       19-24: 65
       25+: 55
+  stacked: true
   legend:
     show: true     # Default to false
     position: "top right"
@@ -196,3 +195,36 @@
     - title: "25+"
       value: 25+
       colour: "#4A783C"
+# Data as string
+# - data: 'my_test_data'
+#   category: "category"  # Category labels come from 
+#   series:
+#     - title: "Series 1"
+#       value: value
+#   stacked: false
+#   legend:
+#     show: true     # Default to false
+#     position: "top right"
+#   axis:
+#     x:
+#       min: 0
+#       max: 600
+#       grid:
+#         stroke-dasharray: "6 2"
+#         stroke-width: 1
+#       ticks:
+#         - value: 100
+#           label: "100"
+#         - value: 200
+#           label: "200"
+#         - value: 300
+#           label: "300"
+#         - value: 400
+#           label: "400"
+#         - value: 500
+#           label: "500"
+#         - value: 600
+#           label: "600"
+#     y:
+#       grid:
+#         stroke-width: 0.5

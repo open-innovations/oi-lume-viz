@@ -37,3 +37,18 @@ Creates a simple panelled dashboard.
 ### `chart.line`
 
 Creates a line chart.
+
+## Testing
+
+Run a test with the following command. Replace the file path with the tests you want to run.
+If you provide a directory path and Deno will find any test files in the directory and it's sub-directories.
+
+```
+deno test --unstable --allow-read components/chart/bar.test.ts
+```
+
+To make Deno continually run these tests, add the `--watch` flag. This will then run each time the input files change.
+
+```
+deno test --unstable --allow-read --watch components/chart/bar.test.ts
+```
