@@ -1,5 +1,6 @@
 import { renderBarChart } from "./helpers.ts";
 import { SeriesOptions } from "./types.ts";
+import { getAssetPath } from "../../lib/util/paths.ts"
 
 /**
  * Options provided to the Bar Chart
@@ -47,7 +48,7 @@ export default function ({ config }: {
   // Call the bar render function
   const chart = renderBarChart(options);
 
-  return `<div class="chart" data-dependencies="/assets/js/chart.js">${chart}</div>`;
+  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') }">${chart}</div>`;
 }
 
 function banana() {
