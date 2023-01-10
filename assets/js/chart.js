@@ -46,7 +46,7 @@
 		for(p = 0; p < pt.length; p++){
 			s = parseInt(pt[p].getAttribute('data-series'));
 			i = parseInt(pt[p].getAttribute('data-i'));
-			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':pt[p].querySelector('title').innerHTML};
+			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':pt[p].querySelector('title')?.innerHTML};
 			if(!series[s]) series[s] = [];
 			if(!series[s][i]) series[s][i] = pts[p];
 		}
