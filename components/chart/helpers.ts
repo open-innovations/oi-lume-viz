@@ -7,17 +7,24 @@ const arraySum = (array: number[]) => array.reduce((a, b) => a + b, 0);
 const findSmallest = (a: number, v: number[]) => Math.min(a, ...v);
 const findLargest = (a: number, v: number[]) => Math.max(a, ...v);
 
-function calculateRange(config: BarChartOptions) {
-  const values = config.series.map(s => s.value!).map(v => (config.data as Record<string, unknown>[]).map(d => d[v] as number));
+function calculateRange(config: BarChartOptions, tickSize = undefined) {
+  const seriesKeys = config.series.map(s => s.value!);
+  const values = (config.data as Record<string, unknown>[]).map(d => seriesKeys.map(v => d[v] as number));
+
+  const roundToTickSize = (value: number) => {
+    const rounder = value > 0 ? Math.ceil : Math.floor;
+    if (!tickSize) return value;
+    return rounder(value / tickSize) * tickSize;
+  }
   if (config.stacked) {
     return {
-      min: Math.min(...values.map(arraySum), 0),
-      max: Math.max(...values.map(arraySum), 0),
+      min: roundToTickSize(Math.min(...values.map(arraySum), 0)),
+      max: roundToTickSize(Math.max(...values.map(arraySum), 0)),
     }
   }
   return {
-    min: values.reduce(findSmallest, 0),
-    max: values.reduce(findLargest, 0),
+    min: roundToTickSize(values.reduce(findSmallest, 0)),
+    max: roundToTickSize(values.reduce(findLargest, 0)),
   }
 }
 
@@ -41,7 +48,7 @@ function generateTicks(config: AxisOptions): TickOptions[] {
 // Simple wrapper around existing legacy
 export function renderBarChart(config: BarChartOptions) {
   // Auto set range for x axis
-  const range = calculateRange(config);
+  const range = calculateRange(config, config.axis.x.tickSize);
   if (config.axis.x.min === undefined) config.axis.x.min = range.min;
   if (config.axis.x.max === undefined) config.axis.x.max = range.max;
 
