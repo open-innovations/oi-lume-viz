@@ -228,3 +228,23 @@
 #     y:
 #       grid:
 #         stroke-width: 0.5
+
+# Auto scaling
+- data:
+    - category: First category
+      series1: 20
+    - category: Second category
+      series1: 10
+    - category: Third category
+      series1: 45
+    - category: Fourth category
+      series1: 15
+  category: category
+  series:
+    - title: Series One
+      value: series1
+  axis:
+    x:
+      ticks:
+        - value: 0
+          label: Origin

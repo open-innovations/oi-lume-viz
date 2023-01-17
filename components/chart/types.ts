@@ -9,6 +9,13 @@ export interface SeriesOptions {
   errorbars: { stroke?: string; "stroke-width": number };
 }
 
+export interface AxisOptions {
+  /* Minimum number on axis. Defaults to smallest of 0 or minimum value of presented of data. */
+  min: number;
+  /* Maxiumum number on axis. Defaults to largest of 0 or maximum value of presented of data. */
+  max: number;
+}
+
 export interface _InternalSeriesControlStructure extends SeriesOptions {
   x: string;
   y: string;
