@@ -1,6 +1,7 @@
 import { renderBarChart } from "./helpers.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
+import { clone } from "../../lib/util/clone.ts";
 
 /**
  * Options provided to the Bar Chart
@@ -31,19 +32,10 @@ axis: {
     title: {
       label: "Count of articles"
     },
-    "font-weight": "normal",
-    min: 0, max: 450,
     grid: {
       "stroke-dasharray": "2 4",
       "stroke-width": 1
     },
-    ticks: [
-      { label: '0', value: 0, 'font-weight': 'normal' },
-      { label: '100', value: 100, 'font-weight': 'normal' },
-      { label: '200', value: 200, 'font-weight': 'normal' },
-      { label: '300', value: 300, 'font-weight': 'normal' },
-      { label: '400', value: 400, 'font-weight': 'normal' }
-    ]
   },
   y: {
     title: {
@@ -67,9 +59,10 @@ function checkOptions(options: BarChartOptions): void {
   }
 }
 
-export default function ({ config }: {
+export default function (input: {
   config: Partial<BarChartOptions>;
 }): string {
+  const config = clone(input.config);
   // TODO(@giles) make this handle nested data references as as string
   if (typeof config.data === "string") {
     throw new Error("Can't read from a string... yet");

@@ -229,14 +229,14 @@
 #       grid:
 #         stroke-width: 0.5
 
-# Auto scaling
+# Minimal config with auto scaling and auto-ticks
 - data:
     - category: First category
       series1: 20
     - category: Second category
       series1: 10
     - category: Third category
-      series1: 45
+      series1: 43
     - category: Fourth category
       series1: 15
   category: category
@@ -245,6 +245,44 @@
       value: series1
   axis:
     x:
-      ticks:
-        - value: 0
-          label: Origin
+      tickSize: 7.5
+
+
+# Auto scaling stacked Bar chart
+- data:
+    - Year: 2018
+      u19: 150
+      19-24: 15
+      25+: 20
+    - Year: 2019
+      u19: 190
+      19-24: 35
+      25+: 45
+    - Year: 2020
+      u19: 300
+      19-24: 65
+      25+: 55
+  stacked: true
+  legend:
+    show: true     # Default to false
+    position: "top right"
+  axis:
+    x:
+      grid:
+        stroke-dasharray: "6 2"
+        stroke-width: 1
+      tickSize: 100
+    y:
+      grid:
+        stroke-width: 0.5
+  category: "Year"  # Category labels come from 
+  series:
+    - title: "Under 19"
+      value: u19
+      colour: "#69C2C9"
+    - title: "19-24"
+      value: 19-24
+      colour: "#7D2248"
+    - title: "25+"
+      value: 25+
+      colour: "#4A783C"
