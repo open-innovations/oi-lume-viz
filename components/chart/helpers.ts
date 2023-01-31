@@ -7,10 +7,11 @@ const arraySum = (array: number[]) => array.reduce((a, b) => a + b, 0);
 const findSmallest = (a: number, v: number[]) => Math.min(a, ...v);
 const findLargest = (a: number, v: number[]) => Math.max(a, ...v);
 
-function calculateRange(config: BarChartOptions, tickSize = undefined) {
-  const seriesKeys = config.series.map(s => s.value!);
+export function calculateRange(config: Partial<BarChartOptions>, tickSize: number | undefined = undefined) {
+  const seriesKeys = config.series!.map(s => s.value!);
   const values = (config.data as Record<string, unknown>[]).map(d => seriesKeys.map(v => d[v] as number));
 
+  // TODO(@giles) Round up / down is based on whether it's max or min, not above or below zero
   const roundToTickSize = (value: number) => {
     const rounder = value > 0 ? Math.ceil : Math.floor;
     if (!tickSize) return value;
@@ -22,15 +23,17 @@ function calculateRange(config: BarChartOptions, tickSize = undefined) {
       max: roundToTickSize(Math.max(...values.map(arraySum), 0)),
     }
   }
+  // TODO(@giles) use Math.max(...values.flat(), 0) ertc
   return {
     min: roundToTickSize(values.reduce(findSmallest, 0)),
     max: roundToTickSize(values.reduce(findLargest, 0)),
   }
 }
 
-function generateTicks(config: AxisOptions): TickOptions[] {
+export function generateTicks(config: AxisOptions): TickOptions[] {
   const { tickSize } = config;
   if (tickSize === undefined) return [];
+  // If tickSize undefined, set a sensible default based on max and min
   const max = Math.floor(config.max / tickSize) * tickSize;
   const min = Math.floor(config.min / tickSize) * tickSize;
   const tickCount = ((max - min) / tickSize) + 1;

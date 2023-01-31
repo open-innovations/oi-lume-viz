@@ -89,7 +89,3 @@ export default function (input: {
 
   return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') }">${chart}</div>`;
 }
-
-function banana() {
-  throw new Error("Function not implemented.");
-}
