@@ -38,7 +38,6 @@
 		pts = [];
 
 		this.showTooltip = function(e){
-			console.log('showTooltip',e.data,this);
 			el.style.position = 'relative';
 
 			var txt,bb,bbo,fill,hsv,hsl,selected,off;
@@ -49,7 +48,6 @@
 				addClasses(this.tip,['tooltip']);
 				add(this.tip,el);
 			}
-
 			// Set the contents
 			txt = e.data.title;
 
@@ -63,13 +61,12 @@
 			bbo = el.getBoundingClientRect(); // Bounding box of SVG holder
 
 			var typ = svg.getAttribute('data-type');
-			off = 4;
-			//if(typ=="hex-map") off = bb.height/2;
+			off = 4 + (typ=="hex-map") ? (8 + bb.height/2) : 0;
 			
 			this.tip.setAttribute('style','position:absolute;left:'+(bb.left + bb.width/2 - bbo.left).toFixed(2)+'px;top:'+(bb.top + bb.height/2 - bbo.top).toFixed(2)+'px;transform:translate3d(-50%,calc(-100% - '+off+'px),0);display:'+(txt ? 'block':'none')+';');
 			this.tip.querySelector('.inner').style.background = fill;
 			this.tip.querySelector('.arrow').style['border-top-color'] = fill;
-			this.tip.style.color = contrastColour(fill);
+			this.tip.style.color = e.data.label.getAttribute('fill')||"black";
 
 			return this;
 		};
@@ -82,43 +79,15 @@
 			return this;
 		};
 		for(p = 0; p < pt.length; p++){
-			tt = pt[p].querySelector('title')
+			tt = pt[p].parentNode.querySelector('title');
 			pts[p] = {'el':pt[p],'tooltip':(tt ? tt.innerHTML : "")};
-			addEv('mouseover',pt[p],{'this':this,'title':pts[p].tooltip,'el':pt[p]},this.showTooltip);
+			addEv('mouseover',pt[p],{'this':this,'title':pts[p].tooltip,'el':pt[p],'label':pt[p].parentNode.querySelector('text')},this.showTooltip);
 		}
 		addEv('mouseleave',el,{'this':this,'s':''},this.reset);
 
 		return this;
 	}
 
-	function h2d(h) {return parseInt(h,16);}
-	function brightnessIndex(rgb){ return rgb[0]*0.299 + rgb[1]*0.587 + rgb[2]*0.114; }
-	function brightnessDiff(a,b){ return Math.abs(brightnessIndex(a)-brightnessIndex(b)); }
-	function hueDiff(a,b){ return Math.abs(a[0]-b[0]) + Math.abs(a[1]-b[1]) + Math.abs(a[2]-b[2]); }
-	function contrastColour(c){
-		var col,cols,rgb = [];
-		if(c.indexOf('#')==0){
-			rgb = [h2d(c.substring(1,3)),h2d(c.substring(3,5)),h2d(c.substring(5,7))];
-		}else if(c.indexOf('rgb')==0){
-			var bits = c.match(/[0-9\.]+/g);
-			if(bits.length == 4) this.alpha = parseFloat(bits[3]);
-			rgb = [parseInt(bits[0]),parseInt(bits[1]),parseInt(bits[2])];
-		}
-		// Check brightness contrast
-		cols = {'black':{'rgb':[0,0,0]},'white':{'rgb':[255,255,255]}};
-		for(col in cols){
-			cols[col].brightness = brightnessDiff(rgb,cols[col].rgb);
-			cols[col].hue = hueDiff(rgb,cols[col].rgb);
-			cols[col].ok = (cols[col].brightness > 125 && cols[col].hue >= 500);
-		}
-		for(col in cols){
-			if(cols[col].ok) return 'rgb('+cols[col].rgb.join(",")+')';
-		}
-		col = (cols.white.brightness > cols.black.brightness) ? "white" : "black"
-		console.warn('Text contrast not enough for %c'+c+'%c (colour contrast: '+cols[col].brightness.toFixed(1)+'/125, hue contrast: '+cols[col].hue+'/500)','background:'+c+';color:'+col,'background:none;color:inherit;');
-		return col;
-	}
-	root.OI.contrastColour = contrastColour;
 	root.OI.InteractiveSVGMap = function(el){ return new InteractiveSVGMap(el); };
 
 })(window || this);

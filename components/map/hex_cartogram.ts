@@ -1,7 +1,7 @@
 import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
-import { Colour } from "../../lib/colour/colour.ts";
+import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 
 // This is a simple scale which returns the same value it was sent
 // Useful if the hexmap has a colour attribute
@@ -27,12 +27,11 @@ function addTspan(str: string) {
 export const css = `
   .hexmap {
     --hex-bg: none;
-    --hex-fill: #aaaaaa;
     background: var(--hex-bg);
     vector-effect: non-scaling-stroke;
   }
-  .hexmap .hex path {
-    fill: var(--hex-fill);
+  .map.hex-map .tooltip .inner {
+	  padding: 1em;
   }
 }
 `;
@@ -50,7 +49,7 @@ type ColourScaleFunction =
 
 type HexmapOptions = {
   bgColour: string;
-  colourScale: ColourScaleGenerator;
+  colourScale: ColourScaleFunction;
   data?: Record<string, unknown>[];
   hexjson: { layout: string; hexes: Record<string, HexDefinition> };
   hexScale: number;
@@ -114,19 +113,26 @@ export default function ({
       hexes[key] = { ...record, ...hexes[key] };
     });
   }
+  
+  let cs = (typeof colourScale==="string") ? ColourScale(colourScale) : colourScale;
 
   // Find the biggest value in the hex map
-  // TODO(@gilesdring) Check if this works when the valueProp is a number
   const maxValue = Object.values(hexes)
-    .map((h) => parseFloat(<string> h[valueProp]) || 0)
-    .reduce((result, current) => Math.max(result, current), 0);
+    .map((h) => {
+		let v = 0;
+		if(typeof h[valueProp]==="string") v = parseFloat(h[valueProp]);
+		else if(typeof h[valueProp]==="number") v = h[valueProp];
+		return v;
+	}).reduce((result, current) => Math.max(result, current), 0);
 
   const fillColour = (input: number | string) => {
-    // If it's a string, just pass it to the colourScale function
-    if (typeof input === "string") return colourScale(input);
-    // If it's numeric, scale by the maxValue
-    if (typeof input === "number") return colourScale(input / maxValue);
-    // How did we get here???
+
+	if(typeof input==="string") return input;
+	else if(typeof input==="number") input /= maxValue;
+	
+	return cs(input);
+	
+	// How did we get here???
     throw new TypeError("Invalid type provided to fillColour function");
   };
 
@@ -280,26 +286,12 @@ export default function ({
     switch (layout) {
       case "odd-r":
       case "even-r":
-        hexPath = `
-          M ${hexCadence / 2},${-hexSide / 2}
-          v ${hexSide}
-          l ${-hexCadence / 2},${hexSide / 2}
-          l ${-hexCadence / 2},${-hexSide / 2}
-          v ${-hexSide}
-          l ${hexCadence / 2},${-hexSide / 2}
-          Z
+        hexPath = `M ${hexCadence / 2},${-hexSide / 2} v ${hexSide} l ${-hexCadence / 2},${hexSide / 2} l ${-hexCadence / 2},${-hexSide / 2} v ${-hexSide} l ${hexCadence / 2},${-hexSide / 2} Z
         `;
         break;
       case "odd-q":
       case "even-q":
-        hexPath = `
-          M ${-hexSide / 2},${-hexCadence / 2}
-          h ${hexSide}
-          l ${hexSide / 2},${hexCadence / 2}
-          l ${-hexSide / 2},${hexCadence / 2}
-          h ${-hexSide}
-          l ${-hexSide / 2},${-hexCadence / 2}
-          Z
+        hexPath = `M ${-hexSide / 2},${-hexCadence / 2} h ${hexSide} l ${hexSide / 2},${hexCadence / 2} l ${-hexSide / 2},${hexCadence / 2} h ${-hexSide} l ${-hexSide / 2},${-hexCadence / 2} Z
         `;
         break;
       default:
@@ -318,22 +310,20 @@ export default function ({
           role="listitem"
           aria-label="${label} value ${value}"
         >
-        <path
-          style="${fill !== undefined ? `--hex-fill: ${fill}` : ""}"
-          d="${hexPath}"
-        />
+        <path fill="${fill !== undefined ? `${fill}` : "#aaaaaa"}" d="${hexPath}"></path>
         <text
-        style="fill: ${(Colour(fill)).contrast};"
+        fill="${(Colour(fill)).contrast}"
         text-anchor="middle"
           dominant-baseline="middle"
           aria-hidden="true"
           >${labelText}</text>
+		<title>${label}: ${value}</title>
       </g>`;
   };
 
-  return `<svg
+  return `<div class="map hex-map" data-dependencies="/assets/js/svg-map.js"><svg
       id="hexes-${uuid}"
-      class="hexmap"
+      class="hex-map"
       viewBox="
         ${-margin - qWidth / 2} ${-margin - hexSide}
         ${width + qWidth + 2 * margin} ${height + 2 * hexSide + 2 * margin}
@@ -341,12 +331,13 @@ export default function ({
       style="${bgColour ? `--hex-bg: ${bgColour}` : ""}"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
-      data-dependencies="/assets/js/auto-popup.js"
+	  data-type="hex-map"
       role="list"
       aria-labelledby="title-${uuid}"
     >
       <title id="title-${uuid}">${title}.</title>
+	  <g class="data-layer">
       ${Object.values(hexes).map(drawHex).join("")}
-    </svg>
+    </g></svg></div>
   `;
 }

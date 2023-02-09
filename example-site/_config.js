@@ -39,18 +39,9 @@ site.remoteFile('index.md', path.resolve('README.md'));
 site.remoteFile('samples/chart/bar/_data/configs.yml', './test/data/bar-chart.yml');
 
 
-// Add a code block with syntax highlighting
-site.filter('syntaxHighlight', (value, lang = "json", depth = 1) => syntaxHighlight(value,lang,depth));
-function syntaxHighlight(value,lang,depth){
-	let str = "";
-	if(lang == "json" || lang == "js"){
-		str = JSON.stringify(value,{},depth);
-	}else{
-		str = value;
-	}
-	return '<pre><code class="hljs language-'+lang+'">'+str+'</code></pre>';
-}
 site.filter('match', (value, regex) => { const re = new RegExp(regex); return value.match(re); });
+
+
 
 site.use(
   code_highlight({

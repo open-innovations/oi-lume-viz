@@ -21,7 +21,7 @@ layout: layout/base.njk
 
 		<p>This example was made with config:</p>
 
-		{{ config | syntaxHighlight("json",2) | safe }}
+		<pre><code class="hljs language-json">{{ config | dump(2) }}</code></pre>
 	</section>
 {% endfor %}
 

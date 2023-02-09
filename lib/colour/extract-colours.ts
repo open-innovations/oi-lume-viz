@@ -17,7 +17,7 @@ export function extractColours(gradient: string): ColourScaleStop[] {
     let v = Infinity;
     let aspercent = false;
     stops[i].replace(/ (\d+\%?)$/, function (_, p1) {
-      if (p1.contains("%")) aspercent = true;
+      if (p1.match("%")) aspercent = true;
       v = parseFloat(p1);
       return "";
     });
