@@ -112,9 +112,12 @@ a.button:hover, button:hover, button:focus, a.button:focus { background-color: #
 .c14-bg, .c14-bg-hover:hover, .c14-bg:visited { background-color: #F9BC26; color: black; }
 .c12-bg, .on label { background-color: #D60303; color: white; }
 .c12-bg:hover, .c12-bg:focus { background: #444; color: white; }
+.warning { color: rgb(95, 82, 7); background-color: rgb(251, 245, 208); filter: drop-shadow(0px 0px 1px rgb(95, 82, 7)); }
 .padded { padding: 1em; }
 .padded-bottom { padding: 1em; margin-bottom: 1em; }
 .doublepadded { padding: 2em; }
+.spaced { margin-bottom: 1em; }
+.centred { text-align: center; }
 .tallpadded { padding-top: 2em; padding-bottom: 2em; }
 section { padding: 2em 0; }
 
