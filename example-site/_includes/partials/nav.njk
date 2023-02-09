@@ -1,5 +1,6 @@
 <nav>
   <ul>
-    <li><a href="/samples/">Samples</a></li>
+    <li><a href="/" {% if url | match("^/$") %} class="b6-bg"{% endif %}>Home</a></li>
+    <li><a href="/samples/" {% if url | match("^/samples/") %} class="b6-bg"{% endif %}>Samples</a></li>
   </ul>
 </nav>
