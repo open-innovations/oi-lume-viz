@@ -4,13 +4,24 @@ layout: layout/base.njk
 
 <h1>{{ title }}</h1>
 
+{% if configs | length > 1 %}
+<ol>
+{% for config in configs %}
+<li><a href="#example-{{ loop.index }}">Example {{ loop.index }}</a></li>
+{% endfor %}
+</ol>
+{% endif %}
+
 {{ content | safe }}
 
 {% for config in configs %}
-  {% comp 'oi.' + component, { "config": config } %}{% endcomp %}
+	<section id="example-{{ loop.index }}">
+		<h2>Example {% if configs | length > 1 %}{{ loop.index }}{% endif %}</h2>
+		{% comp 'oi.' + component, { "config": config } %}{% endcomp %}
 
-  <p>This example was made with config:</p>
+		<p>This example was made with config:</p>
 
-  {{ config | syntaxHighlight("json",2) | safe }}
+		{{ config | syntaxHighlight("json",2) | safe }}
+	</section>
 {% endfor %}
 
