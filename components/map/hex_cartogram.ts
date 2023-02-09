@@ -25,7 +25,7 @@ function addTspan(str: string) {
  * Hexmap styles
  */
 export const css = `
-  .map .tooltip { margin-top: -0.75em; transition: left 0.03s linear; }
+  .map .tooltip { margin-top: -0.75em; transition: left 0.03s linear; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }
   .map .tooltip .inner { padding: 1em; }
 }
 `;
