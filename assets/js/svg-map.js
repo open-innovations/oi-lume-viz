@@ -61,7 +61,7 @@
 			bbo = el.getBoundingClientRect(); // Bounding box of SVG holder
 
 			var typ = svg.getAttribute('data-type');
-			off = 4 + (typ=="hex-map") ? (8 + bb.height/2) : 0;
+			off = (typ=="hex-map") ? (bb.height/2) : 4;
 			
 			this.tip.setAttribute('style','position:absolute;left:'+(bb.left + bb.width/2 - bbo.left).toFixed(2)+'px;top:'+(bb.top + bb.height/2 - bbo.top).toFixed(2)+'px;transform:translate3d(-50%,calc(-100% - '+off+'px),0);display:'+(txt ? 'block':'none')+';');
 			this.tip.querySelector('.inner').style.background = fill;

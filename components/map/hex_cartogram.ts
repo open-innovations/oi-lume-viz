@@ -25,14 +25,8 @@ function addTspan(str: string) {
  * Hexmap styles
  */
 export const css = `
-  .hexmap {
-    --hex-bg: none;
-    background: var(--hex-bg);
-    vector-effect: non-scaling-stroke;
-  }
-  .map.hex-map .tooltip .inner {
-	  padding: 1em;
-  }
+  .map .tooltip { margin-top: -0.75em; transition: left 0.03s linear; }
+  .map .tooltip .inner { padding: 1em; }
 }
 `;
 
@@ -328,11 +322,12 @@ export default function ({
         ${-margin - qWidth / 2} ${-margin - hexSide}
         ${width + qWidth + 2 * margin} ${height + 2 * hexSide + 2 * margin}
       "
-      style="${bgColour ? `--hex-bg: ${bgColour}` : ""}"
+      style="${bgColour ? `background: ${bgColour}` : ""}"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
 	  data-type="hex-map"
       role="list"
+	  vector-effect="non-scaling-stroke"
       aria-labelledby="title-${uuid}"
     >
       <title id="title-${uuid}">${title}.</title>
