@@ -27,6 +27,35 @@
         E06000014: { n: York, colour: "#F92626", q: 0, r: 1 }
     titleProp: n
     valueProp: colour
+- title: "Hexes with defined colours - external data"
+  config:
+    hexjson:
+      layout: odd-r
+      hexes:
+        E08000016: { n: Barnsley, q: 0, r: -2 }
+        E08000032: { n: Bradford, q: -1, r: 0 }
+        E08000033: { n: Calderdale, q: -2, r: -1 }
+        E07000163: { n: Craven, q: -2, r: 1 }
+        E07000165: { n: Harrogate, q: -1, r: 1 }
+        E08000034: { n: Kirklees, q: -1, r: -1 }
+        E08000035: { n: Leeds, q: 0, r: 0 }
+        E07000169: { n: Selby, q: 1, r: 0 }
+        E08000036: { n: Wakefield, q: 0, r: -1 }
+        E06000014: { n: York, q: 0, r: 1 }
+    data:
+      - { code: "E08000016", colour: "#E6007C" }
+      - { code: "E08000032", colour: "#FF6700" }
+      - { code: "E08000033", colour: "#0DBC37" }
+      - { code: "E07000163", colour: "#178CFF" }
+      - { code: "E07000165", colour: "#2f529f" }
+      - { code: "E08000034", colour: "#722EA5" }
+      - { code: "E08000035", colour: "#F9BC26" }
+      - { code: "E07000169", colour: "#1DD3A7" }
+      - { code: "E08000036", colour: "#EF3AAB" }
+      - { code: "E06000014", colour: "#F92626" }
+    matchKey: code
+    titleProp: n
+    valueProp: colour
 - title: "Hexes coloured by a colour scale"
   config:
     hexjson:
