@@ -68,10 +68,10 @@ type HexmapOptions = {
   data?: Record<string, unknown>[];
   hexjson: { layout: string; hexes: Record<string, HexDefinition> };
   hexScale: number;
-  label?: string | number;
+  label?: string;
+  popup?: string;
   margin: number;
   matchKey?: string;
-  popup: (params: Record<string, string | number>) => string;
   title?: string;
   titleProp: string;
   valueProp: string;
@@ -95,9 +95,9 @@ export default function ({
     hexjson,
     hexScale = 1,
     margin: marginScale = 0.25,
-    label = -1,
+    label = (key: string) => key.slice(0,3),
     matchKey,
-    popup = ({ label, value }) => `${label}: ${value}`,
+    popup = (label: string, value) => `${label}: ${value}`,
     title = "Hexmap",
     titleProp = "n",
     valueProp = "colour",
@@ -119,19 +119,29 @@ export default function ({
   
 	let labelProcessor = function(props,key){
 		var txt = key;
+		// See if this is just a straightforward key
 		if(typeof props[key]==="string") txt = props[key];
 
-		if(typeof label==="string"){
-			if(label){
-				// Process replacement filters 
-				txt = applyReplacementFilters(txt,props);
-			}else{
-				// The label is empty so keep it that way
-				txt = "";
-			}
+		if(label){
+			// Process replacement filters 
+			txt = applyReplacementFilters(txt,props);
 		}else{
-			// The default behaviour is to return the first three characters
-			txt = txt.slice(0,3);
+			// The label is empty so keep it that way
+			txt = "";
+		}
+		return txt;
+	}
+	let popupProcessor = function(props,key){
+		var txt = key;
+		// See if this is just a straightforward key
+		if(typeof props[key]==="string") txt = props[key];
+
+		if(popup){
+			// Process replacement filters 
+			txt = applyReplacementFilters(txt,props);
+		}else{
+			// The label is empty so keep it that way
+			txt = "";
 		}
 		return txt;
 	}
@@ -307,11 +317,12 @@ export default function ({
   const drawHex = (config: HexDefinition) => {
     const hexId = hexCounter();
     const { x, y } = getCentre(config);
+    const value = <number> config[valueProp] || 0;
 
     const labelProp = <string> config[titleProp];
-    let labelText = labelProcessor(config,<string> (typeof label==="number" ? titleProp : label));
+    let labelText = labelProcessor(config,<string> (typeof label==="function" ? label(labelProp) : label));
+    let popupText = popupProcessor(config,<string> (typeof popup==="function" ? popup(labelProp, value) : popup));
 
-    const value = <number> config[valueProp] || 0;
     const colourValue =
       <number | string> config[colourValueProp || valueProp] || value;
 
@@ -333,13 +344,13 @@ export default function ({
     }
     // TODO(@giles) Work out what the heck is going on!
     const fill = fillColour(colourValue as never);
-
+	
     // TODO(@gilesdring) this only supports pointy-top hexes at the moment
     return `<g
           id="${uuid}-hex-${hexId}"
           class="hex"
           transform="translate(${x} ${y})"
-          data-auto-popup="${popup({ label, value })}"
+          data-auto-popup="$popupText"
           data-value="${value}"
           role="listitem"
           aria-label="${labelProp} value ${value}"
@@ -351,7 +362,7 @@ export default function ({
           dominant-baseline="middle"
           aria-hidden="true"
           >${labelText}</text>
-		<title>${labelProp}: ${value}</title>
+		<title>${popupText}</title>
       </g>`;
   };
 
