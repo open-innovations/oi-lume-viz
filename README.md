@@ -9,7 +9,7 @@ efficiency, and maintainability benefits, whilst giving us a framework
 To support some of the more complex visualisations we undertake, we've encapsulated a number of our charting
 libraries in this
 
-To use this in your Lume project, include the following in yout Lume `_config.js` or `_config.ts` file.
+To use this in your Lume project, include the following in your Lume `_config.js` or `_config.ts` file.
 *WARNING*! This is strictly a pre-release version, and interfaces are very likely to change.
 
 ```js
