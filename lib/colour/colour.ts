@@ -36,8 +36,8 @@ export function Colour(str: string) {
     "white": { "rgb": [255, 255, 255] },
   };
   for (const col in cols) {
-    cols[col].brightness = brightnessDiff(rgb, cols[col].rgb);
-    cols[col].hue = hueDiff(rgb, cols[col].rgb);
+    cols[col].brightness = brightnessDiff(rgb as [number, number, number], cols[col].rgb as [number, number, number]);
+    cols[col].hue = hueDiff(rgb as [number, number, number], cols[col].rgb as [number, number, number]);
     cols[col].ok = <number> cols[col].brightness > 125 &&
       <number> cols[col].hue >= 500;
   }
