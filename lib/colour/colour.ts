@@ -1,4 +1,4 @@
-import { brightnessDiff, hueDiff } from "./contrast.ts";
+import { contrastRatio } from "./contrast.ts";
 import { parseColourString } from "./parse-colour-string.ts";
 import { Colour } from "./types.ts";
 
@@ -27,26 +27,22 @@ export function Colour(str: string) {
     [name: string]:
       & Pick<Colour, "rgb">
       & {
-        brightness?: number;
-        hue?: number;
-        ok?: boolean;
+        contrast?: number;
       };
   } = {
     "black": { "rgb": [0, 0, 0] },
     "white": { "rgb": [255, 255, 255] },
   };
+  let maxRatio = 0;
   for (const col in cols) {
-    cols[col].brightness = brightnessDiff(rgb as [number, number, number], cols[col].rgb as [number, number, number]);
-    cols[col].hue = hueDiff(rgb as [number, number, number], cols[col].rgb as [number, number, number]);
-    cols[col].ok = <number> cols[col].brightness > 125 &&
-      <number> cols[col].hue >= 500;
+	  let contr = <number> contrastRatio(rgb as [number, number, number], cols[col].rgb as [number, number, number]);
+	  if(contr > maxRatio){
+		  maxRatio = contr;
+		  contrast = col;
+	  }
   }
-  for (const col in cols) {
-    if (cols[col].ok) contrast = "rgb(" + cols[col].rgb.join(",") + ")";
-  }
-  contrast = (<number> cols.white.brightness > <number> cols.black.brightness)
-    ? "white"
-    : "black";
 
   return { rgb, hex, hsl, contrast } as Colour;
 }
+
+
