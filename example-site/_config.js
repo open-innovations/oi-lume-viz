@@ -2,6 +2,7 @@ import * as path from 'std/path/mod.ts';
 import lume from "lume/mod.ts";
 import basePath from "lume/plugins/base_path.ts";
 import oiComponents from '../mod.ts';
+import { stringify as yamlStringify } from 'std/encoding/yaml.ts';
 
 // Code highlighting
 import code_highlight from "lume/plugins/code_highlight.ts";
@@ -36,9 +37,10 @@ console.log(path.resolve('README.md'));
 site.remoteFile('index.md', path.resolve('README.md'));
 
 // Map test data to local site
-site.remoteFile('samples/chart/bar/_data/configs.yml', './test/data/bar-chart.yml');
+site.remoteFile('samples/chart/bar/_data/examples.yml', './test/data/bar-chart.yml');
 
-
+// Add filters
+site.filter('yaml', (value, options = {}) => yamlStringify(value, options));
 site.filter('match', (value, regex) => { const re = new RegExp(regex); return value.match(re); });
 
 

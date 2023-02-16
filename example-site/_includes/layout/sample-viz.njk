@@ -4,24 +4,28 @@ layout: layout/base.njk
 
 <h1>{{ title }}</h1>
 
-{% if configs | length > 1 %}
+{% if examples | length > 1 %}
 <ol>
-{% for config in configs %}
-<li><a href="#example-{{ loop.index }}">Example {{ loop.index }}</a></li>
+{% for example in examples %}
+	<li><a href="#example-{{ loop.index }}">{% if example.title %}{{ example.title }}{% else %}Example {{ loop.index }}{% endif %}</a></li>
 {% endfor %}
 </ol>
 {% endif %}
 
 {{ content | safe }}
 
-{% for config in configs %}
+{% for example in examples %}
 	<section id="example-{{ loop.index }}">
-		<h2>Example {% if configs | length > 1 %}{{ loop.index }}{% endif %}</h2>
-		{% comp 'oi.' + component, { "config": config } %}{% endcomp %}
+		<h2>{% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}</h2>
+		{% if example.description %}
+		<p>{{ example.description | safe }}</p>
+		{% endif %}
+		{% if example.config %}
+		{% comp 'oi.' + component, { "config": example.config } %}{% endcomp %}
 
 		<p>This example was made with config:</p>
 
-		<pre><code class="hljs language-json">{{ config | dump(2) }}</code></pre>
+		<pre><code class="hljs language-yaml">{{ example.config | yaml }}</code></pre>
+		{% endif %}
 	</section>
 {% endfor %}
-

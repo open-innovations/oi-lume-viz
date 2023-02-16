@@ -2,30 +2,75 @@
 title: Dashboard
 component: dashboard
 layout: layout/sample-viz.njk
-configs:
-  - title: name
-    value: numeric
-    units:
-      prefix: pre
-      postfix: post
-    note: footnote
-    data:
-      - name: Panel 1
-        numeric: 10
-        post: k
-        pre: $
-      - name: Panel 2
-        numeric: 20
-        post: " dB"
-        footnote: "This is very quiet"
-    panels:
-      - name: Panel 1
-        class: plum
-        colour: red
-      - name: Panel 2
-        class: cyan
-        scale: Viridis
-        min: 10
-        max: 25
+examples:
+  - title: "Four panels"
+    description: |
+      This example shows four panels. Some panels have prefixes or postfixes around the values. We only show panels for specified items in the data. The order of <code>panels</code> is the order they will appear on the page and doesn't have to match the order in the <code>data</code>.
+    config:
+      title: Title
+      value: Value
+      note: Footnote
+      width: 250px
+      data:
+        - Title: "Thing 1"
+          Value: 15
+          Footnote: "A note"
+          Post: "%"
+        - Title: "Thing 2"
+          Value: 132
+        - Title: "Thing 3"
+          Value: 19
+          Footnote: "2019"
+        - Title: "Thing 4"
+          Value: 90
+          Footnote: "Jan 2021"
+          Pre: "£"
+          Post: "k"
+        - Title: "Thing 5"
+          Value: 56.4
+          Footnote: Test
+          Post: "%"
+      units:
+        prefix: Pre
+        postfix: Post
+      panels:
+        - name: "Thing 1"
+          colour: "#722EA5"
+        - name: "Thing 3"
+          colour: "#0DBC37"
+        - name: "Thing 2"
+          colour: "#F9BC26"
+        - name: "Thing 4"
+          colour: "#08DEF9"
+  - title: "Simple example"
+    description: |
+      An example of 
+    config:
+      title: name
+      value: numeric
+      units:
+        prefix: pre
+        postfix: post
+      note: footnote
+      data:
+        - name: Panel 1
+          numeric: 10
+          post: "&thinsp;dB"
+        - name: Panel 2
+          numeric: 20
+          post: "&thinsp;dB"
+          footnote: "This is very quiet"
+      panels:
+        - name: Panel 1
+          class: plum
+          scale: Viridis
+          min: 10
+          max: 25
+        - name: Panel 2
+          class: cyan
+          scale: Viridis
+          min: 10
+          max: 25
+
 ---
 
