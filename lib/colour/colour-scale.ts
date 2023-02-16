@@ -70,7 +70,7 @@ export function ColourScale(gradient: string): ColourScale {
     }
 
     return "rgba(" + cfinal.r + "," + cfinal.g + "," + cfinal.b + "," +
-      cfinal.alpha + ")";
+      (typeof cfinal.alpha==="number" ? cfinal.alpha : 1) + ")";
   }
   getColour.orig = gradient;
   getColour.gradient = "background: -moz-linear-gradient(left, " + gradient +

@@ -1,3 +1,4 @@
+import { applyReplacementFilters } from "../../lib/util.js";
 import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
@@ -25,8 +26,26 @@ function addTspan(str: string) {
  * Hexmap styles
  */
 export const css = `
-  .map .tooltip { margin-top: -0.75em; transition: left 0.03s linear; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }
-  .map .tooltip .inner { padding: 1em; }
+	.map { position: relative; }
+	.map .tooltip { margin-top: -0.75em; transition: left 0.03s linear; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }
+	.map .tooltip .inner { padding: 1em; }
+	.map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: #e2e2e2; position: relative; }
+	.map .leaflet a { background-image: none!important; color: inherit!important; }
+	.map .legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
+	.map .legend .legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
+	.map .legend i { width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
+	.map .leaflet-popup-content-wrapper { border-radius: 0; }
+	.map .leaflet-popup-content { margin: 1em; }
+	.map .leaflet-container, .map .leaflet-popup-content-wrapper, .map .leaflet-popup-content { font-size: 1em; font-family: "CenturyGothicStd", "Century Gothic", Helvetica, sans-serif; line-height: inherit; }
+	.map .leaflet-popup-content-wrapper, .map .leaflet-popup-tip { box-shadow: none; }
+	.map .leaflet-popup { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.7)); }
+	.map .leaflet-container a.leaflet-popup-close-button { color: inherit; }
+	.map .leaflet-control { z-index: 400; }
+	.map .leaflet-top, .leaflet-bottom { position: absolute; z-index: 400; pointer-events: none; }
+	.leaflet-top { top: 0; }
+	.leaflet-right { right: 0; }
+	.leaflet-bottom { bottom: 0; }
+	.leaflet-left { left: 0; }
 }
 `;
 
@@ -43,12 +62,13 @@ type ColourScaleFunction =
 
 type HexmapOptions = {
   bgColour: string;
-  colourScale: ColourScaleFunction;
+  scale: ColourScaleFunction;
+  min: number;
+  max: number;
   data?: Record<string, unknown>[];
   hexjson: { layout: string; hexes: Record<string, HexDefinition> };
   hexScale: number;
-  labelProcessor: (label: string) => string;
-  labelKey?: string;
+  label?: string | number;
   margin: number;
   matchKey?: string;
   popup: (params: Record<string, string | number>) => string;
@@ -56,6 +76,7 @@ type HexmapOptions = {
   titleProp: string;
   valueProp: string;
   colourValueProp?: string;
+  legend: { position: string; items: Record<number, string> };
 };
 
 // TODO(@gilesdring) set hex to something close to rems
@@ -67,19 +88,21 @@ type HexmapOptions = {
 export default function ({
   config: {
     bgColour = "none",
-    colourScale = identityColourScale,
+    scale = identityColourScale,
+	min = 0,
+	max,
     data,
     hexjson,
     hexScale = 1,
-    labelProcessor = (label) => label.slice(0, 3),
     margin: marginScale = 0.25,
-    labelKey = "",
+    label = -1,
     matchKey,
     popup = ({ label, value }) => `${label}: ${value}`,
     title = "Hexmap",
     titleProp = "n",
     valueProp = "colour",
     colourValueProp,
+	legend,
   }
 }: { config: HexmapOptions }) {
   // Capture the layout and hexes from the hexjson
@@ -93,6 +116,25 @@ export default function ({
 
   // Generate a UUID to identify the hexes
   const uuid = crypto.randomUUID();
+  
+	let labelProcessor = function(props,key){
+		var txt = key;
+		if(typeof props[key]==="string") txt = props[key];
+
+		if(typeof label==="string"){
+			if(label){
+				// Process replacement filters 
+				txt = applyReplacementFilters(txt,props);
+			}else{
+				// The label is empty so keep it that way
+				txt = "";
+			}
+		}else{
+			// The default behaviour is to return the first three characters
+			txt = txt.slice(0,3);
+		}
+		return txt;
+	}
 
   // Merge data into hexes
   // If the matchKey and data are defined
@@ -108,21 +150,22 @@ export default function ({
     });
   }
   
-  let cs = (typeof colourScale==="string") ? ColourScale(colourScale) : colourScale;
+  let cs = (typeof scale==="string") ? ColourScale(scale) : scale;
 
-  // Find the biggest value in the hex map
-  const maxValue = Object.values(hexes)
-    .map((h) => {
+  if(typeof max!=="number"){
+	// Find the biggest value in the hex map
+	const max = Object.values(hexes).map((h) => {
 		let v = 0;
 		if(typeof h[valueProp]==="string") v = parseFloat(h[valueProp]);
 		else if(typeof h[valueProp]==="number") v = h[valueProp];
 		return v;
 	}).reduce((result, current) => Math.max(result, current), 0);
+  }
 
   const fillColour = (input: number | string) => {
 
 	if(typeof input==="string") return input;
-	else if(typeof input==="number") input /= maxValue;
+	else if(typeof input==="number") input = (input - min)/(max - min);
 	
 	return cs(input);
 	
@@ -265,11 +308,8 @@ export default function ({
     const hexId = hexCounter();
     const { x, y } = getCentre(config);
 
-    const label = <string> config[titleProp];
-    let labelText = labelProcessor(label);
-    if (labelKey != "" && typeof config[labelKey] === "string") {
-      labelText = addTspan(config[labelKey] as string);
-    }
+    const labelProp = <string> config[titleProp];
+    let labelText = labelProcessor(config,<string> (typeof label==="number" ? titleProp : label));
 
     const value = <number> config[valueProp] || 0;
     const colourValue =
@@ -302,7 +342,7 @@ export default function ({
           data-auto-popup="${popup({ label, value })}"
           data-value="${value}"
           role="listitem"
-          aria-label="${label} value ${value}"
+          aria-label="${labelProp} value ${value}"
         >
         <path fill="${fill !== undefined ? `${fill}` : "#aaaaaa"}" d="${hexPath}"></path>
         <text
@@ -311,10 +351,29 @@ export default function ({
           dominant-baseline="middle"
           aria-hidden="true"
           >${labelText}</text>
-		<title>${label}: ${value}</title>
+		<title>${labelProp}: ${value}</title>
       </g>`;
   };
 
+  // Make the legend here
+  let legendDiv = '';
+  if(legend){
+	  let position = legend.position||"bottom right";
+	  position = position.replace(/(^| )/g,function(m,p1){ return p1+'leaflet-'; });
+	  legendDiv = '<div class="'+position+'">';
+	  var l = '<div class="legend leaflet-control">';
+	  if(typeof legend.title==="string") l += '<h3>'+legend.title+'</h3>';
+	  if(legend.items){
+		  for(var i = 0; i < legend.items.length; i++){
+			  l += '<div class="legend-item"><i style="background:'+fillColour(legend.items[i].value)+'" title="'+legend.items[i].value+'"></i> ' + legend.items[i].label + '</div>';
+		  }
+	  }
+	  l += '</div>';
+	  legendDiv += l+'</div>';
+  }
+
+
+  // Return the HTML fragment for the visualisation that includes the dependencies and contains the SVG
   return `<div class="map hex-map" data-dependencies="/assets/js/svg-map.js"><svg
       id="hexes-${uuid}"
       class="hex-map"
@@ -333,6 +392,6 @@ export default function ({
       <title id="title-${uuid}">${title}.</title>
 	  <g class="data-layer">
       ${Object.values(hexes).map(drawHex).join("")}
-    </g></svg></div>
+    </g></svg>${legendDiv}</div>
   `;
 }

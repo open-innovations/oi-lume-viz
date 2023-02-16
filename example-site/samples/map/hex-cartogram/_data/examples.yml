@@ -1,7 +1,7 @@
 # hexjson: { layout: string; hexes: Record<string, HexDefinition> };
 # data?: Record<string, unknown>[];
 # bgColour: string;
-# colourScale: (value: number) => string;
+# scale: (value: number) => string;
 # hexScale: number;
 # labelProcessor: (label: string) => string;
 # margin: number;
@@ -11,6 +11,8 @@
 # titleProp: string;
 # valueProp: string;
 - title: "Hexes with defined colours"
+  description: |
+    A very simple hex cartogram. The default hex labels are applied (the first three characters of the name).
   config:
     hexjson:
       layout: odd-r
@@ -28,6 +30,8 @@
     titleProp: n
     valueProp: colour
 - title: "Hexes with defined colours - external data"
+  description: |
+    This is the same as the previous example except we pass a <code>data</code> array which sets properties for each hex. <code>matchKey</code> is used to match the key in <code>hexjson&rarr;hexes</code> with the required key in a <code>data</code> array item. We also customise the label for each hex to be the first letter.
   config:
     hexjson:
       layout: odd-r
@@ -55,8 +59,10 @@
       - { code: "E06000014", colour: "#F92626" }
     matchKey: code
     titleProp: n
+    label: "{{ n | slice(0,1) }}"
     valueProp: colour
 - title: "Hexes coloured by a colour scale"
+  description: "The same hex layout as above but this time we colour the hexes by a defined <code>scale</code> with an optional <code>min</code> and <code>max</code>. We also define a <code>legend</code> with 5 levels - three of the levels are given labels."
   config:
     hexjson:
       layout: odd-r
@@ -72,9 +78,55 @@
         E08000036: { n: Wakefield, v: 9, q: 0, r: -1 }
         E06000014: { n: York, v: 10, q: 0, r: 1 }
     valueProp: v
-    colourScale: "rgb(122, 76, 139) 0%, rgb(124, 109, 168) 12.5%, rgb(115, 138, 177) 25%, rgb(107, 164, 178) 37.5%, rgb(104, 188, 170) 50%, rgb(133, 211, 146) 62.5%, rgb(189, 229, 97) 75%, rgb(254, 240, 65) 87.5%, rgb(254, 240, 65) 100%"
+    scale: "rgb(122, 76, 139) 0%, rgb(124, 109, 168) 12.5%, rgb(115, 138, 177) 25%, rgb(107, 164, 178) 37.5%, rgb(104, 188, 170) 50%, rgb(133, 211, 146) 62.5%, rgb(189, 229, 97) 75%, rgb(254, 240, 65) 87.5%, rgb(254, 240, 65) 100%"
+    min: 0
+    max: 10
+    legend:
+      position: "top right"
+      items:
+        - value: 10
+          label: "10"
+        - value: 7.5
+          label: ''
+        - value: 5
+          label: '5'
+        - value: 2.5
+          label: ''
+        - value: 0
+          label: '0'
 - title: "Big map"
+  description: |
+    This is a large map showing local authorities coloured by region. We provide a key with a title and an entry for each region. Each individual hex <code>label</code> is explicitly set to be an empty string.
   config:
+    label: ""
+    legend:
+      title: "Key"
+      position: "top right"
+      items:
+        - value: "#FF6700"
+          label: "East Anglia"
+        - value: "#00B6FF"
+          label: "East Midlands"
+        - value: "#D73058"
+          label: "London"
+        - value: "#D60303"
+          label: "North East"
+        - value: "#1DD3A7"
+          label: "North West"
+        - value: "#722EA5"
+          label: "Northern Ireland"
+        - value: "#2254F4"
+          label: "Scotland"
+        - value: "#67E767"
+          label: "South East"
+        - value: "#178CFF"
+          label: "South West"
+        - value: "#F9BC26"
+          label: "Yorkshire and the Humber"
+        - value: "#0DBC37"
+          label: "Wales"
+        - value: "#E6007C"
+          label: "West Midlands"
     hexjson:
       layout: odd-r
       hexes:
@@ -452,5 +504,6 @@
         W06000021: {n: Monmouthshire, lad19nmw: Sir Fynwy, q: -1, r: 8, region: W92000004, colour: "#0DBC37"}
         W06000022: {n: Newport, lad19nmw: Casnewydd, q: -1, r: 5, region: W92000004, colour: "#0DBC37"}
         W06000023: {n: Powys, lad19nmw: Powys, q: -1, r: 9, region: W92000004, colour: "#0DBC37"}
-  titleProp: n
-  valueProp: colour
+    titleProp: n
+    valueProp: colour
+
