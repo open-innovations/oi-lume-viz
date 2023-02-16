@@ -100,7 +100,7 @@
     This is a large map showing local authorities coloured by region. We provide a key with a title and an entry for each region. Each individual hex <code>label</code> is explicitly set to be an empty string.
   config:
     label: ""
-    popup: "{{ n }}<br />{{ region }}"
+    popup: "{{ n }}<br />{{ _id }}"
     legend:
       title: "Key"
       position: "top right"

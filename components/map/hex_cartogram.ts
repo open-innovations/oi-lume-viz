@@ -160,6 +160,11 @@ export default function ({
     });
   }
   
+  // Add IDs to hexes
+  for(var key in hexes){
+  	  hexes[key]["_id"] = key;
+  }
+  
   let cs = (typeof scale==="string") ? ColourScale(scale) : scale;
 
   if(typeof max!=="number"){
@@ -320,8 +325,8 @@ export default function ({
     const value = <number> config[valueProp] || 0;
 
     const labelProp = <string> config[titleProp];
-    let labelText = labelProcessor(config,<string> (typeof label==="function" ? label(labelProp) : label));
-    let popupText = popupProcessor(config,<string> (typeof popup==="function" ? popup(labelProp, value) : popup));
+    let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
+    let popupText = popupProcessor(config, <string> (typeof popup==="function" ? popup(labelProp, value) : popup));
 
     const colourValue =
       <number | string> config[colourValueProp || valueProp] || value;
