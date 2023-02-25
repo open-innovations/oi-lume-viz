@@ -1,4 +1,4 @@
-import { renderBarChart } from "./helpers.ts";
+import { renderBarChart, resolveData } from "./helpers.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
@@ -17,7 +17,7 @@ export interface BarChartOptions {
   /** Whether the bar chart is stacked or not */
   stacked: boolean;
   /** Data provided to the chart is expected to be an array of objects (mandatory) */
-  data: { [property: number]: unknown }[] | string;
+  data: Record<string, unknown>[] | string;
   /** Name of the category (mandatory) */
   category: string;
   /** Configuration of each of the series (mandatory) */
@@ -70,9 +70,11 @@ export default function (input: {
   config: Partial<BarChartOptions>;
 }): string {
   const config = clone(input.config);
-  // TODO(@giles) make this handle nested data references as as string
+  
+  // If the data parameter is a string, resolve it from the input to this function
+  // Lume components have access to entire build context (as do pages).
   if (typeof config.data === "string") {
-    throw new Error("Can't read from a string... yet");
+    config.data = resolveData(config.data, input) as Record<string, unknown>[];
   }
 
   // We can optionally set defaults in this

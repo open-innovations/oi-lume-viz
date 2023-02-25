@@ -199,39 +199,6 @@
       - title: "25+"
         value: 25+
         colour: "#4A783C"
-# Data as string
-# - data: 'my_test_data'
-#   category: "category"  # Category labels come from 
-#   series:
-#     - title: "Series 1"
-#       value: value
-#   stacked: false
-#   legend:
-#     show: true     # Default to false
-#     position: "top right"
-#   axis:
-#     x:
-#       min: 0
-#       max: 600
-#       grid:
-#         stroke-dasharray: "6 2"
-#         stroke-width: 1
-#       ticks:
-#         - value: 100
-#           label: "100"
-#         - value: 200
-#           label: "200"
-#         - value: 300
-#           label: "300"
-#         - value: 400
-#           label: "400"
-#         - value: 500
-#           label: "500"
-#         - value: 600
-#           label: "600"
-#     y:
-#       grid:
-#         stroke-width: 0.5
 
 - title: "Minimal config with auto scaling and auto-ticks"
   config:
@@ -251,7 +218,6 @@
     axis:
       x:
         tickSize: 7.5
-
 
 - title: "Auto scaling stacked bar chart"
   config:
@@ -292,3 +258,21 @@
       - title: "25+"
         value: 25+
         colour: "#4A783C"
+
+- title: Data as string
+  config: 
+    data: test.data.bar
+    category: category  # Category labels come from 
+    series:
+      - title: Test values
+        value: value
+    stacked: false
+    legend:
+      show: true
+      position: top right
+    axis:
+      x:
+        tickSize: 10
+      y:
+        grid:
+          stroke-width: 0.5
