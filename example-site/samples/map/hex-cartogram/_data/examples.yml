@@ -509,3 +509,27 @@
     titleProp: n
     valueProp: colour
 
+- title: Hexes with defined colours - external hexes
+  config:
+    hexjson: hexjson.yorks
+    data:
+      - { code: "E08000016", colour: "#E6007C" }
+      - { code: "E08000032", colour: "#FF6700" }
+      - { code: "E08000033", colour: "#0DBC37" }
+      - { code: "E07000163", colour: "#178CFF" }
+      - { code: "E07000165", colour: "#2f529f" }
+      - { code: "E08000034", colour: "#722EA5" }
+      - { code: "E08000035", colour: "#F9BC26" }
+      - { code: "E07000169", colour: "#1DD3A7" }
+      - { code: "E08000036", colour: "#EF3AAB" }
+      - { code: "E06000014", colour: "#F92626" }
+    matchKey: code
+    titleProp: n
+    valueProp: colour
+- title: Hexes with defined colours - external hexes and data
+  config:
+    hexjson: hexjson.yorks
+    data: test.data.hex_yorks
+    matchKey: code
+    titleProp: n
+    valueProp: colour

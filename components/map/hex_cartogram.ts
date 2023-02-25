@@ -3,6 +3,7 @@ import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
+import { resolveData } from "../chart/helpers.ts";
 
 // This is a simple scale which returns the same value it was sent
 // Useful if the hexmap has a colour attribute
@@ -85,26 +86,44 @@ type HexmapOptions = {
  *
  * @param options HexmapOptions object
  */
-export default function ({
-  config: {
+export default function (input: { config: HexmapOptions }) {
+
+  // Take a copy of parameters, with defaults.
+  const {
     bgColour = "none",
     scale = identityColourScale,
-	min = 0,
-	max,
-    data,
-    hexjson,
+    min = 0,
+    max,
+    data: originalData,
+    hexjson: originalHexjson,
     hexScale = 1,
     margin: marginScale = 0.25,
-    label = (key: string) => key.slice(0,3),
+    label = (key: string) => key.slice(0, 3),
     matchKey,
     popup = (label: string, value) => `${label}: ${value}`,
     title = "Hexmap",
     titleProp = "n",
     valueProp = "colour",
     colourValueProp,
-	legend,
+    legend,
+  } = clone(input.config);
+    
+  // Handle hexjson / data as string references
+  // Resolve hexjson if this is a string
+  let hexjson = clone(originalHexjson);
+  if (typeof hexjson === 'string') {
+    hexjson = resolveData(hexjson, input) as HexJson;
   }
-}: { config: HexmapOptions }) {
+  
+  // Resolve data if this is a string
+  let data = originalData;
+  if (data) {
+    data = clone(originalData);
+    if (typeof data === 'string') {
+      data = resolveData(data, input) as Record<string, unknown>[];
+    }
+  }
+
   // Capture the layout and hexes from the hexjson
   const layout = hexjson.layout;
   const hexes = clone(hexjson.hexes);
