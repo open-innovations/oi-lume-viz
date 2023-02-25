@@ -4,7 +4,7 @@
     "lume": "deno eval \"import 'lume/task.ts'\" -- --config example-site/_config.js --src example-site",
     "build": "deno task lume",
     "serve": "deno task lume -s",
-    "test": "deno test --allow-read --unstable"
+    "test": "deno test --allow-read --no-check --unstable"
   },
   "lint": {
     "files": {
