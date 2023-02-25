@@ -4,7 +4,7 @@
 
 At Open Innovations, we've started using the [Lume](https://lume.land) Static Site Generator to build
 data microsites for people. This gives us the benefits of a static HTML site, with associated manageability,
-efficiency, and maintainability benefits, whilst giving us a framework 
+efficiency, and maintainability benefits, whilst giving us a framework for extending.
 
 To support some of the more complex visualisations we undertake, we've encapsulated a number of our charting
 libraries in this
@@ -44,11 +44,11 @@ Run a test with the following command. Replace the file path with the tests you 
 If you provide a directory path and Deno will find any test files in the directory and it's sub-directories.
 
 ```powershell
-deno test --unstable --allow-read components/chart/bar.test.ts
+deno test --unstable --allow-read --no-check components/chart/bar.test.ts
 ```
 
 To make Deno continually run these tests, add the `--watch` flag. This will then run each time the input files change.
 
 ```powershell
-deno test --unstable --allow-read --watch components/chart/bar.test.ts
+deno test --unstable --allow-read --no-check --watch components/chart/bar.test.ts
 ```
