@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from "std/testing/bdd.ts";
 import { assertEquals } from "std/testing/asserts.ts";
-import { calculateRange } from "./helpers.ts";
+import { calculateRange, resolveData } from "./helpers.ts";
 
 describe("calculateRange", () => {
   // deno-lint-ignore no-explicit-any
@@ -27,5 +27,28 @@ describe("calculateRange", () => {
     options.data[0].value = -1;
     const result = calculateRange(options);
     assertEquals(result.min, -1);
+  });
+});
+
+describe("resolveData", () => {
+  let context: Record<string, unknown>;
+
+  beforeEach(() => {
+    context = {
+      "simple": "RESULT",
+      "nested": {
+        "reference": {
+          "path": "RESULT",
+        },
+      },
+    };
+  });
+
+  it("should return a namespace path from the context", () => {
+    assertEquals(resolveData("simple", context), "RESULT");
+  });
+
+  it("should return a nested namespace path from the context", () => {
+    assertEquals(resolveData("nested.reference.path", context), "RESULT");
   });
 });

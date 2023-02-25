@@ -7,27 +7,51 @@ const arraySum = (array: number[]) => array.reduce((a, b) => a + b, 0);
 const findSmallest = (a: number, v: number[]) => Math.min(a, ...v);
 const findLargest = (a: number, v: number[]) => Math.max(a, ...v);
 
-export function calculateRange(config: Partial<BarChartOptions>, tickSize: number | undefined = undefined) {
-  const seriesKeys = config.series!.map(s => s.value!);
-  const values = (config.data as Record<string, unknown>[]).map(d => seriesKeys.map(v => d[v] as number));
+/**
+ * Recursive function to resolve data from a given context
+ *
+ * @param ref dot-separated reference to the dataset
+ * @param context the context in which to search for the data
+ * @returns
+ */
+export function resolveData(
+  ref: string,
+  context: Record<string, unknown>,
+): unknown {
+  const [current, ...children] = ref.split(".");
+  const result = context[current];
+  if (children.length) {
+    return resolveData(children.join("."), result as Record<string, unknown>);
+  }
+  return result;
+}
+
+export function calculateRange(
+  config: Partial<BarChartOptions>,
+  tickSize: number | undefined = undefined,
+) {
+  const seriesKeys = config.series!.map((s) => s.value!);
+  const values = (config.data as Record<string, unknown>[]).map((d) =>
+    seriesKeys.map((v) => d[v] as number)
+  );
 
   // TODO(@giles) Round up / down is based on whether it's max or min, not above or below zero
-  const roundToTickSize = (value: number) => {
+  const roundToTickSize = (value: number) => {
     const rounder = value > 0 ? Math.ceil : Math.floor;
     if (!tickSize) return value;
     return rounder(value / tickSize) * tickSize;
-  }
+  };
   if (config.stacked) {
     return {
       min: roundToTickSize(Math.min(...values.map(arraySum), 0)),
       max: roundToTickSize(Math.max(...values.map(arraySum), 0)),
-    }
+    };
   }
   // TODO(@giles) use Math.max(...values.flat(), 0) ertc
   return {
     min: roundToTickSize(values.reduce(findSmallest, 0)),
     max: roundToTickSize(values.reduce(findLargest, 0)),
-  }
+  };
 }
 
 export function generateTicks(config: AxisOptions): TickOptions[] {
@@ -43,7 +67,7 @@ export function generateTicks(config: AxisOptions): TickOptions[] {
       value: v,
       label: v.toString(),
       "font-weight": "normal",
-    }
+    };
   });
   return ticks;
 }
@@ -56,7 +80,9 @@ export function renderBarChart(config: BarChartOptions) {
   if (config.axis.x.max === undefined) config.axis.x.max = range.max;
 
   // Auto generate ticks if not provided
-  if (config.axis.x.ticks === undefined) config.axis.x.ticks = generateTicks(config.axis.x as AxisOptions);
+  if (config.axis.x.ticks === undefined) {
+    config.axis.x.ticks = generateTicks(config.axis.x as AxisOptions);
+  }
 
   const csv = explodeObjectArray(config.data as Record<string, unknown>[]);
   if (config.stacked === true) {
