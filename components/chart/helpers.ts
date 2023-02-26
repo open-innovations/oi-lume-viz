@@ -18,12 +18,16 @@ export function resolveData(
   ref: string,
   context: Record<string, unknown>,
 ): unknown {
-  const [current, ...children] = ref.split(".");
-  const result = context[current];
-  if (children.length) {
-    return resolveData(children.join("."), result as Record<string, unknown>);
-  }
-  return result;
+  // Find first . in ref
+  const cutMark = ref.indexOf('.');
+  // If no ., we're done: return the reference
+  if (cutMark === -1) return context[ref];
+  // Work out the current key
+  const key = ref.slice(0, cutMark);
+  // ...and the rest
+  const rest = ref.slice(cutMark + 1);
+  // Return the result of calling this function using these
+  return resolveData(rest, context[key] as Record<string, unknown>);
 }
 
 export function calculateRange(
