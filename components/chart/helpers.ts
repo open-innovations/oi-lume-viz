@@ -18,16 +18,14 @@ export function resolveData(
   ref: string,
   context: Record<string, unknown>,
 ): unknown {
-  // Find first . in ref
-  const cutMark = ref.indexOf('.');
-  // If no ., we're done: return the reference
-  if (cutMark === -1) return context[ref];
-  // Work out the current key
-  const key = ref.slice(0, cutMark);
-  // ...and the rest
-  const rest = ref.slice(cutMark + 1);
-  // Return the result of calling this function using these
-  return resolveData(rest, context[key] as Record<string, unknown>);
+  // Initialise the result to be the whole context.
+  // If we provide no key, we should return the whole thing!
+  let result = context;
+  // Split the ref by the '.' character and iterate over the resulting array
+  for (const key of ref.split('.')) {
+    result = result[key] as Record<string, unknown>;
+  }
+  return result;
 }
 
 export function calculateRange(
