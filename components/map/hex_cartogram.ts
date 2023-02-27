@@ -4,6 +4,7 @@ import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { resolveData } from "../chart/helpers.ts";
+import { getAssetPath } from "../../lib/util/paths.ts";
 
 // This is a simple scale which returns the same value it was sent
 // Useful if the hexmap has a colour attribute
@@ -377,7 +378,7 @@ export default function (input: { config: HexmapOptions }) {
           id="${uuid}-hex-${hexId}"
           class="hex"
           transform="translate(${x} ${y})"
-          data-auto-popup="$popupText"
+          data-auto-popup="${popupText}"
           data-value="${value}"
           role="listitem"
           aria-label="${labelProp} value ${value}"
@@ -412,7 +413,7 @@ export default function (input: { config: HexmapOptions }) {
 
 
   // Return the HTML fragment for the visualisation that includes the dependencies and contains the SVG
-  return `<div class="map hex-map" data-dependencies="/assets/js/svg-map.js"><svg
+  return `<div class="map hex-map" data-dependencies="${ getAssetPath('/js/svg-map.js') }"><svg
       id="hexes-${uuid}"
       class="hex-map"
       viewBox="
