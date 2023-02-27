@@ -49,6 +49,8 @@ export const css = `
 	.leaflet-left { left: 0; }
 `;
 
+interface HexJson { layout: string; hexes: Record<string, HexDefinition> };
+
 type HexDefinition = {
   q: number;
   r: number;
@@ -66,7 +68,7 @@ type HexmapOptions = {
   min: number;
   max: number;
   data?: Record<string, unknown>[];
-  hexjson: { layout: string; hexes: Record<string, HexDefinition> };
+  hexjson: HexJson;
   hexScale: number;
   label?: string;
   popup?: string;
@@ -92,7 +94,7 @@ export default function (input: { config: HexmapOptions }) {
     bgColour = "none",
     scale = identityColourScale,
     min = 0,
-    max,
+    max: staticMax,
     data: originalData,
     hexjson: originalHexjson,
     hexScale = 1,
@@ -106,12 +108,14 @@ export default function (input: { config: HexmapOptions }) {
     colourValueProp,
     legend,
   } = clone(input.config);
-    
+
+  let max = staticMax;
+
   // Handle hexjson / data as string references
   // Resolve hexjson if this is a string
   let hexjson = clone(originalHexjson);
   if (typeof hexjson === 'string') {
-    hexjson = resolveData(hexjson, input) as HexJson;
+    hexjson = clone(resolveData(hexjson, input) as HexJson);
   }
   
   // Resolve data if this is a string
@@ -119,7 +123,7 @@ export default function (input: { config: HexmapOptions }) {
   if (data) {
     data = clone(originalData);
     if (typeof data === 'string') {
-      data = resolveData(data, input) as Record<string, unknown>[];
+      data = clone(resolveData(data, input) as Record<string, unknown>[]);
     }
   }
 
@@ -185,14 +189,14 @@ export default function (input: { config: HexmapOptions }) {
   
   let cs = (typeof scale==="string") ? ColourScale(scale) : scale;
 
-  if(typeof max!=="number"){
-	// Find the biggest value in the hex map
-	const max = Object.values(hexes).map((h) => {
-		let v = 0;
-		if(typeof h[valueProp]==="string") v = parseFloat(h[valueProp]);
-		else if(typeof h[valueProp]==="number") v = h[valueProp];
-		return v;
-	}).reduce((result, current) => Math.max(result, current), 0);
+  if (typeof max !== "number") {
+    // Find the biggest value in the hex map
+    max = Object.values(hexes).map((h) => {
+      let v = 0;
+      if (typeof h[valueProp] === "string") v = parseFloat(h[valueProp]);
+      else if (typeof h[valueProp] === "number") v = h[valueProp];
+      return v;
+    }).reduce((result, current) => Math.max(result, current), 0);
   }
 
   const fillColour = (input: number | string) => {
