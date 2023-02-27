@@ -118,8 +118,9 @@ export default function (input: { config: HexmapOptions }) {
   }
   
   // Resolve data if this is a string
-  let data = clone(input.config.data);
-  if (data) {
+  let data;
+  if (input.config.data) {
+    data = clone(input.config.data);
     if (typeof data === 'string') {
       data = clone(resolveData(data, input) as Record<string, unknown>[]);
     }
