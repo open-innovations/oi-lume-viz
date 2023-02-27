@@ -47,7 +47,6 @@ export const css = `
 	.leaflet-right { right: 0; }
 	.leaflet-bottom { bottom: 0; }
 	.leaflet-left { left: 0; }
-}
 `;
 
 type HexDefinition = {
