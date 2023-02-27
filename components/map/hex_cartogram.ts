@@ -58,13 +58,13 @@ type HexDefinition = {
   [key: string]: unknown;
 };
 
-type ColourScaleFunction =
-  | ((property: string) => string)
-  | ((numeric: number) => string);
+type ColourScaleDefinition = string |
+  ((property: string) => string) |
+  ((numeric: number) => string);
 
 type HexmapOptions = {
   bgColour: string;
-  scale: ColourScaleFunction;
+  scale: ColourScaleDefinition;
   min: number;
   max: number;
   data?: Record<string, unknown>[];
@@ -89,14 +89,12 @@ type HexmapOptions = {
  */
 export default function (input: { config: HexmapOptions }) {
 
-  // Take a copy of parameters, with defaults.
+  // Take a copy of parameters as constants, with defaults.
+  // NB these are not cloned at this stage, as this loses information about functions passed in
   const {
     bgColour = "none",
     scale = identityColourScale,
     min = 0,
-    max: staticMax,
-    data: originalData,
-    hexjson: originalHexjson,
     hexScale = 1,
     margin: marginScale = 0.25,
     label = (key: string) => key.slice(0, 3),
@@ -107,21 +105,21 @@ export default function (input: { config: HexmapOptions }) {
     valueProp = "colour",
     colourValueProp,
     legend,
-  } = clone(input.config);
+  } = input.config;
 
-  let max = staticMax;
+  // Set up some variables
+  let max = input.config.max;
 
   // Handle hexjson / data as string references
   // Resolve hexjson if this is a string
-  let hexjson = clone(originalHexjson);
+  let hexjson = clone(input.config.hexjson);
   if (typeof hexjson === 'string') {
     hexjson = clone(resolveData(hexjson, input) as HexJson);
   }
   
   // Resolve data if this is a string
-  let data = originalData;
+  let data = clone(input.config.data);
   if (data) {
-    data = clone(originalData);
     if (typeof data === 'string') {
       data = clone(resolveData(data, input) as Record<string, unknown>[]);
     }
@@ -187,7 +185,8 @@ export default function (input: { config: HexmapOptions }) {
   	  hexes[key]["_id"] = key;
   }
   
-  let cs = (typeof scale==="string") ? ColourScale(scale) : scale;
+  // TODO All this colourscale handling needs to be placed in a utlity function or class
+  const cs = (typeof scale==="string") ? ColourScale(scale) : scale;
 
   if (typeof max !== "number") {
     // Find the biggest value in the hex map
@@ -200,13 +199,13 @@ export default function (input: { config: HexmapOptions }) {
   }
 
   const fillColour = (input: number | string) => {
+    if (typeof input === "string") return input;
+    if (typeof input === "number") input = (input - min) / (max - min);
 
-	if(typeof input==="string") return input;
-	else if(typeof input==="number") input = (input - min)/(max - min);
-	
-	return cs(input);
-	
-	// How did we get here???
+    return cs(input);
+
+    // How did we get here???
+    // I have no idea... ;-_
     throw new TypeError("Invalid type provided to fillColour function");
   };
 
