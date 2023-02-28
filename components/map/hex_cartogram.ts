@@ -202,12 +202,9 @@ export default function (input: { config: HexmapOptions }) {
 
   const fillColour = (input: number | string) => {
     if (typeof input === "string") return input;
-    if (typeof input === "number") input = (input - min) / (max - min);
-
-    return cs(input);
+    if (typeof input === "number") return cs((input - min) / (max - min));
 
     // How did we get here???
-    // I have no idea... ;-_
     throw new TypeError("Invalid type provided to fillColour function");
   };
 
