@@ -29,9 +29,9 @@
         E06000014: { n: York, colour: "#F92626", q: 0, r: 1 }
     titleProp: n
     valueProp: colour
-- title: "Hexes with defined colours - external data"
+- title: "Hexes with defined colours - data and hexes separately"
   description: |
-    This is the same as the previous example except we pass a <code>data</code> array which sets properties for each hex. <code>matchKey</code> is used to match the key in <code>hexjson&rarr;hexes</code> with the required key in a <code>data</code> array item. We also customise the label for each hex to be the first letter.
+    This is the same as the previous example except we pass a <code>data</code> array which sets properties for each hex. <code>matchKey</code> is used to match the key in <code>hexjson &rarr; hexes</code> with the required key in a <code>data</code> array item. We also customise the label for each hex to be the first letter.
   config:
     hexjson:
       layout: odd-r
@@ -136,7 +136,7 @@
         E06000002: {n: Middlesbrough, q: 9, r: 18, region: E12000001, colour: "#D60303"}
         E06000003: {n: Redcar and Cleveland, q: 9, r: 19, region: E12000001, colour: "#D60303"}
         E06000004: {n: Stockton-on-Tees, q: 8, r: 18, region: E12000001, colour: "#D60303"}
-        E06000010: {n: Kingston upon Hull, City of, q: 10, r: 15, region: E12000003, colour: "#F9BC26"}
+        E06000010: {n: "Kingston upon Hull, City of", q: 10, r: 15, region: E12000003, colour: "#F9BC26"}
         E06000011: {n: East Riding of Yorkshire, q: 11, r: 16, region: E12000003, colour: "#F9BC26"}
         E06000005: {n: Darlington, q: 7, r: 18, region: E12000001, colour: "#D60303"}
         E06000006: {n: Halton, q: 1, r: 11, region: E12000002, colour: "#1DD3A7"}
@@ -151,13 +151,13 @@
         E06000016: {n: Leicester, q: 8, r: 8, region: E12000004, colour: "#00B6FF"}
         E06000017: {n: Rutland, q: 10, r: 9, region: E12000004, colour: "#00B6FF"}
         E06000018: {n: Nottingham, q: 8, r: 10, region: E12000004, colour: "#00B6FF"}
-        E06000019: {n: Herefordshire, County of, q: 0, r: 8, region: E12000005, colour: "#E6007C"}
+        E06000019: {n: "Herefordshire, County of", q: 0, r: 8, region: E12000005, colour: "#E6007C"}
         E06000020: {n: Telford and Wrekin, q: 2, r: 9, region: E12000005, colour: "#E6007C"}
         E06000021: {n: Stoke-on-Trent, q: 3, r: 10, region: E12000005, colour: "#E6007C"}
         E06000032: {n: Luton, q: 10, r: 7, region: E12000006, colour: "#FF6700"}
         E06000022: {n: Bath and North East Somerset, q: 1, r: 3, region: E12000009, colour: "#178CFF"}
         E06000033: {n: Southend-on-Sea, q: 16, r: 6, region: E12000006, colour: "#FF6700"}
-        E06000023: {n: Bristol, City of, q: 0, r: 3, region: E12000009, colour: "#178CFF"}
+        E06000023: {n: "Bristol, City of", q: 0, r: 3, region: E12000009, colour: "#178CFF"}
         E07000068: {n: Brentwood, q: 13, r: 5, region: E12000006, colour: "#FF6700"}
         E06000024: {n: North Somerset, q: 0, r: 2, region: E12000009, colour: "#178CFF"}
         E07000237: {n: Worcester, q: 0, r: 7, region: E12000005, colour: "#E6007C"}
@@ -193,7 +193,7 @@
         E06000055: {n: Bedford, q: 9, r: 7, region: E12000006, colour: "#FF6700"}
         E06000056: {n: Central Bedfordshire, q: 9, r: 6, region: E12000006, colour: "#FF6700"}
         E06000057: {n: Northumberland, q: 5, r: 20, region: E12000001, colour: "#D60303"}
-        E06000058: {n: Bournemouth, Christchurch and Poole, q: 0, r: 0, region: E12000009, colour: "#178CFF"}
+        E06000058: {n: "Bournemouth, Christchurch and Poole", q: 0, r: 0, region: E12000009, colour: "#178CFF"}
         E06000059: {n: Dorset, q: -1, r: 0, region: E12000009, colour: "#178CFF"}
         E06000060: {n: Buckinghamshire, q: 5, r: 5, region: E12000008, colour: "#67E767"}
         E09000008: {n: Croydon, q: 10, r: 0, region: E12000007, colour: "#D73058"}
@@ -443,7 +443,7 @@
         E09000030: {n: Tower Hamlets, q: 12, r: 2, region: E12000007, colour: "#D73058"}
         E09000031: {n: Waltham Forest, q: 13, r: 4, region: E12000007, colour: "#D73058"}
         N09000001: {n: Antrim and Newtownabbey, q: -4, r: 16, region: N92000002, colour: "#722EA5"}
-        N09000002: {n: Armagh City, Banbridge and Craigavon, q: -5, r: 16, region: N92000002, colour: "#722EA5"}
+        N09000002: {n: "Armagh City, Banbridge and Craigavon", q: -5, r: 16, region: N92000002, colour: "#722EA5"}
         N09000003: {n: Belfast, q: -4, r: 17, region: N92000002, colour: "#722EA5"}
         N09000004: {n: Causeway Coast and Glens, q: -5, r: 18, region: N92000002, colour: "#722EA5"}
         N09000005: {n: Derry City and Strabane, q: -6, r: 17, region: N92000002, colour: "#722EA5"}
@@ -451,7 +451,7 @@
         N09000007: {n: Lisburn and Castlereagh, q: -5, r: 15, region: N92000002, colour: "#722EA5"}
         N09000008: {n: Mid and East Antrim, q: -4, r: 18, region: N92000002, colour: "#722EA5"}
         N09000009: {n: Mid Ulster, q: -5, r: 17, region: N92000002, colour: "#722EA5"}
-        N09000010: {n: Newry, Mourne and Down, q: -4, r: 15, region: N92000002, colour: "#722EA5"}
+        N09000010: {n: "Newry, Mourne and Down", q: -4, r: 15, region: N92000002, colour: "#722EA5"}
         S12000005: {n: Clackmannanshire, q: 2, r: 24, region: S92000003, colour: "#2254F4"}
         S12000006: {n: Dumfries and Galloway, q: 4, r: 20, region: S92000003, colour: "#2254F4"}
         S12000008: {n: East Ayrshire, q: 3, r: 20, region: S92000003, colour: "#2254F4"}
