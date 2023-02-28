@@ -62,6 +62,7 @@ export const css = `
 .chart .legend .legend-item {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 .chart .legend .series {
   flex-shrink: 0;
