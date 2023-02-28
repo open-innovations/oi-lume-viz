@@ -14,7 +14,6 @@ import lang_bash from "https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es/langu
 
 import autoDependency from 'https://cdn.jsdelivr.net/gh/open-innovations/oi-lume-utils@0.2.0-pre/processors/auto-dependency.ts';
 
-import nunjucks from "lume/deps/nunjucks.ts";
 
 const site = lume({
   location: new URL("https://open-innovations.github.io/oi-lume-charts/"),
@@ -30,10 +29,13 @@ site.use(oiComponents({
   assetPath: '/assets',
   componentNamespace: 'oi',
 }));
-site.use(basePath());
-site.process(['.html'], autoDependency);
 
-console.log(path.resolve('README.md'));
+// The autodependency processor needs to be registered before the base path plugin,
+// or else the autodepended paths will not be rewritten to include the path prefix
+// set in location passed to the lume constructor (above)
+site.process(['.html'], autoDependency);
+site.use(basePath());
+
 site.remoteFile('index.md', path.resolve('README.md'));
 
 // Map test data to local site
