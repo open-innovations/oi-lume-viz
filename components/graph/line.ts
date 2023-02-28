@@ -266,7 +266,7 @@ export default ({ config }: {config: LineChartOptions}) => {
       `<li class="data-series data-series-${i+1} legend-item">
         <svg viewbox='-15 -10 30 20' style="height: 2em;">
         <path class="line" d="M-10,0 h20" stroke="${s.colour}" fill="none" />
-        ${getMarkerFunction(s)([0, 0], { ...s.markerOptions, s: 3 })}
+        ${getMarkerFunction(s)([0, 0], { ...s.markerOptions })}
         </svg>
         <span>${s.label}</span>
       </li>`

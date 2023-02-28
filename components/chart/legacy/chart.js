@@ -177,7 +177,7 @@ export function Chart(config,csv){
 	this.draw = function(){
 		var u,i,fs,pd,hkey,wkey,x,y,s,text,line,circ,p,cl,po,tspan;
 
-		var defaultkeyitem = '<path d="M0 0 L 1 0" class="line" class="" stroke-width="3" stroke-linecap="round"></path><circle cx="0" cy="0" r="5" fill="silver"></circle>';
+		var defaultkeyitem = '<path d="M0 0 L 1 0" class="line" class="" stroke-width="3" stroke-linecap="round"></path><rect x="0" y="0" width="5" height="5" fill="silver"></rect>';
 
 		this.updateRange();
 
@@ -244,13 +244,13 @@ export function Chart(config,csv){
 				
 				text = qs(key.g[s],'text');
 				line = qs(key.g[s],'path');
-				circ = qs(key.g[s],'circle');
+				rect = qs(key.g[s],'rect');
 				setAttr(text,{'x': 0,'y':roundTo(fs*0.2, 3),'font-family':this.opt['font-family']||"sans-serif"});
 				if(typeof this.opt.legend.text==="object"){
 					for(p in this.opt.legend.text) text.setAttribute(p,this.opt.legend.text[p]);
 				}
 				p = this.series[s].getProperties();
-				setAttr(circ,{'cx':roundTo(fs*0.75, 3),'cy':roundTo(0.5*fs, 3),'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
+				setAttr(rect,{'x':roundTo(fs*0.75, 3)-fs/2,'y':roundTo(0.5*fs, 3)-fs/2,'width':fs,'height':fs,'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
 
 				if(this.opt.type=="line-chart" || this.opt.type=="category-chart"){
 					line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*1.5)+' 0');
