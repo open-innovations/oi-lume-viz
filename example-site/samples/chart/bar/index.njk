@@ -2,6 +2,9 @@
 title: Bar Chart
 component: chart.bar
 ---
+
+Our bar chart component currently renders horizontal bar charts. By limiting to horizontal bars it reduces some of the issues of label sizes and allows us to expand the chart vertically - it would be harder to expand horizontally without shrinking the size of the bars/labels. Javascript adds tooltips and can make legend items interactive. Hovering over a series in a legend will fade the other series and shift the highlighted series to the left to allow easier comparison.
+
 {#
   Test data is set in <git project root>/test/data/bar-chart.yaml 
   The page is rendered according to the <project>/example-site/_includes/layout/sample-viz.njk layout.

@@ -1,4 +1,6 @@
 - title: "One series"
+  description: |
+    A simple one series bar chart showing four categories. The x-axis (value) can use a customised <code>axis &rarr; x &rarr; min</code>/<code>axis &rarr; x &rarr; max</code> and you can specify which tick marks are shown and what their labels are using <code>axis &rarr; x &rarr; ticks</code>. This gives the flexibility of very customised labels or no labels for ticks.
   config:
     data:
       - category: First category
@@ -38,6 +40,8 @@
       - title: Series One
         value: series1
 - title: "Two series"
+  description: |
+    Add two series to a horizontal bar chart. Each series gets its own colour. Javascript is used to make the legend interactive (hovering over a series will highlight that series).
   config:
     data:
       - "Ethnic group": Ethnic Group A
@@ -85,6 +89,8 @@
         value: "Male→Value (%)"
         tooltip: "Male Label"
 - title: "Multi series"
+  description: |
+    Add spacing between series' bars as a fraction of the bar width.
   config:
     data:
       - Reason: Reason 1
@@ -147,6 +153,8 @@
         colour: "#69C2C9"
         tooltip: "University Label"
 - title: "Stacked bar chart"
+  description: |
+    Rather than side-by-side bars, sometimes we need to stack bars. Stacked-bar charts don't do a good job of allowing you to compare any series other than the first so we use Javascript to make the legend interactive; hovering over a series will shift this series to the left of the chart to make comparison across categories easier.
   config:
     data:
       - Year: 2018
@@ -201,6 +209,8 @@
         colour: "#4A783C"
 
 - title: "Minimal config with auto scaling and auto-ticks"
+  description: |
+    If you have regularly updated "live" data you may not know the scale that will be needed for the values in advance. In that case you can set a <code>axis &rarr; x &rarr; tickSize</code> and let the chart calculate an automatic range and tick marks.
   config:
     data:
       - category: First category
@@ -260,6 +270,8 @@
         colour: "#4A783C"
 
 - title: Data as string
+  description: |
+    Get the data for the bar chart from a string
   config: 
     data: test.data.bar
     category: category  # Category labels come from 
