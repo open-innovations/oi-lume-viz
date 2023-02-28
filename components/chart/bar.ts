@@ -28,33 +28,6 @@ export interface BarChartOptions {
   };
 }
 
-/*
-data: monthly_count.rows,
-legend: {
-  show: true,
-  position: "top right"
-},
-axis: {
-  x: {
-    title: {
-      label: "Count of articles"
-    },
-    grid: {
-      "stroke-dasharray": "2 4",
-      "stroke-width": 1
-    },
-  },
-  y: {
-    title: {
-      label: "Month"
-    },
-    "font-weight": "normal",
-    grid: {
-      "stroke-width": 0.5
-    }
-  }
-*/
-
 
 /**
  * @param options Options to validate

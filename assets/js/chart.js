@@ -1,5 +1,5 @@
 /*
-	Open Innovations Chart Interactivity v0.2
+	Open Innovations Chart Interactivity v0.2.1
 	Helper function that find ".chart" elements 
 	looks for elements with "pane" within them,
 	finds their <h3> elements, 
@@ -39,7 +39,7 @@
 		var key = el.querySelector('.legend');
 		var serieskey = el.querySelectorAll('.series');
 		var s,i,p;
-		var pt = el.querySelectorAll('.series circle, .series rect');
+		var pt = el.querySelectorAll('.series circle, .series rect, .series path');
 		var pts = [];
 		var series = [];
 		var shapes = [];
@@ -87,12 +87,16 @@
 				d = e.data.s;
 				this.selected = d;
 				selected = el.querySelector('.series-'+d);
+				if(!selected){
+					arr = el.querySelectorAll('.series');
+					for(a = 0; a < arr.length; a++){
+						if(arr[a].getAttribute('data-series') == d) selected = arr[a];
+					}
+				}
 				typ = svg.getAttribute('data-type');
 				if(typ == "stacked-bar-chart"){
 					// Find the origin of the bars by just taking the x-value of the first one in the first series
 					origin = parseFloat(serieskey[0].querySelector('rect').getAttribute('x'));
-				}
-				if(typ == "stacked-bar-chart"){
 					if(shapes.length==0){
 						shapes = new Array(serieskey.length);
 						for(s = 0; s < serieskey.length; s++) shapes[s] = serieskey[s].querySelectorAll('rect');
@@ -278,7 +282,7 @@
 			else this.clearTooltip();
 			return this;
 		};
-    addEv('mousemove',svg,{'this':this},this.findPoint);
+		addEv('mousemove',svg,{'this':this},this.findPoint);
 		if(pts){
 			for(p = 0; p < pts.length; p++){
 				addEv('focus',pts[p].el,{'this':this},this.triggerTooltip);
@@ -290,8 +294,9 @@
 			newkey.classList.add('legend');
 			el.insertBefore(newkey, el.firstChild);
 
-
+			// Get each of the .data-series elements from the existing key
 			var keyseries = key.querySelectorAll('.data-series');
+			
 			var keyitem,icon,txt,viewBox,xscale,yscale,dx,dy,g;
 			for(s = 0; s < keyseries.length; s++){
 				// Create a key item <div>
@@ -299,35 +304,49 @@
 				keyitem.classList.add('legend-item');
 				add(keyitem,newkey);
 
-				// Make the new SVG just for the icon
-				icon = svgEl('svg');
-				add(icon,keyitem);
-
-				// Get the text for the series
 				txt = document.createElement('span');
 				txt.classList.add('label');
-				txt.innerHTML = keyseries[s].querySelector('text tspan').innerHTML;
+				
+				if(!keyseries[s].querySelector('svg')){
+
+					// If this already is SVG get the text from a tspan
+					txt.innerHTML = keyseries[s].querySelector('text tspan').innerHTML;
+
+					// Now remove the text label (we'll recreate it with HTML)
+					keyseries[s].querySelector('text').parentNode.removeChild(keyseries[s].querySelector('text'));
+
+					// Make the new SVG just for the icon and add it to our new series item
+					icon = svgEl('svg');
+					add(keyseries[s],icon);
+					setAttr(icon,{'width':17*1.5,'height':'1em','viewBox':'0 0 '+(17*1.5)+' 17'});
+					snum = keyseries[s].getAttribute('data-series');
+
+				}else{
+					// If this is HTML containing SVG get the text from a span
+					txt.innerHTML = keyseries[s].querySelector('span').innerHTML;
+					keyseries[s].querySelector('span').parentNode.removeChild(keyseries[s].querySelector('span'));
+					
+					// Get the SVG item and use it
+					icon = keyseries[s].querySelector('svg');
+					setAttr(icon,{'height':'1em','style':''});
+					snum = keyseries[s].querySelector('.marker').getAttribute('data-series');
+				}
+				add(icon,keyitem);
 				add(txt,keyitem);
 
-				// Now remove the text label (we'll recreate it with HTML)
-				keyseries[s].querySelector('text').parentNode.removeChild(keyseries[s].querySelector('text'));
-				add(keyseries[s],icon);
 				setAttr(keyseries[s],{'transform':''});
-				setAttr(icon,{'width':17*1.5,'height':17,'viewBox':'0 0 '+(17*1.5)+' 17'});
-				setAttr(keyitem,{'data-series':keyseries[s].getAttribute('data-series'),'tabindex':0,'title':'Highlight series: '+txt.innerHTML});
+				setAttr(keyitem,{'data-series':snum,'tabindex':0,'title':'Highlight series: '+txt.innerHTML});
 
-
-				addEv('mouseover',keyitem,{'this':this,'s':keyseries[s].getAttribute('data-series')},this.highlightSeries);
-				addEv('keydown',keyitem,{'this':this,'s':keyseries[s].getAttribute('data-series')},function(e){
+				// Add the events for mouseover, keydown, click and mouseout
+				addEv('mouseover',keyitem,{'this':this,'s':snum},this.highlightSeries);
+				addEv('keydown',keyitem,{'this':this,'s':snum},function(e){
 					if(e.keyCode==13){
 						e.preventDefault();
 						this.toggleSeries(e);
 					}
 				});
-				//addEv('focus',keyitem,{'this':this,'s':keyseries[s].getAttribute('data-series')},this.highlightSeries);
 				addEv('click',keyitem,{'this':this,'s':keyseries[s].getAttribute('data-series')},this.setSeries);
 				addEv('mouseout',keyitem,{'this':this,'s':null},this.highlightSeries);
-
 			}
 			// Hide the original key
 			key.style.display = 'none';
@@ -338,12 +357,31 @@
 
 	root.OI.InteractiveChart = function(el){ return new InteractiveChart(el); };
 
+
+	// Convert to sRGB colorspace
+	// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+	function sRGBToLinear(v){
+		v /= 255;
+		if (v <= 0.03928) return v/12.92;
+		else return Math.pow((v+0.055)/1.055,2.4);
+	}
+
 	function h2d(h) {return parseInt(h,16);}
-	function brightnessIndex(rgb){ return rgb[0]*0.299 + rgb[1]*0.587 + rgb[2]*0.114; }
-	function brightnessDiff(a,b){ return Math.abs(brightnessIndex(a)-brightnessIndex(b)); }
-	function hueDiff(a,b){ return Math.abs(a[0]-b[0]) + Math.abs(a[1]-b[1]) + Math.abs(a[2]-b[2]); }
+	// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+	function relativeLuminance(rgb){ return 0.2126 * sRGBToLinear(rgb[0]) + 0.7152 * sRGBToLinear(rgb[1]) + 0.0722 * sRGBToLinear(rgb[2]); }
+	// https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html#contrast-ratiodef
+	function contrastRatio(a, b){
+		let L1 = relativeLuminance(a);
+		let L2 = relativeLuminance(b);
+		if(L1 < L2){
+			let temp = L2;
+			L2 = L1;
+			L1 = temp;
+		}
+		return (L1 + 0.05) / (L2 + 0.05);
+	}	
 	function contrastColour(c){
-		var col,cols,rgb = [];
+		var rgb = [];
 		if(c.indexOf('#')==0){
 			rgb = [h2d(c.substring(1,3)),h2d(c.substring(3,5)),h2d(c.substring(5,7))];
 		}else if(c.indexOf('rgb')==0){
@@ -351,19 +389,20 @@
 			if(bits.length == 4) this.alpha = parseFloat(bits[3]);
 			rgb = [parseInt(bits[0]),parseInt(bits[1]),parseInt(bits[2])];
 		}
-		// Check brightness contrast
-		cols = {'black':{'rgb':[0,0,0]},'white':{'rgb':[255,255,255]}};
-		for(col in cols){
-			cols[col].brightness = brightnessDiff(rgb,cols[col].rgb);
-			cols[col].hue = hueDiff(rgb,cols[col].rgb);
-			cols[col].ok = (cols[col].brightness > 125 && cols[col].hue >= 500);
+		var cols = {
+			"black": [0, 0, 0],
+			"white": [255, 255, 255],
+		};
+		let maxRatio = 0;
+		let contrast = "white";
+		for(const col in cols){
+			let contr = contrastRatio(rgb, cols[col]);
+			if(contr > maxRatio){
+				maxRatio = contr;
+				contrast = col;
+			}
 		}
-		for(col in cols){
-			if(cols[col].ok) return 'rgb('+cols[col].rgb.join(",")+')';
-		}
-		col = (cols.white.brightness > cols.black.brightness) ? "white" : "black"
-		console.warn('Text contrast not enough for %c'+c+'%c (colour contrast: '+cols[col].brightness.toFixed(1)+'/125, hue contrast: '+cols[col].hue+'/500)','background:'+c+';color:'+col,'background:none;color:inherit;');
-		return col;
+		return contrast;
 	}
 
 	if(!root.OI) root.OI = {};

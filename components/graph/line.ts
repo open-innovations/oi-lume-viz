@@ -3,6 +3,7 @@ import scale from "../../lib/util/scale.ts";
 import zip from "../../lib/util/zip.ts";
 import { AxisOptions, drawAxes } from "../../lib/chart-parts/axis.ts";
 import { everyNth } from "../../lib/util/every-nth.ts";
+import { getAssetPath } from "../../lib/util/paths.ts"
 import {
   MarkerFunction,
   markerFunctions,
@@ -21,12 +22,12 @@ export const css = `
   fill: var(--colour);
   stroke: none;
 }
+.chart .axis {
+  stroke: var(--colour);
+}
 .chart .title {
   text-anchor: middle;
   dominant-baseline: hanging;
-}
-.chart .axis {
-  stroke: var(--colour);
 }
 .chart .label {
   text-anchor: middle;
@@ -43,18 +44,6 @@ export const css = `
   text-anchor: end;
   dominant-baseline: middle;
 }
-.series .line {
-  fill: none;
-  stroke: var(--colour);
-}
-.series .marker {
-  stroke: var(--colour);
-  fill: none;
-}
-.series .marker.filled {
-  fill: var(--colour);
-  stroke: none;
-}
 .chart .legend-container {
   --width: 20rem;
   overflow: visible;
@@ -67,11 +56,10 @@ export const css = `
 .chart .legend {
   width: var(--width);
   display: block;
-  color: var(--colour);
   padding: 0.5rem;
   list-style: none;
 }
-.chart .legend li {
+.chart .legend .legend-item {
   display: flex;
   align-items: center;
 }
@@ -199,14 +187,17 @@ export default ({ config }: {config: LineChartOptions}) => {
     .map(scaleX);
 
   const getMarkerFunction = (series: Partial<Series>) => {
-    const { marker } = series;
+    // Pass some variables into the markerOptions
+	if(series.colour && !series.markerOptions.colour) series.markerOptions.colour = series.colour;
+
+    let { marker } = series;
     let markerFunction: MarkerFunction = markerFunctions.circle;
     if (typeof marker === "function") markerFunction = marker;
     if (typeof marker === "string") markerFunction = markerFunctions[marker];
     return markerFunction;
   };
 
-  const lines = series.map((s) => {
+  const lines = series.map((s,i) => {
     const yValues = s.yValues?.map(scaleY);
     if (yValues === undefined) throw "No yValues in series";
     const {
@@ -214,6 +205,8 @@ export default ({ config }: {config: LineChartOptions}) => {
       colour,
       markerOptions = {},
     } = s;
+	// Set the series number
+	s.markerOptions.series = i+1;
 
     const markerFunction = getMarkerFunction(s);
 
@@ -222,24 +215,22 @@ export default ({ config }: {config: LineChartOptions}) => {
       yValues.slice(0, categories.length),
     );
 
-    let style = "";
-    if (colour !== undefined) style += `--colour: ${colour}`;
-    if (style !== "") style = `style="${style}"`;
-
     // Create the line
     const line = `<path
       class='line'
+	  stroke='${colour}'
+	  fill='none'
       d='
         M ${points[0].join(",")}
         ${points.slice(1).map((p) => `L ${p.join(",")}`).join(" ")}
       '></path>
     `;
-    const markers = points.map((p) => markerFunction(p, markerOptions)).join(
+    const markers = points.map((p,i) => markerFunction(p, markerOptions, i)).join(
       "",
     );
 
     // TODO(@gilesdring) ID should include a uuid as well to distinguish from other chart series
-    return `<g ${style} id='${id}' class='series'>${line}${markers}</g>`;
+    return `<g id='${id}' class='series' data-series='${i+1}'>${line}${markers}</g>`;
   }).join("");
 
   const xLabels = categories.map(xAxisOptions.formatter).map((
@@ -270,10 +261,10 @@ export default ({ config }: {config: LineChartOptions}) => {
   const legend = `
     <foreignObject class='legend-container' style='--width: ${legendOptions.width};'><ul class='legend'>
       ${
-    series.map((s) =>
-      `<li>
-        <svg viewbox='-15 -10 30 20' class="series" style="height: 2em; --colour: ${s.colour}">
-        <path class="line" d="M-10,0 h20"/>
+    series.map((s,i) =>
+      `<li class="data-series data-series-${i+1} legend-item">
+        <svg viewbox='-15 -10 30 20' style="height: 2em;">
+        <path class="line" d="M-10,0 h20" stroke="${s.colour}" fill="none" />
         ${getMarkerFunction(s)([0, 0], { ...s.markerOptions, s: 3 })}
         </svg>
         <span>${s.label}</span>
@@ -282,15 +273,13 @@ export default ({ config }: {config: LineChartOptions}) => {
   }
     </ul></foreignObject>
     `;
-
-  return `<svg class='chart' style='${
-    plotArea.colour && `--plot-background:${plotArea.colour};`
-  }${textOptions.colour && `--colour:${textOptions.colour};`}' viewBox='
+	
+  const chart = `<svg class='line-chart' viewBox='
       ${-padding.left * SCALING_UNIT}
       ${-padding.top * SCALING_UNIT}
       ${(width + padding.left + padding.right) * SCALING_UNIT}
       ${(height + padding.top + padding.bottom) * SCALING_UNIT}
-    ' role='document'>
+    ' role='document' preserveAspectRatio='xMidYMin meet' data-type='line-chart'>
     ${
     (title)
       ? `
@@ -302,7 +291,11 @@ export default ({ config }: {config: LineChartOptions}) => {
       : "<title>Line Chart</title>"
   }
     ${axes}
+	<g class="data">
     ${lines}
+	</g>
     ${legend}
   </svg>`;
+
+  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') }">${chart}</div>`;
 };

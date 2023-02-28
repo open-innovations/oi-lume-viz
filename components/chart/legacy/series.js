@@ -97,7 +97,7 @@ export function Series(s,props,data,extra){
 				setAttr(pts[i].bar,datum);
 
 				// Update the bar with some default values
-				setAttr(pts[i].bar,{'data-series':(s+1),'tabindex':0,'x':0,'y':0,'width':0,'height':0});
+				setAttr(pts[i].bar,{'data-series':(s+1),'tabindex':0,'x':0,'y':0,'width':0,'height':0,'class':'marker'});
 
 
 				// Add the bar to the element
