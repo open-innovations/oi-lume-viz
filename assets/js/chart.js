@@ -278,6 +278,12 @@
 			else this.clearTooltip();
 			return this;
 		};
+    addEv('mousemove',svg,{'this':this},this.findPoint);
+		if(pts){
+			for(p = 0; p < pts.length; p++){
+				addEv('focus',pts[p].el,{'this':this},this.triggerTooltip);
+			}
+		}
 		if(key){
 			// We build an HTML version of the key
 			var newkey = document.createElement('div');
@@ -326,12 +332,6 @@
 			// Hide the original key
 			key.style.display = 'none';
 			addEv('mouseleave',el,{'this':this,'s':''},this.reset);
-			addEv('mousemove',svg,{'this':this},this.findPoint);
-		}
-		if(pts){
-			for(p = 0; p < pts.length; p++){
-				addEv('focus',pts[p].el,{'this':this},this.triggerTooltip);
-			}
 		}
 		return this;
 	}
