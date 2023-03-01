@@ -39,14 +39,18 @@
 		var key = el.querySelector('.legend');
 		var serieskey = el.querySelectorAll('.series');
 		var s,i,p;
-		var pt = el.querySelectorAll('.series circle, .series rect, .series path');
+		var pt = el.querySelectorAll('.series .marker');
 		var pts = [];
 		var series = [];
 		var shapes = [];
 		for(p = 0; p < pt.length; p++){
+			// Set the tabIndex on every selectable point
+			pt[p].setAttribute('tabindex',0);
+			// Get the series number
 			s = parseInt(pt[p].getAttribute('data-series'));
+			// Get the item within the series
 			i = parseInt(pt[p].getAttribute('data-i'));
-			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':pt[p].querySelector('title')?.innerHTML};
+			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':(pt[p].querySelector('title') ? pt[p].querySelector('title').innerHTML : "")};
 			if(!series[s]) series[s] = [];
 			if(!series[s][i]) series[s][i] = pts[p];
 		}
@@ -82,7 +86,7 @@
 			return this;
 		};
 		this.highlightSeries = function(e){
-			var d,selected,typ,s,r,origin,x,pts,p;
+			var d,selected,typ,s,r,origin,pts,p,arr,a;
 			if(this.enabled){
 				d = e.data.s;
 				this.selected = d;
@@ -103,7 +107,7 @@
 					}
 				}
 				for(s = 0; s < serieskey.length; s++){
-					pts = serieskey[s].querySelectorAll('circle,rect');
+					pts = serieskey[s].querySelectorAll('.marker');
 					if(d){
 
 						if(serieskey[s]==selected){
@@ -159,24 +163,10 @@
 			if(this.tip && this.tip.parentNode) this.tip.parentNode.removeChild(this.tip);
 			return this;
 		};
-		function hsv_to_hsl(h, s, v) {
-			// both hsv and hsl values are in [0, 1]
-			var l = (2 - s) * v / 2;
-			if (l != 0) {
-				if (l == 1) {
-					s = 0;
-				} else if (l < 0.5) {
-					s = s * v / (l * 2);
-				} else {
-					s = s * v / (2 - l * 2);
-				}
-			}
-			return {'h':h,'s':s,'l':l};
-		}
 		this.showTooltip = function(s,i){
 			el.style.position = 'relative';
 
-			var txt,bb,bbo,fill,hsv,hsl,selected,off;
+			var txt,bb,bbo,fill,selected,off;
 			this.tip = el.querySelector('.tooltip');
 			if(!this.tip){
 				this.tip = document.createElement('div');
@@ -297,7 +287,7 @@
 			// Get each of the .data-series elements from the existing key
 			var keyseries = key.querySelectorAll('.data-series');
 			
-			var keyitem,icon,txt,viewBox,xscale,yscale,dx,dy,g;
+			var keyitem,icon,txt,snum;
 			for(s = 0; s < keyseries.length; s++){
 				// Create a key item <div>
 				keyitem = document.createElement('div');
@@ -371,10 +361,10 @@
 	function relativeLuminance(rgb){ return 0.2126 * sRGBToLinear(rgb[0]) + 0.7152 * sRGBToLinear(rgb[1]) + 0.0722 * sRGBToLinear(rgb[2]); }
 	// https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html#contrast-ratiodef
 	function contrastRatio(a, b){
-		let L1 = relativeLuminance(a);
-		let L2 = relativeLuminance(b);
+		var L1 = relativeLuminance(a);
+		var L2 = relativeLuminance(b);
 		if(L1 < L2){
-			let temp = L2;
+			var temp = L2;
 			L2 = L1;
 			L1 = temp;
 		}
@@ -393,10 +383,10 @@
 			"black": [0, 0, 0],
 			"white": [255, 255, 255],
 		};
-		let maxRatio = 0;
-		let contrast = "white";
-		for(const col in cols){
-			let contr = contrastRatio(rgb, cols[col]);
+		var maxRatio = 0;
+		var contrast = "white";
+		for(var col in cols){
+			var contr = contrastRatio(rgb, cols[col]);
 			if(contr > maxRatio){
 				maxRatio = contr;
 				contrast = col;
