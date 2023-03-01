@@ -6,7 +6,7 @@
 # labelProcessor: (label: string) => string;
 # margin: number;
 # matchKey?: string;
-# popup: (params: Record<string, string | number>) => string;
+# tooltip: (params: Record<string, string | number>) => string;
 # title?: string;
 # titleProp: string;
 # valueProp: string;
@@ -61,40 +61,6 @@
     titleProp: n
     label: "{{ n | slice(0,1) }}"
     valueProp: colour
-- title: "Hexes coloured by a colour scale"
-  description: "The same hex layout as above but this time we colour the hexes by a defined <code>scale</code> with an optional <code>min</code> and <code>max</code>. We also define a <code>legend</code> with 5 levels - three of the levels are given labels. We customise the <code>popup</code> label to make sure it includes a percentage sign."
-  config:
-    hexjson:
-      layout: odd-r
-      hexes:
-        E08000016: { n: Barnsley, v: 1, q: 0, r: -2 }
-        E08000032: { n: Bradford, v: 2, q: -1, r: 0 }
-        E08000033: { n: Calderdale, v: 3, q: -2, r: -1 }
-        E07000163: { n: Craven, v: 4, q: -2, r: 1 }
-        E07000165: { n: Harrogate, v: 5, q: -1, r: 1 }
-        E08000034: { n: Kirklees, v: 6, q: -1, r: -1 }
-        E08000035: { n: Leeds, v: 7, q: 0, r: 0 }
-        E07000169: { n: Selby, v: 8, q: 1, r: 0 }
-        E08000036: { n: Wakefield, v: 9, q: 0, r: -1 }
-        E06000014: { n: York, v: 10, q: 0, r: 1 }
-    valueProp: v
-    popup: "{{ n }}: {{ v }}%"
-    scale: "rgb(122, 76, 139) 0%, rgb(124, 109, 168) 12.5%, rgb(115, 138, 177) 25%, rgb(107, 164, 178) 37.5%, rgb(104, 188, 170) 50%, rgb(133, 211, 146) 62.5%, rgb(189, 229, 97) 75%, rgb(254, 240, 65) 87.5%, rgb(254, 240, 65) 100%"
-    min: 0
-    max: 10
-    legend:
-      position: "top right"
-      items:
-        - value: 10
-          label: "10%"
-        - value: 7.5
-          label: ''
-        - value: 5
-          label: '5%'
-        - value: 2.5
-          label: ''
-        - value: 0
-          label: '0%'
 - title: Hexes with defined colours - external hexes
   description: |
     If you are using the same HexJSON layout in multiple places it makes sense not to have to repeat that layout every time. To help with this you can specify where the appropriate <code>hexjson</code> is.
@@ -123,12 +89,48 @@
     matchKey: code
     titleProp: n
     valueProp: colour
+- title: "Hexes coloured by a colour scale"
+  description: |
+    The same hex layout as above but this time we colour the hexes by a defined <code>scale</code> with an optional <code>min</code> and <code>max</code>. The colour <code>scale</code> is a comma separated string of colour stops each of the form <code>rgb(r,g,b) x%</code> in the style of a CSS linear gradient.
+    We also define a <code>legend</code> with 5 levels - three of the levels are given labels. We customise the <code>tooltip</code> label to make sure it includes a percentage sign.
+  config:
+    hexjson: hexjson.yorks
+    data:
+      - { code: "E08000016", v: 1 }
+      - { code: "E08000032", v: 2 }
+      - { code: "E08000033", v: 3 }
+      - { code: "E07000163", v: 4 }
+      - { code: "E07000165", v: 5 }
+      - { code: "E08000034", v: 6 }
+      - { code: "E08000035", v: 7 }
+      - { code: "E07000169", v: 8 }
+      - { code: "E08000036", v: 9 }
+      - { code: "E06000014", v: 10 }
+    matchKey: code
+    valueProp: v
+    tooltip: "{{ n }}: {{ v }}%"
+    scale: "rgb(122, 76, 139) 0%, rgb(124, 109, 168) 12.5%, rgb(115, 138, 177) 25%, rgb(107, 164, 178) 37.5%, rgb(104, 188, 170) 50%, rgb(133, 211, 146) 62.5%, rgb(189, 229, 97) 75%, rgb(254, 240, 65) 87.5%, rgb(254, 240, 65) 100%"
+    min: 0
+    max: 10
+    legend:
+      position: "top right"
+      items:
+        - value: 10
+          label: "10%"
+        - value: 7.5
+          label: ''
+        - value: 5
+          label: '5%'
+        - value: 2.5
+          label: ''
+        - value: 0
+          label: '0%'
 - title: "Big map"
   description: |
     This is a large map showing local authorities coloured by region with a layout loaded from an external source. We provide a key with a title and an entry for each region. Each individual hex <code>label</code> is explicitly set to be an empty string.
   config:
     label: ""
-    popup: "{{ n }}<br />{{ _id }}"
+    tooltip: "{{ n }}<br />{{ _id }}"
     legend:
       title: "Key"
       position: "top right"

@@ -72,7 +72,7 @@ type HexmapOptions = {
   hexjson: HexJson;
   hexScale: number;
   label?: string;
-  popup?: string;
+  tooltip?: string;
   margin: number;
   matchKey?: string;
   title?: string;
@@ -100,7 +100,7 @@ export default function (input: { config: HexmapOptions }) {
     margin: marginScale = 0.25,
     label = (key: string) => key.slice(0, 3),
     matchKey,
-    popup = (label: string, value) => `${label}: ${value}`,
+    tooltip = (label: string, value) => `${label}: ${value}`,
     title = "Hexmap",
     titleProp = "n",
     valueProp = "colour",
@@ -153,12 +153,12 @@ export default function (input: { config: HexmapOptions }) {
 		}
 		return txt;
 	}
-	let popupProcessor = function(props,key){
+	let tooltipProcessor = function(props,key){
 		var txt = key;
 		// See if this is just a straightforward key
 		if(typeof props[key]==="string") txt = props[key];
 
-		if(popup){
+		if(tooltip){
 			// Process replacement filters 
 			txt = applyReplacementFilters(txt,props);
 		}else{
@@ -346,7 +346,7 @@ export default function (input: { config: HexmapOptions }) {
 
     const labelProp = <string> config[titleProp];
     let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
-    let popupText = popupProcessor(config, <string> (typeof popup==="function" ? popup(labelProp, value) : popup));
+    let tooltipText = tooltipProcessor(config, <string> (typeof tooltip==="function" ? tooltip(labelProp, value) : tooltip));
 
     const colourValue =
       <number | string> config[colourValueProp || valueProp] || value;
@@ -375,7 +375,7 @@ export default function (input: { config: HexmapOptions }) {
           id="${uuid}-hex-${hexId}"
           class="hex"
           transform="translate(${x} ${y})"
-          data-auto-popup="${popupText}"
+          data-auto-popup="${tooltipText}"
           data-value="${value}"
           role="listitem"
           aria-label="${labelProp} value ${value}"
@@ -387,7 +387,7 @@ export default function (input: { config: HexmapOptions }) {
           dominant-baseline="middle"
           aria-hidden="true"
           >${labelText}</text>
-		<title>${popupText}</title>
+		<title>${tooltipText}</title>
       </g>`;
   };
 
