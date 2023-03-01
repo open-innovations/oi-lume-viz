@@ -122,6 +122,9 @@ export function Series(s,props,data,extra){
 				pts[i].point = svgEl('circle');
 
 				setAttr(pts[i].point,datum);
+				
+				// Add the marker class for interactivity
+				pts[i].point.classList.add('marker');
 
 				// Update the point
 				o = {'cx':0,'cy':0,'tabindex':0};

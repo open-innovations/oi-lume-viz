@@ -23,15 +23,15 @@ export function Chart(config,csv){
 		'bottom':0,
 		'tick':5,
 		'font-size': 16,
-		'font-family':'CenturyGothicStd,"Century Gothic",sans-serif',
+		'font-family':'Poppins,sans-serif',
 		'legend':{
 			'show':false,
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'none'},
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},
 		'axis':{
-			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'CenturyGothicStd,"Century Gothic",sans-serif'},
-			'y':{'padding':10,'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'CenturyGothicStd,"Century Gothic",sans-serif'}
+			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'Poppins,CenturyGothicStd,"Century Gothic",sans-serif'},
+			'y':{'padding':10,'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'Poppins,CenturyGothicStd,"Century Gothic",sans-serif'}
 		},
 		'duration': '0.3s'
 	};
@@ -91,11 +91,12 @@ export function Chart(config,csv){
 			this.opt.series[s].id = id;
 			this.opt.series[s].lbl = lbl;
 		}
+
 		if(typeof this.opt.buildSeries==="function"){
 			this.opt.buildSeries.call(this);
 		}else{
 			// Series
-			var data,datum,label;
+			var data,datum,label,x,y,labx,laby;
 			for(s = 0; s < this.opt.series.length; s++){
 				mergeDeep(this.opt.series[s],{
 					'line':{'show':true,'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')},
@@ -103,12 +104,16 @@ export function Chart(config,csv){
 				});
 				data = [];
 				for(i = 0; i < csv.rows.length; i++){
-					if(csv.columns[this.opt.series[s].x][i] >= this.opt.axis.x.min && csv.columns[this.opt.series[s].x][i] <= this.opt.axis.x.max){
+					labx = x = csv.columns[this.opt.series[s].x][i];
+					laby = y = csv.columns[this.opt.series[s].y][i];
+					if(typeof x==="string") x = i;
+					if(typeof y==="string") y = i;
+					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
 						categoryoffset = csv.rows.length-i-1;
 						seriesoffset = (this.opt.series.length-s-1.5)*(0.8/this.opt.series.length);
-						label = this.opt.series[s].title+"\n"+csv.columns[this.opt.series[s].x][i]+': '+(csv.columns[this.opt.series[s].y][i]||"");
+						label = this.opt.series[s].title+"\n"+labx+': '+(laby||"");
 						if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
-						datum = {'x':csv.columns[this.opt.series[s].x][i],'y':csv.columns[this.opt.series[s].y][i],'title':label};
+						datum = {'x':x,'y':y,'title':label};
 						datum.data = {'series':this.opt.series[s].title};
 						data.push(datum);
 					}
@@ -233,7 +238,7 @@ export function Chart(config,csv){
 				else if(po[u]=="top") y = this.opt.top+pd;
 				else if(po[u]=="bottom") y = this.h-this.opt.bottom-pd-hkey;
 			}
-			//setAttr(key.el,{'transform':'translate('+x+' '+y+')'});
+
 			setAttr(key.border,{'x':x,'width':wkey+pd,'y':y});
 			y += pd;
 			x += pd;

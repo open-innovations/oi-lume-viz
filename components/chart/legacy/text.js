@@ -1,8 +1,10 @@
 /*
 	Function to estimate pixel length of text strings
-	Currently only works for "Century Gothic" standard/bold
+	Currently only works for limited typefaces in standard/bold
 */
 export function textLength(txt,fs,weight,font){
+
+	const fontparts = font.split(/,(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/g);
 
 	const fonts = {
 		'Arial': {
@@ -19,14 +21,27 @@ export function textLength(txt,fs,weight,font){
 		}
 	};
 
-	if(!font || !fonts[font]){
-		console.warn('We do know the widths of glyphs for the font "'+font+'" so we are defaulting to Arial.');
+	let match = "";
+	for(let f = 0; f < fontparts.length; f++){
+		if(fonts[fontparts[f]]){
+			match = fontparts[f];
+			continue;
+		}
+	}
+	if(!weight) weight = 'std';
+
+	if(!match){
+		console.warn('We do not know the widths of glyphs for the font "'+font+'" so we are defaulting to Arial.');
 		font = "Arial";
+	}
+	if(!fonts[match][weight]){
+		console.warn('We do not know the widths for the weight "'+weight+'" so we are defaulting to normal.');
+		weight = '';
 	}
 
 	var len = 0;
 	var c,code,widths;
-	widths = (weight=="bold") ? fonts[font].bold : fonts[font].std; 
+	widths = (weight=="bold") ? fonts[match].bold : fonts[match].std; 
 	for(c = 0; c < txt.length; c++){
 		code = txt.charCodeAt(c);
 		len += (fs/16)*(code < widths.length ? widths[code] : 0.49);

@@ -18,6 +18,7 @@ export function BarChart(config,csv){
 		'bottom':0,
 		'tick':5,
 		'font-size': basefs,
+		'font-weight': 'std',
 		'key':{
 			'show':false,
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'rgba(255,255,255,0.9)'},
@@ -96,7 +97,7 @@ export function BarChart(config,csv){
 						// Work out the longest line
 						for(i = 0; i < lines.length; i++){
 							// Roughly calculate the length in pixels
-							len = Math.max(len,(this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + textLength(lines[i],this.opt['font-size'],this.opt['font-weight'],'Century Gothic') + this.opt.tick + this.opt.axis[ax].padding);
+							len = Math.max(len,(this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + textLength(lines[i],this.opt['font-size'],this.opt['font-weight'],this.opt['font-family']) + this.opt.tick + this.opt.axis[ax].padding);
 						}
 					}
 					align = this.opt.axis[ax].labels[l].align||(ax=="x" ? "bottom":"left");

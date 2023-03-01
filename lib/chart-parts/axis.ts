@@ -9,7 +9,7 @@ export type AxisOptions = {
 }
 
 export function drawAxes({
-  origin, width, height, xLabels, xAxisOptions, yLabels, yAxisOptions, tickSize = 10,
+  origin, width, height, xLabels, xAxisOptions, yLabels, yAxisOptions, tickSpacing = 10,
 }: {
   origin: [number, number];
   width: number;
@@ -18,10 +18,10 @@ export function drawAxes({
   xAxisOptions: AxisOptions;
   yLabels: { y: number; label: string; }[];
   yAxisOptions: AxisOptions;
-  tickSize?: number;
+  tickSpacing?: number;
 }) {
   const defaultTitleOffset = 2;
-  const yTickPath = yLabels.map(({ y }) => `M${origin[0]},${y}h${-tickSize}`).join('');
+  const yTickPath = yLabels.map(({ y }) => `M${origin[0]},${y}h${-tickSpacing}`).join('');
   let yLabel = '';
   if (yAxisOptions.title !== undefined)
     yLabel = `
@@ -33,7 +33,7 @@ export function drawAxes({
         </text>
     `;
 
-  const xTickPath = xLabels.map(({ x }) => `M${x},${origin[1]}v${tickSize}`).join('');
+  const xTickPath = xLabels.map(({ x }) => `M${x},${origin[1]}v${tickSpacing}`).join('');
   let xLabel = '';
   if (xAxisOptions.title !== undefined)
     xLabel = `
@@ -48,16 +48,16 @@ export function drawAxes({
     <g class='axis'>
       <g class='y-axis'>
         <title>Y Axis</title>
-        <path d='M ${origin.join(',')} v -${height}'/>
-        <path d='${yTickPath}'/>
-        ${yLabels.map(({ y, label }) => `<text class='tick-label' x=${origin[0]} y=${y} dx=${-tickSize * 2}>${label}</text>`).join('')}
+        <path d='M ${origin.join(',')} v -${height}' stroke="#444" />
+        <path d='${yTickPath}' stroke="#444" />
+        ${yLabels.map(({ y, label }) => `<text class='tick-label' x=${origin[0]} y=${y} dx=${-tickSpacing * 2} text-anchor='end' dominant-baseline='middle'>${label}</text>`).join('')}
         ${yLabel}
       </g>
       <g class='x-axis${xAxisOptions.labelRotate ? ' rotated' : ''}'>
         <title>X Axis</title>
-        <path d='M ${origin.join(',')} h ${width}'/>
-        <path d='${xTickPath}'/>
-        ${xLabels.map(({ x, label }) => `<text class='tick-label' x=0 y=0 transform="translate(${x} ${origin[1] + tickSize * 2}) ${xAxisOptions.labelRotate ? 'rotate(-' + xAxisOptions.labelRotate + ')' : ''}">${label}</text>`).join('')}
+        <path d='M ${origin.join(',')} h ${width}' stroke="#444" />
+        <path d='${xTickPath}' stroke="#444" />
+        ${xLabels.map(({ x, label }) => `<text class='tick-label' x=0 y=0 transform="translate(${x} ${origin[1] + tickSpacing * 2}) ${xAxisOptions.labelRotate ? 'rotate(-' + xAxisOptions.labelRotate + ')' : ''}" text-anchor="middle" dominant-baseline="hanging">${label}</text>`).join('')}
         ${xLabel}
       </g>
     </g>

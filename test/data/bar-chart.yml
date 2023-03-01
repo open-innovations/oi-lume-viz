@@ -210,7 +210,7 @@
 
 - title: "Minimal config with auto scaling and auto-ticks"
   description: |
-    If you have regularly updated "live" data you may not know the scale that will be needed for the values in advance. In that case you can set a <code>axis &rarr; x &rarr; tickSize</code> and let the chart calculate an automatic range and tick marks.
+    If you have regularly updated "live" data you may not know the scale that will be needed for the values in advance. In that case you can set a <code>axis &rarr; x &rarr; tickSpacing</code> and let the chart calculate an automatic range and tick marks.
   config:
     data:
       - category: First category
@@ -227,7 +227,7 @@
         value: series1
     axis:
       x:
-        tickSize: 7.5
+        tickSpacing: 7.5
 
 - title: "Auto scaling stacked bar chart"
   config:
@@ -253,7 +253,7 @@
         grid:
           stroke-dasharray: "6 2"
           stroke-width: 1
-        tickSize: 100
+        tickSpacing: 100
       y:
         grid:
           stroke-width: 0.5
@@ -284,7 +284,7 @@
       position: top right
     axis:
       x:
-        tickSize: 10
+        tickSpacing: 10
       y:
         grid:
           stroke-width: 0.5

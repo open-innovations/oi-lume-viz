@@ -26,8 +26,8 @@ export interface AxisOptions {
   /** Maxiumum number on axis. Defaults to largest of 0 or maximum value of presented of data. */
   max: number;
   /** Size of ticks for auto generated or rounding */
-  tickSize: number;
-  /** Ticks to display on axis. Auto generated if ommitted and tickSize provided. Otherwise defaults to empty. */
+  tickSpacing: number;
+  /** Ticks to display on axis. Auto generated if ommitted and tickSpacing provided. Otherwise defaults to empty. */
   ticks: TickOptions[];
   /** Font weight for the axis */
   "font-weight": FontWeightOptions;

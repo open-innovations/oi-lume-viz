@@ -22,9 +22,6 @@ export const css = `
   fill: var(--colour);
   stroke: none;
 }
-.chart .axis {
-  stroke: var(--colour);
-}
 .chart .title {
   text-anchor: middle;
   dominant-baseline: hanging;
@@ -33,16 +30,8 @@ export const css = `
   text-anchor: middle;
   dominant-baseline: central;
 }
-.chart .x-axis .tick-label {
-  text-anchor: middle;
-  dominant-baseline: hanging;
-}
 .chart .x-axis.rotated .tick-label {
   text-anchor: end;
-}
-.chart .y-axis .tick-label {
-  text-anchor: end;
-  dominant-baseline: middle;
 }
 .chart .legend-container {
   --width: 20rem;

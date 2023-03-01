@@ -39,7 +39,7 @@ site.use(basePath());
 site.remoteFile('index.md', path.resolve('README.md'));
 
 // Map test data to local site
-site.remoteFile('samples/chart/bar/_data/examples.yml', './test/data/bar-chart.yml');
+site.remoteFile('samples/chart/bar/_data/examples.yml', './test/data/bar-chart.yml', 'samples/chart/line/_data/examples.yml',);
 
 // Add filters
 site.filter('yaml', (value, options = {}) => yamlStringify(value, options));

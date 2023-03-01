@@ -58,21 +58,6 @@ export function Axis(ax,from,to,attr){
 		y = (ax=="y" ? (opt.top + (opt.height-opt.top-opt.bottom)/2):(opt.height-fs/2));
 		setAttr(this.title,{'x':x,'y':y,'dx':0,'text-anchor':'middle','transform':(ax=="y"?'rotate(-90,'+x+','+y+')':''),'font-family':opt['font-family']||'sans-serif','font-weight':opt['font-weight']});
 		this.el.removeAttribute('style');
-		// Check if we need to add a line
-		/*
-		if(!this.line.el){
-			this.line.el = svgEl("path");
-			this.line.el.classList.add('line');
-			this.line.el.setAttribute('vector-effect','non-scaling-stroke');
-			// Add it to the element
-			add(this.line.el,this.el);
-			// Create an animation for the line
-			this.line.animate = new Animate(this.line.el,{'duration':opt.duration});
-		}
-		pos = [{x:(opt.left-0.5),y:(opt.height-opt.bottom-0.5)},{x:(ax=="x" ? (opt.width-opt.right) : (opt.left-0.5)),y:(ax=="x" ? (opt.height-opt.bottom-0.5) : (opt.top-0.5))}];
-		this.line.animate.set({'d':{'from':'','to':pos}});
-		setAttr(this.line.el,{'d':'M'+pos[0].x+' '+pos[0].y+' L'+pos[1].x+' '+pos[1].y,'style':(opt.line.show ? 'display:block':'display:none'),'stroke':opt.line.stroke,'stroke-width':opt.line['stroke-width'],'stroke-dasharray':opt.line['stroke-dasharray']});
-		*/
 		// Loop over existing ticks removing any that no longer exist
 		for(t in this.ticks){
 			if(t && !opt.ticks.show){
@@ -159,7 +144,6 @@ export function Axis(ax,from,to,attr){
 				}
 			}
 		}
-		//add(this.line.el,this.el); // simulate z-index
 	};
 	return this;
 }
