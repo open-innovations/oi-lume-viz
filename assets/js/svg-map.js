@@ -36,7 +36,24 @@
 		svg = el.querySelector('svg');
 		pt = svg.querySelectorAll('.data-layer path');
 		pts = [];
-
+		
+		this.addOutline = function(e){
+			// Create an outline version of the hex that sits on top
+			var outline = e.cloneNode(true);
+			outline.querySelector('text').remove();
+			outline.querySelector('title').remove();
+			outline.querySelector('path').setAttribute('fill','none');
+			outline.querySelector('path').setAttribute('vector-effect','non-scaling-stroke');
+			outline.removeAttribute('id');
+			outline.classList.add('outline');
+			e.parentNode.appendChild(outline);
+			return this;
+		};
+		this.removeOutline = function(e){
+			if(!e) e = svg.querySelector('.data-layer');
+			if(e.parentNode.querySelector('.outline')) e.parentNode.querySelector('.outline').remove();
+			return this;
+		};
 		this.showTooltip = function(e){
 			el.style.position = 'relative';
 
@@ -48,6 +65,13 @@
 				addClasses(this.tip,['tooltip']);
 				add(this.tip,el);
 			}
+
+			// Remove any existing outline
+			this.removeOutline(e.data.el.parentNode);
+
+			// Create an outline version of the hex that sits on top
+			this.addOutline(e.data.el.parentNode);
+
 			// Set the contents
 			txt = e.data.title;
 
@@ -75,12 +99,17 @@
 			return this.clearTooltip(e);
 		};
 		this.clearTooltip = function(e){
+			
+			// Remove any existing outline
+			this.removeOutline();
 			if(this.tip && this.tip.parentNode) this.tip.parentNode.removeChild(this.tip);
 			return this;
 		};
 		for(p = 0; p < pt.length; p++){
 			tt = pt[p].parentNode.querySelector('title');
 			pts[p] = {'el':pt[p],'tooltip':(tt ? tt.innerHTML : "")};
+			pt[p].parentNode.setAttribute('tabindex',0);
+			addEv('focus',pt[p].parentNode,{'this':this,'title':pts[p].tooltip,'el':pt[p],'label':pt[p].parentNode.querySelector('text')},this.showTooltip);
 			addEv('mouseover',pt[p],{'this':this,'title':pts[p].tooltip,'el':pt[p],'label':pt[p].parentNode.querySelector('text')},this.showTooltip);
 		}
 		addEv('mouseleave',el,{'this':this,'s':''},this.reset);

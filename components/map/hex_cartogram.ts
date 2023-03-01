@@ -44,6 +44,8 @@ export const css = `
 	.map .leaflet-container a.leaflet-popup-close-button { color: inherit; }
 	.map .leaflet-control { z-index: 400; }
 	.map .leaflet-top, .leaflet-bottom { position: absolute; z-index: 400; pointer-events: none; }
+	.map.hex-map .hex:focus { outline: none; }
+	.map.hex-map .hex.outline path { stroke: black; stroke-width: 4px; }
 	.leaflet-top { top: 0; }
 	.leaflet-right { right: 0; }
 	.leaflet-bottom { bottom: 0; }
