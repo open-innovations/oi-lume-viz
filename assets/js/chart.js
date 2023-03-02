@@ -296,35 +296,36 @@
 
 				txt = document.createElement('span');
 				txt.classList.add('label');
-				
+
 				if(!keyseries[s].querySelector('svg')){
 
 					// If this already is SVG get the text from a tspan
 					txt.innerHTML = keyseries[s].querySelector('text tspan').innerHTML;
 
-					// Now remove the text label (we'll recreate it with HTML)
-					keyseries[s].querySelector('text').parentNode.removeChild(keyseries[s].querySelector('text'));
-
 					// Make the new SVG just for the icon and add it to our new series item
 					icon = svgEl('svg');
-					add(keyseries[s],icon);
-					setAttr(icon,{'width':17*1.5,'height':'1em','viewBox':'0 0 '+(17*1.5)+' 17'});
+					add(keyseries[s].cloneNode(true),icon);
+					setAttr(icon,{'overflow':'visible','width':17*1.5,'height':'1em','viewBox':'0 0 '+(17*1.5)+' 17'});
 					snum = keyseries[s].getAttribute('data-series');
 
 				}else{
+					// Get the SVG item and use it
+					icon = keyseries[s].querySelector('svg').cloneNode(true);
+					setAttr(icon,{'overflow':'visible','height':'1em','style':''});
+
 					// If this is HTML containing SVG get the text from a span
 					txt.innerHTML = keyseries[s].querySelector('span').innerHTML;
-					keyseries[s].querySelector('span').parentNode.removeChild(keyseries[s].querySelector('span'));
 					
-					// Get the SVG item and use it
-					icon = keyseries[s].querySelector('svg');
-					setAttr(icon,{'height':'1em','style':''});
 					snum = keyseries[s].querySelector('.marker').getAttribute('data-series');
 				}
+
+				// Remove any text from the icon
+				if(icon.querySelector('text')) icon.querySelector('text').parentNode.removeChild(icon.querySelector('text'));
+
 				add(icon,keyitem);
 				add(txt,keyitem);
 
-				setAttr(keyseries[s],{'transform':''});
+				setAttr(icon.querySelector('.data-series'),{'transform':''});
 				setAttr(keyitem,{'data-series':snum,'tabindex':0,'title':'Highlight series: '+txt.innerHTML});
 
 				// Add the events for mouseover, keydown, click and mouseout

@@ -13,12 +13,10 @@ export const css = `
  * Options provided to the Line Chart
  */
 export interface LineChartOptions {
-  /** Whether the bar chart is stacked or not - this shouldn't need to be here */
-  stacked: boolean;
   /** Data provided to the chart is expected to be an array of objects (mandatory) */
   data: Record<string, unknown>[] | string;
-  /** Name of the category (mandatory) */
-  category: string;
+  /** Name of a common x-axis category - over-rided by 'x' set in an individual series  */
+  category?: string;
   /** Configuration of each of the series (mandatory) */
   series: Partial<SeriesOptions>[];
   /** Configuration of the axes */

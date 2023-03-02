@@ -54,7 +54,11 @@ export function BarChart(config,csv){
 						}
 					}
 					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
-					datum = {'x':(isNaN(csv.columns[this.opt.series[s].value][i]) ? null : csv.columns[this.opt.series[s].value][i]),'y':categoryoffset+seriesoffset,'title':label};
+					datum = {
+						'x':(isNaN(csv.columns[this.opt.series[s].value][i]) ? null : csv.columns[this.opt.series[s].value][i]),
+						'y':categoryoffset+seriesoffset,
+						'title':label
+					};
 					// Add errors if we have them
 					if(this.opt.series[s].errors) datum.error = {'x':[csv.columns[this.opt.series[s].errors[0]][i],csv.columns[this.opt.series[s].errors[1]][i]]};
 					datum.data = {'category':csv.columns[this.opt.category][i],'series':this.opt.series[s].title};

@@ -1,7 +1,7 @@
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { Axis } from './axis.js';
 import { Series } from './series.js';
-import { add, svgEl, setAttr, addClasses, qs, roundTo } from './util.js';
+import { add, svgEl, setAttr, addClasses, roundTo } from './util.js';
 import { textLength } from './text.js';
 
 const ns = 'http://www.w3.org/2000/svg';
@@ -92,42 +92,43 @@ export function Chart(config,csv){
 			this.opt.series[s].lbl = lbl;
 		}
 
-		if(typeof this.opt.buildSeries==="function"){
-			this.opt.buildSeries.call(this);
-		}else{
-			// Series
-			var data,datum,label,x,y,labx,laby;
-			for(s = 0; s < this.opt.series.length; s++){
-				mergeDeep(this.opt.series[s],{
-					'line':{'show':true,'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')},
-					'points':{'size':1, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')}
-				});
-				data = [];
-				for(i = 0; i < csv.rows.length; i++){
-					labx = x = csv.columns[this.opt.series[s].x][i];
-					laby = y = csv.columns[this.opt.series[s].y][i];
-					if(typeof x==="string") x = i;
-					if(typeof y==="string") y = i;
-					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
-						categoryoffset = csv.rows.length-i-1;
-						seriesoffset = (this.opt.series.length-s-1.5)*(0.8/this.opt.series.length);
-						label = this.opt.series[s].title+"\n"+labx+': '+(laby||"");
-						if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
-						datum = {'x':x,'y':y,'title':label};
-						datum.data = {'series':this.opt.series[s].title};
-						data.push(datum);
-					}
-				}
-				this.series.push(new Series(s,this.opt.series[s],data));
-			}
-		}
+		// Use a custom function to build the data series
+		if(typeof this.opt.buildSeries==="function") this.opt.buildSeries.call(this);
+		else this.buildSeries();
 
 		if(seriesgroup) add(seriesgroup,svg);
 
 		this.addSeries();
 		return this;
 	};
-
+	// Build the data series. For each series, it creates a data structure of the format:
+	// [{x:,y:,title:},{x:,y:,title:}]
+	this.buildSeries = function(){
+		let s,i,labx,laby,x,y,label,datum,data;
+		// Build the series
+		for(s = 0; s < this.opt.series.length; s++){
+			mergeDeep(this.opt.series[s],{
+				'line':{'show':true,'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')},
+				'points':{'size':1, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')}
+			});
+			data = [];
+			for(i = 0; i < csv.rows.length; i++){
+				labx = x = csv.columns[this.opt.series[s].x][i];
+				laby = y = csv.columns[this.opt.series[s].y][i];
+				if(typeof x==="string") x = i;
+				if(typeof y==="string") y = i;
+				if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
+					label = this.opt.series[s].title+"\n"+labx+': '+(laby||"");
+					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
+					datum = {'x':x,'y':y,'title':label};
+					datum.data = {'series':this.opt.series[s].title};
+					data.push(datum);
+				}
+			}
+			this.series.push(new Series(s,this.opt.series[s],data));
+		}
+		return this;
+	}
 	this.getXY = function(x,y){
 		x = this.opt.left + ((x - this.xmin)/(this.xmax - this.xmin))*(this.w - this.opt.left - this.opt.right);
 		y = this.opt.top + (1-(y - this.ymin)/(this.ymax - this.ymin))*(this.h - this.opt.bottom - this.opt.top);
@@ -155,6 +156,7 @@ export function Chart(config,csv){
 		for(ax in this.axes) this.axes[ax].setProperties(this.opt.axis[ax]||{}).addTo(svg);
 		return this;
 	};
+	
 	this.buildAxes = function(){
 		// Axes
 		// Build x-axis labels
@@ -179,90 +181,21 @@ export function Chart(config,csv){
 		return svg.outerHTML;
 	};
 
-	this.draw = function(){
-		var u,i,fs,pd,hkey,wkey,x,y,s,text,line,circ,p,cl,po,tspan;
 
-		var defaultkeyitem = '<path d="M0 0 L 1 0" class="line" class="" stroke-width="3" stroke-linecap="round"></path><rect x="0" y="0" width="5" height="5" fill="silver"></rect>';
+	this.draw = function(){
+		var u,i,fs,pd,hkey,wkey,x,y,s,text,line,mark,p,cl,po,tspan;
 
 		this.updateRange();
 
 		// Update axes
 		for(ax in this.axes) this.axes[ax].update();
 
+		// Create a legend for the chart
 		if(this.opt.legend.show){
-			fs = this.opt['font-size']||16;
-			pd = this.opt.legend.padding||fs*0.5;
-			hkey = (this.opt.legend.label ? 1:0)*fs +(2*pd) + (this.series.length*fs);
-			x = 0;
-			y = 0;
-			if(!key){
-				key = {'el':svgEl("g"),'g':[],'border':svgEl("rect")};
-				key.el.classList.add('legend');
-				setAttr(key.border,{'x':0,'y':this.opt.top,'width':this.w,'height':hkey});
-				if(typeof this.opt.legend.border==="object"){
-					for(p in this.opt.legend.border) key.border.setAttribute(p,this.opt.legend.border[p]);
-				}
-				add(key.border,key.el);
-				add(key.el,svg);
-			}
-
-			wkey = 0;
-			for(s = 0; s < this.series.length; s++){
-				if(!key.g[s]){
-					key.g[s] = svgEl("g");
-					key.g[s].setAttribute('data-series',s+1);
-					// Update class of line
-					cl = ['data-series','data-series-'+(s+1)];
-					if(this.series[s].getProperty('class')) cl.concat(this.series[s].getProperty('class').split(/ /));
-					addClasses(key.g[s],cl);
-
-					add(key.g[s],key.el);
-				}
-				tspan = (this.series[s].getProperty('title')||"Series "+(s+1));
-				key.g[s].innerHTML = '<text><tspan dx="'+(fs*2)+'" dy="0">'+tspan+'</tspan></text>'+defaultkeyitem;
-				setAttr(key.g[s].querySelector('tspan'),this.series[s].getProperty('attr'));
-				// If we had a browser we could use getBoundingClientRect().width, but we don't so we'll approximate the length
-				wkey = Math.max(wkey,textLength(tspan,fs,this.opt.legend.text['font-weight']||"standard",'Century Gothic'));
-			}
-			if(typeof this.opt.legend.width==="number") wkey = this.opt.legend.width;
-			else wkey += fs*1.5 + pd*2;	// The width is approximately half the font-size plus twice the font size (for the icon) and some padding
-
-
-			if(!this.opt.legend.position) this.opt.legend.position = 'top right';
-			po = this.opt.legend.position.split(/ /);
-
-			x = y = 0;
-			for(u = 0; u < po.length; u++){
-				if(po[u]=="left") x = this.opt.left+pd;
-				else if(po[u]=="right") x = (this.w-this.opt.right-wkey-pd);
-				else if(po[u]=="top") y = this.opt.top+pd;
-				else if(po[u]=="bottom") y = this.h-this.opt.bottom-pd-hkey;
-			}
-
-			setAttr(key.border,{'x':x,'width':wkey+pd,'y':y});
-			y += pd;
-			x += pd;
-
-			for(s = 0; s < this.series.length; s++){
-				// Set the transform on the group
-				setAttr(key.g[s],{'transform':'translate('+x+' '+y+')'});
-				
-				text = qs(key.g[s],'text');
-				line = qs(key.g[s],'path');
-				rect = qs(key.g[s],'rect');
-				setAttr(text,{'x': 0,'y':roundTo(fs*0.2, 3),'font-family':this.opt['font-family']||"sans-serif"});
-				if(typeof this.opt.legend.text==="object"){
-					for(p in this.opt.legend.text) text.setAttribute(p,this.opt.legend.text[p]);
-				}
-				p = this.series[s].getProperties();
-				setAttr(rect,{'x':roundTo(fs*0.75, 3)-fs/2,'y':roundTo(0.5*fs, 3)-fs/2,'width':fs,'height':fs,'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
-
-				if(this.opt.type=="line-chart" || this.opt.type=="category-chart"){
-					line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*1.5)+' 0');
-					if(p.line.color) line.setAttribute('stroke',p.line.color||"");
-				}
-				
-				y += fs;
+			if(!this.legend){
+				this.legend = new Legend(this,svg);
+			}else{
+				this.legend.update();
 			}
 		}
 
@@ -273,5 +206,155 @@ export function Chart(config,csv){
 	};
 	
 	this.init();
+	return this;
+}
+
+function Legend(chart,svg){
+	let key,fs,pd,hkey,wkey,x,y,s,text,line,mark,p,cl,po,tspan,u;
+
+	fs = chart.opt['font-size']||16;
+	pd = chart.opt.legend.padding||fs*0.5;
+	hkey = (chart.opt.legend.label ? 1:0)*fs +(2*pd) + (chart.series.length*fs);
+	x = 0;
+	y = 0;
+
+	if(!chart.legend){
+		key = {'el':svgEl("g"),'g':[],'items':[],'border':svgEl("rect")};
+		key.el.classList.add('legend');
+		setAttr(key.border,{'x':0,'y':chart.opt.top,'width':chart.w,'height':hkey});
+		if(typeof chart.opt.legend.border==="object"){
+			for(p in chart.opt.legend.border) key.border.setAttribute(p,chart.opt.legend.border[p]);
+		}
+		add(key.border,key.el);
+		add(key.el,svg);
+	}
+
+	this.update = function(){
+		wkey = 0;
+		for(s = 0; s < chart.series.length; s++){
+			if(!key.items[s]){
+				key.items[s] = new KeyItem({
+					'type':chart.opt.type,
+					'legend':key.el,
+					'series':chart.series[s],
+					's':s,
+					'marker':chart.opt.series[s].marker,
+					'markerOptions':chart.opt.series[s].markerOptions||{},
+					'fontSize': fs 
+				});
+			}
+
+			// If we had a browser we could use getBoundingClientRect().width, but we don't so we'll approximate the length
+			wkey = Math.max(wkey,key.items[s].getTextLength(chart.opt.legend.text['font-weight']||"standard",'Century Gothic'));
+		}
+		if(typeof chart.opt.legend.width==="number") wkey = chart.opt.legend.width;
+		else wkey += fs*1.5 + pd*2;	// The width is approximately half the font-size plus twice the font size (for the icon) and some padding
+
+
+		if(!chart.opt.legend.position) chart.opt.legend.position = 'top right';
+		po = chart.opt.legend.position.split(/ /);
+
+		x = y = 0;
+		for(u = 0; u < po.length; u++){
+			if(po[u]=="left") x = chart.opt.left+pd;
+			else if(po[u]=="right") x = (chart.w-chart.opt.right-wkey-pd);
+			else if(po[u]=="top") y = chart.opt.top+pd;
+			else if(po[u]=="bottom") y = chart.h-chart.opt.bottom-pd-hkey;
+		}
+
+		setAttr(key.el,{'transform':'translate('+x+' '+y+')'})
+		setAttr(key.border,{'x':0,'width':wkey+pd,'y':0});
+		y += pd;
+		x += pd;
+
+		x = pd;
+		y = pd;
+		for(s = 0; s < chart.series.length; s++){
+			y += key.items[s].setPosition(x,y);
+			key.items[s].updateLabel(chart.opt.legend.text,chart.opt['font-family']);
+			key.items[s].update();
+		}
+		return this;
+	};
+
+	this.update();
+
+	return this;
+}
+
+// Build a key item
+function KeyItem(opts){
+
+	if(!opts) throw("No options provided");
+	
+	// Set some default values
+	if(!opts.markerOptions) opts.markerOptions = {};
+	if(!opts.marker) opts.marker = (opts.type=="bar-chart" ? "square" : "circle");
+	if(typeof opts.fontSize === 'undefined') opts.fontSize = 4; // Deliberately small so we can see it is bad
+
+	this.el = svgEl("g");
+	this.el.setAttribute('data-series',opts.s+1);
+
+	// Update class of line
+	let cl = ['data-series','data-series-'+(opts.s+1)];
+	if(opts.series.getProperty('class')) cl.concat(series.getProperty('class').split(/ /));
+	addClasses(this.el,cl);
+	opts.legend.appendChild(this.el);
+
+	let label = svgEl('text');
+	this.el.appendChild(label);
+	let tspan = svgEl('tspan');
+	tspan.innerHTML = (opts.series.getProperty('title')||"Series "+(s+1));
+	setAttr(tspan,{'dx':(opts.fontSize*2),'dy':0});
+	label.appendChild(tspan);
+	
+	let line = svgEl('path');
+	setAttr(line,{'d':'M0 0 L 1 0','stroke-width':3,'stroke-linecap':'round','class':'line item-line'});
+	
+	let mark;
+	if(opts.marker == "square"){
+		mark = svgEl("rect");
+		setAttr(mark,{'class':'item-mark','x':0,'y':0,'width':5,'height':5,'fill':'silver'});
+	}else{
+		mark = svgEl("circle");
+		setAttr(mark,{'class':'item-mark','cx':0.5,'cy':0,'r':opts.markerOptions.s||5,'fill':'silver'});
+	}
+	this.el.appendChild(line);
+	this.el.appendChild(mark);
+	
+	setAttr(tspan,opts.series.getProperty('attr'));
+
+	this.getTextLength = function(fontWeight,fontFamily){
+		return textLength(tspan.innerText,opts.fontSize,fontWeight,fontFamily);
+	};
+	this.setPosition = function(x,y){
+		setAttr(this.el,{'transform':'translate('+x+' '+y+')','data':'a'});
+		return opts.fontSize;
+	};
+	this.updateLabel = function(text,fontFamily){
+		setAttr(label,{'x': 0,'y':roundTo(opts.fontSize*0.2, 3),'font-family':fontFamily||"sans-serif"});
+		if(typeof text==="object"){
+			for(let p in text) label.setAttribute(p,text[p]);
+		}
+		return this;
+	}
+
+	this.update = function(){
+
+		let fs = opts.fontSize;
+		let p = opts.series.getProperties();
+		if(opts.marker=="square"){
+			setAttr(mark,{'x':roundTo(fs*0.75, 3)-fs/2,'y':roundTo(0.5*fs, 3)-fs/2,'width':fs,'height':fs,'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
+		}else{
+			setAttr(mark,{'cx':roundTo(fs*0.75, 3),'cy':roundTo(0.5*fs, 3),'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
+		}
+		
+		if(opts.type=="line-chart" || opts.type=="category-chart"){
+			line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*1.5)+' 0');
+			if(p.line.color) line.setAttribute('stroke',p.line.color||"");
+		}
+		return this;
+	}
+
 	return this;
 }
