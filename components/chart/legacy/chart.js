@@ -317,7 +317,7 @@ function KeyItem(opts){
 		setAttr(mark,{'class':'item-mark','x':0,'y':0,'width':5,'height':5,'fill':'silver'});
 	}else{
 		mark = svgEl("circle");
-		setAttr(mark,{'class':'item-mark','cx':0.5,'cy':0,'r':opts.markerOptions.s||5,'fill':'silver'});
+		setAttr(mark,{'class':'item-mark','cx':0.5,'cy':0,'r':opts.markerOptions.size||5,'fill':'silver'});
 	}
 	this.el.appendChild(line);
 	this.el.appendChild(mark);
