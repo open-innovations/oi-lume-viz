@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8" />
+	<title>Glyph widths</title>
+	<style>
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://open-innovations.org/resources/fonts/Poppins/pxiDyp8kv8JHgFVrJJLmr19VFteOcEg.woff2) format('woff2');
+  unicode-range: U+0900-097F, U+1CD0-1CF6, U+1CF8-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FB;
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://open-innovations.org/resources/fonts/Poppins/pxiDyp8kv8JHgFVrJJLmr19VGdeOcEg.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://open-innovations.org/resources/fonts/Poppins/pxiDyp8kv8JHgFVrJJLmr19VF9eO.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://open-innovations.org/resources/fonts/Poppins/pxiByp8kv8JHgFVrLEj6Z11lFc-K.woff2) format('woff2');
+  unicode-range: U+0900-097F, U+1CD0-1CF6, U+1CF8-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FB;
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://open-innovations.org/resources/fonts/Poppins/pxiByp8kv8JHgFVrLEj6Z1JlFc-K.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://open-innovations.org/resources/fonts/Poppins/pxiByp8kv8JHgFVrLEj6Z1xlFQ.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+	body {
+		font-family: Arial,Poppins,"Century Gothic";
+		font-size: 32px;
+	}
+	#glyphs-bold { font-weight: bold; }
+	textarea { width: 100%; height: 10em; }
+	</style>
+</head>
+<body class="b1-bg">
+
+	<div class="holder padded">
+		<button id="calculate">Calculate</button>
+		<h1>Glyphs</h1>
+		
+		<h2>Lume</h2>
+		<textarea id="lume"></textarea>
+
+		<div id="glyphs"></div>
+		<div id="glyphs-bold"></div>
+	</div>
+
+	<script>
+	document.getElementById('calculate').addEventListener('click',function(){
+
+		var el = document.getElementById('glyphs');
+		var bd = document.getElementById('glyphs-bold');
+		
+		var text = '';
+		for(var charCode = 0; charCode <= 11000; charCode++){
+			text += '<span data="'+charCode+'">'+String.fromCharCode(charCode)+'</span>';
+		}
+		el.innerHTML = text;
+		bd.innerHTML = text;
+		
+		var fonts = {};
+		var font = getComputedStyle(el)['font-family'].replace(/^\"?([^\"\,]+)\"?.*$/,function(m,p1){ return p1; });
+		console.log(font);
+		fonts[font] = {'normal':{'font-size':parseInt(getComputedStyle(el)['font-size']),'widths':[]},'bold':{'font-size':parseInt(getComputedStyle(bd)['font-size']),'widths':[]}};
+
+
+		// Now work out widths for standard weight
+		chars = el.querySelectorAll('span');
+		codes = [];
+		for(var c = 0; c < chars.length; c++){
+			codes.push(chars[c].offsetWidth);
+		}
+		fonts[font].normal.widths = codes;
+
+		// Now work out widths for bold weight
+		chars = bd.querySelectorAll('span');
+		codes = [];
+		for(var c = 0; c < chars.length; c++){
+			codes.push(chars[c].offsetWidth);
+		}
+		fonts[font].bold.widths = codes;
+
+		document.getElementById('lume').innerHTML = JSON.stringify(fonts);
+	});
+	</script>
+
+	
+</body>
+</html>
