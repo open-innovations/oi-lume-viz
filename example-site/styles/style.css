@@ -80,6 +80,7 @@ footer a { color: #1DD3A7; }
 code,pre { font-family: monospace; color: #444; background-color: #efefef; }
 code { padding: 0.125em 0.25em; }
 pre { max-width: 100%; overflow-x: auto; padding: 16px; margin-bottom: 16px; }
+pre code { padding: 0; }
 ul { list-style: disc; }
 ol { list-style: decimal; }
 ul, ol { margin-left: 2em; }
