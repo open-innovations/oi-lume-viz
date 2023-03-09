@@ -212,7 +212,7 @@ function Legend(chart,svg){
 	let key,fs,pd,hkey,wkey,x,y,s,text,line,mark,p,cl,po,tspan,u;
 
 	fs = chart.opt['font-size']||16;
-	pd = chart.opt.legend.padding||fs*0.5;
+	pd = chart.opt.legend.padding||(fs*0.5);
 	hkey = (chart.opt.legend.label ? 1:0)*fs +(2*pd) + (chart.series.length*fs);
 	x = 0;
 	y = 0;
@@ -244,10 +244,11 @@ function Legend(chart,svg){
 			}
 
 			// If we had a browser we could use getBoundingClientRect().width, but we don't so we'll approximate the length
-			wkey = Math.max(wkey,key.items[s].getTextLength(chart.opt.legend.text['font-weight']||"standard",'Century Gothic'));
+			wkey = Math.max(wkey,key.items[s].getTextLength(chart.opt.legend.text['font-weight']||"standard",chart.opt.legend.text['font-family']||chart.opt['font-family']||"Poppins"));
 		}
+
 		if(typeof chart.opt.legend.width==="number") wkey = chart.opt.legend.width;
-		else wkey += fs*1.5 + pd*2;	// The width is approximately half the font-size plus twice the font size (for the icon) and some padding
+		else wkey += fs*2 + pd*2;	// The width is approximately half the font-size plus twice the font size (for the icon) and some padding
 
 		if(!chart.opt.legend.position) chart.opt.legend.position = 'top right';
 		po = chart.opt.legend.position.split(/ /);
@@ -261,7 +262,7 @@ function Legend(chart,svg){
 		}
 
 		setAttr(key.el,{'transform':'translate('+x+' '+y+')'})
-		setAttr(key.border,{'x':0,'width':wkey+pd,'y':0});
+		setAttr(key.border,{'x':0,'width':wkey,'y':0,'fill':chart.opt.legend.fill||'rgba(255,255,255,0.8)'});
 		y += pd;
 		x += pd;
 
