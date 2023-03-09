@@ -22,10 +22,12 @@ examples:
           grid:
             show: true
           tickSpacing: 5
+          tickSize: 5
         y:
           grid:
             show: true
           tickSpacing: 5
+          tickSize: 5
       series:
         - title: 16-17
           x: Year
@@ -33,13 +35,15 @@ examples:
           colour: "#e52e36"
   - title: "Explicitly defined grid"
     description: |
-      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed. We also create an interactive legend.
+      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tickSize</code> set for the <code>axis</code> rather than for each tick. We also create an interactive legend.
     config:
       data: test.data.unemploymentByAge
       legend:
         show: true     # Default to false
       axis:
         x:
+          title:
+            label: "Year"
           grid:
             stroke-dasharray: "6 2"
             stroke-width: 1
@@ -47,6 +51,7 @@ examples:
             - value: 2000
               grid: true
               label: '2000'
+              tickSize: 5
             - value: 2002
               grid: true
               label: ''
@@ -62,6 +67,7 @@ examples:
             - value: 2010
               grid: true
               label: '2010'
+              tickSize: 5
             - value: 2012
               grid: true
               label: ''
@@ -77,11 +83,14 @@ examples:
             - value: 2020
               grid: true
               label: '2020'
+              tickSize: 5
           min: 2000.0
           max: 2022.5
         y:
           min: 0
           max: 45
+          title:
+            label: "Unemployment"
           grid:
             stroke-width: 0.5
           ticks:
@@ -115,6 +124,7 @@ examples:
             - value: 45
               grid: true
               label: ''
+          tickSize: 5
       series:
         - title: 16-17
           x: Year

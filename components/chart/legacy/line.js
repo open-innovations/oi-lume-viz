@@ -3,11 +3,13 @@ import { Series } from './series.js';
 import { textLength } from './text.js';
 import { mergeDeep } from './util.js';
 
-const basefs = 17;
 const colours = {};
 
 // ORIGINAL FUNCTION BELOW
 export function LineChart(config,csv){
+
+	const basefs = 16;
+
 	var opt = {
 		'type': 'line-chart',
 		'padding':{'left':0,'top':0,'right':0,'bottom':0},
@@ -15,35 +17,54 @@ export function LineChart(config,csv){
 		'right':0,
 		'top':0,
 		'bottom':0,
-		'tick':5,
 		'font-size': basefs,
 		'key':{
 			'show':false,
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'rgba(255,255,255,0.9)'},
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},
-		'axis':{'x':{'padding':10,'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':10,'labels':{}}},
+		'axis':{'x':{'padding':5,'tickSize':0.5,'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tickSize':0.5,'labels':{}}},
 		'duration': '0.3s',
 		'updatePadding': function(){
-			var l,pad,len,ax,lines,align;
+			var l,pad,ax,lines,align,titlesize,extent,lbl,tick;
 			// Work out padding
 			pad = {'l':0,'t':0,'b':0,'r':0};
 			for(ax in this.opt.axis){
+				// The extent (in the perpendicular dimension) of the axis title
+				titlesize = 0;
+				if(this.opt.axis[ax].title && this.opt.axis[ax].title.label!=""){
+					titlesize += this.opt['font-size']*2;	// A line height of 2em
+				}
 				// Work out axis padding
 				for(l in this.opt.axis[ax].labels){
-					len = 0;
-					// Split the label by any new line characters
-					lines = this.opt.axis[ax].labels[l].label.split(/\n/g);
 
-					// Length is based on the label length
-					len = (this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*2 : 0) + (this.opt['font-size']*lines.length) + this.opt.tick + (this.opt.axis[ax].labels[l].offset||this.opt.axis[ax].padding||0);
+					// The extent of the axis furniture - start from the size of the title
+					extent = titlesize;
+
+					// Replace string-based newlines
+					lbl = (this.opt.axis[ax].labels[l].label||"").replace(/\\n/g,'\n');
+
+					// Split the label by any new line characters
+					lines = lbl.split(/\n/g);
+
+					// Get alignment (or use defaults)
 					align = this.opt.axis[ax].labels[l].align||(ax=="x" ? "bottom":"left");
+
+					tick = 0;
+					if(typeof this.opt.axis[ax].tickSize==="number") tick = this.opt.axis[ax].tickSize;
+					if(typeof this.opt.axis[ax].labels[l].tickSize==="number") tick = this.opt.axis[ax].labels[l].tickSize;
+					extent += tick;
+					extent += (this.opt.axis[ax].labels[l].offset||(lbl ? this.opt.axis[ax].padding : 0)||0);
+
 					if(ax=="x"){
-						if(align=="bottom") pad.b = Math.max(pad.b,len);
-						else pad.t = Math.max(pad.t,len);
+						extent += lines.length * this.opt['font-size'];
+						if(align=="bottom") pad.b = Math.max(pad.b,extent);
+						else pad.t = Math.max(pad.t,extent);
 					}else{
-						if(align=="left") pad.l = Math.max(pad.l,len);
-						else pad.r = Math.max(pad.r,len);
+						// Length is based on the label length
+						extent += Math.ceil(textLength(lines[0],this.opt['font-size'],this.opt.axis[ax]['font-weight'],this.opt.axis[ax]['font-family']));
+						if(align=="left") pad.l = Math.max(pad.l,extent);
+						else pad.r = Math.max(pad.r,extent);
 					}
 				}
 			}

@@ -21,7 +21,6 @@ export function Chart(config,csv){
 		'right':0,
 		'top':0,
 		'bottom':0,
-		'tick':5,
 		'font-size': 16,
 		'font-family':'Poppins,sans-serif',
 		'legend':{
@@ -30,8 +29,8 @@ export function Chart(config,csv){
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},
 		'axis':{
-			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'Poppins,CenturyGothicStd,"Century Gothic",sans-serif'},
-			'y':{'padding':10,'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'Poppins,CenturyGothicStd,"Century Gothic",sans-serif'}
+			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'Poppins,CenturyGothicStd,"Century Gothic",sans-serif','font-weight':'normal'},
+			'y':{'padding':10,'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'Poppins,CenturyGothicStd,"Century Gothic",sans-serif','font-weight':'normal'}
 		},
 		'duration': '0.3s'
 	};
@@ -41,8 +40,8 @@ export function Chart(config,csv){
 	this.xmax = 0;
 	this.ymin = 0;
 	this.ymax = 0;
-	this.w = this.opt.width||800;
-	this.h = this.opt.height||500;
+	this.w = this.opt.width||1048;
+	this.h = this.opt.height||786;
 	this.series = [];
 	this.axes = {};
 	id = Math.round(Math.random()*1e8);
@@ -183,7 +182,7 @@ export function Chart(config,csv){
 
 
 	this.draw = function(){
-		var u,i,fs,pd,hkey,wkey,x,y,s,text,line,mark,p,cl,po,tspan;
+		var u,i,fs,pd,hkey,wkey,x,y,s,text,line,mark,p,cl,po,tspan,w,lbl;
 
 		this.updateRange();
 
@@ -249,7 +248,6 @@ function Legend(chart,svg){
 		}
 		if(typeof chart.opt.legend.width==="number") wkey = chart.opt.legend.width;
 		else wkey += fs*1.5 + pd*2;	// The width is approximately half the font-size plus twice the font size (for the icon) and some padding
-
 
 		if(!chart.opt.legend.position) chart.opt.legend.position = 'top right';
 		po = chart.opt.legend.position.split(/ /);
@@ -325,7 +323,9 @@ function KeyItem(opts){
 	setAttr(tspan,opts.series.getProperty('attr'));
 
 	this.getTextLength = function(fontWeight,fontFamily){
-		return textLength(tspan.innerText,opts.fontSize,fontWeight,fontFamily);
+		// If the DOM element has access to getComputedTextLength() 
+		// we use that otherwise fall back to our simplistic version
+		return (typeof label.getComputedTextLength==="function") ? label.getComputedTextLength() : textLength(tspan.innerText,opts.fontSize,fontWeight,fontFamily);
 	};
 	this.setPosition = function(x,y){
 		setAttr(this.el,{'transform':'translate('+x+' '+y+')','data':'a'});

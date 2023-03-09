@@ -3,11 +3,12 @@ import { Series } from './series.js';
 import { textLength } from './text.js';
 import { mergeDeep } from './util.js';
 
-const basefs = 17;
 const colours = {};
 
 // ORIGINAL FUNCTION BELOW
 export function BarChart(config,csv){
+
+	const basefs = 16;
 
 	var opt = {
 		'type': 'bar-chart',
@@ -18,7 +19,7 @@ export function BarChart(config,csv){
 		'bottom':0,
 		'tick':5,
 		'font-size': basefs,
-		'font-weight': 'std',
+		'font-weight': 'normal',
 		'key':{
 			'show':false,
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'rgba(255,255,255,0.9)'},

@@ -16,6 +16,7 @@ export function Axis(ax,from,to,attr){
 		'grid':{'show':false,'stroke':'#B2B2B2','stroke-width':1,'stroke-linecap':'round','stroke-dasharray':''},
 		title:{},
 		ticks:{'show':true},
+		tickSize: 5,
 		labels:{},
 		'getXY':function(x,y){ return {x:x,y:y}; }
 	};
@@ -79,7 +80,8 @@ export function Axis(ax,from,to,attr){
 				talign = opt.labels[t]['text-anchor']||(ax=="y" ? (align=="left" ? "end":"start") : "middle");
 				baseline = (ax=="x" ? ((align=="bottom") ? "hanging" : "text-bottom") : "middle");
 				if(opt['dominant-baseline']) baseline = opt['dominant-baseline'];
-				len = (typeof opt.labels[t].ticksize==="number" ? opt.labels[t].ticksize:5);
+				len = (typeof opt.labels[t].tickSize==="number" ? opt.labels[t].tickSize : opt.tickSize);
+
 				pd = (typeof opt.labels[t].offset==="number" ? opt.labels[t].offset : opt.padding);
 				x = (ax=="x" ? parseFloat(t) : (align=="left" ? xmin:xmax));
 				y = (ax=="x" ? (align=="bottom" ? ymin:ymax) : parseFloat(t));
@@ -108,10 +110,10 @@ export function Axis(ax,from,to,attr){
 						}
 						this.ticks[t].g.animate = new Animate(this.ticks[t].g.el,{duration:opt.duration});
 						add(this.ticks[t].g.el,this.el);
-						if(len>0){
+//						if(len>0){
 							this.ticks[t].line = {'el':svgEl('line')};
 							add(this.ticks[t].line.el,this.ticks[t].g.el);
-						}
+//						}
 						this.ticks[t].text.el.setAttribute('text-anchor',(opt['text-anchor'] || talign));
 						add(this.ticks[t].text.el,this.ticks[t].g.el);
 					}else{
@@ -144,6 +146,7 @@ export function Axis(ax,from,to,attr){
 				}
 			}
 		}
+		return this;
 	};
 	return this;
 }
