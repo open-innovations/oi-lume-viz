@@ -28,14 +28,16 @@ export class TreeMap extends HierarchyVisualisation {
       grouping: options.grouping,
       dataMapper: options.dataMapper,
     });
+    if (!options.width) throw new Error('TreeMap options must include a numeric width');
+    if (!options.height) throw new Error('TreeMap options must include a numeric height');
     this.width = options.width;
     this.height = options.height;
-    this.padding = options.padding;
+    this.padding = options.padding || 0;
     this.nameMapper = options.nameMapper;
     this.colourMapper = options.colourMapper;
   }
   prepareTreemap() {
-    // Count the number of cells
+    // TODO Deal with trees with a value
     this.root.count().sort(function (a, b) {
       return b.height - a.height || b.value - a.value;
     });
