@@ -92,7 +92,7 @@ export class TreeMap extends HierarchyVisualisation {
       .attr("viewBox", [0, 0, this.width, this.height]);
 
     svg.append('style').text(`
-      div {
+      .treemap foreignObject div {
         color: white;
         font-size:10px;
         padding:5px;
