@@ -10,6 +10,7 @@ export type TreeMapOptions = HierarchyVisualisationOptions & {
   width: number;
   height: number;
   padding: number;
+  ratio?: number;
   valueKey?: string;
   nameMapper: UsefulFunction;
   colourMapper: UsefulFunction;
@@ -22,6 +23,7 @@ export class TreeMap extends HierarchyVisualisation {
   valueKey?: string;
   nameMapper: UsefulFunction;
   colourMapper: UsefulFunction;
+  ratio: number;
 
   constructor(options: TreeMapOptions) {
     super({
@@ -38,6 +40,7 @@ export class TreeMap extends HierarchyVisualisation {
     this.valueKey = options.valueKey;
     this.nameMapper = options.nameMapper;
     this.colourMapper = options.colourMapper;
+    this.ratio = options.ratio || 1;
   }
   /**
    * Prepare the hierarchy in this.root for treemapping
@@ -64,9 +67,17 @@ export class TreeMap extends HierarchyVisualisation {
     this.root.sort(function (a, b) {
       return b.height - a.height || b.value - a.value;
     });
+
+    this.root.each(node => {
+      for (const child of node.children || []) {
+        child.x0 /= this.ratio;
+        child.x1 /= this.ratio;
+      }
+    });
+
     return d3.treemap()
       .size([
-        this.width,
+        this.width / this.ratio,
         this.height,
       ])
       .padding(this.padding);
@@ -103,11 +114,11 @@ export class TreeMap extends HierarchyVisualisation {
     const treeCell = node.enter().append("g")
       .attr('data-height', d => d.height)
       .classed('series', true)
-      .attr("transform", d => `translate(${d.x0} ${d.y0})`);
+      .attr("transform", d => `translate(${d.x0 * this.ratio} ${d.y0})`);
 
     treeCell.append("rect")
       .attr("x", 0).attr("y", 0)
-      .attr("width", d => d.x1 - d.x0)
+      .attr("width", d => (d.x1 - d.x0) * this.ratio)
       .attr("height", d => d.y1 - d.y0)
       .attr("fill", this.colourMapper)
       .append('title')
@@ -116,7 +127,7 @@ export class TreeMap extends HierarchyVisualisation {
     // Add labels to the leaf nodes
     treeCell.append('foreignObject')
       .attr('x', 0).attr('y', 0)
-      .attr('width', d => d.x1 - d.x0)
+      .attr("width", d => (d.x1 - d.x0) * this.ratio)
       .attr('height', d => d.y1 - d.y0)
       .append('div')
       .text(d => d.data.title);
