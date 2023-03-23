@@ -54,7 +54,8 @@ export class TreeMap extends HierarchyVisualisation {
 
     // Create the base svg
     const svg = d3.create("svg")
-      .attr("viewBox", [0, 0, this.width, this.height]);
+      .attr("viewBox", [0, 0, this.width, this.height])
+      .classed('chart', true);
 
     svg.append('style').text(`
       div {
