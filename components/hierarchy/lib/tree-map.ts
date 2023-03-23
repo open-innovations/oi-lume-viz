@@ -10,6 +10,7 @@ export type TreeMapOptions = HierarchyVisualisationOptions & {
   width: number;
   height: number;
   padding: number;
+  valueKey?: string;
   nameMapper: UsefulFunction;
   colourMapper: UsefulFunction;
 };
@@ -18,6 +19,7 @@ export class TreeMap extends HierarchyVisualisation {
   width: number;
   height: number;
   padding: number;
+  valueKey?: string;
   nameMapper: UsefulFunction;
   colourMapper: UsefulFunction;
 
@@ -33,12 +35,33 @@ export class TreeMap extends HierarchyVisualisation {
     this.width = options.width;
     this.height = options.height;
     this.padding = options.padding || 0;
+    this.valueKey = options.valueKey;
     this.nameMapper = options.nameMapper;
     this.colourMapper = options.colourMapper;
   }
+  /**
+   * Prepare the hierarchy in this.root for treemapping
+   * 
+   * @returns void
+   */
   prepareTreemap() {
-    // TODO Deal with trees with a value
-    this.root.count().sort(function (a, b) {
+    if (this.valueKey) {
+      /**
+       * If the object was instantiated with a `valueKey`, then it calls the `sum` method of the `root`.
+       */
+      this.root.sum((d) => {
+        return d[this.valueKey] || 0;
+      });
+    } else {
+      /**
+       * Otherwise, it uses the `count` method of `root`.
+       */
+      this.root.count()
+    }
+    /**
+     * Sort the `root`
+     */
+    this.root.sort(function (a, b) {
       return b.height - a.height || b.value - a.value;
     });
     return d3.treemap()
