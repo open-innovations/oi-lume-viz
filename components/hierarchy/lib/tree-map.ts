@@ -63,12 +63,6 @@ export class TreeMap extends HierarchyVisualisation {
         padding:5px;
         border:none;
       }
-      [data-height] foreignObject {
-        display: none;
-      }
-      [data-height="0"] foreignObject {
-        display: initial;
-      }
     `);
     
     // Create a group to hold the cells
