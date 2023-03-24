@@ -1,9 +1,10 @@
+import { Colour } from "../../../lib/colour/colour.ts";
 import d3 from "../../../lib/external/d3.ts";
 
 import {
   HierarchyVisualisation,
   HierarchyVisualisationOptions,
-UsefulFunction,
+  UsefulFunction,
 } from "./hierarchy-visualisation.ts";
 
 export type TreeMapOptions = HierarchyVisualisationOptions & {
@@ -131,6 +132,7 @@ export class TreeMap extends HierarchyVisualisation {
       .attr("width", d => (d.x1 - d.x0) * this.ratio)
       .attr('height', d => d.y1 - d.y0)
       .append('div')
+      .style('color', (d) => Colour(this.colourMapper(d)).contrast)
       .text(d => d.data.title);
 
     return svg.node();
