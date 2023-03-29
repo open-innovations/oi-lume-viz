@@ -45,14 +45,14 @@
   config:
     data:
       - "Ethnic group": Ethnic Group A
-        "Female→Value (%)": 34
-        "Male→Value (%)": 23
+        "Aspect 1 (%)": 34
+        "Aspect 2 (%)": 23
       - "Ethnic group": Ethnic Group B
-        "Female→Value (%)": 45
-        "Male→Value (%)": 35
+        "Aspect 1 (%)": 45
+        "Aspect 2 (%)": 35
       - "Ethnic group": Ethnic Group C
-        "Female→Value (%)": 36
-        "Male→Value (%)": 10
+        "Aspect 1 (%)": 36
+        "Aspect 2 (%)": 10
     legend:
       show: true     # Default to false
       position: "top right"
@@ -77,20 +77,20 @@
           stroke-width: 0.5
     category: "Ethnic group"  # Category names come from 
     columns:
-      - name: "Female Label"
-        template: "Female<br />{{ Ethnic group}}: {{ Female→Value (%) }}%"
-      - name: "Male Label"
-        template: "Male<br />{{ Ethnic group}}: {{ Male→Value (%) }}%"
+      - name: "Aspect 1 Label"
+        template: "Aspect 1<br />{{ Ethnic group}}: {{ Aspect 1 (%) }}%"
+      - name: "Aspect 2 Label"
+        template: "Aspect 2<br />{{ Ethnic group}}: {{ Aspect 2 (%) }}%"
     series:
-      - title: "Female"
-        value: "Female→Value (%)"
-        tooltip: "Female Label"
-      - title: "Male"
-        value: "Male→Value (%)"
-        tooltip: "Male Label"
+      - title: "Aspect 1"
+        value: "Aspect 1 (%)"
+        tooltip: "Aspect 1 Label"
+      - title: "Aspect 2"
+        value: "Aspect 2 (%)"
+        tooltip: "Aspect 2 Label"
 - title: "Multi series"
   description: |
-    Add spacing between series' bars as a fraction of the bar width.
+    Add spacing between series' bars as a fraction of the bar width. Explicitly set the colours of each series (as either a hex colour, an RGB colour or a named CSS colour).
   config:
     data:
       - Reason: Reason 1
@@ -269,9 +269,9 @@
         value: 25+
         colour: "#4A783C"
 
-- title: Data as string
+- title: Data object
   description: |
-    Get the data for the bar chart from a string
+    Get the data for the bar chart from an object
   config: 
     data: test.data.bar
     category: category  # Category labels come from 

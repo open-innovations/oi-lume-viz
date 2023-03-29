@@ -1,4 +1,5 @@
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
+import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
 import { Axis } from './axis.js';
 import { Series } from './series.js';
 import { add, svgEl, setAttr, addClasses, roundTo } from './util.js';
@@ -89,6 +90,7 @@ export function Chart(config,csv){
 		for(var s = 0; s < this.opt.series.length; s++){
 			this.opt.series[s].id = id;
 			this.opt.series[s].lbl = lbl;
+			if(this.opt.series[s].colour) this.opt.series[s].colour = replaceNamedColours(this.opt.series[s].colour);
 		}
 
 		// Use a custom function to build the data series
@@ -349,7 +351,7 @@ function KeyItem(opts){
 		}else{
 			setAttr(mark,{'cx':roundTo(fs*0.75, 3),'cy':roundTo(0.5*fs, 3),'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
 		}
-		
+
 		if(opts.type=="line-chart" || opts.type=="category-chart"){
 			line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*1.5)+' 0');
 			if(p.line.color) line.setAttribute('stroke',p.line.color||"");
