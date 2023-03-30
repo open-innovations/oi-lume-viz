@@ -1,4 +1,25 @@
-- title: "One series"
+- title: "One series - minimal config with auto scaling and auto-ticks"
+  description: |
+    If you have regularly updated "live" data you may not know the scale that will be needed for the values in advance. In that case you can set a <code>axis &rarr; x &rarr; tickSpacing</code> and let the chart calculate an automatic range and tick marks.
+  config:
+    data:
+      - category: First category
+        series1: 20
+      - category: Second category
+        series1: 10
+      - category: Third category
+        series1: 43
+      - category: Fourth category
+        series1: 15
+    category: category
+    series:
+      - title: Series One
+        value: series1
+    axis:
+      x:
+        tickSpacing: 7.5
+
+- title: "One series - defined scaling and ticks"
   description: |
     A simple one series bar chart showing four categories. The x-axis (value) can use a customised <code>axis &rarr; x &rarr; min</code>/<code>axis &rarr; x &rarr; max</code> and you can specify which tick marks are shown and what their labels are using <code>axis &rarr; x &rarr; ticks</code>. This gives the flexibility of very customised labels or no labels for ticks.
   config:
@@ -39,7 +60,7 @@
     series:
       - title: Series One
         value: series1
-- title: "Two series"
+- title: "Two series - customised tooltips"
   description: |
     Add two series to a horizontal bar chart. Each series gets its own colour. Javascript is used to make the legend interactive (hovering over a series will highlight that series).
   config:
@@ -88,7 +109,7 @@
       - title: "Aspect 2"
         value: "Aspect 2 (%)"
         tooltip: "Aspect 2 Label"
-- title: "Multi series"
+- title: "Multi series - customised colours"
   description: |
     Add spacing between series' bars as a fraction of the bar width. Explicitly set the colours of each series (as either a hex colour, an RGB colour or a named CSS colour).
   config:
@@ -152,7 +173,49 @@
         value: "University"
         colour: "#69C2C9"
         tooltip: "University Label"
-- title: "Stacked bar chart"
+
+
+- title: "Stacked bar chart - auto scaling"
+  config:
+    data:
+      - Year: 2018
+        u19: 150
+        19-24: 15
+        25+: 20
+      - Year: 2019
+        u19: 190
+        19-24: 35
+        25+: 45
+      - Year: 2020
+        u19: 300
+        19-24: 65
+        25+: 55
+    stacked: true
+    legend:
+      show: true     # Default to false
+      position: "top right"
+    axis:
+      x:
+        grid:
+          stroke-dasharray: "6 2"
+          stroke-width: 1
+        tickSpacing: 100
+      y:
+        grid:
+          stroke-width: 0.5
+    category: "Year"  # Category labels come from 
+    series:
+      - title: "Under 19"
+        value: u19
+        colour: "#69C2C9"
+      - title: "19-24"
+        value: 19-24
+        colour: "#7D2248"
+      - title: "25+"
+        value: 25+
+        colour: "#4A783C"
+
+- title: "Stacked bar chart - defined scaling"
   description: |
     Rather than side-by-side bars, sometimes we need to stack bars. Stacked-bar charts don't do a good job of allowing you to compare any series other than the first so we use Javascript to make the legend interactive; hovering over a series will shift this series to the left of the chart to make comparison across categories easier.
   config:
@@ -193,67 +256,6 @@
             label: "500"
           - value: 600
             label: "600"
-      y:
-        grid:
-          stroke-width: 0.5
-    category: "Year"  # Category labels come from 
-    series:
-      - title: "Under 19"
-        value: u19
-        colour: "#69C2C9"
-      - title: "19-24"
-        value: 19-24
-        colour: "#7D2248"
-      - title: "25+"
-        value: 25+
-        colour: "#4A783C"
-
-- title: "Minimal config with auto scaling and auto-ticks"
-  description: |
-    If you have regularly updated "live" data you may not know the scale that will be needed for the values in advance. In that case you can set a <code>axis &rarr; x &rarr; tickSpacing</code> and let the chart calculate an automatic range and tick marks.
-  config:
-    data:
-      - category: First category
-        series1: 20
-      - category: Second category
-        series1: 10
-      - category: Third category
-        series1: 43
-      - category: Fourth category
-        series1: 15
-    category: category
-    series:
-      - title: Series One
-        value: series1
-    axis:
-      x:
-        tickSpacing: 7.5
-
-- title: "Auto scaling stacked bar chart"
-  config:
-    data:
-      - Year: 2018
-        u19: 150
-        19-24: 15
-        25+: 20
-      - Year: 2019
-        u19: 190
-        19-24: 35
-        25+: 45
-      - Year: 2020
-        u19: 300
-        19-24: 65
-        25+: 55
-    stacked: true
-    legend:
-      show: true     # Default to false
-      position: "top right"
-    axis:
-      x:
-        grid:
-          stroke-dasharray: "6 2"
-          stroke-width: 1
-        tickSpacing: 100
       y:
         grid:
           stroke-width: 0.5
