@@ -33,7 +33,7 @@ examples:
           colour: "#e52e36"
   - title: "Explicitly defined grid"
     description: |
-      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tickSize</code> set for the <code>axis</code> rather than for each tick. We also create an interactive legend.
+      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tickSize</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by creating virtual <code>columns</code> (each column has a <code>name</code> and <code>template</code>). We also create an interactive legend.
     config:
       data: test.data.unemploymentByAge
       legend:
@@ -123,23 +123,36 @@ examples:
               grid: true
               label: ''
           tickSize: 5
+      columns:
+        - name: "16-17 Label"
+          template: "16-17<br />{{ Year }}: {{ 16-17 | toFixed(1) }}%"
+        - name: "18-24 Label"
+          template: "18-24<br />{{ Year }}: {{ 18-24 | toFixed(1) }}%"
+        - name: "25-49 Label"
+          template: "25-49<br />{{ Year }}: {{ 25-49 | toFixed(1) }}%"
+        - name: "50 over Label"
+          template: "50 and over<br />{{ Year }}: {{ 50-64 | toFixed(1) }}%"
       series:
         - title: 16-17
           x: Year
           y: 16-17
           colour: "#e52e36"
+          tooltip: "16-17 Label"
         - title: 18-24
           x: Year
           y: 18-24
           colour: "#f7ab3d"
+          tooltip: "18-24 Label"
         - title: 25-49
           x: Year
           y: 25-49
           colour: "#c7b200"
+          tooltip: "25-49 Label"
         - title: 50-64
           x: Year
           y: 50 and over
           colour: "#005776"
+          tooltip: "50 over Label"
   - title: "Line chart with categories"
     config:
       legend:

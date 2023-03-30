@@ -1,4 +1,4 @@
-import { renderBarChart, resolveData } from "./helpers.ts";
+import { renderBarChart, resolveData, addVirtualColumns } from "./helpers.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
@@ -49,6 +49,9 @@ export default function (input: {
   if (typeof config.data === "string") {
     config.data = resolveData(config.data, input) as Record<string, unknown>[];
   }
+
+  // Create any defined columns
+  config.data = addVirtualColumns(config);
 
   // We can optionally set defaults in this
   const defaults: Partial<BarChartOptions> = {

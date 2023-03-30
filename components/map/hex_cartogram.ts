@@ -3,7 +3,7 @@ import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
-import { resolveData } from "../chart/helpers.ts";
+import { resolveData, addVirtualColumns } from "../chart/helpers.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 
 // This is a simple scale which returns the same value it was sent
@@ -127,6 +127,10 @@ export default function (input: { config: HexmapOptions }) {
     if (typeof data === 'string') {
       data = clone(resolveData(data, input) as Record<string, unknown>[]);
     }
+
+	// Create any defined columns
+    data.data = addVirtualColumns(data);
+
   }
 
   // Capture the layout and hexes from the hexjson

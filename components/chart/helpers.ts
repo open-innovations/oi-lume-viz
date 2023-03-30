@@ -1,3 +1,4 @@
+import { applyReplacementFilters } from "../../lib/util.js";
 import type { LineChartOptions } from "./line.ts";
 import type { BarChartOptions } from "./bar.ts";
 import type { AxisOptions, TickOptions } from "./types.ts";
@@ -28,6 +29,23 @@ export function resolveData(
     result = result[key] as Record<string, unknown>;
   }
   return result;
+}
+
+export function addVirtualColumns (
+  config: unknown
+) {
+	let c,r,v;
+	if(config.columns && config.columns.length > 0 && typeof config.data==="object" && config.data.length > 0){
+		for(r = 0; r < config.data.length; r++){
+			for(c = 0; c < config.columns.length; c++){
+				if(config.columns[c].template){
+					v = applyReplacementFilters(config.columns[c].template,config.data[r]);
+					config.data[r][config.columns[c].name] = v;
+				}
+			}
+		}
+	}
+	return config.data;
 }
 
 export function updateAxis (
