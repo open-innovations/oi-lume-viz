@@ -6,7 +6,7 @@ export interface SeriesOptions {
   /** Value to use from the provided data */
   value: string;
   line: { show: boolean; color: string };
-  points: { show: boolean; size: number; color: string };
+  points: { show: boolean; size: number; color: string, marker: string; };
   bars: { show: boolean; color: string };
   errorbars: { stroke?: string; "stroke-width": number };
 }

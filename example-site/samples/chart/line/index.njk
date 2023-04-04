@@ -239,13 +239,111 @@ examples:
           colour: blue
           x: category
           y: series2
-          marker: square
         - title: Series 3
           colour: green
           x: category
           y: series3
-          markerOptions:
-            size: 10
+  - title: "Line chart with custom icons"
+    description: |
+      Line markers can be defined using the <code>points</code> object on a <code>series</code>. Points can have a <code>marker</code> (one of <code>circle</code>, <code>triangle</code>, <code>square</code>, <code>diamond</code>, <code>pentagon</code>, <code>hexagon</code>, <code>octogon</code>, <code>line</code>, or <code>cross</code>), a <code>size</code>, and a rotation given by <code>rotate</code> (in degrees).
+    config:
+      legend:
+        show: true     # Default to false
+      data:
+        - category: A
+          series1: 10
+          series2: 12
+          series3: 15
+        - category: B
+          series1: 20
+          series2: 22
+          series3: 32
+        - category: C
+          series1: 23
+          series2: 21
+          series3: 24
+        - category: D
+          series1: 47
+          series2: 45
+          series3: 35
+        - category: E
+          series1: 34
+          series2: 37
+          series3: 31
+        - category: F
+          series1: 55
+          series2: 57
+          series3: 52
+        - category: G
+          series1: 49
+          series2: 59
+          series3: 19
+        - category: H
+          series1: 20
+          series2: 30
+          series3: 10
+        - category: I
+          series1: 10
+          series2: 12
+          series3: 1
+        - category: J
+          series1: 5
+          series2: 2
+          series3: 30
+      axis:
+        x:
+          grid:
+            show: true
+          min: -0.5
+          max: 9.5
+          ticks:
+            - value: 0
+              label: "A"
+            - value: 1
+              label: "B"
+            - value: 2
+              label: "C"
+            - value: 3
+              label: "D"
+            - value: 4
+              label: "E"
+            - value: 5
+              label: "F"
+            - value: 6
+              label: "G"
+            - value: 7
+              label: "H"
+            - value: 8
+              label: "I"
+            - value: 9
+              label: "J"
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 100
+      series:
+        - title: Series 1
+          colour: red
+          x: category
+          y: series1
+          points:
+            size: 8
+        - title: Series 2
+          colour: blue
+          x: category
+          y: series2
+          points:
+            marker: square
+            size: 15
+        - title: Series 3
+          colour: green
+          x: category
+          y: series3
+          points:
+            marker: triangle
+            rotate: 180
+            size: 15
 ---
 
 Our line chart component renders simple line charts. 

@@ -33,7 +33,7 @@ export function BarChart(config,csv){
 			for(s = 0; s < this.opt.series.length; s++){
 				mergeDeep(this.opt.series[s],{
 					'line':{'show':false,'color':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
-					'points':{'show':false,'size':4, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
+					'points':{'show':false,'size':(this.opt.series[s].points ? this.opt.series[s].points.size : null)||4, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
 					'bars':{'show':true,'color':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
 					'errorbars':{'stroke':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null),'stroke-width':2}
 				});

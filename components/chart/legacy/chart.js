@@ -2,6 +2,7 @@ import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
 import { Axis } from './axis.js';
 import { Series } from './series.js';
+import { Marker } from './marker.js';
 import { add, svgEl, setAttr, addClasses, roundTo } from './util.js';
 import { textLength } from './text.js';
 
@@ -110,7 +111,7 @@ export function Chart(config,csv){
 		for(s = 0; s < this.opt.series.length; s++){
 			mergeDeep(this.opt.series[s],{
 				'line':{'show':true,'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')},
-				'points':{'size':1, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')}
+				'points':{'size':(this.opt.series[s].points && typeof this.opt.series[s].points.size==="number" ? this.opt.series[s].points.size : 1), 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')}
 			});
 			data = [];
 			for(i = 0; i < csv.rows.length; i++){
@@ -239,8 +240,7 @@ function Legend(chart,svg){
 					'legend':key.el,
 					'series':chart.series[s],
 					's':s,
-					'marker':chart.opt.series[s].marker,
-					'markerOptions':chart.opt.series[s].markerOptions||{},
+					'points':chart.opt.series[s].points||{},
 					'fontSize': fs 
 				});
 			}
@@ -284,14 +284,16 @@ function Legend(chart,svg){
 }
 
 // Build a key item
-function KeyItem(opts){
+function KeyItem(attr){
 
-	if(!opts) throw("No options provided");
+	if(!attr) throw("No options provided");
 	
+	var opts = {
+		'points': {'marker':(attr.type=="bar-chart" ? "square" : "circle")},
+		'fontSize': 1	// Deliberately small so we can see it is bad
+	}
 	// Set some default values
-	if(!opts.markerOptions) opts.markerOptions = {};
-	if(!opts.marker) opts.marker = (opts.type=="bar-chart" ? "square" : "circle");
-	if(typeof opts.fontSize === 'undefined') opts.fontSize = 4; // Deliberately small so we can see it is bad
+	mergeDeep(opts,attr);
 
 	this.el = svgEl("g");
 	this.el.setAttribute('data-series',opts.s+1);
@@ -312,16 +314,13 @@ function KeyItem(opts){
 	let line = svgEl('path');
 	setAttr(line,{'d':'M0 0 L 1 0','stroke-width':3,'stroke-linecap':'round','class':'line item-line'});
 	
-	let mark;
-	if(opts.marker == "square"){
-		mark = svgEl("rect");
-		setAttr(mark,{'class':'item-mark','x':0,'y':0,'width':5,'height':5,'fill':'silver'});
-	}else{
-		mark = svgEl("circle");
-		setAttr(mark,{'class':'item-mark','cx':0.5,'cy':0,'r':opts.markerOptions.size||5,'fill':'silver'});
-	}
+	let mark = new Marker(opts.points);
+	mark.addClass('item-mark');
+	mark.setSize(Math.min((opts.points.size||opts.fontSize/2),opts.fontSize));	// Default size of key item
+	mark.setAttr({'fill':'silver'});
+
 	this.el.appendChild(line);
-	this.el.appendChild(mark);
+	this.el.appendChild(mark.el);
 	
 	setAttr(tspan,opts.series.getProperty('attr'));
 
@@ -346,11 +345,8 @@ function KeyItem(opts){
 
 		let fs = opts.fontSize;
 		let p = opts.series.getProperties();
-		if(opts.marker=="square"){
-			setAttr(mark,{'x':roundTo(fs*0.75, 3)-fs/2,'y':roundTo(0.5*fs, 3)-fs/2,'width':fs,'height':fs,'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
-		}else{
-			setAttr(mark,{'cx':roundTo(fs*0.75, 3),'cy':roundTo(0.5*fs, 3),'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
-		}
+		mark.setPosition(roundTo(fs*0.75, 3),roundTo(0.5*fs, 3),fs/2);
+		mark.setAttr({'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
 
 		if(opts.type=="line-chart" || opts.type=="category-chart"){
 			line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*1.5)+' 0');

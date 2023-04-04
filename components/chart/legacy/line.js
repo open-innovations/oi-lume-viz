@@ -1,5 +1,4 @@
 import { Chart } from './chart.js';
-import { Series } from './series.js';
 import { textLength } from './text.js';
 import { mergeDeep } from './util.js';
 

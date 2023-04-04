@@ -1,5 +1,6 @@
 import { Animate } from './animate.js';
-import { add,addClasses, svgEl, setAttr, mergeDeep,clone } from './util.js';
+import { Marker } from './marker.js';
+import { add, addClasses, svgEl, setAttr, mergeDeep, clone } from './util.js';
 
 export function Series(s,props,data,extra){
 	if(!props) return this;
@@ -119,24 +120,19 @@ export function Series(s,props,data,extra){
 
 			// Do we show the points
 			if(opt.points.show){
-				pts[i].point = svgEl('circle');
 
-				setAttr(pts[i].point,datum);
+//if(opt.points.size > 1) console.log('series size = ',opt.points.size);
+				pts[i].mark = new Marker(opt.points);
+				pts[i].mark.setAnimation({'duration':opt.duration});
+				pts[i].mark.setAttr(datum);
+				pts[i].mark.setAttr({'tabindex':0,'data-series':s+1}); // Update the point
+				pts[i].mark.addClass('marker');
 				
-				// Add the marker class for interactivity
-				pts[i].point.classList.add('marker');
+				// Add the marker element to the series element
+				add(pts[i].mark.el,this.el);
 
-				// Update the point
-				o = {'cx':0,'cy':0,'tabindex':0};
-				o['data-series'] = s+1;
-				setAttr(pts[i].point,o);
-
-				add(pts[i].point,this.el);
-
-				// Add animation to point
-				pts[i].anim_point = new Animate(pts[i].point,{'duration':opt.duration});
-
-				add(pts[i].title,pts[i].point);
+				// Add the title to the marker
+				add(pts[i].title,pts[i].mark.el);
 			}
 
 		}
@@ -159,12 +155,16 @@ export function Series(s,props,data,extra){
 			r = (opt['stroke-width']||1)/2;
 
 			if(opt.points){
+//if(opt.points.size > 1) console.log('setting',opt.points);
 				if(typeof opt.points.size==="number") r = Math.max(opt.points.size,r);
 				if(typeof opt.points.size==="function") r = opt.points.size.call(pt,{'series':s,'i':i,'data':data[i]});
 			}
 
 			// Set some initial values for the point
-			if(pts[i].point) setAttr(pts[i].point,{'r':r,'fill':opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
+			if(pts[i].mark){
+				pts[i].mark.setAttr({'fill':opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
+				pts[i].mark.setSize(r);
+			}
 			// Set some initial values for the bar
 			if(pts[i].bar) setAttr(pts[i].bar,{'r':r,'fill':opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
 			
@@ -192,9 +192,9 @@ export function Series(s,props,data,extra){
 			}
 
 			// Update point position
-			if(pts[i].anim_point) pts[i].anim_point.set({'cx':{'from':pts[i].old.x||null,'to':ps.x},'cy':{'from':pts[i].old.y||null,'to':ps.y}});
+			if(pts[i].mark) pts[i].mark.setPosition(ps.x,ps.y);
 			
-			if(!data[i].good) setAttr(pts[i].point,{'visibility':'hidden'});
+			if(!data[i].good) setAttr(pts[i].mark.point,{'visibility':'hidden'});
 
 			// Update bar position
 			if(pts[i].bar){
