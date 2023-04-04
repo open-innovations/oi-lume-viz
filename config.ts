@@ -7,11 +7,12 @@ export const assets = [
 ];
 
 export const components = [
+  'chart/bar.ts',
   'chart/line.ts',
   'chart/scatter.ts',
-  'chart/bar.ts',
   'dashboard.ts',
   'graph/line.ts',
+  'hierarchy/tree_map.ts',
   'map/hex_cartogram.ts',
   'map/svg.ts',
 ];

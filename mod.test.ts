@@ -31,7 +31,7 @@ describe("module", () => {
     theModule()(fakeSite);
 
     // TODO fix fragile test
-    assertSpyCalls(<Stub> fakeSite.remoteFile, 8);
+    assertSpyCalls(<Stub> fakeSite.remoteFile, 13);
     assertSpyCallArg(<Stub> fakeSite.remoteFile, 0, 0, `/assets/${assets[0]}`);
     assertSpyCallArg(
       <Stub> fakeSite.remoteFile,
@@ -45,7 +45,7 @@ describe("module", () => {
     theModule()(fakeSite);
 
     // TODO fix fragile test
-    assertSpyCalls(<Stub> fakeSite.copy, 4);
+    assertSpyCalls(<Stub> fakeSite.copy, 5);
     assertSpyCallArg(<Stub> fakeSite.copy, 0, 0, `/assets/${assets[0]}`);
   });
 
