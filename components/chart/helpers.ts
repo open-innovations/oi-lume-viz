@@ -129,6 +129,7 @@ export function calculateRange(
   const roundToTickSize = (value: number) => {
     const rounder = value > 0 ? Math.ceil : Math.floor;
     if (!tickSpacing) return value;
+	console.log('roundToTickSize',rounder(value / tickSpacing) * tickSpacing);
     return rounder(value / tickSpacing) * tickSpacing;
   };
   if (config.stacked){
@@ -145,6 +146,12 @@ export function calculateRange(
   };
 }
 
+// Simple function to count the number of decimals in a number
+function countDecimals(value) {
+	if(Math.floor(value) === value) return 0;
+	return value.toString().split(".")[1].length || 0;
+}
+
 export function generateTicks(config: AxisOptions): TickOptions[] {
   const { tickSpacing } = config;
   if (tickSpacing === undefined) return [];
@@ -152,11 +159,18 @@ export function generateTicks(config: AxisOptions): TickOptions[] {
   const max = Math.floor(config.max / tickSpacing) * tickSpacing;
   const min = Math.floor(config.min / tickSpacing) * tickSpacing;
   const tickCount = ((max - min) / tickSpacing) + 1;
+
+  // Find the precision of the tickSpacing
+  var precision = countDecimals(tickSpacing);
+
   const ticks = Array.from(new Array(tickCount)).map<TickOptions>((_, i) => {
-    const v = i * tickSpacing + min;
+	// Round the value to the required precision
+    const v = (i * tickSpacing + min).toFixed(precision);
+	
+	console.log('generateTicks',v);
     return {
-      value: v,
-      label: v.toString(),
+      value: parseFloat(v),
+      label: v,
       "font-weight": "normal",
     };
   });
