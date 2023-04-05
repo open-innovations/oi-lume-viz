@@ -1,7 +1,9 @@
-level_1,level_2,name,value
-Group A,Subgroup 1,Item A1,10
-Group A,Subgroup 2,Item A2,20
-Group A,Subgroup 3,Item A3,30
-Group B,Subgroup 1,Item B1,40
-Group B,Subgroup 2,Item B2,50
-Group B,Subgroup 3,Item B3,60
+level_1,level_2,name,value,colour,colour_value,colour_index
+Group A,Subgroup 1,Item A1.1,10,#396bad,#d73058,0.1
+Group A,Subgroup 2,Item A2.1,20,#396bad,#d73058,0.2
+Group A,Subgroup 3,Item A3.1,30,#396bad,#d73058,0.3
+Group A,Subgroup 3,Item A3.2,100,#396bad,#d73058,0.3
+Group B,Subgroup 1,Item B1.1,40,#396bad,#1dd3a7,0.4
+Group B,Subgroup 2,Item B2.1,50,#396bad,#1dd3a7,0.5
+Group B,Subgroup 3,Item B3.1,60,#396bad,#1dd3a7,0.6
+Group C,Subgroup 1,Item C1.1,10,#396bad,#2254f4,0.7

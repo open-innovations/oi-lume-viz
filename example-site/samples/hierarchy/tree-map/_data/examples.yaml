@@ -1,19 +1,58 @@
-- title: "Minimal"
+- title: Minimal
   description: |
     This is a minimal treemap visualisation. Default grouping is by the 'name' property (which defautls to `name`).
+    The size of the blocks corresponds to the count of items in each group.
   config:
     data: test.data.hierarchy.rows
 
-- title: "Specify name"
+- title: Specify value
   description: |
-    The `nameKey` property has been passed to override the name.
+    The `value` property allows a value property to be used to size the treemap.
   config:
     data: test.data.hierarchy.rows
-    nameKey: level_1
+    value: value
 
-- title: "Specify value"
+- title: Group by a different column
   description: |
-    The `valueKey` property allows a value property to be used to size the treemap.
+    The `grouping` property has been specified to define a different grouping.
+    Because no `value` property has been specified, this is sized based on count of the data items in the group.
   config:
     data: test.data.hierarchy.rows
-    valueKey: value
+    grouping:
+      - level_1
+
+- title: Multi-level treemap
+  description: |
+    Providing multiple levels of hierarchy will group the treemap items together.
+    This example is sized based on the value column
+  config:
+    data: test.data.hierarchy.rows
+    grouping:
+      - level_1
+      - level_2
+      - name
+    value: value
+
+- title: Colour value
+  description: |
+    The component, looks for a column named `colour` in the data to determine the colour of blocks.
+    It is possible to change the name of the column by specifying the `colour_value` property.
+  config:
+    data: test.data.hierarchy.rows
+    colour: colour_value
+
+- title: Colour index
+  description: |
+    If a `scale` property is provided, and the a value between 0 and 1 is provided in the _`colour`_ column,
+    the relevant tree node will be coloured based on the value in the range.
+  config:
+    data: test.data.hierarchy.rows
+    colour: colour_index
+    scale: |
+      rgb(122,76,139) 0%, rgb(124,109,168) 12.5%, rgb(115,138,177) 25%, rgb(107,164,178) 37.5%, rgb(104,188,170) 50%, rgb(133,211,146) 62.5%, rgb(189,229,97) 75%, rgb(254,240,65) 87.5%, rgb(254,240,65) 100%
+
+
+
+
+
+

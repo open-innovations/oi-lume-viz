@@ -1,52 +1,109 @@
+import { ColourScale } from "../../lib/colour/colour-scale.ts";
 import { thingOrNameOfThing } from "../../lib/helpers.ts";
+import { getUniqueItemsFromArray } from "../../lib/util/array.ts";
 import { TableData, UsefulFunction } from "./lib/hierarchy-visualisation.ts";
 import { TreeMap, TreeMapOptions } from "./lib/tree-map.ts";
 
+interface ColourOptions {
+  colour: string;
+  scale?: string;
+}
+
+interface TreemapLevelData {
+  colour: (d: unknown) => string;
+  original: Record<string, unknown>[];
+  value: number;
+}
+
+const grouperMaker = (grouperKeys: string[]) => {
+  const types = getUniqueItemsFromArray(grouperKeys.map((x) => typeof x));
+  if (types.length > 1) {
+    throw new TypeError("Different types of grouper passed.");
+  }
+  if (types[0] !== "string") {
+    throw new TypeError("Grouping not passed strings.");
+  }
+  return grouperKeys.map((g) => (d) => d[g]);
+};
+
+type TreemapComponentOptions =
+  & Pick<TreeMapOptions, "data">
+  & Partial<
+    Omit<TreeMapOptions, "colourMapper" | "reduce" | "grouping" | "dataMapper">
+  >
+  & ColourOptions
+  & {
+    grouping: string[];
+  };
+
 /**
  * Wrapper around the TreeMap class which implements the visualisation
- * @param options 
- * @returns 
+ * @param options
+ * @returns
  */
-export default function (options: {
-  config: Partial<TreeMapOptions> & Pick<TreeMapOptions, 'data'>
-}) {
+export default function (options: { config: TreemapComponentOptions }) {
+  // Get colour and scale from the passed in config
+  const { colour = "colour", scale } = options.config;
+
+  // This is a utility function to map grouped data for processing
   const hierarchyReducer = (d) => {
-    if (config.valueKey === undefined) return {};
-    const value = d.reduce((result, current) => result + current[config.valueKey], 0);
-    return { value };
+    const data: TreemapLevelData = {
+      // We just take the first entry and use the colour.
+      // If the grouping is unique (i.e. one item), this if fine.
+      // If the grouping has multiple entries per group, we will ignore the rest.
+      colour: () => d[0][colour],
+      original: d,
+      value: d.length,
+    };
+    if (scale !== undefined) {
+      const colourScale = ColourScale(scale);
+      data.colour = () => colourScale(d[0][colour]);
+    }
+    if (config.value !== undefined) {
+      data.value = d
+        .map(
+          (v: Record<string, unknown>) => v[config.value as string] as number,
+        )
+        .reduce((total: number, current: number) => total + current, 0);
+    }
+    return data;
   };
-  const hierarchyMapper = d => {
-    const [ name = ':ROOT:', data ] = d.data;
-    if (typeof name !== 'string')
-    throw new TypeError('Grouping function for Treemap has not generated a string for a hierarchy level.');
-    d.data = { [config.nameKey]: name, ...data };
-    d.name = d.data[config.nameKey];
+
+  // This is a utility function to convert the hierarchy into a structure that is easier to work with
+  const hierarchyMapper = (d) => {
+    const [name = ":ROOT:", data] = d.data;
+    if (typeof name !== "string") {
+      throw new TypeError(
+        "Grouping function for Treemap has not generated a string for a hierarchy level.",
+      );
+    }
+    d.data = { name, ...data };
+    d.name = d.data.name;
   };
 
   // Clone the data table to avoid breaking the global context and set defaults
   const config: TreeMapOptions = {
     ...options.config,
-    colourMapper: options.config.colourMapper || (() => '#aaaaaa'),
-    dataMapper: options.config.dataMapper || hierarchyMapper,
-    grouping: options.config.grouping || [(d) => d[config.nameKey]],
+    colourMapper: (d) => d.data.colour(d) || "#aaaaaa",
+    dataMapper: hierarchyMapper,
+    grouping: grouperMaker(options.config.grouping || ["name"]),
     height: options.config.height || 400,
-    nameKey: options.config.nameKey || 'name',
-    nameMapper: options.config.nameMapper || ((d) => d.name),
-    padding: options.config.padding || 0,
-    reduce: options.config.reduce || hierarchyReducer,
+    description: options.config.description || ((d) => d.name),
+    padding: options.config.padding || 2,
+    reduce: hierarchyReducer,
     width: options.config.width || 600,
-  }
+  };
 
   // Convert references into actual objects
-  // These are for the Hierarchy Visualisation base class
-  config.data = thingOrNameOfThing<TableData<string | number>>(options.config.data, options);
-  config.grouping = thingOrNameOfThing<UsefulFunction[]>(config.grouping, options);
-  config.reduce = thingOrNameOfThing<UsefulFunction>(config.reduce, options);
-  config.dataMapper = thingOrNameOfThing<UsefulFunction>(config.dataMapper, options);
-  
-  // These are for the TreeMap class
-  config.nameMapper = thingOrNameOfThing<UsefulFunction>(config.nameMapper, options);
-  config.colourMapper = thingOrNameOfThing<UsefulFunction>(config.colourMapper, options);
+  config.data = thingOrNameOfThing<TableData<string | number>>(
+    options.config.data,
+    options,
+  );
+
+  config.description = thingOrNameOfThing<UsefulFunction>(
+    config.description,
+    options,
+  );
 
   const treemap = new TreeMap(config);
   return treemap.render();
