@@ -18,7 +18,7 @@ layout: layout/base.njk
 	<section id="example-{{ loop.index }}">
 		<h2>{% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}</h2>
 		{% if example.description %}
-		<p>{{ example.description | safe }}</p>
+		<p>{{ example.description | md | safe }}</p>
 		{% endif %}
 		{% if example.config %}
 		{% comp 'oi.' + component, { "config": example.config } %}{% endcomp %}

@@ -40,8 +40,8 @@
 		this.addOutline = function(e){
 			// Create an outline version of the hex that sits on top
 			var outline = e.cloneNode(true);
-			outline.querySelector('text').remove();
-			outline.querySelector('title').remove();
+			if(outline.querySelector('text')) outline.querySelector('text').remove();
+			if(outline.querySelector('title')) outline.querySelector('title').remove();
 			outline.querySelector('path').setAttribute('fill','none');
 			outline.querySelector('path').setAttribute('vector-effect','non-scaling-stroke');
 			outline.removeAttribute('id');
@@ -70,7 +70,7 @@
 			this.removeOutline(e.data.el.parentNode);
 
 			// Create an outline version of the hex that sits on top
-			this.addOutline(e.data.el.parentNode);
+			if(typ=="hex-map") this.addOutline(e.data.el.parentNode);
 
 			// Set the contents
 			txt = e.data.title;
@@ -90,8 +90,7 @@
 			this.tip.setAttribute('style','position:absolute;left:'+(bb.left + bb.width/2 - bbo.left).toFixed(2)+'px;top:'+(bb.top + bb.height/2 - bbo.top).toFixed(2)+'px;transform:translate3d(-50%,calc(-100% - '+off+'px),0);display:'+(txt ? 'block':'none')+';');
 			this.tip.querySelector('.inner').style.background = fill;
 			this.tip.querySelector('.arrow').style['border-top-color'] = fill;
-			this.tip.style.color = e.data.label.getAttribute('fill')||"black";
-
+			this.tip.style.color = OI.contrastColour ? OI.contrastColour(fill) : "black";
 			return this;
 		};
 
@@ -106,11 +105,12 @@
 			return this;
 		};
 		for(p = 0; p < pt.length; p++){
-			tt = pt[p].parentNode.querySelector('title');
+			tt = pt[p].querySelector('title');
+			if(!tt) tt = pt[p].parentNode.querySelector('title');
 			pts[p] = {'el':pt[p],'tooltip':(tt ? tt.innerHTML : "")};
 			pt[p].parentNode.setAttribute('tabindex',0);
-			addEv('focus',pt[p].parentNode,{'this':this,'title':pts[p].tooltip,'el':pt[p],'label':pt[p].parentNode.querySelector('text')},this.showTooltip);
-			addEv('mouseover',pt[p],{'this':this,'title':pts[p].tooltip,'el':pt[p],'label':pt[p].parentNode.querySelector('text')},this.showTooltip);
+			addEv('focus',pt[p].parentNode,{'this':this,'title':pts[p].tooltip,'el':pt[p]},this.showTooltip);
+			addEv('mouseover',pt[p],{'this':this,'title':pts[p].tooltip,'el':pt[p]},this.showTooltip);
 		}
 		addEv('mouseleave',el,{'this':this,'s':''},this.reset);
 

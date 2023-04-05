@@ -3,7 +3,8 @@ import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
-import { resolveData, addVirtualColumns } from "../chart/helpers.ts";
+import { resolveData } from "../chart/helpers.ts";
+import { addVirtualColumns } from "../../lib/helpers.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 
 // This is a simple scale which returns the same value it was sent
@@ -416,7 +417,7 @@ export default function (input: { config: HexmapOptions }) {
 
 
   // Return the HTML fragment for the visualisation that includes the dependencies and contains the SVG
-  return `<div class="map hex-map" data-dependencies="${ getAssetPath('/js/svg-map.js') }"><svg
+  return `<div class="map hex-map" data-dependencies="${ getAssetPath('/js/svg-map.js') },${ getAssetPath('/js/contrast-colour.js') }"><svg
       id="hexes-${uuid}"
       class="hex-map"
       viewBox="

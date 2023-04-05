@@ -1,3 +1,5 @@
+import { applyReplacementFilters } from "./util.js";
+
 /**
  * Recursive function to resolve data from a given context
  *
@@ -30,4 +32,23 @@ export function resolveData<T = unknown>(
 export function thingOrNameOfThing<T = unknown>(thingOrName: string | T, context: Record<string, unknown> ): T {
   if (typeof thingOrName !== 'string') return thingOrName as T;
   return resolveData(thingOrName as string, context) as T;
+}
+
+
+
+export function addVirtualColumns (
+  config: unknown
+) {
+	let c,r,v;
+	if(config.columns && config.columns.length > 0 && typeof config.data==="object" && config.data.length > 0){
+		for(r = 0; r < config.data.length; r++){
+			for(c = 0; c < config.columns.length; c++){
+				if(config.columns[c].template){
+					v = applyReplacementFilters(config.columns[c].template,config.data[r]);
+					config.data[r][config.columns[c].name] = v;
+				}
+			}
+		}
+	}
+	return config.data;
 }

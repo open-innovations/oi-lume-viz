@@ -1,4 +1,5 @@
-import { renderScatterChart, resolveData, addVirtualColumns } from "./helpers.ts";
+import { addVirtualColumns } from "../../lib/helpers.ts";
+import { renderScatterChart, resolveData } from "./helpers.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
@@ -70,5 +71,5 @@ export default function (input: {
   // Call the line render function
   const chart = renderScatterChart(options);
 
-  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') }">${chart}</div>`;
+  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/contrast-colour.js') }">${chart}</div>`;
 }

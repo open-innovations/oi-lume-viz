@@ -20,9 +20,13 @@ function drawPolygon(n,cx,cy,r){
 	};
 	p += "Z";
 	return p;
-
 }
 
+// Main marker function.
+// A marker will default to "marker": "circle".
+// Other attributes include:
+//   size - the "radius" of the marker
+//   rotate - the number of degrees to rotate the marker
 export function Marker(attr){
 
 	if(!attr){
