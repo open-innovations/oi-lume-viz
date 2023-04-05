@@ -1066,7 +1066,7 @@ function Layer(attr,map,i){
 								'stroke-width': this.options['stroke-width']||'0.4%',
 								'stroke-linejoin': this.options['stroke-linejoin'],
 								'text-anchor': feature.style['text-anchor']||this.options.textAnchor||'middle',
-								'font-family': feature.style['font-family']||'CenturyGothicStd',
+								'font-family': feature.style['font-family']||'Poppins,CenturyGothicStd,Arial',
 								'font-size': (feature.style['font-size'] ? feature.style['font-size'] : 1),
 								'paint-order': 'stroke',
 								'x': xy.x.toFixed(2),
