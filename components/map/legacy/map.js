@@ -1054,13 +1054,13 @@ function Layer(attr,map,i){
 							tspan.innerHTML = feature.name;
 							p.appendChild(tspan);
 							mergeDeep(opt,{
-								'fill': this.options.fill||this.options.color,
+								'fill': feature.style['colour']||this.options.fill||this.options.color,
 								'fill-opacity': this.options.fillOpacity,
-								'font-weight': this.options['font-weight']||'',
-								'stroke': this.options.stroke||this.options.color,
+								'font-weight': feature.style['font-weight']||this.options['font-weight']||'',
+								'stroke': feature.style['border']||this.options.stroke||this.options.color,
 								'stroke-width': this.options['stroke-width']||'0.4%',
 								'stroke-linejoin': this.options['stroke-linejoin'],
-								'text-anchor': this.options.textAnchor||feature.style['text-anchor']||'middle',
+								'text-anchor': feature.style['text-anchor']||this.options.textAnchor||'middle',
 								'font-family': feature.style['font-family']||'CenturyGothicStd',
 								'font-size': (feature.style['font-size'] ? feature.style['font-size'] : 1),
 								'paint-order': 'stroke',
