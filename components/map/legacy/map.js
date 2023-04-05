@@ -36,6 +36,7 @@ function clone(a){ return JSON.parse(JSON.stringify(a)); }
 export function SVGMap(opts){
 	
 	var csv = clone(opts.data);
+	var fs = 16;
 
 	var config = {
 		'scale': 'Viridis',
@@ -119,37 +120,46 @@ export function SVGMap(opts){
 		'id': 'labels',
 		'options': { 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},
 		'type': 'text',
-		'values': {'data':places,'places':config.places},
+		'values': {'data':clone(places),'places':config.places},
 		'process': function(d,map){
-			var i,c,locations,fs,f,loc,threshold,place,p;
+			var i,c,locations,f,loc,threshold,place,p;
 
 			locations = [];
-			fs = 1;
-			threshold = 100000;
+			threshold = 0;
 
-			for(i = 0; i < this.attr.values.data.length; i++){
+			for(p = 0; p < this.attr.values.places.length; p++){
 
 				place = -1;
-				for(p = 0; p < this.attr.values.places.length; p++){
-					if(this.attr.values.places[p].name==this.attr.values.data[i].Name) place = p;
+				for(i = 0; i < this.attr.values.data.length; i++){
+					if(this.attr.values.places[p].name==this.attr.values.data[i].Name) place = i;
 				}
+
+				if(place < 0){
+					this.attr.values.data.push({'Name':this.attr.values.places[p].name,'Population':this.attr.values.places[p].population||0,'Latitude':this.attr.values.places[p].latitude,'Longitude':this.attr.values.places[p].longitude});
+					place = this.attr.values.data.length-1;
+				}
+
 				if(place >= 0){
 					loc = {'type':'Feature','properties':{},'style':{},'geometry':{'type':'Point','coordinates':[]}};
 
-					for(c in this.attr.values.data[i]) loc.properties[c] = this.attr.values.data[i][c];
-					for(c in this.attr.values.places[place]) loc.style[c] = this.attr.values.places[place][c];
+					for(c in this.attr.values.data[place]) loc.properties[c] = this.attr.values.data[place][c];
+					for(c in this.attr.values.places[p]) loc.style[c] = this.attr.values.places[p][c];
 					loc.name = loc.properties.Name;
 
-					f = fs*0.75;
-					if(loc.properties.Population){
-						if(loc.properties.Population > 100000) f += fs*0.125;
-						if(loc.properties.Population > 250000) f += fs*0.125;
-						if(loc.properties.Population > 750000) loc.name = loc.name.toUpperCase();
+					if(!loc.style['font-size']){
+						f = fs*0.75;
+						if(loc.properties.Population){
+							if(loc.properties.Population > 100000) f += fs*0.125;
+							if(loc.properties.Population > 250000) f += fs*0.125;
+							if(loc.properties.Population > 750000) loc.name = loc.name.toUpperCase();
+						}
+						loc.style['font-size'] = f;
 					}
-					loc.properties.fontsize = 12*f;
 					loc.geometry.coordinates = [loc.properties.Longitude,loc.properties.Latitude];
-					if(typeof this.attr.values.places[place].longitude==="number") loc.geometry.coordinates[0] = this.attr.values.places[place].longitude;
-					if(typeof this.attr.values.places[place].latitude==="number") loc.geometry.coordinates[1] = this.attr.values.places[place].latitude;
+					
+					if(typeof loc.properties.Population==="undefined") loc.properties.Population = 0;
+					if(typeof this.attr.values.places[p].longitude==="number") loc.geometry.coordinates[0] = this.attr.values.places[p].longitude;
+					if(typeof this.attr.values.places[p].latitude==="number") loc.geometry.coordinates[1] = this.attr.values.places[p].latitude;
 					if(loc.properties.Population >= threshold) locations.push(loc);
 				}
 			}
@@ -997,7 +1007,6 @@ function Layer(attr,map,i){
 							var style = {'iconSize':icon.iconSize,'iconAnchor':icon.iconAnchor,'color':'black'};
 							mergeDeep(style,feature.properties);
 
-
 							if(txt){
 								// We want to get the contents of the SVG and the attributes
 								txt = txt.replace(/<svg([^>]*)>/,function(m,attrs){
@@ -1053,7 +1062,7 @@ function Layer(attr,map,i){
 								'stroke-linejoin': this.options['stroke-linejoin'],
 								'text-anchor': this.options.textAnchor||feature.style['text-anchor']||'middle',
 								'font-family': feature.style['font-family']||'CenturyGothicStd',
-								'font-size': (feature.properties.fontsize ? feature.properties.fontsize : 1),
+								'font-size': (feature.style['font-size'] ? feature.style['font-size'] : 1),
 								'paint-order': 'stroke',
 								'x': xy.x.toFixed(2),
 								'y': xy.y.toFixed(2)

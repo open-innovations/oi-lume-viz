@@ -70,6 +70,51 @@ examples:
       tooltip: Tooltip label
       value: Aged 15 years and under
       scale: Viridis
+  - title: Add place labels
+    description: |
+      We can add <code>places</code> to the map. A place can be defined with the following properties:
+        * <code>name</code> - the label to use for the place marker
+        * <code>latitude</code> - set the latitude of the marker (can be omitted if it is a UK place we know about)
+        * <code>longitude</code> - set the longitude of the marker (can be omitted if it is a UK place we know about)
+        * <code>text-anchor</code> - set to either <code>start</code>, <code>middle</code>, or <code>end</code> to anchor the text
+        * <code>font-size</code> - manually set the font size (if omitted it will be scaled to the population where known)
+    config:
+      data:
+        - { code: "E08000016", name: "Barnsley", colour: "#E6007C" }
+        - { code: "E08000032", name: "Bradford", colour: "#FF6700" }
+        - { code: "E08000033", name: "Calderdale", colour: "#0DBC37" }
+        - { code: "E07000163", name: "Craven", colour: "#178CFF" }
+        - { code: "E07000165", name: "Harrogate", colour: "#2f529f" }
+        - { code: "E08000034", name: "Kirklees", colour: "#722EA5" }
+        - { code: "E08000035", name: "Leeds", colour: "#F9BC26" }
+        - { code: "E07000169", name: "Selby", colour: "#1DD3A7" }
+        - { code: "E08000036", name: "Wakefield", colour: "#EF3AAB" }
+        - { code: "E06000014", name: "York", colour: "#F92626" }
+      geojson:
+        key: LAD21CD
+        data: geojson.leeds_city_region
+      key: code
+      tooltip: name
+      value: colour
+      places:
+          - name: Bradford
+            text-anchor: end
+          - name: Leeds
+            font-size: 20
+          - name: Halifax
+          - name: Harrogate
+          - name: Huddersfield
+          - name: Settle
+            latitude: 54.0693
+            longitude: -2.2790
+          - name: Skipton
+            latitude: 53.9619
+            longitude: -2.0174
+          - name: Wakefield
+            text-anchor: start
+            latitude: 53.68331
+            longitude: -1.49768
+          - name: York
 ---
 
 
