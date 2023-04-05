@@ -129,7 +129,6 @@ export function calculateRange(
   const roundToTickSize = (value: number) => {
     const rounder = value > 0 ? Math.ceil : Math.floor;
     if (!tickSpacing) return value;
-	console.log('roundToTickSize',rounder(value / tickSpacing) * tickSpacing);
     return rounder(value / tickSpacing) * tickSpacing;
   };
   if (config.stacked){
@@ -166,8 +165,6 @@ export function generateTicks(config: AxisOptions): TickOptions[] {
   const ticks = Array.from(new Array(tickCount)).map<TickOptions>((_, i) => {
 	// Round the value to the required precision
     const v = (i * tickSpacing + min).toFixed(precision);
-	
-	console.log('generateTicks',v);
     return {
       value: parseFloat(v),
       label: v,
