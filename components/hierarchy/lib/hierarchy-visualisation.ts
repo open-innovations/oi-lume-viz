@@ -4,7 +4,7 @@ export type TableData<T> = Record<string, T>[];
 export type UsefulFunction = (d: unknown) => unknown;
 
 export interface HierarchyVisualisationOptions {
-  table: TableData<string | number>;
+  data: TableData<string | number>;
   reduce: UsefulFunction;
   grouping: UsefulFunction[];
   dataMapper?: UsefulFunction;
@@ -14,27 +14,26 @@ export abstract class HierarchyVisualisation {
   readonly options: HierarchyVisualisationOptions;
   root: d3types.HierarchyNode<unknown>;
   constructor(options: HierarchyVisualisationOptions) {
-    if (options.table === undefined) {
+    if (options.data === undefined) {
       throw new Error("Treemap options does not include a table");
     }
 
     this.options = {
       ...options,
-      table: structuredClone(options.table),
+      data: structuredClone(options.data),
     };
 
     try {
-      this.root = d3.hierarchy(
-        d3.rollup(
-          this.options.table,
-          this.options.reduce,
-          ...this.options.grouping,
-        ),
+      const grouping = d3.rollup(
+        this.options.data,
+        this.options.reduce,
+        ...this.options.grouping,
       );
+      this.root = d3.hierarchy(grouping);
     } catch (e) {
       console.error(e.message);
       throw new Error(
-        "Unable to create root for treemap. Did you provide table, reducer and grouping functions?",
+        "Unable to create root for treemap. Did you provide data and grouping functions?",
       );
     }
     if (this.options.dataMapper) this.root.each(this.options.dataMapper);

@@ -12,6 +12,7 @@ export type TreeMapOptions = HierarchyVisualisationOptions & {
   height: number;
   padding: number;
   ratio?: number;
+  nameKey: string;
   valueKey?: string;
   nameMapper: UsefulFunction;
   colourMapper: UsefulFunction;
@@ -21,6 +22,7 @@ export class TreeMap extends HierarchyVisualisation {
   width: number;
   height: number;
   padding: number;
+  nameKey: string;  
   valueKey?: string;
   nameMapper: UsefulFunction;
   colourMapper: UsefulFunction;
@@ -28,7 +30,7 @@ export class TreeMap extends HierarchyVisualisation {
 
   constructor(options: TreeMapOptions) {
     super({
-      table: options.table,
+      data: options.data,
       reduce: options.reduce,
       grouping: options.grouping,
       dataMapper: options.dataMapper,
@@ -38,6 +40,7 @@ export class TreeMap extends HierarchyVisualisation {
     this.width = options.width;
     this.height = options.height;
     this.padding = options.padding || 0;
+    this.nameKey = options.nameKey;
     this.valueKey = options.valueKey;
     this.nameMapper = options.nameMapper;
     this.colourMapper = options.colourMapper;
@@ -81,7 +84,7 @@ export class TreeMap extends HierarchyVisualisation {
         this.width / this.ratio,
         this.height,
       ])
-      .padding(this.padding);
+      .paddingInner(this.padding);
   }
   render() {
     const treemap = this.prepareTreemap();
@@ -103,17 +106,18 @@ export class TreeMap extends HierarchyVisualisation {
     
     // Create a group to hold the cells
     const treeCells = svg.append("g")
-      .attr("fill", "#aaa")
-      .attr("stroke", "#555")
       .attr("stroke-width", 1);
 
-    const nodes = this.root;
+    // Don't make interim levels
+    // TODO(@gilesdring) maybe make this configurable?
+    const nodes = this.root.leaves();
 
     // Attach the nodes to the top level group
     const node = treeCells.selectAll("g")
       .data(nodes);
 
     const treeCell = node.enter().append("g")
+      .attr('data-depth', d => d.depth)
       .attr('data-height', d => d.height)
       .classed('series', true)
       .attr("transform", d => `translate(${d.x0 * this.ratio} ${d.y0})`);
@@ -122,7 +126,13 @@ export class TreeMap extends HierarchyVisualisation {
       .attr("x", 0).attr("y", 0)
       .attr("width", d => (d.x1 - d.x0) * this.ratio)
       .attr("height", d => d.y1 - d.y0)
-      .attr("fill", this.colourMapper)
+      .attr("fill", (d) => {
+        if (d.depth > 0 ) return this.colourMapper(d)
+        return "none";
+      })
+      .attr("stroke", (d) => {
+        if (d.depth > 0 ) return "#555";
+      })
       .append('title')
       .text(this.nameMapper);
 
@@ -133,8 +143,8 @@ export class TreeMap extends HierarchyVisualisation {
       .attr('height', d => d.y1 - d.y0)
       .append('div')
       .style('color', (d) => Colour(this.colourMapper(d)).contrast)
-      .text(d => d.data.title);
+      .text(d => d.data[this.nameKey]);
 
-    return svg.node();
+    return svg.node()?.outerHTML;
   }
 }

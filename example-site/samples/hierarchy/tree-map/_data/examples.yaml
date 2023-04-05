@@ -1,0 +1,19 @@
+- title: "Minimal"
+  description: |
+    This is a minimal treemap visualisation. Default grouping is by the 'name' property (which defautls to `name`).
+  config:
+    data: test.data.hierarchy.rows
+
+- title: "Specify name"
+  description: |
+    The `nameKey` property has been passed to override the name.
+  config:
+    data: test.data.hierarchy.rows
+    nameKey: level_1
+
+- title: "Specify value"
+  description: |
+    The `valueKey` property allows a value property to be used to size the treemap.
+  config:
+    data: test.data.hierarchy.rows
+    valueKey: value
