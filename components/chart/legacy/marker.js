@@ -1,16 +1,18 @@
 import { Animate } from './animate.js';
 import { add, addClasses, svgEl, setAttr, mergeDeep, clone } from './util.js';
 
-function drawPolygon(corners,cx,cy,r){
+// Function to draw a regular polygon as an SVG path. 
+// It will have n sides and be centred on cx,cy with a "radius" r.
+function drawPolygon(n,cx,cy,r){
 	if(typeof cx==="string") cx = parseFloat(cx);
 	if(typeof cy==="string") cy = parseFloat(cy);
 
-	var step = 360/corners;
+	var step = 360/n;
 	var cordeg = 0;
 	var p = "M"+cx+","+cy;
 	var d2r = Math.PI/180;
 	// For even-numbered sides we offset the initial angle
-	var ginit = (corners%2==0 ? -step/2 : 0);
+	var ginit = (n%2==0 ? -step/2 : 0);
 	for(var g = ginit,j = 0; g <= 360; g += step, j++){
 		var y = (Math.sin(g*d2r)*r + cy).toFixed(3);
 		var x = (Math.cos(g*d2r)*r + cx).toFixed(3);

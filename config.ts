@@ -7,6 +7,7 @@ export const assets = [
 
 export const components = [
   'chart/line.ts',
+  'chart/scatter.ts',
   'chart/bar.ts',
   'dashboard.ts',
   'graph/line.ts',

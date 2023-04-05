@@ -1,8 +1,10 @@
 import { applyReplacementFilters } from "../../lib/util.js";
 import type { LineChartOptions } from "./line.ts";
+import type { ScatterChartOptions } from "./scatter.ts";
 import type { BarChartOptions } from "./bar.ts";
 import type { AxisOptions, TickOptions } from "./types.ts";
 import { LineChart } from "./legacy/line.js";
+import { ScatterChart } from "./legacy/scatter.js";
 import { BarChart } from "./legacy/bar.js";
 import { StackedBarChart } from "./legacy/stacked-bar.js";
 
@@ -49,7 +51,7 @@ export function addVirtualColumns (
 }
 
 export function updateAxis (
-  config: Partial<BarChartOptions|LineChartOptions>,
+  config: Partial<BarChartOptions|LineChartOptions|ScatterChartOptions>,
 ) {
 
 	let ncategories = 0;
@@ -116,7 +118,7 @@ export function updateAxis (
 }
 
 export function calculateRange(
-  config: Partial<BarChartOptions|LineChartOptions>,
+  config: Partial<BarChartOptions|LineChartOptions|ScatterChartOptions>,
   tickSpacing: number | undefined = undefined,
 ) {
 
@@ -183,6 +185,19 @@ export function renderLineChart(config: LineChartOptions) {
 	const csv = explodeObjectArray(config.data as Record<string, unknown>[]);
 
 	const chart = new LineChart(config, csv);
+
+	return chart.getSVG();
+}
+
+// Simple wrapper around existing legacy
+export function renderScatterChart(config: ScatterChartOptions) {
+
+	// Auto set range for x axis
+	config = updateAxis(config);
+
+	const csv = explodeObjectArray(config.data as Record<string, unknown>[]);
+
+	const chart = new ScatterChart(config, csv);
 
 	return chart.getSVG();
 }

@@ -1,10 +1,10 @@
 ---
-title: Line Chart
-component: chart.line
+title: Scatter chart
+component: chart.scatter
 examples:
   - title: "Basic"
     description: |
-      This is a basic line chart with one data series showing unemployment over time for 16-17 year olds (data from the ONS's <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>). The graph is auto-scaled to the data using <code>axis → x → tickSpacing</code> and <code>axis → y → tickSpacing</code>. The tick marks for each <code>axis</code> are defined using those same properties and styled with <code>axis → x → grid</code>. 
+      This is a basic scatter chart with one data series showing unemployment over time for 16-17 year olds (data from the ONS's <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>). The graph is auto-scaled to the data using <code>axis → x → tickSpacing</code> and <code>axis → y → tickSpacing</code>. The tick marks for each <code>axis</code> are defined using those same properties and styled with <code>axis → x → grid</code>. 
     config:
       data: test.data.unemploymentByAge
       series:
@@ -14,7 +14,7 @@ examples:
           colour: "#e52e36"
   - title: "Auto-generated grid"
     description: |
-      This is a basic line chart showing the same data as above. In this example we have auto-scaled each axis to the data using <code>axis → x → tickSpacing</code> and <code>axis → y → tickSpacing</code>. The <code>tickSpacing</code> values are used to auto generate tick marks which are styled with <code>axis → x → grid</code> and  <code>axis → y → grid</code>. 
+      This is a basic scatter chart showing the same data as above. In this example we have auto-scaled each axis to the data using <code>axis → x → tickSpacing</code> and <code>axis → y → tickSpacing</code>. The <code>tickSpacing</code> values are used to auto generate tick marks which are styled with <code>axis → x → grid</code> and  <code>axis → y → grid</code>. 
     config:
       data: test.data.unemploymentByAge
       axis:
@@ -154,6 +154,8 @@ examples:
           colour: "#005776"
           tooltip: "50 over Label"
   - title: "Category-based data"
+    description: |
+      Sometimes you have data that is in categories.
     config:
       legend:
         show: true     # Default to false
@@ -312,8 +314,7 @@ examples:
           x: value
           y: series2
           points:
-            marker: line
-            rotate: 45
+            marker: square
             size: 16
         - title: Series 3
           colour: green
@@ -325,4 +326,4 @@ examples:
             size: 32
 ---
 
-Our line chart component renders simple line charts. 
+Our scatter chart component renders simple scatter charts. 

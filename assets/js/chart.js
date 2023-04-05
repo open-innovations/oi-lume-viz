@@ -251,15 +251,22 @@
 									// Check if the vertical position lines up with a bar and the horizontal position is within the bar
 									if(e.clientY >= p.top && e.clientY <= p.top+p.height && e.clientX >= p.left && e.clientX <= p.left+p.width) idx = i;
 								}
+							}else{
+								dx = Math.abs((p.x+p.width/2)-e.clientX);	// Find distance from circle centre to cursor
+								dy = Math.abs((p.y+p.width/2)-e.clientY);
+								d = Math.sqrt(dx*dx + dy*dy);
+								if(d < min && d < dist){
+									idx = i;
+									dist = d;
+								}
 							}
 						}
 						if(idx >= 0){
-							matches.push({'dist':d,'distx':dist,'pt':series[s][idx]});
+							matches.push({'dist':d,'pt':series[s][idx]});
 						}
 					}
 				}
 			}
-
 			dist = 1e100;
 			idx = -1;
 			for(s = 0; s < matches.length; s++){

@@ -4,12 +4,16 @@ import { add, svgEl, setAttr,addClasses, mergeDeep, roundTo } from './util.js';
 export function Axis(ax,from,to,attr){
 
 	var opt,lbl,fs,xmin,xmax,ymin,ymax;
-	
+
+	// Set some defaults
 	opt = {
+		'label': 'axis',
 		'left': 0,
 		'right': 0,
 		'top': 0,
 		'bottom': 0,
+		'padding': 4,
+		'font-size': 16,
 		'font-family': 'CenturyGothicStd,"Century Gothic",sans-serif',
 		'font-weight': 'bold',
 		'line':{'show':true,stroke:'#000000','stroke-width':1,'stroke-linecap':'round','stroke-dasharray':''},
@@ -20,22 +24,36 @@ export function Axis(ax,from,to,attr){
 		labels:{},
 		'getXY':function(x,y){ return {x:x,y:y}; }
 	};
+
+	// Update our defaults with the attributes provided to the function
 	mergeDeep(opt,attr);
-	lbl = opt.label||'axis';
+
+	lbl = opt.label;
 	this.ticks = {};
 	this.line = {};
+
+	// Create the main SVG element for the axis
 	this.el = svgEl("g");
 	addClasses(this.el,[lbl+'-grid',lbl+'-grid-'+ax]);
+
+	// Create a title element
 	this.title = svgEl("text");
 	this.title.classList.add(lbl+'-grid-title');
+
+	// Add the title to the main element
 	add(this.title,this.el);
-	fs = opt['font-size']||16;
-	opt.padding = 4;
+
+	fs = opt['font-size'];
+
 	xmin = ymin = xmax = ymax = 0;
+
+	// External function so that we can add this axis to the chart SVG
 	this.addTo = function(svg){
 		add(this.el,svg);
 		return this;
 	};
+
+	// Set the x and y range of the axis
 	this.updateRange = function(xmn,xmx,ymn,ymx){
 		xmin = xmn;
 		xmax = xmx;
@@ -43,14 +61,20 @@ export function Axis(ax,from,to,attr){
 		ymax = ymx;
 		return this;
 	};
+
+	// Update the properties of the axis
 	this.setProperties = function(myopt){
 		mergeDeep(opt,myopt);
 		return this;
 	};
+
+	// Get a specific property
 	this.getProperty = function(pid){
 		if(opt.hasOwnProperty(pid)) return opt[pid];
 		else return null;
 	};
+
+	// Update the axis
 	this.update = function(){
 		var t,x,y,pos,len,align,talign,baseline,xsign,ysign,lines,l,d;
 		if(!opt.labels) opt.labels = {};
