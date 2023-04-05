@@ -33,7 +33,7 @@ examples:
           colour: "#e52e36"
   - title: "Explicitly defined grid"
     description: |
-      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tickSize</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by creating virtual <code>columns</code> (each column has a <code>name</code> and <code>template</code>). We also create an interactive legend.
+      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. In this case they all share a common x-value column in the data but they don't have to. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tickSize</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by creating virtual <code>columns</code> (each column has a <code>name</code> and <code>template</code>). We also create an interactive legend.
     config:
       data: test.data.unemploymentByAge
       legend:
@@ -252,46 +252,66 @@ examples:
       legend:
         show: true     # Default to false
       data:
-        - value: 0.1
-          series1: 10
-          series2: 12
-          series3: 15
-        - value: 0.2
-          series1: 20
-          series2: 22
-          series3: 32
-        - value: 0.3
-          series1: 23
-          series2: 21
-          series3: 24
-        - value: 0.4
-          series1: 47
-          series2: 45
-          series3: 35
-        - value: 0.5
-          series1: 34
-          series2: 37
-          series3: 31
-        - value: 0.6
-          series1: 55
-          series2: 57
-          series3: 52
-        - value: 0.7
-          series1: 49
-          series2: 59
-          series3: 19
-        - value: 0.8
-          series1: 20
-          series2: 30
-          series3: 10
-        - value: 0.9
-          series1: 10
-          series2: 12
-          series3: 1
-        - value: 1.0
-          series1: 5
-          series2: 2
-          series3: 30
+        - series1-y: 10
+          series2-y: 12
+          series3-y: 15
+          series1-x: 0.09
+          series2-x: 0.1
+          series3-x: 0.1
+        - series1-y: 20
+          series2-y: 22
+          series3-y: 32
+          series1-x: 0.19
+          series2-x: 0.2
+          series3-x: 0.19
+        - series1-y: 23
+          series2-y: 21
+          series3-y: 24
+          series1-x: 0.28
+          series2-x: 0.3
+          series3-x: 0.31
+        - series1-y: 47
+          series2-y: 45
+          series3-y: 35
+          series1-x: 0.41
+          series2-x: 0.4
+          series3-x: 0.39
+        - series1-y: 34
+          series2-y: 37
+          series3-y: 31
+          series1-x: 0.52
+          series2-x: 0.5
+          series3-x: 0.49
+        - series1-y: 55
+          series2-y: 57
+          series3-y: 52
+          series1-x: 0.61
+          series2-x: 0.6
+          series3-x: 0.61
+        - series1-y: 49
+          series2-y: 59
+          series3-y: 19
+          series1-x: 0.69
+          series2-x: 0.7
+          series3-x: 0.68
+        - series1-y: 20
+          series2-y: 30
+          series3-y: 10
+          series1-x: 0.83
+          series2-x: 0.8
+          series3-x: 0.81
+        - series1-y: 10
+          series2-y: 12
+          series3-y: 1
+          series1-x: 0.91
+          series2-x: 0.9
+          series3-x: 0.89
+        - series1-y: 5
+          series2-y: 2
+          series3-y: 30
+          series1-x: 1.05
+          series2-x: 1
+          series3-x: 1.01
       axis:
         x:
           grid:
@@ -305,21 +325,21 @@ examples:
       series:
         - title: Series 1
           colour: red
-          x: value
-          y: series1
+          x: series1-x
+          y: series1-y
           points:
             size: 8
         - title: Series 2
           colour: blue
-          x: value
-          y: series2
+          x: series2-x
+          y: series2-y
           points:
             marker: square
             size: 16
         - title: Series 3
           colour: green
-          x: value
-          y: series3
+          x: series3-x
+          y: series3-y
           points:
             marker: triangle
             rotate: 180

@@ -105,7 +105,7 @@ export function updateAxis (
 		}
 
 		// Auto generate ticks if not provided
-		if (config.axis[ax].ticks === undefined) {
+		if (typeof config.axis[ax].ticks === "undefined") {
 			config.axis[ax].ticks = generateTicks(config.axis[ax] as AxisOptions);
 			// If the grid→show property is set we will make sure that each generated tick has grid set to true
 			if(config.axis[ax].grid && config.axis[ax].grid.show){
@@ -159,7 +159,9 @@ export function generateTicks(config: AxisOptions): TickOptions[] {
   // If tickSpacing undefined, set a sensible default based on max and min
   const max = Math.floor(config.max / tickSpacing) * tickSpacing;
   const min = Math.floor(config.min / tickSpacing) * tickSpacing;
-  const tickCount = ((max - min) / tickSpacing) + 1;
+  // Make sure to round the tickCount to the nearest integer
+  // to avoid floating point precision errors
+  const tickCount = Math.round(((max - min) / tickSpacing) + 1);
 
   // Find the precision of the tickSpacing
   var precision = countDecimals(tickSpacing);
