@@ -1,6 +1,6 @@
 import { document } from '../../../lib/document.ts';
 //import { loadDataFile, mergeDeep } from '/src/_lib/oi/util.js';
-//import { colourScales, Colour } from '/src/_lib/oi/colour.js';
+//import { colourScales, Colour } from '../../../lib/colour.js';
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { Colour, ColourScale } from "../../../lib/colour/colours.ts";
 import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
@@ -68,6 +68,8 @@ export function SVGMap(opts){
 	if(typeof config.min=="number") min = config.min;
 	if(typeof config.max=="number") max = config.max;
 
+	config.max = max;
+	config.min = min;
 	var layerlist = [];
 	
 	if(config.background){
@@ -639,9 +641,12 @@ function getLegend(config){
 	
 	// Build a legend
 	var legend = '';
+	var cs = ColourScale(scales[config.scale]||config.scale);
 	if(config.legend && config.legend.items){
 		for(var i = 0; i < config.legend.items.length; i++){
-			legend += '<i style="background:'+colourScales.getColourFromScale(config.scale||'Viridis',config.legend.items[i].value,config.min,config.max)+'"></i> ' + config.legend.items[i].label + '<br />';
+			
+//			console.log(i,cs,config.min,config.max,config.legend.items[i].value,cs((config.legend.items[i].value-config.min)/(config.max-config.min)));
+			legend += '<i style="background:'+cs((config.legend.items[i].value-config.min)/(config.max-config.min))+'"></i> ' + config.legend.items[i].label + '<br />';
 		}
 	}
 	return legend;

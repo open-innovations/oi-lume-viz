@@ -38,7 +38,7 @@ export const css = `
 	.map .leaflet a { background-image: none!important; color: inherit!important; }
 	.map .legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
 	.map .legend .legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
-	.map .legend i { width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
+	.map .legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
 	.map .leaflet-popup-content-wrapper { border-radius: 0; }
 	.map .leaflet-popup-content { margin: 1em; }
 	.map .leaflet-container, .map .leaflet-popup-content-wrapper, .map .leaflet-popup-content { font-size: 1em; font-family: "CenturyGothicStd", "Century Gothic", Helvetica, sans-serif; line-height: inherit; }
