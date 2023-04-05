@@ -4,6 +4,8 @@ import basePath from "lume/plugins/base_path.ts";
 import oiComponents from '../mod.ts';
 import { stringify as yamlStringify } from 'std/encoding/yaml.ts';
 
+import csvLoader from 'https://deno.land/x/oi_lume_utils@v0.2.0/loaders/csv-loader.ts'
+
 // Code highlighting
 import code_highlight from "lume/plugins/code_highlight.ts";
 // import your favorite language(s)
@@ -23,6 +25,8 @@ const site = lume({
 
 
 site.loadAssets([".css"]);
+site.loadData(['.csv'], csvLoader);
+
 
 // TODO(@giles) Make this work in all the places!
 site.use(oiComponents({
