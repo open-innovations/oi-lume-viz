@@ -47,7 +47,7 @@ examples:
       value: colour
   - title: Colour a map - using a defined scale
     description: |
-      In this example we'll use a numeric column (`Aged 15 years and under`) in the data to set the `value` to use along with `scale` to colour each area. In this example we manually set `min` and `max` but if either are not set they will be calculated from the data.
+      In this example we'll use a numeric column (`Aged 15 years and under`) in the data to set the `value` to use along with `scale` to colour each area. The `scale` can be given as a known string (e.g. "Viridis") or a CSS-style gradient (e.g. "#ffe837 0%, #7d7d77 50%, #042450 100%"). The `min` and `max` for the `scale` will be calculated from the data unless provided.
       
       We will create a virtual column in the data named `Tooltip label` built using a `template` and use this to define the tooltip.
     config:
@@ -74,9 +74,7 @@ examples:
       scale: Viridis
   - title: Add a legend
     description: |
-      In this example we'll use a numeric column (`Aged 15 years and under`) in the data to set the `value` to use along with `scale` to colour each area. We will manually set `min` and `max` (by default they are calculated from the data). We add a `legend` that we can `position` (e.g. "top right") and add `items` to; each item has a `value` and `label`.
-      
-      We will create a virtual column in the data named `Tooltip label` built using a `template` and use this to define the tooltip.
+      Sometimes you need a `legend` with defined levels. To make this we first manually set `min` and `max` (otherwise they are calculated from the data and won't necessarily match our levels). We `position` (e.g. "top right") and add `items` to the legend. Each item has a `value` and `label`.
     config:
       data:
         - { LAD21CD: "E08000016", "LAD21NM":"Barnsley", colour: "#E6007C","Aged 15 years and under":44782,"Aged 16 to 24 years":22101,"Aged 25 to 34 years":32949,"Aged 35 to 49 years":44857,"Aged 50 to 64 years":52285,"Aged 65 years and over":47598 }
