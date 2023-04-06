@@ -17,8 +17,8 @@ export function LineChart(config,csv){
 		'top':0,
 		'bottom':0,
 		'font-size': basefs,
-		'key':{
-			'show':false,
+		'legend':{
+			'show': true,
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'rgba(255,255,255,0.9)'},
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},

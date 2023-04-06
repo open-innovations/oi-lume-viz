@@ -20,7 +20,7 @@ export function BarChart(config,csv){
 		'tick':5,
 		'font-size': basefs,
 		'font-weight': 'normal',
-		'key':{
+		'legend':{
 			'show':false,
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'rgba(255,255,255,0.9)'},
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}

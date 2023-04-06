@@ -289,7 +289,7 @@ function KeyItem(attr){
 	if(!attr) throw("No options provided");
 	
 	var opts = {
-		'points': {'marker':(attr.type=="bar-chart" ? "square" : "circle")},
+		'points': {'marker':(attr.type=="bar-chart" || attr.type=="stacked-bar-chart" ? "square" : "circle")},
 		'fontSize': 1	// Deliberately small so we can see it is bad
 	}
 	// Set some default values
@@ -316,7 +316,7 @@ function KeyItem(attr){
 	
 	let mark = new Marker(opts.points);
 	mark.addClass('item-mark');
-	mark.setSize(Math.min((opts.points.size||opts.fontSize/2),opts.fontSize));	// Default size of key item
+	mark.setSize(attr.type=="bar-chart" || attr.type=="stacked-bar-chart" ? opts.fontSize : Math.min((opts.points.size||opts.fontSize/2),opts.fontSize));	// Default size of key item
 	mark.setAttr({'fill':'silver'});
 
 	this.el.appendChild(line);
