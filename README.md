@@ -38,6 +38,13 @@ Creates a simple panelled dashboard.
 
 Creates a line chart.
 
+
+## Colours
+
+In many of the visualisations it is possible to set the colours of lines/points/polygons. You can set a colour as a hex code (e.g. `#396bad`), an RGB value (e.g. `rgba(255,0,0,1)`) or [a CSS color name](https://www.tutorialrepublic.com/css-reference/css-color-names.php).
+
+Sometimes items can have their colour set using a colour `scale` value. These can either be provided in the style of a [CSS gradient string](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient) (e.g. `#03051A 0%, "#CB1B4F 50%, #FAEBDD 100%`) or using one of the following named colour scales: `Cividis`, `Heat`, `Inferno`, `Magma`, `Mako`, `ODI`, `Planck`, `Plasma`, `Rocket`, `Turbo`, `Viridis`.
+
 ## Testing
 
 Run a test with the following command. Replace the file path with the tests you want to run.
@@ -52,3 +59,4 @@ To make Deno continually run these tests, add the `--watch` flag. This will then
 ```powershell
 deno test --unstable --allow-read --no-check --watch components/chart/bar.test.ts
 ```
+
