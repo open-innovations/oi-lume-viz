@@ -127,13 +127,26 @@ export default function (input: { config: SVGmapOptions }) {
 			input,
 		);
 	}
-	
+
 	// If the GeoJSON object doesn't contain a type: FeatureCollection we stop
 	if(!geojson.data.type || geojson.data.type !== "FeatureCollection"){
 		console.error(geojson);
 		throw new Error("No FeatureCollection in the GeoJSON");
 	}
 	config.geojson = geojson;
+
+	if(config.background){
+		// Handle background / data as string references
+		let background = clone(config.background);
+		if(typeof background.data === 'string'){
+			background.data = thingOrNameOfThing<TableData<string | number>>(
+				background.data,
+				input,
+			);
+		}
+		config.background = background;
+	}
+	
 	
 	// Resolve data if this is a string
 	let data;
