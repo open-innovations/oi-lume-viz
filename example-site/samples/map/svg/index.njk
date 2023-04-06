@@ -66,6 +66,7 @@ examples:
       key: LAD21CD
       value: Aged 15 years and under
       scale: Viridis
+      tooltip: LAD21NM
   - title: Custom tooltips
     description: |
       We will create a virtual column with the `name` "Tooltip label" to define the `tooltip` text. Virtual columns must have a `name` and `template` which can include existing columns from the data e.g. "{{ LAD21NM }}: {{ Aged 15 years and under }}" would use the `LAD21CD` and `Aged 15 years and under` values from the data. Replacement values (e.g. "{{ Aged 15 years and under }}") can use the following filters:
