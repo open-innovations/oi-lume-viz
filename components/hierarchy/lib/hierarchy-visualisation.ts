@@ -1,4 +1,4 @@
-import d3, { d3types } from "../../../lib/external/d3.ts";
+import { d3, d3types } from "../../../lib/external/d3.ts";
 
 export type TableData<T> = Record<string, T>[];
 export type UsefulFunction = (d: unknown) => unknown;

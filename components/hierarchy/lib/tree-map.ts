@@ -1,5 +1,5 @@
 import { Colour } from "../../../lib/colour/colour.ts";
-import d3 from "../../../lib/external/d3.ts";
+import { d3 } from "../../../lib/external/d3.ts";
 
 import {
   HierarchyVisualisation,
