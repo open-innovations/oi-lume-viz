@@ -67,5 +67,6 @@
       - name: Tooltip
         template: "{{ level_1 }}\n{{ level_2 }}\n{{ name }}: {{ value | toLocaleString() }}"
     tooltip: "Tooltip"
-
+    colour: colour_index
+    scale: Viridis
 
