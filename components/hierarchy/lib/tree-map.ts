@@ -1,6 +1,5 @@
 import { Colour } from "../../../lib/colour/colour.ts";
 import { d3 } from "../../../lib/external/d3.ts";
-import { getAssetPath } from "../../../lib/util/paths.ts";
 
 import {
   HierarchyVisualisation,
@@ -132,6 +131,6 @@ export class TreeMap extends HierarchyVisualisation {
       .style("color", (d) => Colour(this.colourMapper(d)).contrast)
       .text((d) => d.data.name);
 
-    return `<div class="tree-map" data-dependencies="${ getAssetPath('/js/tree-map.js') },${ getAssetPath('/js/tooltip.js') }">`+svg.node()!.outerHTML+`</div>`;
+    return svg.node()!.outerHTML;
   }
 }
