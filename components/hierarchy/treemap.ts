@@ -11,6 +11,10 @@ interface ColourOptions {
   scale?: string;
 }
 
+interface TooltipOptions {
+  tooltip: string;
+}
+
 interface TreemapLevelData {
   colour: (d: unknown) => string;
   original: Record<string, unknown>[];
@@ -34,6 +38,7 @@ type TreemapComponentOptions =
     Omit<TreeMapOptions, "colourMapper" | "reduce" | "grouping" | "dataMapper">
   >
   & ColourOptions
+  & TooltipOptions
   & {
     grouping: string[];
   };
@@ -44,8 +49,8 @@ type TreemapComponentOptions =
  * @returns
  */
 export default function (options: { config: TreemapComponentOptions }) {
-  // Get colour and scale from the passed in config
-  const { colour = "colour", scale } = options.config;
+  // Get colour, scale and tooltip from the passed in config
+  const { colour = "colour", scale, tooltip } = options.config;
 
   // This is a utility function to map grouped data for processing
   const hierarchyReducer = (d) => {
@@ -102,25 +107,21 @@ export default function (options: { config: TreemapComponentOptions }) {
     options,
   );
 
-
-  
   // Create any defined columns
   config.data = addVirtualColumns(config);
 
-  if(config.tooltip){
-      config.description = function(d){
-		if(d.data.original[0][config.tooltip] !== undefined) return d.data.original[0][config.tooltip];
-		return d.name;
-      };
-  }else{
+  if (tooltip) {
+    config.description = function (d) {
+      if (d.data.original[0][tooltip] !== undefined) return d.data.original[0][tooltip];
+      return d.name;
+    };
+  } else {
     config.description = thingOrNameOfThing<UsefulFunction>(
       config.description,
       options,
     );
-	  
   }
   
-
   const treemap = new TreeMap(config);
   const dependencies = `data-dependencies="${ getAssetPath('/js/tree-map.js') },${ getAssetPath('/js/tooltip.js') }"`;
   return `<div class="tree-map" ${dependencies}>${treemap.render()}</div>`;
