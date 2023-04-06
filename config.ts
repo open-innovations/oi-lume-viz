@@ -4,6 +4,7 @@ export const assets = [
   'js/svg-map.js',
   'js/tooltip.js',
   'js/tabbed.js',
+  'js/treemap-popup.js',
 ];
 
 export const components = [
