@@ -45,7 +45,8 @@ export function SVGMap(opts){
 	}
 	mergeDeep(config,opts);
 	
-	console.log('TYPE: SVG-MAP');
+  // TODO(@slowe) Can we remove this?
+  console.log('TYPE: SVG-MAP');
 
 	let geo = config.geojson.data;
 
