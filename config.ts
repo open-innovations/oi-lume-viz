@@ -1,6 +1,5 @@
 export const assets = [
   'js/chart.js',
-  'js/contrast-colour.js',
   'js/dashboard.js',
   'js/svg-map.js',
   'js/tooltip.js',

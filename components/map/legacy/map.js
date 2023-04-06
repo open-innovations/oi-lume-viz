@@ -225,7 +225,7 @@ export function LeafletMap(config,csv){
 		// Build a legend
 		var legend = getLegend(config).replace(/\"/g,'\\"');
 
-		html = ['<div class="map" data-dependencies="/assets/leaflet/leaflet.js,/assets/leaflet/leaflet.css,/assets/js/contrast-colour.js">'];
+		html = ['<div class="map" data-dependencies="/assets/leaflet/leaflet.js,/assets/leaflet/leaflet.css,/assets/js/tooltip.js">'];
 		
 		html.push('<script>');
 		html.push('(function(root){');
@@ -421,7 +421,7 @@ function HexMap(config,csv,sources){
 
 	this.getHTML = function(){
 
-		var html = ['<div class="map hex-map" data-dependencies="/assets/js/svg-map.js,/assets/js/contrast-colour.js">'];
+		var html = ['<div class="map hex-map" data-dependencies="/assets/js/svg-map.js,/assets/js/tooltip.js">'];
 
 		html.push(svg.outerHTML);
 
@@ -713,7 +713,7 @@ function BasicMap(config,attr){
 	this.place = (attr.place||"");
 
 	this.getHTML = function(){
-		var html = ['<div class="map svg-map" data-dependencies="/assets/js/svg-map.js,/assets/js/tooltip.js,/assets/js/contrast-colour.js">'];
+		var html = ['<div class="map svg-map" data-dependencies="/assets/js/svg-map.js,/assets/js/tooltip.js">'];
 
 		html.push(this.svg.outerHTML);
 

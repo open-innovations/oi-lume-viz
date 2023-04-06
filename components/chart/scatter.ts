@@ -71,5 +71,5 @@ export default function (input: {
   // Call the line render function
   const chart = renderScatterChart(options);
 
-  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/tooltip.js') },${ getAssetPath('/js/contrast-colour.js') }">${chart}</div>`;
+  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
 }

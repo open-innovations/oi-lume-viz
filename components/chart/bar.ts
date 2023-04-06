@@ -73,5 +73,5 @@ export default function (input: {
   // Call the bar render function
   const chart = renderBarChart(options);
 
-  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/tooltip.js') },${ getAssetPath('/js/contrast-colour.js') }">${chart}</div>`;
+  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
 }
