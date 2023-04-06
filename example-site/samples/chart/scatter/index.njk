@@ -10,7 +10,7 @@ examples:
       series:
         - title: 16-17
           x: Year
-          y: 16-17
+          y: 16-17→rate (%)1
           colour: "#e52e36"
   - title: "Auto-generated grid"
     description: |
@@ -29,7 +29,7 @@ examples:
       series:
         - title: 16-17
           x: Year
-          y: 16-17
+          y: 16-17→rate (%)1
           colour: "#e52e36"
   - title: "Explicitly defined grid"
     description: |
@@ -125,32 +125,32 @@ examples:
           tickSize: 5
       columns:
         - name: "16-17 Label"
-          template: "16-17<br />{{ Year }}: {{ 16-17 | toFixed(1) }}%"
+          template: "16-17<br />{{ Date }}: {{ 16-17→rate (%)1 | toFixed(1) }}%"
         - name: "18-24 Label"
-          template: "18-24<br />{{ Year }}: {{ 18-24 | toFixed(1) }}%"
+          template: "18-24<br />{{ Date }}: {{ 18-24→rate (%)1 | toFixed(1) }}%"
         - name: "25-49 Label"
-          template: "25-49<br />{{ Year }}: {{ 25-49 | toFixed(1) }}%"
+          template: "25-49<br />{{ Dtae }}: {{ 25-49→rate (%)1 | toFixed(1) }}%"
         - name: "50 over Label"
-          template: "50 and over<br />{{ Year }}: {{ 50-64 | toFixed(1) }}%"
+          template: "50 and over<br />{{ Date }}: {{ 50 and over→rate (%)1 | toFixed(1) }}%"
       series:
         - title: 16-17
           x: Year
-          y: 16-17
+          y: "16-17→rate (%)1"
           colour: "#e52e36"
           tooltip: "16-17 Label"
         - title: 18-24
           x: Year
-          y: 18-24
+          y: "18-24→rate (%)1"
           colour: "#f7ab3d"
           tooltip: "18-24 Label"
         - title: 25-49
           x: Year
-          y: 25-49
+          y: "25-49→rate (%)1"
           colour: "#c7b200"
           tooltip: "25-49 Label"
         - title: 50-64
           x: Year
-          y: 50 and over
+          y: "50 and over→rate (%)1"
           colour: "#005776"
           tooltip: "50 over Label"
   - title: "Category-based data"

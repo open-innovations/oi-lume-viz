@@ -1,4 +1,4 @@
-import { addVirtualColumns } from "../../lib/helpers.ts";
+import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { renderScatterChart, resolveData } from "./helpers.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
@@ -43,11 +43,14 @@ export default function (input: {
 }): string {
   const config = clone(input.config);
 
-  // If the data parameter is a string, resolve it from the input to this function
-  // Lume components have access to entire build context (as do pages).
-  if (typeof config.data === "string") {
-    config.data = resolveData(config.data, input) as Record<string, unknown>[];
-  }
+  // Convert references into actual objects
+  config.data = thingOrNameOfThing<TableData<string | number>>(
+    config.data,
+    input,
+  );
+
+  // In case it was a CSV file loaded
+  if(config.data.rows) config.data = config.data.rows;
 
   // Create any defined columns
   config.data = addVirtualColumns(config);
