@@ -1,6 +1,7 @@
 import { ColourScale } from "../../lib/colour/colour-scale.ts";
 import { thingOrNameOfThing } from "../../lib/helpers.ts";
 import { getUniqueItemsFromArray } from "../../lib/util/array.ts";
+import { getAssetPath } from "../../lib/util/paths.ts";
 import { TableData, UsefulFunction } from "./lib/hierarchy-visualisation.ts";
 import { TreeMap, TreeMapOptions } from "./lib/tree-map.ts";
 
@@ -106,5 +107,6 @@ export default function (options: { config: TreemapComponentOptions }) {
   );
 
   const treemap = new TreeMap(config);
-  return treemap.render();
+  const dependencies = `data-dependencies="${ getAssetPath('/js/treemap-popup.js') }"`;
+  return `<div class="chart" ${dependencies}>${treemap.render()}</div>`;
 }
