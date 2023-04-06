@@ -51,8 +51,14 @@
     scale: |
       rgb(122,76,139) 0%, rgb(124,109,168) 12.5%, rgb(115,138,177) 25%, rgb(107,164,178) 37.5%, rgb(104,188,170) 50%, rgb(133,211,146) 62.5%, rgb(189,229,97) 75%, rgb(254,240,65) 87.5%, rgb(254,240,65) 100%
 
-
-
-
+- title: Custom tooltips
+  description: |
+    If a `tooltip` property is provided, and the value is the name of a column in the data, a custom tooltip will be used. The tooltip column can also be one of any virtual `columns`. Virtual columns must have a `name` and `template` which can include existing columns from the data e.g. "{{ level_1 }}: {{ level_2 }}" would use the `level_1` and `level_2` values from the data.
+  config:
+    data: test.data.hierarchy.rows
+    columns:
+      - name: Tooltip
+        template: "{{ level_1 }}\n{{ level_2 }}\n{{ name }}"
+    tooltip: "Tooltip"
 
 

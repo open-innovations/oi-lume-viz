@@ -4,6 +4,7 @@ import { getUniqueItemsFromArray } from "../../lib/util/array.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { TableData, UsefulFunction } from "./lib/hierarchy-visualisation.ts";
 import { TreeMap, TreeMapOptions } from "./lib/tree-map.ts";
+import { addVirtualColumns } from "../../lib/helpers.ts";
 
 interface ColourOptions {
   colour: string;
@@ -90,7 +91,7 @@ export default function (options: { config: TreemapComponentOptions }) {
     grouping: grouperMaker(options.config.grouping || ["name"]),
     height: options.config.height || 400,
     description: options.config.description || ((d) => d.name),
-    padding: options.config.padding || 2,
+	padding: options.config.padding || 2,
     reduce: hierarchyReducer,
     width: options.config.width || 600,
   };
@@ -101,10 +102,24 @@ export default function (options: { config: TreemapComponentOptions }) {
     options,
   );
 
-  config.description = thingOrNameOfThing<UsefulFunction>(
-    config.description,
-    options,
-  );
+
+  
+  // Create any defined columns
+  config.data = addVirtualColumns(config);
+
+  if(config.tooltip){
+      config.description = function(d){
+		if(d.data.original[0][config.tooltip] !== undefined) return d.data.original[0][config.tooltip];
+		return d.name;
+      };
+  }else{
+    config.description = thingOrNameOfThing<UsefulFunction>(
+      config.description,
+      options,
+    );
+	  
+  }
+  
 
   const treemap = new TreeMap(config);
   const dependencies = `data-dependencies="${ getAssetPath('/js/tree-map.js') },${ getAssetPath('/js/tooltip.js') }"`;
