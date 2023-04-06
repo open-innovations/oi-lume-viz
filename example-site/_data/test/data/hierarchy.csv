@@ -3,7 +3,7 @@ Group A,Subgroup 1,Item A1.1,10,#396bad,#d73058,0.1
 Group A,Subgroup 2,Item A2.1,20,#396bad,#d73058,0.2
 Group A,Subgroup 3,Item A3.1,30,#396bad,#d73058,0.3
 Group A,Subgroup 3,Item A3.2,100,#396bad,#d73058,0.3
-Group B,Subgroup 1,Item B1.1,40,#396bad,#1dd3a7,0.4
-Group B,Subgroup 2,Item B2.1,50,#396bad,#1dd3a7,0.5
-Group B,Subgroup 3,Item B3.1,60,#396bad,#1dd3a7,0.6
-Group C,Subgroup 1,Item C1.1,10,#396bad,#2254f4,0.7
+Group B,Subgroup 1,Item B1.1,40,#396bad,#1dd3a7,0.5
+Group B,Subgroup 2,Item B2.1,50,#396bad,#1dd3a7,0.6
+Group B,Subgroup 3,Item B3.1,60,#396bad,#1dd3a7,0.8
+Group C,Subgroup 1,Item C1.1,10,#396bad,#2254f4,1.0
