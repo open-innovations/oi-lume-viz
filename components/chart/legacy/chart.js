@@ -74,7 +74,7 @@ export function Chart(config,csv){
 			setAttr(rect,{'x':0,'y':0,'width':this.w,'height':this.h});
 			add(rect,clip);
 			seriesgroup = svgEl('g');
-			seriesgroup.classList.add('data');
+			seriesgroup.classList.add('data-layer');
 		}
 
 		if(typeof this.opt.buildAxes==="function"){

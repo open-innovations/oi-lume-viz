@@ -50,7 +50,7 @@
 			s = parseInt(pt[p].getAttribute('data-series'));
 			// Get the item within the series
 			i = parseInt(pt[p].getAttribute('data-i'));
-			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':(pt[p].querySelector('title') ? pt[p].querySelector('title').innerHTML : "")};
+			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.add(pt[p])};
 			if(!series[s]) series[s] = [];
 			if(!series[s][i]) series[s][i] = pts[p];
 		}
@@ -63,7 +63,8 @@
 		}
 
 		this.reset = function(e){
-			return this.clearSeries(e).clearTooltip(e);
+			OI.Tooltips.clear();
+			return this.clearSeries(e);
 		};
 		this.setSeries = function(e){
 			this.enabled = !this.enabled;
@@ -153,57 +154,6 @@
 			}
 			return this;
 		};
-		this.triggerTooltip = function(e){
-			for(var i = 0; i < pts.length; i++){
-				if(pts[i].el==e.target) return this.showTooltip(pts[i].series,pts[i].i);
-			}
-			return this;
-		};
-		this.clearTooltip = function(e){
-			if(this.tip && this.tip.parentNode) this.tip.parentNode.removeChild(this.tip);
-			return this;
-		};
-		this.showTooltip = function(s,i){
-			el.style.position = 'relative';
-
-			var txt,bb,bbo,fill,selected,off;
-			this.tip = el.querySelector('.tooltip');
-			if(!this.tip){
-				this.tip = document.createElement('div');
-				this.tip.innerHTML = '<div class="inner" style="background: #b2b2b2;position:relative;"></div><div class="arrow" style="position: absolute; width: 0; height: 0; border: 0.5em solid transparent; border-bottom: 0; left: 50%; top: calc(100% - 1px); transform: translate3d(-50%,0,0); border-color: transparent; border-top-color: green;"></div>';
-				addClasses(this.tip,['tooltip']);
-				add(this.tip,el);
-			}
-
-			// Set the contents
-			txt = series[s][i].tooltip.replace(/\\n/g,'<br />');
-
-			fill = series[s][i].el.getAttribute('fill');
-
-			// Remove current selections
-			selected = el.querySelectorAll('circle.selected, rect.selected');
-			for(var j = 0; j < selected.length; j++) selected[j].classList.remove('selected');
-			
-			// Select this point
-			series[s][i].el.classList.add('selected');
-
-			this.tip.querySelector('.inner').innerHTML = (txt);
-
-			// Position the tooltip
-			bb = series[s][i].el.getBoundingClientRect();	// Bounding box of the element
-			bbo = el.getBoundingClientRect(); // Bounding box of SVG holder
-
-			var typ = svg.getAttribute('data-type');
-			off = 4;
-			if(typ=="bar-chart" || typ=="stacked-bar-chart") off = bb.height/2;
-			
-			this.tip.setAttribute('style','position:absolute;left:'+(bb.left + bb.width/2 - bbo.left).toFixed(2)+'px;top:'+(bb.top + bb.height/2 - bbo.top).toFixed(2)+'px;transform:translate3d(-50%,calc(-100% - '+off+'px),0);display:'+(txt ? 'block':'none')+';');
-			this.tip.querySelector('.inner').style.background = fill;
-			this.tip.querySelector('.arrow').style['border-top-color'] = fill;
-			this.tip.style.color = (OI.contrastColour ? OI.contrastColour(fill) : "red");
-
-			return this;
-		};
 		// Find the nearest point
 		this.findPoint = function(e){
 			var i,d,dx,dy,p,idx,min,dist,ok;
@@ -275,16 +225,11 @@
 					idx = s;
 				}
 			}
-			if(idx >= 0) this.showTooltip(matches[idx].pt.series,matches[idx].pt.i);
-			else this.clearTooltip();
+			if(idx >= 0) matches[idx].pt.tooltip.show();
+			else OI.Tooltips.clear();
 			return this;
 		};
 		addEv('mousemove',svg,{'this':this},this.findPoint);
-		if(pts){
-			for(p = 0; p < pts.length; p++){
-				addEv('focus',pts[p].el,{'this':this},this.triggerTooltip);
-			}
-		}
 		if(key){
 			// We build an HTML version of the key
 			var newkey = document.createElement('div');

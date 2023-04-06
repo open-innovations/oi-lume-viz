@@ -41,13 +41,11 @@ export function SVGMap(opts){
 	var config = {
 		'scale': 'Viridis',
 		'places': [],
-		'markers': []
+		'markers': [],
+		'data-type':'svg-map'
 	}
 	mergeDeep(config,opts);
 	
-  // TODO(@slowe) Can we remove this?
-  console.log('TYPE: SVG-MAP');
-
 	let geo = config.geojson.data;
 
 	var cs = ColourScale(scales[config.scale]||config.scale);
@@ -705,6 +703,7 @@ function BasicMap(config,attr){
 	// Add the SVG
 	this.svg = svgEl('svg');
 	setAttr(this.svg,{'class':'map-inner','xmlns':'http://www.w3.org/2000/svg','version':'1.1','width':this.w,'height':this.h,'viewBox':'-180 0 360 180','overflow':'visible','style':'max-width:100%;max-height:100%;background:'+(attr.background||"white"),'preserveAspectRatio':'xMidYMid meet'});
+	if(config['data-type']) setAttr(this.svg,{'data-type':config['data-type']});
 	el.appendChild(this.svg);
 
 	this.layers = [];
@@ -714,7 +713,7 @@ function BasicMap(config,attr){
 	this.place = (attr.place||"");
 
 	this.getHTML = function(){
-		var html = ['<div class="map svg-map" data-dependencies="/assets/js/svg-map.js,/assets/js/contrast-colour.js">'];
+		var html = ['<div class="map svg-map" data-dependencies="/assets/js/svg-map.js,/assets/js/tooltip.js,/assets/js/contrast-colour.js">'];
 
 		html.push(this.svg.outerHTML);
 

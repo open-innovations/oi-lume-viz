@@ -3,6 +3,7 @@ export const assets = [
   'js/contrast-colour.js',
   'js/dashboard.js',
   'js/svg-map.js',
+  'js/tooltip.js',
   'js/tabbed.js',
 ];
 

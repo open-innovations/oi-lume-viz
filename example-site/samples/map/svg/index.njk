@@ -4,9 +4,9 @@ component: map.svg
 examples:
   - title: A basic map
     description: |
-      The polygons are defined by the `geojson&rarr;data` key which loads a GeoJSON file (you may want to put your GeoJSON through our <a href="https://open-innovations.github.io/geojson-minify/">GeoJSON Minify tool</a> first).
+      The polygons are defined by the `geojson→data` key which loads a GeoJSON file (you may want to put your GeoJSON through our <a href="https://open-innovations.github.io/geojson-minify/">GeoJSON Minify tool</a> first).
       
-      The `geojson&rarr;key` attribute is used to match a property in `geojson&rarr;data&rarr;features[]&rarr;properties` with the `key` attribute in the `data` rows e.g. we try to match the `code` attribute in the data (say "E08000016") with the `LAD21CD` key in the GeoJSON. The `value` key is the name of a column in the `data` that defines the colour to use for the polygon. A `tooltip` can also be specified as the name of a column in the `data`.
+      The `geojson→key` attribute is used to match a property in `geojson→data→features[]→properties` with the `key` attribute in the `data` rows e.g. we try to match the `code` attribute in the data (say "E08000016") with the `LAD21CD` key in the GeoJSON. The `value` key is the name of a column in the `data` that defines the colour to use for the polygon. A `tooltip` can also be specified as the name of a column in the `data`.
     config:
       data:
         - { code: "E08000016", name: "Barnsley" }
