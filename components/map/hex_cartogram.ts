@@ -419,7 +419,7 @@ export default function (input: { config: HexmapOptions }) {
   // Return the HTML fragment for the visualisation that includes the dependencies and contains the SVG
   return `<div class="map hex-map" data-dependencies="${ getAssetPath('/js/svg-map.js') },${ getAssetPath('/js/tooltip.js') }"><svg
       id="hexes-${uuid}"
-      class="hex-map"
+      class="map-inner"
       viewBox="
         ${-margin - qWidth / 2} ${-margin - hexSide}
         ${width + qWidth + 2 * margin} ${height + 2 * hexSide + 2 * margin}

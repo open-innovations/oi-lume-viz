@@ -2,6 +2,7 @@ export const assets = [
   'js/chart.js',
   'js/dashboard.js',
   'js/svg-map.js',
+  'js/tree-map.js',
   'js/tooltip.js',
   'js/tabbed.js',
 ];
