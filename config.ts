@@ -12,7 +12,7 @@ export const components = [
   'chart/scatter.ts',
   'dashboard.ts',
   'graph/line.ts',
-  'hierarchy/tree_map.ts',
+  'hierarchy/treemap.ts',
   'map/hex_cartogram.ts',
   'map/svg.ts',
 ];
