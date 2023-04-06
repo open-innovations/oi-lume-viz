@@ -1,10 +1,9 @@
-import { addVirtualColumns } from "../../lib/helpers.ts";
+import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { applyReplacementFilters } from "../../lib/util.js";
 import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
-import { resolveData } from "../chart/helpers.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { SVGMap } from "./legacy/map.js";
 
@@ -107,6 +106,12 @@ export default function (input: { config: SVGmapOptions }) {
 	
 	var config = clone(input.config);
 
+	// Convert references into actual objects
+	config.data = thingOrNameOfThing<TableData<string | number>>(
+		config.data,
+		input,
+	);
+
 	// Create any defined columns
 	config.data = addVirtualColumns(config);
 
@@ -117,7 +122,10 @@ export default function (input: { config: SVGmapOptions }) {
 
 	// Handle geojson / data as string references
 	if(typeof geojson.data === 'string'){
-		geojson.data = clone(resolveData(geojson.data, input) as GeoJson);
+		geojson.data = thingOrNameOfThing<TableData<string | number>>(
+			geojson.data,
+			input,
+		);
 	}
 	
 	// If the GeoJSON object doesn't contain a type: FeatureCollection we stop
@@ -131,9 +139,14 @@ export default function (input: { config: SVGmapOptions }) {
 	let data;
 	if (config.data) {
 		data = clone(config.data);
-		if (typeof data === 'string') {
-			data = clone(resolveData(data, input) as Record<string, unknown>[]);
-		}
+		// Convert references into actual objects
+		data = thingOrNameOfThing<TableData<string | number>>(
+			data,
+			input,
+		);
+
+		// In case it was a CSV file loaded
+		if(config.data.rows) config.data = config.data.rows;
 
 		// Create any defined columns
 		data.data = addVirtualColumns(data);

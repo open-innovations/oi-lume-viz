@@ -1,10 +1,9 @@
+import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { applyReplacementFilters } from "../../lib/util.js";
 import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
-import { resolveData } from "../chart/helpers.ts";
-import { addVirtualColumns } from "../../lib/helpers.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 
 // This is a simple scale which returns the same value it was sent
@@ -118,18 +117,29 @@ export default function (input: { config: HexmapOptions }) {
   // Resolve hexjson if this is a string
   let hexjson = clone(input.config.hexjson);
   if (typeof hexjson === 'string') {
-    hexjson = clone(resolveData(hexjson, input) as HexJson);
+    // Convert references into actual objects
+    hexjson = thingOrNameOfThing<TableData<string | number>>(
+      hexjson,
+      input,
+    );
   }
   
   // Resolve data if this is a string
   let data;
   if (input.config.data) {
     data = clone(input.config.data);
-    if (typeof data === 'string') {
-      data = clone(resolveData(data, input) as Record<string, unknown>[]);
-    }
 
-	// Create any defined columns
+
+    // Convert references into actual objects
+    data = thingOrNameOfThing<TableData<string | number>>(
+      data,
+      input,
+    );
+
+    // In case it was a CSV file loaded
+    if(data.rows) data = data.rows;
+
+    // Create any defined columns
     data.data = addVirtualColumns(data);
 
   }

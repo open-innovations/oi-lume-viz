@@ -1,5 +1,5 @@
 import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
-import { renderLineChart, resolveData } from "./helpers.ts";
+import { renderLineChart } from "./helpers.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
