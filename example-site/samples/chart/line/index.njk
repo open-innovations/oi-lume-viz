@@ -1,0 +1,328 @@
+---
+title: Line chart
+component: chart.line
+examples:
+  - title: "Basic"
+    description: |
+      This is a basic line chart with one data series showing unemployment over time for 16-17 year olds (data from the ONS's <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>). The graph is auto-scaled to the data using <code>axis → x → tickSpacing</code> and <code>axis → y → tickSpacing</code>. The tick marks for each <code>axis</code> are defined using those same properties and styled with <code>axis → x → grid</code>. 
+    config:
+      data: test.data.unemploymentByAge
+      series:
+        - title: 16-17
+          x: Year
+          y: "16-17→rate (%)1"
+          colour: "#e52e36"
+  - title: "Auto-generated grid"
+    description: |
+      This is a basic line chart showing the same data as above. In this example we have auto-scaled each axis to the data using <code>axis → x → tickSpacing</code> and <code>axis → y → tickSpacing</code>. The <code>tickSpacing</code> values are used to auto generate tick marks which are styled with <code>axis → x → grid</code> and  <code>axis → y → grid</code>. 
+    config:
+      data: test.data.unemploymentByAge
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 5
+        y:
+          grid:
+            show: true
+          tickSpacing: 5
+      series:
+        - title: 16-17
+          x: Year
+          y: "16-17→rate (%)1"
+          colour: "#e52e36"
+  - title: "Explicitly defined grid"
+    description: |
+      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tickSize</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by creating virtual <code>columns</code> (each column has a <code>name</code> and <code>template</code>). We also create an interactive legend.
+    config:
+      data: test.data.unemploymentByAge
+      legend:
+        show: true     # Default to false
+      axis:
+        x:
+          title:
+            label: "Year"
+          grid:
+            stroke-dasharray: "6 2"
+            stroke-width: 1
+          ticks:
+            - value: 2000
+              grid: true
+              label: '2000'
+              tickSize: 5
+            - value: 2002
+              grid: true
+              label: ''
+            - value: 2004
+              grid: true
+              label: ''
+            - value: 2006
+              grid: true
+              label: ''
+            - value: 2008
+              grid: true
+              label: ''
+            - value: 2010
+              grid: true
+              label: '2010'
+              tickSize: 5
+            - value: 2012
+              grid: true
+              label: ''
+            - value: 2014
+              grid: true
+              label: ''
+            - value: 2016
+              grid: true
+              label: ''
+            - value: 2018
+              grid: true
+              label: ''
+            - value: 2020
+              grid: true
+              label: '2020'
+              tickSize: 5
+          min: 2000.0
+          max: 2022.5
+        y:
+          min: 0
+          max: 45
+          title:
+            label: "Unemployment"
+          grid:
+            stroke-width: 0.5
+          ticks:
+            - value: 0
+              grid: true
+              label: '0%'
+            - value: 5
+              grid: true
+              label: ''
+            - value: 10
+              grid: true
+              label: '10%'
+            - value: 15
+              grid: true
+              label: ''
+            - value: 20
+              grid: true
+              label: '20%'
+            - value: 25
+              grid: true
+              label: ''
+            - value: 30
+              grid: true
+              label: '30%'
+            - value: 35
+              grid: true
+              label: ''
+            - value: 40
+              grid: true
+              label: '40%'
+            - value: 45
+              grid: true
+              label: ''
+          tickSize: 5
+      columns:
+        - name: "16-17 Label"
+          template: "16-17<br />{{ Date }}: {{ 16-17→rate (%)1 | toFixed(1) }}%"
+        - name: "18-24 Label"
+          template: "18-24<br />{{ Date }}: {{ 18-24→rate (%)1 | toFixed(1) }}%"
+        - name: "25-49 Label"
+          template: "25-49<br />{{ Date }}: {{ 25-49→rate (%)1 | toFixed(1) }}%"
+        - name: "50 over Label"
+          template: "50 and over<br />{{ Date }}: {{ 50 and over→rate (%)1 | toFixed(1) }}%"
+      series:
+        - title: 16-17
+          x: Year
+          y: "16-17→rate (%)1"
+          colour: "#e52e36"
+          tooltip: "16-17 Label"
+        - title: 18-24
+          x: Year
+          y: "18-24→rate (%)1"
+          colour: "#f7ab3d"
+          tooltip: "18-24 Label"
+        - title: 25-49
+          x: Year
+          y: "25-49→rate (%)1"
+          colour: "#c7b200"
+          tooltip: "25-49 Label"
+        - title: 50-64
+          x: Year
+          y: "50 and over→rate (%)1"
+          colour: "#005776"
+          tooltip: "50 over Label"
+  - title: "Category-based data"
+    config:
+      legend:
+        show: true     # Default to false
+      data:
+        - category: A
+          series1: 10
+          series2: 12
+          series3: 15
+        - category: B
+          series1: 20
+          series2: 22
+          series3: 32
+        - category: C
+          series1: 23
+          series2: 21
+          series3: 24
+        - category: D
+          series1: 47
+          series2: 45
+          series3: 35
+        - category: E
+          series1: 34
+          series2: 37
+          series3: 31
+        - category: F
+          series1: 55
+          series2: 57
+          series3: 52
+        - category: G
+          series1: 49
+          series2: 59
+          series3: 19
+        - category: H
+          series1: 20
+          series2: 30
+          series3: 10
+        - category: I
+          series1: 10
+          series2: 12
+          series3: 1
+        - category: J
+          series1: 5
+          series2: 2
+          series3: 30
+      axis:
+        x:
+          grid:
+            show: true
+          min: -0.5
+          max: 9.5
+          ticks:
+            - value: 0
+              label: "A"
+            - value: 1
+              label: "B"
+            - value: 2
+              label: "C"
+            - value: 3
+              label: "D"
+            - value: 4
+              label: "E"
+            - value: 5
+              label: "F"
+            - value: 6
+              label: "G"
+            - value: 7
+              label: "H"
+            - value: 8
+              label: "I"
+            - value: 9
+              label: "J"
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 100
+      series:
+        - title: Series 1
+          colour: red
+          x: category
+          y: series1
+        - title: Series 2
+          colour: blue
+          x: category
+          y: series2
+        - title: Series 3
+          colour: green
+          x: category
+          y: series3
+  - title: "Custom icons"
+    description: |
+      Line markers can be defined using the <code>points</code> object on a <code>series</code>. Points can have a <code>marker</code> (one of <code>circle</code>, <code>triangle</code>, <code>square</code>, <code>diamond</code>, <code>pentagon</code>, <code>hexagon</code>, <code>octagon</code>, <code>line</code>, or <code>cross</code>), a <code>size</code>, and a rotation given by <code>rotate</code> (in degrees).
+    config:
+      legend:
+        show: true     # Default to false
+      data:
+        - value: 0.1
+          series1: 10
+          series2: 12
+          series3: 15
+        - value: 0.2
+          series1: 20
+          series2: 22
+          series3: 32
+        - value: 0.3
+          series1: 23
+          series2: 21
+          series3: 24
+        - value: 0.4
+          series1: 47
+          series2: 45
+          series3: 35
+        - value: 0.5
+          series1: 34
+          series2: 37
+          series3: 31
+        - value: 0.6
+          series1: 55
+          series2: 57
+          series3: 52
+        - value: 0.7
+          series1: 49
+          series2: 59
+          series3: 19
+        - value: 0.8
+          series1: 20
+          series2: 30
+          series3: 10
+        - value: 0.9
+          series1: 10
+          series2: 12
+          series3: 1
+        - value: 1.0
+          series1: 5
+          series2: 2
+          series3: 30
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 0.2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 100
+      series:
+        - title: Series 1
+          colour: red
+          x: value
+          y: series1
+          points:
+            size: 8
+        - title: Series 2
+          colour: blue
+          x: value
+          y: series2
+          points:
+            marker: line
+            rotate: 45
+            size: 16
+        - title: Series 3
+          colour: green
+          x: value
+          y: series3
+          points:
+            marker: triangle
+            rotate: 180
+            size: 32
+---
+
+Our line chart component renders simple line charts. 
