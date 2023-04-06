@@ -30,8 +30,9 @@ describe("module", () => {
   it("should load remote files", () => {
     theModule()(fakeSite);
 
-    // TODO fix fragile test
-    assertSpyCalls(<Stub> fakeSite.remoteFile, 13);
+    const calls = assets.length + components.length;
+
+    assertSpyCalls(<Stub> fakeSite.remoteFile, calls);
     assertSpyCallArg(<Stub> fakeSite.remoteFile, 0, 0, `/assets/${assets[0]}`);
     assertSpyCallArg(
       <Stub> fakeSite.remoteFile,
@@ -44,8 +45,9 @@ describe("module", () => {
   it("should copy each file separately", () => {
     theModule()(fakeSite);
 
-    // TODO fix fragile test
-    assertSpyCalls(<Stub> fakeSite.copy, 5);
+    const calls = assets.length;
+
+    assertSpyCalls(<Stub> fakeSite.copy, calls);
     assertSpyCallArg(<Stub> fakeSite.copy, 0, 0, `/assets/${assets[0]}`);
   });
 
