@@ -11,7 +11,7 @@ export function extractColours(gradient: string): ColourScaleStop[] {
   const stops = gradient.match(
     /(([a-z]{3,4}\([^\)]+\)|#[A-Fa-f0-9]{6}) \d+\%?)/g,
   );
-  if (stops === null) throw "Can't parse gradient string";
+  if (stops === null) throw "Can't parse gradient string: \""+gradient+"\"";
   const cs: ColourScaleStop[] = [];
   for (let i = 0; i < stops.length; i++) {
     let v = Infinity;
