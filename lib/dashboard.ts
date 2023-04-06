@@ -1,4 +1,5 @@
-import { colourScales, contrastColour } from './colour.js';
+import { contrastColour } from './colour/contrast.ts';
+import { ColourScale } from './colour/colour-scale.ts';
 import { getAssetPath } from './util/paths.ts';
 
 export type DashboardOptions = {
@@ -91,7 +92,10 @@ export function dashboard(config: DashboardOptions){
       // If a scale value has been given, use that instead of the value of the panel
       if(typeof panels[p]['scale-value']==="number") v = panels[p]['scale-value'];
       // Find the colour from the colour scale
-      col = colourScales.getColourFromScale(panels[p].scale||'Viridis',v,panels[p].min||0,panels[p].max||100);
+	  let cs = ColourScale(panels[p].scale||'Viridis');
+      let min = panels[p].min||0;
+	  let max = panels[p].max||100
+	  col = cs((v-min)/(max-min));
       // Process the colour so we can get the 
       c = contrastColour(col);
     }
