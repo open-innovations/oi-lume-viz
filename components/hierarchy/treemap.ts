@@ -108,5 +108,5 @@ export default function (options: { config: TreemapComponentOptions }) {
 
   const treemap = new TreeMap(config);
   const dependencies = `data-dependencies="${ getAssetPath('/js/tree-map.js') },${ getAssetPath('/js/tooltip.js') }"`;
-  return `<div class="chart" ${dependencies}>${treemap.render()}</div>`;
+  return `<div class="tree-map" ${dependencies}>${treemap.render()}</div>`;
 }
