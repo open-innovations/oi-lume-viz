@@ -1,6 +1,7 @@
 import { extractColours } from "./extract-colours.ts";
 import { getColourPercent } from "./get-colour-percent.ts";
 
+// Cividis/Inferno/Magma/Plasma/Turbo/Viridis come from Plotly https://github.com/plotly/plotly.py/blob/master/packages/python/plotly/_plotly_utils/colors/sequential.py (MIT)
 export var namedColourScales = {
 	'Cividis': '#00224e 0%, #123570 11.1%, #3b496c 22.222%, #575d6d 33.333%, #707173 44.444%, #8a8678 55.555%, #a59c74 66.666%, #c3b369 77.777%, #e1cc55 88.888%, #00224e0 100%',
 	'Heat': 'rgb(0,0,0) 0%, rgb(128,0,0) 25%, rgb(255,128,0) 50%, rgb(255,255,128) 75%, rgb(255,255,255) 100%',
