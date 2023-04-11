@@ -1,6 +1,6 @@
 ---
-title: SVG map
-component: map.svg
+title: Leaflet map
+component: map.leaflet
 examples:
   - title: A basic map
     description: |
@@ -296,26 +296,4 @@ examples:
           max: -0.3
 ---
 
-
-{#
-Other options include...
-options:
-  scale: "hsl(87, 57%, 86%) 0%, hsl(191, 57%, 15%) 100%"
-  min: 0
-  max: 5000000
-  legend:
-    position: top right
-    items:
-      - value: 5000000
-        label: 5 million
-      - value: 4000000
-        label: 4 million
-      - value: 3000000
-        label: 3 million
-      - value: 2000000
-        label: 2 million
-      - value: 1000000
-        label: 1 million
-      - value: 0
-        label: '0'
-#}
+<link rel="stylesheet" href="/assets/leaflet/leaflet.css">

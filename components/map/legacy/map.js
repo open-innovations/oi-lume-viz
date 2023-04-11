@@ -19,6 +19,321 @@ var icons = {
 function clone(a){ return JSON.parse(JSON.stringify(a)); }
 
 
+// This component uses "/assets/leaflet/leaflet.js" and "/assets/leaflet/leaflet.css" to make things interactive in the browser.
+// It will only get included in pages that need it by using the "data-dependencies" attribute.
+export function LeafletMap(opts){
+
+	var csv = clone(opts.data);
+	var fs = 16;
+
+	var config = {
+		'scale': 'Viridis',
+		'places': [],
+		'markers': [],
+		'data-type': 'leaflet-map',
+		'attribution': '',
+		'tileLayer': {
+			'url': 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+			'maxZoom': 19,
+			'attribution': "Tiles: &copy; OpenStreetMap/CartoDB",
+			'subdomains': "abcd"
+		},
+		'labelLayer': {
+			'url': 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
+			'attribution': "",
+			'pane': "labels"
+		}
+	}
+	mergeDeep(config,opts);
+	
+	let geo = config.geojson.data;
+
+	var cs = ColourScale(config.scale);
+
+	// Work out default max/min from data
+	var min = 1e100;
+	var max = -1e100;
+	
+	if(config.value){
+		for(var i = 0; i < csv.length; i++){
+			if(csv[i][config.value] && typeof csv[i][config.value]==="number"){
+				min = Math.min(min,csv[i][config.value]);
+				max = Math.max(max,csv[i][config.value]);
+			}
+		}
+	}
+
+	// Override defaults if set
+	if(typeof config.min=="number") min = config.min;
+	if(typeof config.max=="number") max = config.max;
+
+	config.max = max;
+	config.min = min;
+
+	var v,i;
+	// Update the colours for the CSV rows
+	for(i = 0; i < csv.length; i++){
+		if(config.value && csv[i][config.value]){
+			v = csv[i][config.value];
+			if(typeof v==="number") csv[i].colour = cs((csv[i][config.value]-config.min)/(config.max-config.min));
+		}
+		// Set a default colour if we don't have one
+		if(csv[i].colour === undefined) csv[i].colour = "#aaaaaa";
+	}
+	
+	this.getHTML = function(){
+		var html,i,r,file;
+
+		html = ['<div class="map leaflet-map" data-dependencies="/assets/leaflet/leaflet.js,/assets/js/tooltip.js">'];
+		
+		html.push('<script>');
+		html.push('(function(root){');
+		html.push('	var p = document.currentScript.parentNode;');
+		html.push('	var el = document.createElement("div");');
+		html.push('	el.classList.add("leaflet");');
+		html.push('	p.appendChild(el);');
+		html.push('	var map = L.map(el);');
+
+		// Store the map in an array for the page
+		html.push('	if(!root.OI) root.OI = {};\n');
+		html.push('	if(!root.OI.maps) root.OI.maps = [];\n');
+		
+		html.push('	var id = root.OI.maps.length;\n');
+		html.push('	root.OI.maps.push({"map":map});\n');
+
+		if(config.bounds){
+			// Create the bounds object required by Leaflet
+			var bstr = '[['+config.bounds.lat.min+','+config.bounds.lon.min+'],['+config.bounds.lat.max+','+config.bounds.lon.max+']]';
+			html.push(' OI.maps[id].bounds = '+bstr+';\n');
+			html.push('	map.fitBounds('+bstr+');\n');
+		}
+		
+		if(config.background){
+			var colour = Colour(config.background.colour||"#fafaf8");
+			html.push(' var bggeo = '+JSON.stringify(config.background.data)+';\n');
+			html.push('	var bg = L.geoJSON(bggeo,{"style":{"color":"'+colour.hex+'","weight":0,"fillOpacity":1}});\n');
+			html.push('	bg.addTo(map);\n');
+		}else{
+			html.push('	L.tileLayer("'+config.tileLayer.url+'", '+JSON.stringify(config.tileLayer)+').addTo(map);\n');
+		}
+
+		html.push('	map.attributionControl.setPrefix("'+config.attribution+'");\n');
+		
+		// Add the GeoJSON
+		html.push('	var geojson = '+JSON.stringify(geo)+';\n');
+		html.push('	var csv = '+JSON.stringify(csv)+';\n');
+		html.push('	var geokey = "'+config.geojson.key+'";\n');
+		html.push('	var key = "'+config.key+'";\n');
+		html.push('	var toolkey = "'+config.tooltip+'";\n');
+
+		// A function to return the row for a given key
+		html.push('	function getData(k){\n');
+		html.push('		for(var i = 0; i < csv.length; i++){\n');
+		html.push('			if(csv[i][key] == k) return csv[i];\n');
+		html.push('		}\n');
+		html.push('		return {};\n');
+		html.push('	}\n');
+
+		// A function to style each GeoJSON feature
+		html.push('	function style(feature){\n');
+		html.push('		var d = getData(feature.properties[geokey]);\n');
+		html.push('		return {\n');
+		html.push('			weight: 0.5,\n');
+		html.push('			opacity: 0.5,\n');
+		html.push('			color: "#ffffff",\n');
+		html.push('			fillOpacity: 1,\n');
+		html.push('			fillColor: d.colour||"transparent"\n');
+		html.push('		};\n');
+		html.push('	}\n');
+
+		// Add the GeoJSON to the map
+		html.push('	var geoattrs = { "style": style };\n');
+		html.push('	geoattrs.onEachFeature = function(feature, layer){\n');
+		html.push('		var d = getData(feature.properties[geokey]);\n');
+		html.push('		layer.bindPopup(d["Label"]||d[toolkey]||feature.properties[geokey]).on("popupopen",function(ev){\n');
+		html.push('			var ps = ev.popup._container;\n');
+		// Set the background colour of the popup
+		html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["background-color"] = d.colour;\n');
+		html.push('			ps.querySelector(".leaflet-popup-tip").style["background-color"] = d.colour;\n');
+		// Set the text colour of the popup
+		html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["color"] = OI.contrastColour(d.colour);\n');
+		html.push('			ps.style["color"] = OI.contrastColour(d.colour);\n');
+		html.push('		});\n');
+		html.push('	};\n');
+					
+		html.push('	var geo = L.geoJSON(geojson,geoattrs);\n');
+		html.push('	geo.addTo(map);\n');
+
+		html.push('	OI.maps[id].bounds = geo.getBounds();\n');
+		if(!config.bounds) html.push('	map.fitBounds(geo.getBounds());\n');
+
+		if(config.markers && config.markers.length > 0){
+			var icon;
+			for(var m = 0; m < config.markers.length; m++){
+				icon;
+				if(typeof config.markers[m].icon==="undefined") config.markers[m].icon = "default";
+				if(icons[config.markers[m].icon]) icon = clone(icons[config.markers[m].icon]);
+				else{ icon = config.markers[m].icon; }
+				if(!icon.svg){
+					throw("No SVG within marker "+m);
+				}
+				if(!icon.size) icon.size = [40,40];
+				if(!icon.anchor) icon.anchor = [20,0];
+				if(icon.svg){
+					// Clean up tags to make sure we have explicit closing tags
+					icon.svg = icon.svg.replace(/<([^\s]+)\s([^\>]+)\s*\/\s*>/g,function(m,p1,p2){ return "<"+p1+" "+p2+"></"+p1+">"});
+				}else{
+					icon.svg = '?';
+				}
+				icon.color = 'black';
+				if(config.markers[m].color) icon.color = config.markers[m].color;
+				if(config.markers[m].colour) icon.color = config.markers[m].colour;
+
+				icon.bgPos = [icon.anchor[0],icon.size[1]-icon.anchor[1]];
+				icon.html = '<div style="color:'+icon.color+'">'+icon.svg+'</div>';
+				delete config.markers[m].svg;
+				config.markers[m].icon = icon;
+			}
+			html.push('	var markers = '+JSON.stringify(config.markers)+';\n');
+			html.push('	var mark;\n');
+			html.push('	for(var m = 0; m < markers.length; m++){\n');
+			html.push('		icon = L.divIcon({"html":markers[m].icon.html,"iconSize":markers[m].icon.size,"iconAnchor":markers[m].icon.bgPos});\n');
+			html.push('		mark = L.marker([markers[m].latitude,markers[m].longitude], {icon: icon})\n');
+			html.push('		mark.addTo(map);\n');
+			html.push('		if(markers[m].tooltip) mark.bindPopup(markers[m].tooltip,{"className":"popup"});\n');
+			html.push('	}\n');
+			html.push('	function wrap(el,colour) { const wrappingElement = document.createElement("div"); el.replaceWith(wrappingElement); wrappingElement.appendChild(el); }');
+
+			html.push('	map.on("popupopen", function (e) {\n');
+			html.push('		var colour = "";\n');
+			html.push('		if(e.popup._source._path){\n');
+			html.push('			colour = window.getComputedStyle(e.popup._source._path).fill;\n');
+			html.push('		}else{\n');
+			html.push('			colour = window.getComputedStyle(e.popup._source._icon.querySelector("div")).color;\n');
+			html.push('		}\n');
+			html.push('		el = e.popup._container;\n');
+			html.push('		var style = "background-color:"+colour+"!important;color:"+OI.contrastColour(colour)+"!important;";\n');
+			html.push('		el.querySelector(".leaflet-popup-content-wrapper").setAttribute("style",style);\n');
+			html.push('		el.querySelector(".leaflet-popup-tip").setAttribute("style",style);\n');
+			html.push('		el.querySelector(".leaflet-popup-close-button").setAttribute("style",style);\n');
+			html.push('	})\n');
+		}
+
+		if(config.legend){
+			config.legend = mergeDeep({'position':'bottom right'},config.legend);
+			var legend = getLegend(config);
+
+			// Create the legend and add it to the map
+			html.push('	var legend = L.control({position: "'+((config.legend.position).replace(/ /g,""))+'"});\n');
+			html.push('	legend.onAdd = function (map){\n');
+			html.push('		var div = L.DomUtil.create("div", "info legend");\n');
+			html.push('		div.innerHTML = \''+legend+'\';\n');
+			html.push('		return div;\n');
+			html.push('	}\n');
+			html.push('	legend.addTo(map);\n');
+		}
+
+		if(config.places){
+			for(var i = 0; i < config.places.length; i++){
+				var place = -1;
+				for(var p = 0; p < places.length; p++){
+					if(places[p].Name==config.places[i].name){
+						place = p;
+						continue;
+					}
+				}
+				var f = fs*0.75;
+				if(place >= 0){
+					var p = clone(places[place]);
+					if(typeof config.places[i].latitude!=="number") config.places[i].latitude = p.Latitude
+					if(typeof config.places[i].longitude!=="number") config.places[i].longitude = p.Longitude
+					if(p.Population){
+						if(p.Population > 100000) f += fs*0.125;
+						if(p.Population > 250000) f += fs*0.125;
+						if(p.Population > 750000) config.places[i].name = config.places[i].name.toUpperCase();
+					}
+				}
+				config.places[i] = mergeDeep({'font-size':f,'font-weight':'bold','font-family':'Poppins,CenturyGothicStd,Arial','colour':'black','border':'white'},config.places[i]);
+				if(typeof config.places[i].latitude==="number" && typeof config.places[i].longitude==="number"){
+					html.push('	new L.Marker(['+config.places[i].latitude+', '+config.places[i].longitude+'], { icon: new L.DivIcon({className: "place-name", html: "<svg xmlns=\'http://www.w3.org/2000/svg\' version=\'1.1\' preserveAspectRatio=\'xMidYMin meet\' overflow=\'visible\'><text fill=\''+config.places[i]['colour']+'\' stroke=\''+config.places[i]['border']+'\' stroke-width=\'7%\' paint-order=\'stroke\'><tspan style=\'font-size:'+(config.places[i]['font-size'])+'px;font-weight:'+config.places[i]['font-weight']+';font-family:'+config.places[i]['font-family']+';\'>'+(config.places[i].name||"")+'</tspan></text></svg>"}) }).addTo(map);\n');
+				}
+			}
+			html.push('	function fitSvgTextElements() {\n');
+			html.push('		const elements = document.querySelectorAll(".place-name svg");\n');
+			html.push('		for( const el of elements ) {\n');
+			html.push('			const box = el.querySelector("text").getBBox();\n');
+			html.push('			el.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);\n');
+			html.push('			el.setAttribute("width", box.width);\n');
+			html.push('		}\n');
+			html.push('	}\n');
+			html.push('	fitSvgTextElements();\n');
+		}else{
+			// Create a map label pane so labels can sit above polygons
+			html.push('	map.createPane("labels");\n');
+			html.push('	map.getPane("labels").style.zIndex = 650;\n');
+			html.push('	map.getPane("labels").style.pointerEvents = "none";\n');
+			html.push('	L.tileLayer("'+config.labelLayer.url+'", '+JSON.stringify(config.labelLayer)+').addTo(map);\n');
+		}
+
+		html.push('})(window || this);\n');
+		html.push('</script>\n');
+
+		html.push('</div>\n');
+
+		return html.join('');
+	};
+	return this;
+}
+
+function getLegend(config){
+	
+	// Build a legend
+	var legend = '';
+	var cs = ColourScale(config.scale);
+	if(config.legend && config.legend.items){
+		for(var i = 0; i < config.legend.items.length; i++){
+			legend += '<i style="background:'+cs((config.legend.items[i].value-config.min)/(config.max-config.min))+'"></i> ' + config.legend.items[i].label + '<br />';
+		}
+	}
+	return legend;
+}
+
+// Build a legend in SVG
+function buildLegend(config){
+
+	var container = document.createElement('div');
+	if(config.legend){
+		if(!config.legend.position) config.legend.position = "bottom right";
+		config.legend.position = config.legend.position.replace(/(^| )/g,function(m,p1){ return p1+'leaflet-'; });
+		setAttr(container,{'class':config.legend.position});
+	}
+	
+	if(config.legend && config.legend.items){
+		var legend = document.createElement('div');
+		setAttr(legend,{'class':'legend leaflet-control'});
+		legend.innerHTML = getLegend(config);
+		add(legend,container);
+	}
+	return container;
+}
+
+function loadFromSources(path,sources){
+
+	var name,bits,data;
+	name = path.replace(/\//g, '.').replace(/^.*data/, 'sources').replace(/\.[^\.]*$/, '');
+	bits = name.split(".");
+	data = {};
+	if(bits[0]=="sources"){
+		data = clone(sources);
+		for(var b = 1; b < bits.length; b++){
+			if(data[bits[b]]) data = data[bits[b]];
+			else return {};
+		}
+	}
+	return data;
+}
+
+
 // This component uses "/assets/js/svg-map.js" to make things interactive in the browser.
 // That will only get included in pages that need it by using the "data-dependencies" attribute.
 export function SVGMap(opts){
@@ -194,485 +509,6 @@ export function SVGMap(opts){
 	return map;
 
 }
-
-// This component uses "/assets/leaflet/leaflet.js" and "/assets/leaflet/leaflet.css" to make things interactive in the browser.
-// It will only get included in pages that need it by using the "data-dependencies" attribute.
-export function LeafletMap(config,csv){
-
-	this.getHTML = function(){
-		var html,i,r,file;
-
-		if(config.geojson.file) file = config.geojson.file;
-		else console.error('No GeoJSON file given');
-
-		// Add a colour-scale colour to each row based on the "value" column
-		var rows = clone(csv.rows);
-		for(r = 0; r < rows.length; r++){
-			rows[r].colour = colourScales.getColourFromScale(config.scale||'Viridis',rows[r][config.value],config.min,config.max);
-		}
-
-		// Build a legend
-		var legend = getLegend(config).replace(/\"/g,'\\"');
-
-		html = ['<div class="map" data-dependencies="/assets/leaflet/leaflet.js,/assets/leaflet/leaflet.css,/assets/js/tooltip.js">'];
-		
-		html.push('<script>');
-		html.push('(function(root){');
-		html.push('	var p = document.currentScript.parentNode;');
-		html.push('	var el = document.createElement("div");');
-		html.push('	el.classList.add("leaflet");');
-		html.push('	p.appendChild(el);');
-		html.push('	var map = L.map(el);');
-
-		// Store the map in an array for the page
-		html.push('	if(!root.OI) root.OI = {};\n');
-		html.push('	if(!root.OI.maps) root.OI.maps = [];\n');
-		
-		html.push('	var id = root.OI.maps.length;\n');
-		html.push('	root.OI.maps.push({"map":map,"bounds":null});\n');
-
-		if(config.bounds){
-			// Create the bounds object required by Leaflet
-			var bstr = '[['+config.bounds.lat.min+','+config.bounds.lon.min+'],['+config.bounds.lat.max+','+config.bounds.lon.max+']]';
-			html.push(' OI.maps[id].bounds = '+bstr+';');
-			html.push('	map.fitBounds('+bstr+');');
-		}
-		html.push('	L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "Tiles: &copy; OpenStreetMap/CartoDB", subdomains: "abcd" }).addTo(map);');
-		html.push('	map.attributionControl.setPrefix("Youth Futures Foundation");\n');
-		
-		// Create a map label pane so labels can sit above polygons
-		html.push('	map.createPane("labels");\n');
-		html.push('	map.getPane("labels").style.zIndex = 650;\n');
-		html.push('	map.getPane("labels").style.pointerEvents = "none";\n');
-		html.push('	L.tileLayer("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", {\n');
-		html.push('		attribution: "",\n');
-		html.push('		pane: "labels"\n');
-		html.push('	}).addTo(map);\n');
-
-		// Fetch the GeoJSON file
-		// Alternatively we could have loaded it and inserted it here in the page directly
-		html.push('	fetch("'+file+'").then(response => {\n');
-		html.push('		if(!response.ok) throw new Error("Network response was not OK");\n');
-		html.push('		return response.json();\n');
-		html.push('	}).then(json => {\n');
-		html.push('		var csv = '+JSON.stringify(rows)+';\n');
-		html.push('		var geokey = "'+config.geojson.key+'";\n');
-		html.push('		var key = "'+config.key+'";\n');
-
-		// A function to return the row for a given key
-		html.push('		function getData(k){\n');
-		html.push('			for(var i = 0; i < csv.length; i++){\n');
-		html.push('				if(csv[i][key] == k) return csv[i];\n');
-		html.push('			}\n');
-		html.push('			return {};\n');
-		html.push('		}\n');
-
-		// A function to style each GeoJSON feature
-		html.push('		function style(feature){\n');
-		html.push('			var d = getData(feature.properties[geokey]);\n');
-		html.push('			return {\n');
-		html.push('				weight: 0.5,\n');
-		html.push('				opacity: 0.5,\n');
-		html.push('				color: "#ffffff",\n');
-		html.push('				fillOpacity: 1,\n');
-		html.push('				fillColor: d.colour||"transparent"\n');
-		html.push('			};\n');
-		html.push('		}\n');
-
-		// Add the GeoJSON to the map
-		html.push('		var geoattrs = { "style": style };\n');
-		html.push('		geoattrs.onEachFeature = function(feature, layer){\n');
-		html.push('			var d = getData(feature.properties[geokey]);\n');
-		html.push('			layer.bindPopup(d["Label"]||feature.properties[geokey]).on("popupopen",function(ev){\n');
-		html.push('				var ps = ev.popup._container;\n');
-		// Set the background colour of the popup
-		html.push('				ps.querySelector(".leaflet-popup-content-wrapper").style["background-color"] = d.colour;\n');
-		html.push('				ps.querySelector(".leaflet-popup-tip").style["background-color"] = d.colour;\n');
-		// Set the text colour of the popup
-		html.push('				ps.querySelector(".leaflet-popup-content-wrapper").style["color"] = OI.contrastColour(d.colour);\n');
-		html.push('				ps.style["color"] = OI.contrastColour(d.colour);\n');
-		html.push('			});\n');
-		html.push('		};\n');
-					
-		html.push('		var geo = L.geoJSON(json,geoattrs);\n');
-		html.push('		geo.addTo(map);\n');
-
-		html.push('		OI.maps[id].bounds = geo.getBounds();\n');
-		if(!config.bounds) html.push('		map.fitBounds(geo.getBounds());\n');
-
-		if(config.markers){
-			var icon;
-			for(var m = 0; m < config.markers.length; m++){
-				icon = null;
-				if(icons[config.markers[m].icon]) icon = clone(icons[config.markers[m].icon]);
-				else if(config.markers[m].icon.svg){ icon = config.markers[m].icon; }
-				if(!icon.size) icon.size = [40,40];
-				if(!icon.anchor) icon.anchor = [20,0];
-				icon.bgPos = [icon.anchor[0],icon.size[1]-icon.anchor[1]];
-				icon.html = '<div style="color:'+(config.markers[m].color ? config.markers[m].color : "#000000")+'">'+icon.svg+'</div>';
-				delete config.markers[m].svg;
-				config.markers[m].icon = icon;
-			}
-			html.push('		var markers = '+JSON.stringify(config.markers)+';\n');
-			html.push('		var mark;\n');
-			html.push('		for(var m = 0; m < markers.length; m++){\n');
-			html.push('			icon = L.divIcon({"html":markers[m].icon.html,"iconSize":markers[m].icon.iconSize,"iconAnchor":markers[m].icon.bgPos});\n');
-			html.push('			mark = L.marker([markers[m].latitude,markers[m].longitude], {icon: icon})\n');
-			html.push('			mark.addTo(map);\n');
-			html.push('			if(markers[m].tooltip) mark.bindPopup(markers[m].tooltip,{"className":"popup"});\n');
-			html.push('		}\n');
-			html.push('		function wrap(el,colour) { const wrappingElement = document.createElement("div"); el.replaceWith(wrappingElement); wrappingElement.appendChild(el); }');
-
-			html.push('		map.on("popupopen", function (e) {\n');
-			html.push('			var colour = window.getComputedStyle(e.popup._source._icon.querySelector("div")).color;\n');
-			html.push('			el = e.popup._container;\n');
-			html.push('			var style = "background-color:"+colour+"!important;color:"+OI.contrastColour(colour)+"!important;";\n');
-			html.push('			el.querySelector(".leaflet-popup-content-wrapper").setAttribute("style",style);\n');
-			html.push('			el.querySelector(".leaflet-popup-tip").setAttribute("style",style);\n');
-			html.push('			el.querySelector(".leaflet-popup-close-button").setAttribute("style",style);\n');
-			html.push('		})\n');
-		}
-
-		if(config.legend){
-			// Create the legend and add it to the map
-			html.push('		var legend = L.control({position: "'+((config.legend.position||"bottom right").replace(/ /g,""))+'"});\n');
-			html.push('		legend.onAdd = function (map){\n');
-			html.push('			var div = L.DomUtil.create("div", "info legend");\n');
-			html.push('			div.innerHTML = "'+legend+'";\n');
-			html.push('			return div;\n');
-			html.push('		}\n');
-			html.push('		legend.addTo(map);\n');
-		}
-
-		html.push('	}).catch(error => {\n');
-		html.push('		console.error("Unable to load the data",error);\n');
-		html.push('	});\n');
-
-
-		html.push('})(window || this);\n');
-		html.push('</script>\n');
-
-		html.push('</div>\n');
-
-		return html.join('');
-	};
-	return this;
-}
-
-/*
-// This component creates a hex map layout
-function HexMap(config,csv,sources){
-
-	var el = document.createElement('div');
-	this.container = el;
-	el.innerHTML = "";
-	setAttr(this.container,{'style':'overflow:hidden'});
-
-	let range = {};
-	this.w = (config.width || 1200);
-	this.h = (config.height || 675);
-	this.attr = config;
-	const fs = config['font-size'] || 17;
-
-	this.style = {
-		'default': { 'fill': '#cccccc', 'fill-opacity': 1, 'font-size': fs, 'stroke-width': 1.5, 'stroke-opacity': 1, 'stroke': '#ffffff' },
-		'highlight': { 'fill': '#1DD3A7' },
-		'grid': { 'fill': '#aaa', 'fill-opacity': 0.1 }
-	};
-
-	if(!config.hexjson.file){
-		console.error('No HexJSON file given');
-		return this;
-	}
-
-	// Create the SVG element
-	let svg = svgEl('svg');
-	setAttr(svg,{'xmlns':'http://www.w3.org/2000/svg','version':'1.1','viewBox':'0 0 '+this.w+' '+this.h,'overflow':'visible','style':'max-width:100%;max-height:100%;background:'+(config.background||"transparent"),'preserveAspectRatio':'xMidYMid meet'});
-	svg.innerHTML = "";
-	svg.setAttribute('data-type','hex-map');
-
-	// Create a group which has a class list data-layer so that the interactive JS can find it
-	let group = svgEl('g');
-	group.classList.add('data-layer');
-	add(group,svg);
-
-	this.areas = {};
-
-	let min = 0;
-	let max = 1;
-	// Set min/max to the range for the value column
-	if(config.value && csv.range[config.value]) min = csv.range[config.value].min;
-	if(config.value && csv.range[config.value]) max = csv.range[config.value].max;
-	// Override min/max if provided in config
-	if(typeof config.min==="number") min = config.min;
-	if(typeof config.max==="number") max = config.max;
-
-
-	this.getHTML = function(){
-
-		var html = ['<div class="map hex-map" data-dependencies="/assets/js/svg-map.js,/assets/js/tooltip.js">'];
-
-		html.push(svg.outerHTML);
-
-		// Create the legend
-		var legend = buildLegend(config);
-		html.push(legend.outerHTML);
-
-		html.push('</div>\n');
-
-		return html.join('');
-	};
-	this.init = function(){
-		// Get the contents of the HexJSON file
-		var hexjson = loadFromSources(config.hexjson.file,sources);
-		
-		// Process the HexJSON
-		this.setMapping(hexjson);
-		return this;
-	};
-	this.setMapping = function (mapping){
-		let region, p, s;
-		this.mapping = mapping;
-
-		if(!this.properties) this.properties = { "x": 100, "y": 100 };
-		p = mapping.layout.split("-");
-		this.properties.shift = p[0];
-		this.properties.orientation = p[1];
-
-		range = { 'r': { 'min': Infinity, 'max': -Infinity }, 'q': { 'min': Infinity, 'max': -Infinity } };
-		for(region in this.mapping.hexes){
-			if(this.mapping.hexes[region]){
-				p = updatePos(this.mapping.hexes[region].q, this.mapping.hexes[region].r, this.mapping.layout);
-				if (p.q > range.q.max) range.q.max = p.q;
-				if (p.q < range.q.min) range.q.min = p.q;
-				if (p.r > range.r.max) range.r.max = p.r;
-				if (p.r < range.r.min) range.r.min = p.r;
-			}
-		}
-		// Find range and mid points
-		range.q.d = range.q.max - range.q.min;
-		range.r.d = range.r.max - range.r.min;
-		range.q.mid = range.q.min + range.q.d / 2;
-		range.r.mid = range.r.min + range.r.d / 2;
-		this.range = clone(range);
-		
-		if(this.properties.orientation == "r") s = Math.min(0.5 * this.h / (range.r.d * 0.75 + 1), (1 / Math.sqrt(3)) * this.w / (range.q.d + 1));	// Pointy-topped
-		else s = Math.min((1 / Math.sqrt(3)) * this.h / (range.r.d + 1), 0.5 * this.w / (range.q.d * 0.75 + 1));	// Flat-topped
-
-		if(typeof config.size !== "number"){
-			if (typeof s !== "number") s = 10;
-			s = Math.round(100 * s) / 100;
-			config.size = s;
-			this.properties.size = s;	
-		}
-		this.properties.s = { 'cos': Math.round(10 * this.properties.size * Math.sqrt(3) / 2) / 10, 'sin': this.properties.size * 0.5 };
-		this.properties.s.c = this.properties.s.cos.toFixed(2);
-		this.properties.s.s = this.properties.s.sin.toFixed(2);
-
-		return this.draw();
-	};
-
-	// Create an object for the q,r coordinates that contains:
-	// array: <array> - the path for the hexagon as an array
-	// path: <string> - the path for the hexagon as a string
-	// x: <number> - the x position of the hexagon
-	// y: <number> - the y position of the hexagon
-	this.drawHex = function (q, r) {
-		if(this.properties){
-			let x, y;
-			const cs = this.properties.s.cos;
-			const ss = this.properties.s.sin;
-
-			const p = updatePos(q, r, this.mapping.layout);
-
-			if(this.properties.orientation == "r"){
-				// Pointy topped
-				x = (this.w / 2) + ((p.q - this.range.q.mid) * cs * 2);
-				y = (this.h / 2) - ((p.r - this.range.r.mid) * ss * 3);
-			}else{
-				// Flat topped
-				x = (this.w / 2) + ((p.q - this.range.q.mid) * ss * 3);
-				y = (this.h / 2) - ((p.r - this.range.r.mid) * cs * 2);
-			}
-			x = parseFloat(x.toFixed(1));
-			const path = [['M', [x, y]]];
-			if(this.properties.orientation == "r"){
-				// Pointy topped
-				path.push(['m', [cs, -ss]]);
-				path.push(['l', [0, 2 * ss, -cs, ss, -cs, -ss, 0, -2 * ss, cs, -ss, cs, ss]]);
-				path.push(['z', []]);
-			}else{
-				// Flat topped
-				path.push(['m', [-ss, cs]]);
-				path.push(['l', [2 * ss, 0, ss, -cs, -ss, -cs, -2 * ss, 0, -ss, cs]]);
-				path.push(['z', []]);
-			}
-			return { 'array': path, 'path': toPath(path), 'x': x, 'y': y };
-		}
-		return this;
-	};
-
-	this.draw = function () {
-		let r, q, h, region;
-
-		const range = this.range;
-		for (region in this.mapping.hexes) {
-			if (this.mapping.hexes[region]) {
-				q = this.mapping.hexes[region].q;
-				r = this.mapping.hexes[region].r;
-				if (q > range.q.max) range.q.max = q;
-				if (q < range.q.min) range.q.min = q;
-				if (r > range.r.max) range.r.max = r;
-				if (r < range.r.min) range.r.min = r;
-			}
-		}
-
-		// Add padding to range
-		range.q.min -= this.padding;
-		range.q.max += this.padding;
-		range.r.min -= this.padding;
-		range.r.max += this.padding;
-
-		// q,r coordinate of the centre of the range
-		const qp = (range.q.max + range.q.min) / 2;
-		const rp = (range.r.max + range.r.min) / 2;
-
-		this.properties.x = (this.w / 2) - (this.properties.s.cos * 2 * qp);
-		this.properties.y = (this.h / 2) + (this.properties.s.sin * 3 * rp);
-
-		// Store this for use elsewhere
-		this.range = clone(range);
-
-		let path, colour, title, hexid;
-
-		let style = clone(this.style['default']);
-		style['class'] = 'hex-cell';
-
-		for(r in this.mapping.hexes){
-			if(this.mapping.hexes[r]){
-
-				h = this.drawHex(this.mapping.hexes[r].q, this.mapping.hexes[r].r);
-
-				// Create a <path> for the hexagon outline
-				path = svgEl('path');
-
-				// Create a <title> to go inside the path - gives us tooltips by default
-				title = svgEl('title');
-
-				// Set the default for the title to the name in the HexJSON or the ID of the hex
-				title.innerHTML = (this.mapping.hexes[r].n || r);
-
-				// Add the <title> to the <path>
-				add(title,path);
-
-				// Define the path and some properties
-				setAttr(path, { 'd': h.path, 'class': 'hex-cell', 'transform-origin': h.x + 'px ' + h.y + 'px', 'data-q': this.mapping.hexes[r].q, 'data-r': this.mapping.hexes[r].r });
-
-				// Apply more styles to the path
-				setAttr(path, style);
-
-				// Add the path to the data-layer group
-				group.appendChild(path);
-
-				// Keep the DOM elements for this hex to use later
-				this.areas[r] = { 'hex': path, 'data': this.mapping.hexes[r], 'orig': h, 'title': title };
-
-				// We need to update the hex's colour and title.
-				// First check if we have key/value columns.
-				if(config.key && csv.columns[config.key] && config.value && csv.columns[config.value]){
-
-					// Loop over the rows in the CSV to check each one
-					for(var i = 0; i < csv.rows.length; i++){
-
-						hexid = r;
-						if(config.hexjson.key && this.mapping.hexes[r][config.hexjson.key]) hexid = this.mapping.hexes[r][config.hexjson.key];
-
-						// If the CSV row matches the hexagon key
-						if(csv.rows[i][config.key]==hexid){
-
-							// Update the colour of the hexagon
-							colour = colourScales.getColourFromScale(config.scale||'Viridis',csv.rows[i][config.value],min,max);
-							setAttr(this.areas[r].hex,{'fill':colour,'data-value':csv.rows[i][config.value]});
-
-							// Update the title for the hexagon
-							if(config.label && csv.columns[config.label]) title.innerHTML = csv.rows[i][config.label];
-						}
-
-					}
-				}
-
-				// Apply some styles/colours to the hexagon
-				setAttr(this.areas[r].hex, { 'stroke': this.style['default'].stroke, 'stroke-opacity': this.style['default']['stroke-opacity'], 'stroke-width': this.style['default']['stroke-width'], 'title': this.mapping.hexes[r].n, 'data-regions': r, 'style': 'cursor: pointer;' });
-			}
-		}
-
-		return this;
-	};
-	function updatePos(q, r, layout) {
-		if (layout == "odd-r" && (r % 2) != 0) q += 0.5;	// "odd-r" horizontal layout shoves odd rows right
-		if (layout == "even-r" && (r % 2) == 0) q += 0.5; // "even-r" horizontal layout shoves even rows right
-		if (layout == "odd-q" && (q % 2) != 0) r += 0.5;	// "odd-q" vertical layout shoves odd columns down
-		if (layout == "even-q" && (q % 2) == 0) r += 0.5; // "even-q" vertical layout shoves even columns down
-		return { 'q': q, 'r': r };
-	}
-	function toPath(p) {
-		let str = '';
-		for (let i = 0; i < p.length; i++) str += ((p[i][0]) ? p[i][0] : ' ') + (p[i][1].length > 0 ? p[i][1].join(',') : ' ');
-		return str;
-	}
-
-	return this.init();
-}
-*/
-
-function getLegend(config){
-	
-	// Build a legend
-	var legend = '';
-	var cs = ColourScale(config.scale);
-	if(config.legend && config.legend.items){
-		for(var i = 0; i < config.legend.items.length; i++){
-			legend += '<i style="background:'+cs((config.legend.items[i].value-config.min)/(config.max-config.min))+'"></i> ' + config.legend.items[i].label + '<br />';
-		}
-	}
-	return legend;
-}
-
-// Build a legend in SVG
-function buildLegend(config){
-
-	var container = document.createElement('div');
-	if(config.legend){
-		if(!config.legend.position) config.legend.position = "bottom right";
-		config.legend.position = config.legend.position.replace(/(^| )/g,function(m,p1){ return p1+'leaflet-'; });
-		setAttr(container,{'class':config.legend.position});
-	}
-	
-	if(config.legend && config.legend.items){
-		var legend = document.createElement('div');
-		setAttr(legend,{'class':'legend leaflet-control'});
-		legend.innerHTML = getLegend(config);
-		add(legend,container);
-	}
-	return container;
-}
-
-function loadFromSources(path,sources){
-
-	var name,bits,data;
-	name = path.replace(/\//g, '.').replace(/^.*data/, 'sources').replace(/\.[^\.]*$/, '');
-	bits = name.split(".");
-	data = {};
-	if(bits[0]=="sources"){
-		data = clone(sources);
-		for(var b = 1; b < bits.length; b++){
-			if(data[bits[b]]) data = data[bits[b]];
-			else return {};
-		}
-	}
-	return data;
-}
-
 
 
 function BasicMap(config,attr){

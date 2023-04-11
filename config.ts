@@ -5,6 +5,8 @@ export const assets = [
   'js/tree-map.js',
   'js/tooltip.js',
   'js/tabbed.js',
+  'leaflet/leaflet.js',
+  'leaflet/leaflet.css',
 ];
 
 export const components = [
@@ -16,4 +18,5 @@ export const components = [
   'hierarchy/treemap.ts',
   'map/hex_cartogram.ts',
   'map/svg.ts',
+  'map/leaflet.ts',
 ];
