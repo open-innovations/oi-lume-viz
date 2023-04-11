@@ -10,7 +10,6 @@ examples:
       title: Title
       value: Value
       note: Footnote
-      width: 250px
       data:
         - Title: "Thing 1"
           Value: 15
@@ -64,13 +63,68 @@ examples:
         - name: Panel 1
           class: plum
           scale: Viridis
-          min: 10
+          min: 0
           max: 25
         - name: Panel 2
           class: cyan
           scale: Viridis
-          min: 10
+          min: 0
           max: 25
+  - title: "Setting the width of panels"
+    description: |
+      Set the minimum width of a panel to `400px`. The panel will either be the specified width or will get larger to fit a whole number of columns.
+    config:
+      title: name
+      value: numeric
+      units:
+        prefix: pre
+        postfix: post
+      note: footnote
+      width: 400px
+      data:
+        - name: Panel 1
+          numeric: 10
+          post: "&thinsp;dB"
+        - name: Panel 2
+          numeric: 20
+          post: "&thinsp;dB"
+        - name: Panel 3
+          numeric: 50
+          post: "&thinsp;dB"
+        - name: Panel 4
+          numeric: 100
+          post: "&thinsp;dB"
+        - name: Panel 5
+          numeric: 110
+          post: "&thinsp;dB"
+        - name: Panel 6
+          numeric: 120
+          post: "&thinsp;dB"
+      panels:
+        - name: Panel 1
+          scale: Viridis
+          min: 10
+          max: 120
+        - name: Panel 2
+          scale: Viridis
+          min: 10
+          max: 120
+        - name: Panel 3
+          scale: Viridis
+          min: 10
+          max: 120
+        - name: Panel 4
+          scale: Viridis
+          min: 10
+          max: 120
+        - name: Panel 5
+          scale: Viridis
+          min: 10
+          max: 120
+        - name: Panel 6
+          scale: Viridis
+          min: 10
+          max: 120
 
 ---
 
