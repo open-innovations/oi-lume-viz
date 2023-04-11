@@ -38,7 +38,7 @@ export const css = `
 	.map .legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
 	.map.leaflet-map .marker:focus { outline: none; }
 
-	.map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: white; position: relative; }
+	.map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: transparent; position: relative; }
 	.map .leaflet a { background-image: none!important; color: inherit!important; }
 	.map .leaflet-popup-content-wrapper { border-radius: 0; }
 	.map .leaflet-popup-content { margin: 1em; }
@@ -49,6 +49,9 @@ export const css = `
 	.map .leaflet-control { z-index: 400; }
 	.map .leaflet-top, .leaflet-bottom { position: absolute; z-index: 400; pointer-events: none; }
 	.map.leaflet-map .place-name > svg { position: absolute; transform: translate3d(-50%,-50%,0); left: 50%; top: 50%; }
+	.leaflet-div-icon { background: transparent!important; border: 0!important; }
+	.leaflet-control-attribution { font-size: 0.75em; }
+	.leaflet-div-icon svg { width: 100%; height: 100%; }
 	.leaflet-top { top: 0; }
 	.leaflet-right { right: 0; }
 	.leaflet-bottom { bottom: 0; }
