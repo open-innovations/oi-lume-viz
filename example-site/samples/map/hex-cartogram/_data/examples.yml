@@ -10,6 +10,24 @@
 # title?: string;
 # titleProp: string;
 # valueProp: string;
+- title: "Basic hex cartogram"
+  description: |
+    A very simple hex cartogram. The default hex labels are applied (the first three characters of the name).
+  config:
+    hexjson:
+      layout: odd-r
+      hexes:
+        E08000016: { n: Barnsley, q: 0, r: -2 }
+        E08000032: { n: Bradford, q: -1, r: 0 }
+        E08000033: { n: Calderdale, q: -2, r: -1 }
+        E07000163: { n: Craven, q: -2, r: 1 }
+        E07000165: { n: Harrogate, q: -1, r: 1 }
+        E08000034: { n: Kirklees, q: -1, r: -1 }
+        E08000035: { n: Leeds, q: 0, r: 0 }
+        E07000169: { n: Selby, q: 1, r: 0 }
+        E08000036: { n: Wakefield, q: 0, r: -1 }
+        E06000014: { n: York, q: 0, r: 1 }
+    titleProp: n
 - title: "Hexes with defined colours"
   description: |
     A very simple hex cartogram. The default hex labels are applied (the first three characters of the name).
@@ -108,7 +126,7 @@
       - { code: "E06000014", "LAD21NM":"York", colour: "#F92626","Aged 15 years and under":30738 }
     matchKey: code
     valueProp: Aged 15 years and under
-    tooltip: "{{ n }}: {{ Aged 15 years and under }}%"
+    tooltip: "Aged 15 and under<br />{{ LAD21NM }}: {{ Aged 15 years and under | toLocaleString()    }}"
     scale: Viridis
     min: 0
     max: 160000

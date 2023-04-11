@@ -79,7 +79,7 @@ type HexmapOptions = {
   matchKey?: string;
   title?: string;
   titleProp: string;
-  valueProp: string;
+  valueProp?: string;
   colourValueProp?: string;
   legend: { position: string; items: Record<number, string> };
 };
@@ -213,6 +213,7 @@ export default function (input: { config: HexmapOptions }) {
       let v = 0;
       if (typeof h[valueProp] === "string") v = parseFloat(h[valueProp]);
       else if (typeof h[valueProp] === "number") v = h[valueProp];
+	  else v = "#aaaaaa";
       return v;
     }).reduce((result, current) => Math.max(result, current), 0);
   }
@@ -359,7 +360,7 @@ export default function (input: { config: HexmapOptions }) {
   const drawHex = (config: HexDefinition) => {
     const hexId = hexCounter();
     const { x, y } = getCentre(config);
-    const value = <number> config[valueProp] || 0;
+    const value = <number> config[valueProp] || "#aaaaaa";
 
     const labelProp = <string> config[titleProp];
     let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
