@@ -138,16 +138,18 @@ examples:
               label: '0'
   - title: Place labels
     description: |
-      We can add `places` to a map. A place can be defined with the following properties:
-        * `name` - the label to use for the place marker
-        * `latitude` - set the latitude of the marker (can be omitted if it is a UK place we know about)
-        * `longitude` - set the longitude of the marker (can be omitted if it is a UK place we know about)
+      We can add `places` to a layer above the interactive map. A place can be defined with the following properties:
+        * `name` - the label to use for the place label
+        * `latitude` - set the latitude of the label (can be omitted if it is a UK place we know about)
+        * `longitude` - set the longitude of the label (can be omitted if it is a UK place we know about)
         * `text-anchor` - set to either `start`, `middle`, or `end` to anchor the text
         * `colour` - the colour of the label (default is black)
         * `border` - the colour of the label border (default is white)
         * `font-size` - manually set the font size (if omitted it will be scaled to the population where known)
         * `font-weight` - manually set the font weight (e.g. to "bold")
         * `font-family` - manually set the font family
+
+      Be aware that place labels sit above the interactive layer so may block some interactivity.
     config:
       data:
         - { code: "E08000016", name: "Barnsley" }
@@ -168,8 +170,9 @@ examples:
       places:
           - name: Bradford
             text-anchor: end
+            font-size: 24
           - name: Leeds
-            font-size: 20
+            font-size: 32
             colour: "#722EA5"
             border: "#1DD3A7"
             font-weight: bold
@@ -187,9 +190,81 @@ examples:
             latitude: 53.68331
             longitude: -1.49768
           - name: York
+  - title: Map markers
+    description: |
+      We can add `markers` to a layer above the interactive map. A marker can be defined with the following properties:
+        * `icon` - can be either:
+          * `string` - one of `default`, `geo`, `geo-alt`, `asterisk`, `pin`, `balloon`, `balloon-heart`, `chat-square`
+          * `object` - define an icon using the following properties
+            * `svg` - the SVG string to use
+            * `size` - e.g. `[40,40]`
+            * `anchor` - e.g. `[20,0]` 
+        * `latitude` - set the latitude of the marker
+        * `longitude` - set the longitude of the marker
+        * `colour` - the colour of the label (default is black)
+        * `tooltip` - the content of an optional tooltip
+
+      Be aware that markers sit above the interactive layer so may block some interactivity.
+    config:
+      data:
+        - { code: "E08000016", name: "Barnsley" }
+        - { code: "E08000032", name: "Bradford" }
+        - { code: "E08000033", name: "Calderdale" }
+        - { code: "E07000163", name: "Craven" }
+        - { code: "E07000165", name: "Harrogate" }
+        - { code: "E08000034", name: "Kirklees" }
+        - { code: "E08000035", name: "Leeds" }
+        - { code: "E07000169", name: "Selby" }
+        - { code: "E08000036", name: "Wakefield" }
+        - { code: "E06000014", name: "York" }
+      geojson:
+        key: LAD21CD
+        data: geojson.leeds_city_region
+      key: code
+      tooltip: name
+      markers:
+        - icon:
+            svg: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-award-fill" viewBox="0 0 16 16"><path d="m8 0 1.669.864 1.858.282.842 1.68 1.337 1.32L13.4 6l.306 1.854-1.337 1.32-.842 1.68-1.858.282L8 12l-1.669-.864-1.858-.282-.842-1.68-1.337-1.32L2.6 6l-.306-1.854 1.337-1.32.842-1.68L6.331.864 8 0z"/><path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/></svg>'
+            size: [30,30]
+            anchor: [15,15]
+          tooltip: "Barnsley marker"
+          latitude: 53.5529
+          longitude: -1.4825
+          color: "#EF3AAB"
+        - icon: geo
+          tooltip: "Bradford marker"
+          latitude: 53.7944
+          longitude: -1.7519
+          colour: "#2254F4"
+        - icon: balloon
+          tooltip: "Huddersfield marker"
+          latitude: 53.6463
+          longitude: -1.7853
+          colour: "#0DBC37"
+        - icon: chat-square
+          tooltip: "Halifax marker"
+          latitude: 53.7211
+          longitude: -1.8622
+          colour: "#722EA5"
+        - icon: geo-alt
+          tooltip: "Leeds marker"
+          latitude: 53.7968
+          longitude: -1.5439
+          colour: "#F9BC26"
+        - icon: pin
+          tooltip: "Wakefield marker"
+          latitude: 53.68331
+          longitude: -1.49768
+          colour: "#D60303"
+        - icon: asterisk
+          tooltip: "York marker"
+          latitude: 53.9601
+          longitude: -1.0808
+        - latitude: 53.9617
+          longitude: -2.0201
   - title: Add a background
     description: |
-      A non-interactive `background` can be added behind the map. It should contain GeoJSON `data`. It can have its `colour` set. We can also adjust the map `bounds` if we'd like the view to cover an area smaller/larger than the bounds of the data. Note that the exact bounding of map will also depend on the aspect ratio that the map ends up on the end-user's display.
+      A non-interactive `background` can be added as a layer behind the interactive map. It should contain GeoJSON `data`. It can have its `colour` set. We can also adjust the map `bounds` if we'd like the view to cover an area smaller/larger than the bounds of the data. Note that the exact bounding of map will also depend on the aspect ratio that the map ends up on the end-user's display.
     config:
       data:
         - { code: "E08000016", "LAD21NM":"Barnsley", colour: "#E6007C","Aged 15 years and under":44782 }

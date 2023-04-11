@@ -28,11 +28,24 @@
 		for(var i = 0; i < cl.length; i++) el.classList.add(cl[i]);
 		return el;
 	}
+	// Create a polyfill for furthest
+	if (!Element.prototype.furthest) {
+		Element.prototype.furthest = function(s){
+			var el = this;
+			var anc = null;
+
+			while (el !== null && el.nodeType === 1) {
+				if (el.matches(s)) anc = el;
+				el = el.parentElement || el.parentNode;
+			}
+			return anc;
+		}
+	}
 
 	function Tooltip(pt,attr){
 
 		var svg,holder,tt,typ;
-		svg = pt.closest('svg');
+		svg = pt.furthest('svg');
 		holder = svg.parentNode;
 		tt = pt.querySelector('title');
 		if(!tt) tt = pt.parentNode.querySelector('title');
@@ -55,6 +68,10 @@
 
 			// Get the fill colour
 			fill = pt.getAttribute('fill');
+			// If no fill try the fill of the nearest SVG element
+			if(!fill) fill = pt.closest('svg').getAttribute('fill');
+			// If the fill is "currentColor" we compute what that is
+			if(fill == "currentColor") fill = window.getComputedStyle(pt)['color'];
 
 			// Remove current selections
 			selected = svg.querySelectorAll('.selected');

@@ -33,25 +33,10 @@ export const css = `
 	.map { position: relative; }
 	.map .tooltip { margin-top: -0.75em; transition: left 0.03s linear; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }
 	.map .tooltip .inner { padding: 1em; }
-	.map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: #e2e2e2; position: relative; }
-	.map .leaflet a { background-image: none!important; color: inherit!important; }
 	.map .legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
 	.map .legend .legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
 	.map .legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
-	.map .leaflet-popup-content-wrapper { border-radius: 0; }
-	.map .leaflet-popup-content { margin: 1em; }
-	.map .leaflet-container, .map .leaflet-popup-content-wrapper, .map .leaflet-popup-content { font-size: 1em; font-family: "CenturyGothicStd", "Century Gothic", Helvetica, sans-serif; line-height: inherit; }
-	.map .leaflet-popup-content-wrapper, .map .leaflet-popup-tip { box-shadow: none; }
-	.map .leaflet-popup { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.7)); }
-	.map .leaflet-container a.leaflet-popup-close-button { color: inherit; }
-	.map .leaflet-control { z-index: 400; }
-	.map .leaflet-top, .leaflet-bottom { position: absolute; z-index: 400; pointer-events: none; }
-	.map.hex-map .hex:focus { outline: none; }
-	.map.hex-map .hex.outline path { stroke: black; stroke-width: 4px; }
-	.leaflet-top { top: 0; }
-	.leaflet-right { right: 0; }
-	.leaflet-bottom { bottom: 0; }
-	.leaflet-left { left: 0; }
+	.map.svg-map .marker:focus { outline: none; }
 `;
 
 interface GeoJson { type: string; features: unknown };

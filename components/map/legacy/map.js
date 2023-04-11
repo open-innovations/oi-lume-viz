@@ -9,7 +9,7 @@ var icons = {
 	'default': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" fill="currentColor" /></svg>'},
 	'geo': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-geo-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" fill="currentColor" /></svg>'},
 	'geo-alt': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" fill="currentColor" /></svg>'},
-	'asterisk': {'iconAnchor':[20,20],'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-asterisk" viewBox="0 0 16 16"><path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z" fill="currentColor" /></svg>'},
+	'asterisk': {'anchor':[20,20],'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-asterisk" viewBox="0 0 16 16"><path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z" fill="currentColor" /></svg>'},
 	'pin': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-pin-fill" viewBox="0 0 16 16"><path d="M4.146.146A.5.5 0 0 1 4.5 0h7a.5.5 0 0 1 .5.5c0 .68-.342 1.174-.646 1.479-.126.125-.25.224-.354.298v4.431l.078.048c.203.127.476.314.751.555C12.36 7.775 13 8.527 13 9.5a.5.5 0 0 1-.5.5h-4v4.5c0 .276-.224 1.5-.5 1.5s-.5-1.224-.5-1.5V10h-4a.5.5 0 0 1-.5-.5c0-.973.64-1.725 1.17-2.189A5.921 5.921 0 0 1 5 6.708V2.277a2.77 2.77 0 0 1-.354-.298C4.342 1.674 4 1.179 4 .5a.5.5 0 0 1 .146-.354z" fill="currentColor" /></svg>'},
 	'balloon': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-balloon-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.48 10.901C11.211 10.227 13 7.837 13 5A5 5 0 0 0 3 5c0 2.837 1.789 5.227 4.52 5.901l-.244.487a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2.376 2.376 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.244-.487ZM4.352 3.356a4.004 4.004 0 0 1 3.15-2.325C7.774.997 8 1.224 8 1.5c0 .276-.226.496-.498.542-.95.162-1.749.78-2.173 1.617a.595.595 0 0 1-.52.341c-.346 0-.599-.329-.457-.644Z" fill="currentColor" /></svg>'},
 	'balloon-heart': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-balloon-heart-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.49 10.92C19.412 3.382 11.28-2.387 8 .986 4.719-2.387-3.413 3.382 7.51 10.92l-.234.468a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2.376 2.376 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.235-.468ZM6.726 1.269c-1.167-.61-2.8-.142-3.454 1.135-.237.463-.36 1.08-.202 1.85.055.27.467.197.527-.071.285-1.256 1.177-2.462 2.989-2.528.234-.008.348-.278.14-.386Z" fill="currentColor" /></svg>'},
@@ -306,9 +306,9 @@ export function LeafletMap(config,csv){
 				icon = null;
 				if(icons[config.markers[m].icon]) icon = clone(icons[config.markers[m].icon]);
 				else if(config.markers[m].icon.svg){ icon = config.markers[m].icon; }
-				if(!icon.iconSize) icon.iconSize = [40,40];
-				if(!icon.iconAnchor) icon.iconAnchor = [20,0];
-				icon.bgPos = [icon.iconAnchor[0],icon.iconSize[1]-icon.iconAnchor[1]];
+				if(!icon.size) icon.size = [40,40];
+				if(!icon.anchor) icon.anchor = [20,0];
+				icon.bgPos = [icon.anchor[0],icon.size[1]-icon.anchor[1]];
 				icon.html = '<div style="color:'+(config.markers[m].color ? config.markers[m].color : "#000000")+'">'+icon.svg+'</div>';
 				delete config.markers[m].svg;
 				config.markers[m].icon = icon;
@@ -988,15 +988,31 @@ function Layer(attr,map,i){
 
 						var opt = {};
 
-						if(feature.properties.icon){
-							var icon;
-							if(icons[feature.properties.icon]) icon = clone(icons[feature.properties.icon]);
-							else if(feature.properties.icon.svg){ icon = feature.properties.icon; }
-							if(!icon.iconSize) icon.iconSize = [40,40];
-							if(!icon.iconAnchor) icon.iconAnchor = [20,0];
-							var txt = icon.svg;
+						// If there is no icon and no name label, create a default icon
+						if(!feature.properties.icon && !feature.name) feature.properties.icon = "default";
 
-							var style = {'iconSize':icon.iconSize,'iconAnchor':icon.iconAnchor,'color':'black'};
+						if(feature.properties.icon){
+							var icon = {'size':[40,40]};
+
+							if(typeof feature.properties.icon==="string"){
+								if(!icons[feature.properties.icon]){
+									throw("No icon known with name \""+feature.properties.icon+"\"");
+									return;
+								}
+								icon = mergeDeep(icon,icons[feature.properties.icon]);
+							}else{
+								icon = mergeDeep(icon,feature.properties.icon);
+							}
+
+							if(!icon.svg){
+								throw("No SVG provided for icon");
+								return;
+							}
+							// Set default anchor position
+							if(!icon.anchor) icon.anchor = [icon.size[0]/2,0];
+							var txt = icon.svg;
+							var style = {'icon':icon,'color':'black'};
+							if(feature.properties.colour) style.color = feature.properties.colour;
 							mergeDeep(style,feature.properties);
 
 							if(txt){
@@ -1008,28 +1024,32 @@ function Layer(attr,map,i){
 									})
 									return "";
 								}).replace(/<\/svg>/,"");
-								
+
+								// Clean up tags to make sure we have explicit closing tags
+								txt = txt.replace(/<([^\s]+)\s([^\>]+)\s*\/\s*>/g,function(m,p1,p2){ return "<"+p1+" "+p2+"></"+p1+">"});
+
 								var tileBox = map.bounds.asTile(map.zoom);
 								var scale = Math.max(tileBox.x.range/map.w,tileBox.y.range/map.h);
 
 								p = svgEl('svg');
+								p.setAttribute('vector-effect','non-scaling-stroke');
 								p.innerHTML = txt;
 								mergeDeep(opt,{
 									'viewBox': '0 0 16 16',
 									// Shift the x/y values to adjust for iconAnchor and iconSize
-									'x': (xy.x + (-(style.iconSize[0] - style.iconAnchor[0])*scale)).toFixed(2),
-									'y': (xy.y + (-(style.iconSize[1] - style.iconAnchor[1])*scale)).toFixed(2)
+									'x': (xy.x + (-(icon.size[0] - icon.anchor[0])*scale)).toFixed(2),
+									'y': (xy.y + (-(icon.size[1] - icon.anchor[1])*scale)).toFixed(2)
 								});
 								setAttr(p,opt);
-								p.setAttribute('width',style.iconSize[0]*scale);
-								p.setAttribute('height',style.iconSize[1]*scale);
+								p.setAttribute('width',icon.size[0]*scale);
+								p.setAttribute('height',icon.size[1]*scale);
 
 								// Add title to the SVG
 								if(feature.properties.tooltip){
 									var t = svgEl('title');
 									t.innerHTML = feature.properties.tooltip;
 									p.appendChild(t);
-									p.classList.add('has-tooltip');
+									p.classList.add('marker');
 								}
 							}else{
 								console.error(feature);

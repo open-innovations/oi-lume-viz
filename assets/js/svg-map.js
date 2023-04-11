@@ -16,11 +16,20 @@
 	}
 
 	function InteractiveSVGMap(el){
-		var svg,pt,p,_obj;
+		var svg,pt,p,_obj,typ;
 
-		svg = el.querySelector('svg');
-		typ = svg.getAttribute('data-type');
-		pt = svg.querySelectorAll('.data-layer path');
+		if(el.tagName.toLowerCase()=="svg"){
+			// Used for markers
+			svg = el;
+			el = svg.parentNode;
+			typ = "svg-map";
+			pt = svg.querySelectorAll('path');
+		}else{
+			svg = el.querySelector('svg');
+			typ = svg.getAttribute('data-type');
+			pt = svg.querySelectorAll('.data-layer path');
+		}
+
 		
 		this.addOutline = function(e){
 			// Create an outline version of the hex that sits on top
@@ -48,7 +57,6 @@
 					_obj.removeOutline();
 					_obj.addOutline(e.parentNode);
 				}
-				console.log('hex map addition',attr);
 			}
 			OI.Tooltips.add(pt[p],attr);
 		}
@@ -61,6 +69,6 @@
 })(window || this);
 
 OI.ready(function(){
-	var svgs = document.querySelectorAll('.map.svg-map, .map.hex-map');
+	var svgs = document.querySelectorAll('.map.svg-map, .map.hex-map, svg.marker');
 	for(var i = 0; i < svgs.length; i++) OI.InteractiveSVGMap(svgs[i]);
 });
