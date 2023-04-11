@@ -79,7 +79,7 @@ type HexmapOptions = {
   matchKey?: string;
   title?: string;
   titleProp: string;
-  valueProp?: string;
+  value?: string;
   colourValueProp?: string;
   legend: { position: string; items: Record<number, string> };
 };
@@ -100,12 +100,12 @@ export default function (input: { config: HexmapOptions }) {
     min = 0,
     hexScale = 1,
     margin: marginScale = 0.25,
-    label = (key: string) => key.slice(0, 3),
+    label = '',
     matchKey,
-    tooltip = (label: string, value) => `${label}: ${value}`,
+    tooltip = (label: string, value) => `${label}`,
     title = "Hexmap",
     titleProp = "n",
-    valueProp = "colour",
+    value = "",
     colourValueProp,
     legend,
   } = input.config;
@@ -211,8 +211,8 @@ export default function (input: { config: HexmapOptions }) {
     // Find the biggest value in the hex map
     max = Object.values(hexes).map((h) => {
       let v = 0;
-      if (typeof h[valueProp] === "string") v = parseFloat(h[valueProp]);
-      else if (typeof h[valueProp] === "number") v = h[valueProp];
+      if (typeof h[value] === "string") v = parseFloat(h[value]);
+      else if (typeof h[value] === "number") v = h[value];
 	  else v = "#aaaaaa";
       return v;
     }).reduce((result, current) => Math.max(result, current), 0);
@@ -360,14 +360,14 @@ export default function (input: { config: HexmapOptions }) {
   const drawHex = (config: HexDefinition) => {
     const hexId = hexCounter();
     const { x, y } = getCentre(config);
-    const value = <number> config[valueProp] || "#aaaaaa";
+    const valuecol = <number> config[value] || "#aaaaaa";
 
     const labelProp = <string> config[titleProp];
     let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
-    let tooltipText = tooltipProcessor(config, <string> (typeof tooltip==="function" ? tooltip(labelProp, value) : tooltip));
+    let tooltipText = tooltipProcessor(config, <string> (typeof tooltip==="function" ? tooltip(labelProp, valuecol) : tooltip));
 
     const colourValue =
-      <number | string> config[colourValueProp || valueProp] || value;
+      <number | string> config[colourValueProp || value] || valuecol;
 
     // Calculate the path based on the layout
     let hexPath: string | undefined = undefined;
@@ -394,9 +394,9 @@ export default function (input: { config: HexmapOptions }) {
           class="hex"
           transform="translate(${x} ${y})"
           data-auto-popup="${tooltipText}"
-          data-value="${value}"
+          data-value="${valuecol}"
           role="listitem"
-          aria-label="${labelProp} value ${value}"
+          aria-label="${labelProp} value ${valuecol}"
         >
         <path fill="${fill !== undefined ? `${fill}` : "#aaaaaa"}" d="${hexPath}"></path>
         <text

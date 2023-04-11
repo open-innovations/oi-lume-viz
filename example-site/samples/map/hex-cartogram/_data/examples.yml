@@ -8,8 +8,7 @@
 # matchKey?: string;
 # tooltip: (params: Record<string, string | number>) => string;
 # title?: string;
-# titleProp: string;
-# valueProp: string;
+# value: string;
 - title: "Basic hex cartogram"
   description: |
     A very simple hex cartogram. The default hex labels are applied (the first three characters of the name).
@@ -27,10 +26,27 @@
         E07000169: { n: Selby, q: 1, r: 0 }
         E08000036: { n: Wakefield, q: 0, r: -1 }
         E06000014: { n: York, q: 0, r: 1 }
-    titleProp: n
+- title: "Hexes with labels"
+  description: |
+    A very simple hex cartogram. A `label` is added to each hex consisting of the first three characters of the name.
+  config:
+    hexjson:
+      layout: odd-r
+      hexes:
+        E08000016: { n: Barnsley, q: 0, r: -2 }
+        E08000032: { n: Bradford, q: -1, r: 0 }
+        E08000033: { n: Calderdale, q: -2, r: -1 }
+        E07000163: { n: Craven, q: -2, r: 1 }
+        E07000165: { n: Harrogate, q: -1, r: 1 }
+        E08000034: { n: Kirklees, q: -1, r: -1 }
+        E08000035: { n: Leeds, q: 0, r: 0 }
+        E07000169: { n: Selby, q: 1, r: 0 }
+        E08000036: { n: Wakefield, q: 0, r: -1 }
+        E06000014: { n: York, q: 0, r: 1 }
+    label: "{{ n | slice(0,3) }}"
 - title: "Hexes with defined colours"
   description: |
-    A very simple hex cartogram. The default hex labels are applied (the first three characters of the name).
+    A very simple hex cartogram. Colours are set in the HexJSON.
   config:
     hexjson:
       layout: odd-r
@@ -45,8 +61,7 @@
         E07000169: { n: Selby, colour: "#1DD3A7", q: 1, r: 0 }
         E08000036: { n: Wakefield, colour: "#EF3AAB", q: 0, r: -1 }
         E06000014: { n: York, colour: "#F92626", q: 0, r: 1 }
-    titleProp: n
-    valueProp: colour
+    value: colour
 - title: "Hexes with defined colours - data and hexes separately"
   description: |
     This is the same as the previous example except we pass a <code>data</code> array which sets properties for each hex rather than set those in the <a href="https://open-innovations.org/projects/hexmaps/hexjson">HexJSON</a>. We use <code>matchKey</code> to match the key in <code>hexjson &rarr; hexes</code> with the required key in a <code>data</code> array item. We also customise the label for each hex to be the first letter.
@@ -76,9 +91,7 @@
       - { code: "E08000036", colour: "#EF3AAB" }
       - { code: "E06000014", colour: "#F92626" }
     matchKey: code
-    titleProp: n
-    label: "{{ n | slice(0,1) }}"
-    valueProp: colour
+    value: colour
 - title: Hexes with defined colours - external hexes
   description: |
     If you are using the same HexJSON layout in multiple places it makes sense not to have to repeat that layout every time. To help with this you can specify where the appropriate <code>hexjson</code> is.
@@ -96,8 +109,7 @@
       - { code: "E08000036", colour: "#F9BC26" }
       - { code: "E06000014", colour: "#1DD3A7" }
     matchKey: code
-    titleProp: n
-    valueProp: colour
+    value: colour
 - title: Hexes with defined colours - external hexes and data
   description: |
     Similarly, you can specify where the <code>data</code> are stored rather that explicitly include them in the YAML.
@@ -105,8 +117,7 @@
     hexjson: hexjson.yorks
     data: test.data.hex_yorks
     matchKey: code
-    titleProp: n
-    valueProp: colour
+    value: colour
 - title: "Hexes coloured by a colour scale"
   description: |
     The same hex layout as above but this time we colour the hexes by a defined <code>scale</code> with an optional <code>min</code> and <code>max</code>. The colour <code>scale</code> is a comma separated string of colour stops each of the form <code>rgb(r,g,b) x%</code> in the style of a CSS linear gradient.
@@ -125,7 +136,7 @@
       - { code: "E08000036", "LAD21NM":"Wakefield", colour: "#EF3AAB","Aged 15 years and under":65832 }
       - { code: "E06000014", "LAD21NM":"York", colour: "#F92626","Aged 15 years and under":30738 }
     matchKey: code
-    valueProp: Aged 15 years and under
+    value: Aged 15 years and under
     tooltip: "Aged 15 and under<br />{{ LAD21NM }}: {{ Aged 15 years and under | toLocaleString()    }}"
     scale: Viridis
     min: 0
@@ -178,6 +189,5 @@
         - value: "#E6007C"
           label: "West Midlands"
     hexjson: hexjson.localauthorities
-    titleProp: n
-    valueProp: colour
+    value: colour
 
