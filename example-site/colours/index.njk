@@ -1,0 +1,59 @@
+---
+layout: layout/base.njk
+title: Colours
+scales:
+  - Cividis
+  - Heat
+  - Inferno
+  - Magma
+  - Mako
+  - ODI
+  - Planck
+  - Plasma
+  - Rocket
+  - Turbo
+  - Viridis
+---
+
+<style>
+dl {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-gap: 0.5em;
+	width: 80%;
+	margin: 2em auto;
+}
+dl dt { font-weight: bold; text-align: right; }
+.scale-preview {
+	width: 100%;
+	height: 2.5em;
+	display: block;
+}
+</style>
+
+<h1>{{ title }}</h1>
+
+<p>In many of the visualisations it is possible to set the colours of lines/points/polygons. You can set a colour using:</p>
+
+<ul>
+	<li>a hex code e.g. <code style="background:#396bad;color:{{ "#396bad" | contrastColour }}">#396bad</code></li>
+	<li>an RGB value e.g. <code style="background:rgb(255,0,0);color:{{ "rgb(255,0,0)" | contrastColour }}">rgb(255,0,0)</code> or <code style="background:rgba(255,0,0,0.5);color:{{ "rgba(255,0,0,0.5)" | contrastColour }}">rgba(255,0,0,0.5)</code></li>
+	<li><a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">a CSS color name</a> e.g. <code style="background:purple;color:{{ "purple" | contrastColour }}">purple</code></li>
+</ul>
+
+<h2>Contrasting colour</h2>
+<p>If you are placing coloured text on a coloured background you may want to make sure you have the most <a href="https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef">contrasting colour</a> ratio. You can get that using, for example, <code>&lbrace;&lbrace; "#396bad" | contrastColour() &rbrace;&rbrace;</code> where the first argument is the colour. For <code style="background:#396bad;color:{{ "#396bad" | contrastColour }}">#396bad</code> we get the contrasting <code>{{ "#396bad" | contrastColour }}</code>.</p>
+
+<h2>Colour scales</h2>
+<p>Sometimes items can have their colour set using a colour <code>scale</code> value. These can either be provided in the style of a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient">CSS gradient string</a> (e.g. <code>#03051A 0%, #CB1B4F 50%, #FAEBDD 100%</code>) or using one of the following named colour scales:</p>
+
+<dl>
+{% for scale in scales %}
+	<dt><code>{{ scale }}</code></dt>
+	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale | colourScaleGradient() }});"></dd>
+{% endfor %}
+</dl>
+
+<p>You can apply a colour scale to replacement values e.g. <code>&lbrace;&lbrace; value | colourScale("Viridis",0,100) &rbrace;&rbrace;</code> passes <code>value</code> into the <code>colourScale</code> function with the scale <code>Viridis</code>, the minimum value <code>0</code>, and maximum value <code>100</code>.</p>
+
+<p>It is possible to get a reversed version of each scale by adding <code>_r</code> to the name e.g. <code>Viridis_r</code>.</p>

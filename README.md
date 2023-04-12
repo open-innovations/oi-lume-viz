@@ -6,8 +6,9 @@ At Open Innovations, we've started using the [Lume](https://lume.land) Static Si
 data microsites for people. This gives us the benefits of a static HTML site, with associated manageability,
 efficiency, and maintainability benefits, whilst giving us a framework for extending.
 
-To support some of the more complex visualisations we undertake, we've encapsulated a number of our charting
-libraries in this
+To support some of the more complex visualisations we undertake, we've encapsulated a number of our charting libraries in this. With each one we aim to keep bandwidth use down and only use limited front-end Javascript to add some interactivity.
+
+## Using the library
 
 To use this in your Lume project, include the following in your Lume `_config.js` or `_config.ts` file.
 *WARNING*! This is strictly a pre-release version, and interfaces are very likely to change.
@@ -23,27 +24,49 @@ site.use(oiCharts({
 
 You can provide the following options:
 
-* `assetPath` path to locate the javascript assets that are loaded (**default:** `/assets`)
+* `assetPath` path to locate the Javascript assets that are loaded (**default:** `/assets`)
 * `componentNamespace` namespace where the charts are accessible e.g. `comp.oi.dashboard()` (**default:** `oi`)
 
-## Available Charts
+## Visualisation types
 
 TODO add some documentation!
 
 ### `dashboard`
 
-Creates a simple panelled dashboard.
+Creates a simple panelled dashboard. See [dashboard samples](/samples/dashboard).
 
 ### `chart.line`
 
-Creates a line chart.
+Creates a line chart. See [line chart samples](/samples/chart/line).
+
+### `chart.scatter`
+
+Similar to line charts but with lines turned off. See [scatter chart samples](/samples/chart/scatter).
+
+### `chart.bar`
+
+Creates a simple horizontal bar chart. See [bar chart samples](/samples/chart/bar).
+
+### `hierarchy.treemap`
+
+Creates a hierarchical treemap. See [treemap samples](/samples/hierarchy/treemap).
+
+### `map.leaflet`
+
+Creates a Leaflet-based slippy map. See [Leaflet map samples](/samples/map/leaflet).
+
+### `map.svg`
+
+Creates a simple SVG-based map using a Web Mercator projection. See [SVG map samples](/samples/map/svg).
+
+### `map.hex_cartogram`
+
+Creates a hexagonal cartogram using [HexJSON layouts](https://open-innovations.org/projects/hexmaps/hexjson). See [hex cartogram samples](/samples/map/hex-cartogram).
 
 
-## Colours
+## <a name="string-building"></a> Building a string
 
-In many of the visualisations it is possible to set the colours of lines/points/polygons. You can set a colour as a hex code (e.g. `#396bad`), an RGB value (e.g. `rgba(255,0,0,1)`) or [a CSS color name](https://www.tutorialrepublic.com/css-reference/css-color-names.php).
-
-Sometimes items can have their colour set using a colour `scale` value. These can either be provided in the style of a [CSS gradient string](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient) (e.g. `#03051A 0%, "#CB1B4F 50%, #FAEBDD 100%`) or using one of the following named colour scales: `Cividis`, `Heat`, `Inferno`, `Magma`, `Mako`, `ODI`, `Planck`, `Plasma`, `Rocket`, `Turbo`, `Viridis`.
+Often, within visualisations, there is a need to construct tooltips or labels from attributes in the data. In such cases we've allowed pattern-based-strings to be defined which will take values from the data using a double curly braces syntax e.g. `{{ key }}`. For instance, say the data rows for a visualisation contain the attributes `ConstituencyName` and `population`. We can build a very simple `tooltip` string as `{{ ConstituencyName }}: {{ population }}`. In this case `{{ ConstituencyName }}` will be replaced by that row's `ConstituencyName` value and `{{ population }}` by the `population` value. 
 
 ## Testing
 

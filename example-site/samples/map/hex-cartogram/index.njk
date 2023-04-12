@@ -2,20 +2,20 @@
 title: Hex cartogram
 component: map.hex_cartogram
 # hexjson: { layout: string; hexes: Record<string, HexDefinition> };
-  # data?: Record<string, unknown>[];
-  # bgColour: string;
-  # scale: (value: number) => string;
-  # hexScale: number;
-  # labelProcessor: (label: string) => string;
-  # margin: number;
-  # matchKey?: string;
-  # tooltip: (params: Record<string, string | number>) => string;
-  # title?: string;
-  # value: string;
+# data?: Record<string, unknown>[];
+# bgColour: string;
+# scale: (value: number) => string;
+# hexScale: number;
+# labelProcessor: (label: string) => string;
+# margin: number;
+# matchKey?: string;
+# tooltip: (params: Record<string, string | number>) => string;
+# title?: string;
+# value: string;
 examples:
-  - title: "Basic hex cartogram"
+  - title: "A basic hex cartogram"
     description: |
-      A very simple hex cartogram.
+      A very simple hex cartogram that just shows the hexes.
     config:
       hexjson:
         layout: odd-r
@@ -30,9 +30,9 @@ examples:
           E07000169: { n: Selby, q: 1, r: 0 }
           E08000036: { n: Wakefield, q: 0, r: -1 }
           E06000014: { n: York, q: 0, r: 1 }
-  - title: "Hexes with labels"
+  - title: "Hex labels"
     description: |
-      A very simple hex cartogram with a `label` added to each hex. The `label` takes the `n` value from a hex and slices off the first three characters.
+      A very simple hex cartogram with a `label` added to each hex. The `label` value allows you to [construct a string](/#string-building). In this example the labels are created from each hex's `n` attribute and are limited to the first three characters.
     config:
       hexjson:
         layout: odd-r
