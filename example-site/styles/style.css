@@ -66,8 +66,8 @@ h1:first-child, h2:first-child, h3:first-child, .title { margin-top: 0; }
 h1 + *, h2 + *, h3 + * { margin-top: 1em; }
 strong { font-weight: 700; }
 em { font-style: italic; }
-a { color: #18AD87; text-decoration: underline; }
-.bold { color: #18AD87; }
+a { color: #722EA5; text-decoration: underline; }
+.bold { color: #722EA5; }
 p, time, li, td, th, footer, div { font-weight: 300; }
 p, iframe, h2, h3, figure, ul, ol, .block, .padded-bottom { margin-bottom: 16px; }
 button, .button { border: 0px; font-size: 1em; background-color: #efefef; color: black; text-decoration: none!important; display: inline-block; padding: 0.5em 1em; cursor: pointer; vertical-align: top; line-height: 1.25em; }
