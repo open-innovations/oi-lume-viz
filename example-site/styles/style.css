@@ -136,9 +136,16 @@ header nav ul li { display: inline-block; }
 header nav ul > li > a { padding: 0.5em 1em; display: inline-block; width: 100%; color: inherit; }
 header nav ul > li > a:hover, header nav ul > li > a:focus { background: white; color: black; }
 
+.grid { display: grid; grid-template-columns: 50% 50%; grid-gap: 1em; }
+.grid .pane { background: #f9f9f9; }
+
 .elsewhere { float: right; margin-top: 0; }
 .elsewhere li { display: inline-block; margin-left: 0.5em; }
 .elsewhere li a { line-height: 0; display: block; }
 footer .address { margin-top: 1em; }
 footer a { color: inherit; }
 footer hr.about { margin: 32px 0; border: 0; border-top:1px solid #444; }
+
+@media only screen and (max-width: 1080px) {
+	.grid { grid-template-columns: 100%; }
+}

@@ -2,12 +2,27 @@
 title: Samples
 ---
 
+<link rel="stylesheet" href="/assets/leaflet/leaflet.css">
+
 <h1>{{ title }}</h1>
 
 <p>Below you will find samples of the visualisation types we've made so far:</p>
 
 <ul>
-{% for sample in search.pages('sample') | data %}
+{% for sample in search.pages('sample order>0', 'order') | data %}
   <li><a href="{{ sample.url }}">{{ sample.title }}</a></li>
 {% endfor %}
 </ul>
+
+<div class="grid">
+  {% for page in search.pages('sample order>0', 'order') | data %}
+	<div class="pane doublepadded">
+		<h2><a href="{{ page.url }}">{{ page.title }}</a></h2>
+		<!--<p>Component: <code>{{ page.component }}</code></p>-->
+		{% if page.description %}<p>{{ page.description }}</p>{% endif %}
+		{% if page.examples %}
+			{% comp 'oi.' + page.component, { config: page.examples[0].config } %}{% endcomp %}
+		{% endif %}
+	</div>
+  {% endfor %}
+</div>

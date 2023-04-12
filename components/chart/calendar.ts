@@ -4,6 +4,7 @@ import { clone } from "../../lib/util/clone.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 
 export const css = `
+.calendar-chart .year { fill: #aaaaaa; }
 .calendar-chart rect.in-year:focus {
 	outline: 0;
 }
@@ -67,7 +68,7 @@ export default function (input: {
 
 	const chart = CalendarChart(options);
 
-	return `<div class="chart calendar-chart" data-dependencies="${ getAssetPath('/js/calendar-chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
+	return `<div class="calendar-chart" data-dependencies="${ getAssetPath('/js/calendar-chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
 }
 
 
@@ -120,7 +121,7 @@ function CalendarChart(input: {
 	let yr = (range.max.year - range.min.year)+1;
 	let h = (size*7)*yr + (yr > 0 ? space*(yr-1) : 0);
 
-	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="xMidYMin meet" overflow="hidden" data-type="calendar-chart">';
+	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 '+w+' '+h+'" vector-effect="non-scaling-stroke" preserveAspectRatio="xMidYMin meet" overflow="hidden" data-type="calendar-chart">';
 	let x = 0;
 	let y = 0;
 
