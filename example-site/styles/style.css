@@ -139,6 +139,10 @@ header nav ul > li > a:hover, header nav ul > li > a:focus { background: white; 
 .grid { display: grid; grid-template-columns: 50% 50%; grid-gap: 1em; }
 .grid .pane { background: #f9f9f9; }
 
+.legend { margin-bottom: 1em; text-align: center; }
+.legend .legend-item { display: inline-block; line-height: 1em; margin-right: 1em; cursor: pointer; }
+.legend .legend-item svg { float: left; }
+
 .elsewhere { float: right; margin-top: 0; }
 .elsewhere li { display: inline-block; margin-left: 0.5em; }
 .elsewhere li a { line-height: 0; display: block; }
