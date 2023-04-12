@@ -58,7 +58,7 @@ export function dashboard(config: DashboardOptions){
     throw `Invalid value: No property named "${value}" in the data`;
   
   // Set asset path based on module config
-  const html = ['<div class="dashboard" data-dependencies="' + getAssetPath('/js/dashboard.js') + '" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, '+(width||'250px')+'), 1fr));">'];
+  const html = ['<div class="dashboard" data-dependencies="' + getAssetPath('/js/dashboard.js') + '">'];
 
   // Loop over the user-specified panels
   for(let p = 0 ; p < panels.length; p++){
