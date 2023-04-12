@@ -15,22 +15,6 @@ scales:
   - Viridis
 ---
 
-<style>
-dl {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	grid-gap: 0.5em;
-	width: 80%;
-	margin: 2em auto;
-}
-dl dt { font-weight: bold; text-align: right; }
-.scale-preview {
-	width: 100%;
-	height: 2.5em;
-	display: block;
-}
-</style>
-
 <h1>{{ title }}</h1>
 
 <p>In many of the visualisations it is possible to set the colours of lines/points/polygons. You can set a colour using:</p>
@@ -57,3 +41,20 @@ dl dt { font-weight: bold; text-align: right; }
 <p>You can apply a colour scale to replacement values e.g. <code>&lbrace;&lbrace; value | colourScale("Viridis",0,100) &rbrace;&rbrace;</code> passes <code>value</code> into the <code>colourScale</code> function with the scale <code>Viridis</code>, the minimum value <code>0</code>, and maximum value <code>100</code>.</p>
 
 <p>It is possible to get a reversed version of each scale by adding <code>_r</code> to the name e.g. <code>Viridis_r</code>.</p>
+
+
+<style>
+dl {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-gap: 0.5em;
+	width: 80%;
+	margin: 2em auto;
+}
+dl dt { font-weight: bold; text-align: right; }
+.scale-preview {
+	width: 100%;
+	height: 2.5em;
+	display: block;
+}
+</style>
