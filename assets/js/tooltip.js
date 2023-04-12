@@ -114,8 +114,8 @@
 			return this;
 		}
 
-		pt.parentNode.setAttribute('tabindex',0);
-		addEv('focus',pt.parentNode,{'this':this},this.show);
+		pt.setAttribute('tabindex',0);
+		addEv('focus',pt,{'this':this},this.show);
 		addEv('mouseover',(attr['hover-element']||pt),{'this':this},this.show);
 		addEv('mouseleave',holder,{'this':this,'s':''},attr._parent.clear);
 

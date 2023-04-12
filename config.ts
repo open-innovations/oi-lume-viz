@@ -1,5 +1,6 @@
 export const assets = [
   'js/chart.js',
+  'js/calendar-chart.js',
   'js/dashboard.js',
   'js/svg-map.js',
   'js/tree-map.js',
@@ -13,6 +14,7 @@ export const components = [
   'chart/bar.ts',
   'chart/line.ts',
   'chart/scatter.ts',
+  'chart/calendar.ts',
   'dashboard.ts',
   'graph/line.ts',
   'hierarchy/treemap.ts',

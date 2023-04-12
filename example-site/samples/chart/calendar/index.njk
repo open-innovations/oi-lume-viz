@@ -1,0 +1,472 @@
+---
+title: Calendar chart
+component: chart.calendar
+examples:
+  - title: "Basic calendar chart"
+    description: |
+      This is a basic calendar chart showing a dataset with daily data. 
+    config:
+      data:
+        - date: "2021-10-04"
+          colour: "#FF6700"
+        - date: "2021-10-06"
+          colour: "#FF6700"
+        - date: "2021-10-18"
+          colour: "#FF6700"
+        - date: "2021-10-19"
+          colour: "#FF6700"
+        - date: "2021-10-20"
+          colour: "#FF6700"
+        - date: "2021-11-04"
+          colour: "#FF6700"
+        - date: "2021-11-22"
+          colour: "#FF6700"
+        - date: "2021-12-22"
+          colour: "#FF6700"
+        - date: "2022-01-04"
+          colour: "#FF6700"
+        - date: "2022-01-05"
+          colour: "#FF6700"
+        - date: "2022-01-18"
+          colour: "#FF6700"
+        - date: "2022-01-20"
+          colour: "#FF6700"
+        - date: "2022-01-23"
+          colour: "#FF6700"
+        - date: "2022-01-24"
+          colour: "#FF6700"
+        - date: "2022-01-26"
+          colour: "#FF6700"
+        - date: "2022-02-03"
+          colour: "#FF6700"
+        - date: "2022-02-16"
+          colour: "#FF6700"
+        - date: "2022-02-21"
+          colour: "#FF6700"
+        - date: "2022-02-28"
+          colour: "#FF6700"
+        - date: "2022-03-02"
+          colour: "#FF6700"
+        - date: "2022-03-07"
+          colour: "#FF6700"
+        - date: "2022-03-09"
+          colour: "#FF6700"
+        - date: "2022-03-10"
+          colour: "#FF6700"
+        - date: "2022-03-11"
+          colour: "#FF6700"
+        - date: "2022-03-15"
+          colour: "#FF6700"
+        - date: "2022-03-16"
+          colour: "#FF6700"
+        - date: "2022-03-17"
+          colour: "#FF6700"
+        - date: "2022-03-24"
+          colour: "#FF6700"
+        - date: "2022-03-28"
+          colour: "#FF6700"
+        - date: "2022-03-31"
+          colour: "#FF6700"
+        - date: "2022-04-05"
+          colour: "#FF6700"
+        - date: "2022-04-06"
+          colour: "#FF6700"
+        - date: "2022-04-12"
+          colour: "#FF6700"
+        - date: "2022-05-04"
+          colour: "#FF6700"
+        - date: "2022-05-05"
+          colour: "#FF6700"
+        - date: "2022-05-11"
+          colour: "#FF6700"
+        - date: "2022-05-18"
+          colour: "#FF6700"
+        - date: "2022-06-04"
+          colour: "#FF6700"
+        - date: "2022-06-07"
+          colour: "#FF6700"
+        - date: "2022-06-15"
+          colour: "#FF6700"
+        - date: "2022-06-20"
+          colour: "#FF6700"
+        - date: "2022-06-28"
+          colour: "#FF6700"
+      value: colour
+      key: date
+  - title: "Colour using a defined scale"
+    description: |
+      We colour the days based on a colour `scale`. If `min` and `max` are not set, the scale will use the range in the data.
+    config:
+      data:
+        - date: "2021-10-04"
+          change: 62
+        - date: "2021-10-06"
+          change: 15
+        - date: "2021-10-18"
+          change: 69
+        - date: "2021-10-19"
+          change: 5
+        - date: "2021-10-20"
+          change: 3
+        - date: "2021-11-04"
+          change: 110
+        - date: "2021-11-22"
+          change: 150
+        - date: "2021-12-22"
+          change: 252
+        - date: "2022-01-04"
+          change: 0
+        - date: "2022-01-05"
+          change: 9
+        - date: "2022-01-18"
+          change: 100
+        - date: "2022-01-20"
+          change: 6
+        - date: "2022-01-23"
+          change: 7
+        - date: "2022-01-24"
+          change: 9
+        - date: "2022-01-26"
+          change: 9
+        - date: "2022-02-03"
+          change: 72
+        - date: "2022-02-16"
+          change: 40
+        - date: "2022-02-21"
+          change: 11
+        - date: "2022-02-28"
+          change: 48
+        - date: "2022-03-02"
+          change: 4
+        - date: "2022-03-07"
+          change: 5
+        - date: "2022-03-09"
+          change: 3
+        - date: "2022-03-10"
+          change: 11
+        - date: "2022-03-11"
+          change: 9
+        - date: "2022-03-15"
+          change: 24
+        - date: "2022-03-16"
+          change: 4
+        - date: "2022-03-17"
+          change: 3
+        - date: "2022-03-24"
+          change: 13
+        - date: "2022-03-28"
+          change: 4
+        - date: "2022-03-31"
+          change: 7
+        - date: "2022-04-05"
+          change: 36
+        - date: "2022-04-06"
+          change: 4
+        - date: "2022-04-12"
+          change: 22
+        - date: "2022-05-04"
+          change: 74
+        - date: "2022-05-05"
+          change: 2
+        - date: "2022-05-11"
+          change: 10
+        - date: "2022-05-18"
+          change: 12
+        - date: "2022-06-04"
+          change: 30
+        - date: "2022-06-07"
+          change: 7
+        - date: "2022-06-15"
+          change: 11
+        - date: "2022-06-20"
+          change: 7
+        - date: "2022-06-28"
+          change: 27
+      value: change
+      key: date
+      scale: Viridis
+  - title: "Add a tooltip"
+    description: |
+      Create virtual `columns` and use one as a `tooltip`.
+    config:
+      data:
+        - date: "2021-10-04"
+          change: 62
+        - date: "2021-10-06"
+          change: 15
+        - date: "2021-10-18"
+          change: 69
+        - date: "2021-10-19"
+          change: 5
+        - date: "2021-10-20"
+          change: 3
+        - date: "2021-11-04"
+          change: 110
+        - date: "2021-11-22"
+          change: 150
+        - date: "2021-12-22"
+          change: 252
+        - date: "2022-01-04"
+          change: 0
+        - date: "2022-01-05"
+          change: 9
+        - date: "2022-01-18"
+          change: 100
+        - date: "2022-01-20"
+          change: 6
+        - date: "2022-01-23"
+          change: 7
+        - date: "2022-01-24"
+          change: 9
+        - date: "2022-01-26"
+          change: 9
+        - date: "2022-02-03"
+          change: 72
+        - date: "2022-02-16"
+          change: 40
+        - date: "2022-02-21"
+          change: 11
+        - date: "2022-02-28"
+          change: 48
+        - date: "2022-03-02"
+          change: 4
+        - date: "2022-03-07"
+          change: 5
+        - date: "2022-03-09"
+          change: 3
+        - date: "2022-03-10"
+          change: 11
+        - date: "2022-03-11"
+          change: 9
+        - date: "2022-03-15"
+          change: 24
+        - date: "2022-03-16"
+          change: 4
+        - date: "2022-03-17"
+          change: 3
+        - date: "2022-03-24"
+          change: 13
+        - date: "2022-03-28"
+          change: 4
+        - date: "2022-03-31"
+          change: 7
+        - date: "2022-04-05"
+          change: 36
+        - date: "2022-04-06"
+          change: 4
+        - date: "2022-04-12"
+          change: 22
+        - date: "2022-05-04"
+          change: 74
+        - date: "2022-05-05"
+          change: 2
+        - date: "2022-05-11"
+          change: 10
+        - date: "2022-05-18"
+          change: 12
+        - date: "2022-06-04"
+          change: 30
+        - date: "2022-06-07"
+          change: 7
+        - date: "2022-06-15"
+          change: 11
+        - date: "2022-06-20"
+          change: 7
+        - date: "2022-06-28"
+          change: 27
+      value: change
+      key: date
+      scale: Viridis
+      columns:
+        - name: Tooltip
+          template: "{{ date }} <br />{{ change }} MWh"
+      tooltip: Tooltip
+  - title: "Reverse the order of the years"
+    description: |
+      We can set the `order` of the years to either `chronological` (earliest year first) or `reverse` (latest year first).
+    config:
+      data:
+        - date: "2021-10-04"
+          change: 62
+        - date: "2021-10-06"
+          change: 15
+        - date: "2021-10-18"
+          change: 69
+        - date: "2021-10-19"
+          change: 5
+        - date: "2021-10-20"
+          change: 3
+        - date: "2021-11-04"
+          change: 110
+        - date: "2021-11-22"
+          change: 150
+        - date: "2021-12-22"
+          change: 252
+        - date: "2022-01-04"
+          change: 0
+        - date: "2022-01-05"
+          change: 9
+        - date: "2022-01-18"
+          change: 100
+        - date: "2022-01-20"
+          change: 6
+        - date: "2022-01-23"
+          change: 7
+        - date: "2022-01-24"
+          change: 9
+        - date: "2022-01-26"
+          change: 9
+        - date: "2022-02-03"
+          change: 72
+        - date: "2022-02-16"
+          change: 40
+        - date: "2022-02-21"
+          change: 11
+        - date: "2022-02-28"
+          change: 48
+        - date: "2022-03-02"
+          change: 4
+        - date: "2022-03-07"
+          change: 5
+        - date: "2022-03-09"
+          change: 3
+        - date: "2022-03-10"
+          change: 11
+        - date: "2022-03-11"
+          change: 9
+        - date: "2022-03-15"
+          change: 24
+        - date: "2022-03-16"
+          change: 4
+        - date: "2022-03-17"
+          change: 3
+        - date: "2022-03-24"
+          change: 13
+        - date: "2022-03-28"
+          change: 4
+        - date: "2022-03-31"
+          change: 7
+        - date: "2022-04-05"
+          change: 36
+        - date: "2022-04-06"
+          change: 4
+        - date: "2022-04-12"
+          change: 22
+        - date: "2022-05-04"
+          change: 74
+        - date: "2022-05-05"
+          change: 2
+        - date: "2022-05-11"
+          change: 10
+        - date: "2022-05-18"
+          change: 12
+        - date: "2022-06-04"
+          change: 30
+        - date: "2022-06-07"
+          change: 7
+        - date: "2022-06-15"
+          change: 11
+        - date: "2022-06-20"
+          change: 7
+        - date: "2022-06-28"
+          change: 27
+      value: change
+      key: date
+      scale: Viridis
+      order: reverse
+  - title: "Set the first day of the week"
+    description: |
+      By default we start the week on a Monday but sometimes you may want to use a different day. You can set the `startofweek` value to `0` for Sunday, `1` for Monday etc. Let's start the week on a Sunday.
+    config:
+      data:
+        - date: "2021-10-04"
+          change: 62
+        - date: "2021-10-06"
+          change: 15
+        - date: "2021-10-18"
+          change: 69
+        - date: "2021-10-19"
+          change: 5
+        - date: "2021-10-20"
+          change: 3
+        - date: "2021-11-04"
+          change: 110
+        - date: "2021-11-22"
+          change: 150
+        - date: "2021-12-22"
+          change: 252
+        - date: "2022-01-04"
+          change: 0
+        - date: "2022-01-05"
+          change: 9
+        - date: "2022-01-18"
+          change: 100
+        - date: "2022-01-20"
+          change: 6
+        - date: "2022-01-23"
+          change: 7
+        - date: "2022-01-24"
+          change: 9
+        - date: "2022-01-26"
+          change: 9
+        - date: "2022-02-03"
+          change: 72
+        - date: "2022-02-16"
+          change: 40
+        - date: "2022-02-21"
+          change: 11
+        - date: "2022-02-28"
+          change: 48
+        - date: "2022-03-02"
+          change: 4
+        - date: "2022-03-07"
+          change: 5
+        - date: "2022-03-09"
+          change: 3
+        - date: "2022-03-10"
+          change: 11
+        - date: "2022-03-11"
+          change: 9
+        - date: "2022-03-15"
+          change: 24
+        - date: "2022-03-16"
+          change: 4
+        - date: "2022-03-17"
+          change: 3
+        - date: "2022-03-24"
+          change: 13
+        - date: "2022-03-28"
+          change: 4
+        - date: "2022-03-31"
+          change: 7
+        - date: "2022-04-05"
+          change: 36
+        - date: "2022-04-06"
+          change: 4
+        - date: "2022-04-12"
+          change: 22
+        - date: "2022-05-04"
+          change: 74
+        - date: "2022-05-05"
+          change: 2
+        - date: "2022-05-11"
+          change: 10
+        - date: "2022-05-18"
+          change: 12
+        - date: "2022-06-04"
+          change: 30
+        - date: "2022-06-07"
+          change: 7
+        - date: "2022-06-15"
+          change: 11
+        - date: "2022-06-20"
+          change: 7
+        - date: "2022-06-28"
+          change: 27
+      value: change
+      key: date
+      scale: Viridis
+      startofweek: 0
+---
+
+Our calendar chart component renders simple calendar charts. 
