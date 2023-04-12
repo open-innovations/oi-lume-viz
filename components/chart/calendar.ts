@@ -225,6 +225,8 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 		if(dat){
 			if(dat[input.tooltip]) tooltip = dat[input.tooltip];
 			else tooltip = (dat[input.key]||"");
+		}else{
+			tooltip = iso;
 		}
 
 		svg += '<rect class="'+(d >= syear && d <= eyear ? "in-year" : "not-in-year")+(tooltip ? " has-value" : "")+'"';
