@@ -1,3 +1,250 @@
 ---
 title: Hex cartogram
+component: map.hex_cartogram
+# hexjson: { layout: string; hexes: Record<string, HexDefinition> };
+  # data?: Record<string, unknown>[];
+  # bgColour: string;
+  # scale: (value: number) => string;
+  # hexScale: number;
+  # labelProcessor: (label: string) => string;
+  # margin: number;
+  # matchKey?: string;
+  # tooltip: (params: Record<string, string | number>) => string;
+  # title?: string;
+  # value: string;
+examples:
+  - title: "Basic hex cartogram"
+    description: |
+      A very simple hex cartogram.
+    config:
+      hexjson:
+        layout: odd-r
+        hexes:
+          E08000016: { n: Barnsley, q: 0, r: -2 }
+          E08000032: { n: Bradford, q: -1, r: 0 }
+          E08000033: { n: Calderdale, q: -2, r: -1 }
+          E07000163: { n: Craven, q: -2, r: 1 }
+          E07000165: { n: Harrogate, q: -1, r: 1 }
+          E08000034: { n: Kirklees, q: -1, r: -1 }
+          E08000035: { n: Leeds, q: 0, r: 0 }
+          E07000169: { n: Selby, q: 1, r: 0 }
+          E08000036: { n: Wakefield, q: 0, r: -1 }
+          E06000014: { n: York, q: 0, r: 1 }
+  - title: "Hexes with labels"
+    description: |
+      A very simple hex cartogram with a `label` added to each hex. The `label` takes the `n` value from a hex and slices off the first three characters.
+    config:
+      hexjson:
+        layout: odd-r
+        hexes:
+          E08000016: { n: Barnsley, q: 0, r: -2 }
+          E08000032: { n: Bradford, q: -1, r: 0 }
+          E08000033: { n: Calderdale, q: -2, r: -1 }
+          E07000163: { n: Craven, q: -2, r: 1 }
+          E07000165: { n: Harrogate, q: -1, r: 1 }
+          E08000034: { n: Kirklees, q: -1, r: -1 }
+          E08000035: { n: Leeds, q: 0, r: 0 }
+          E07000169: { n: Selby, q: 1, r: 0 }
+          E08000036: { n: Wakefield, q: 0, r: -1 }
+          E06000014: { n: York, q: 0, r: 1 }
+      label: "{{ n | slice(0,3) }}"
+  - title: "Hexes with defined colours"
+    description: |
+      A very simple hex cartogram. The colour of each hex is given by the `value` key.
+    config:
+      hexjson:
+        layout: odd-r
+        hexes:
+          E08000016: { n: Barnsley, colour: "#E6007C", q: 0, r: -2 }
+          E08000032: { n: Bradford, colour: "#FF6700", q: -1, r: 0 }
+          E08000033: { n: Calderdale, colour: "#0DBC37", q: -2, r: -1 }
+          E07000163: { n: Craven, colour: "#178CFF", q: -2, r: 1 }
+          E07000165: { n: Harrogate, colour: "#2f529f", q: -1, r: 1 }
+          E08000034: { n: Kirklees, colour: "#722EA5", q: -1, r: -1 }
+          E08000035: { n: Leeds, colour: "#F9BC26", q: 0, r: 0 }
+          E07000169: { n: Selby, colour: "#1DD3A7", q: 1, r: 0 }
+          E08000036: { n: Wakefield, colour: "#EF3AAB", q: 0, r: -1 }
+          E06000014: { n: York, colour: "#F92626", q: 0, r: 1 }
+      value: colour
+  - title: "Hexes with defined colours - data and hexes separately"
+    description: |
+      This is the same as the previous example except we pass a <code>data</code> array which sets properties for each hex rather than set those in the <a href="https://open-innovations.org/projects/hexmaps/hexjson">HexJSON</a>. We use <code>matchKey</code> to match the key in <code>hexjson &rarr; hexes</code> with the required key in a <code>data</code> array item. We also customise the label for each hex to be the first letter.
+    config:
+      hexjson:
+        layout: odd-r
+        hexes:
+          E08000016: { n: Barnsley, q: 0, r: -2 }
+          E08000032: { n: Bradford, q: -1, r: 0 }
+          E08000033: { n: Calderdale, q: -2, r: -1 }
+          E07000163: { n: Craven, q: -2, r: 1 }
+          E07000165: { n: Harrogate, q: -1, r: 1 }
+          E08000034: { n: Kirklees, q: -1, r: -1 }
+          E08000035: { n: Leeds, q: 0, r: 0 }
+          E07000169: { n: Selby, q: 1, r: 0 }
+          E08000036: { n: Wakefield, q: 0, r: -1 }
+          E06000014: { n: York, q: 0, r: 1 }
+      data:
+        - { code: "E08000016", colour: "#E6007C" }
+        - { code: "E08000032", colour: "#FF6700" }
+        - { code: "E08000033", colour: "#0DBC37" }
+        - { code: "E07000163", colour: "#178CFF" }
+        - { code: "E07000165", colour: "#2f529f" }
+        - { code: "E08000034", colour: "#722EA5" }
+        - { code: "E08000035", colour: "#F9BC26" }
+        - { code: "E07000169", colour: "#1DD3A7" }
+        - { code: "E08000036", colour: "#EF3AAB" }
+        - { code: "E06000014", colour: "#F92626" }
+      matchKey: code
+      value: colour
+  - title: Hexes with defined colours - external hexes
+    description: |
+      If you are using the same HexJSON layout in multiple places it makes sense not to have to repeat that layout every time. To help with this you can specify where the appropriate <code>hexjson</code> is.
+    config:
+      hexjson: hexjson.yorks
+      data:
+        - { code: "E08000016", colour: "#FF6700" }
+        - { code: "E08000032", colour: "#F9BC26" }
+        - { code: "E08000033", colour: "#F9BC26" }
+        - { code: "E07000163", colour: "#1DD3A7" }
+        - { code: "E07000165", colour: "#1DD3A7" }
+        - { code: "E08000034", colour: "#F9BC26" }
+        - { code: "E08000035", colour: "#F9BC26" }
+        - { code: "E07000169", colour: "#1DD3A7" }
+        - { code: "E08000036", colour: "#F9BC26" }
+        - { code: "E06000014", colour: "#1DD3A7" }
+      matchKey: code
+      value: colour
+  - title: Hexes with defined colours - external hexes and data
+    description: |
+      Similarly, you can specify where the <code>data</code> are stored rather that explicitly include them in the YAML.
+    config:
+      hexjson: hexjson.yorks
+      data: test.data.hex_yorks
+      matchKey: code
+      value: colour
+  - title: "Hexes coloured by a colour scale"
+    description: |
+      The same hex layout as above but this time we colour the hexes by a defined <code>scale</code> with an optional <code>min</code> and <code>max</code>. The colour <code>scale</code> is a comma separated string of colour stops each of the form <code>rgb(r,g,b) x%</code> in the style of a CSS linear gradient.
+    config:
+      hexjson: hexjson.yorks
+      data:
+        - { code: "E08000016", "LAD21NM":"Barnsley", colour: "#E6007C","Aged 15 years and under":44782 }
+        - { code: "E08000032", "LAD21NM":"Bradford", colour: "#FF6700","Aged 15 years and under":124837 }
+        - { code: "E08000033", "LAD21NM":"Calderdale", colour: "#0DBC37","Aged 15 years and under":39997 }
+        - { code: "E07000163", "LAD21NM":"Craven", colour: "#178CFF","Aged 15 years and under":8643 }
+        - { code: "E07000165", "LAD21NM":"Harrogate", colour: "#2f529f","Aged 15 years and under":27362 }
+        - { code: "E08000034", "LAD21NM":"Kirklees", colour: "#722EA5","Aged 15 years and under":86941 }
+        - { code: "E08000035", "LAD21NM":"Leeds", colour: "#F9BC26","Aged 15 years and under":153483 }
+        - { code: "E07000169", "LAD21NM":"Selby", colour: "#1DD3A7","Aged 15 years and under":16556 }
+        - { code: "E08000036", "LAD21NM":"Wakefield", colour: "#EF3AAB","Aged 15 years and under":65832 }
+        - { code: "E06000014", "LAD21NM":"York", colour: "#F92626","Aged 15 years and under":30738 }
+      matchKey: code
+      value: Aged 15 years and under
+      scale: Viridis
+      min: 0
+      max: 160000
+  - title: "Add a legend"
+    description: |
+      The same hex layout as above but this time we colour the hexes by a defined <code>scale</code> with an optional <code>min</code> and <code>max</code>. The colour <code>scale</code> is a comma separated string of colour stops each of the form <code>rgb(r,g,b) x%</code> in the style of a CSS linear gradient.
+      We also define a <code>legend</code> with 5 levels - three of the levels are given labels. We customise the <code>tooltip</code> label to make sure it includes a percentage sign.
+    config:
+      hexjson: hexjson.yorks
+      data:
+        - { code: "E08000016", "LAD21NM":"Barnsley", colour: "#E6007C","Aged 15 years and under":44782 }
+        - { code: "E08000032", "LAD21NM":"Bradford", colour: "#FF6700","Aged 15 years and under":124837 }
+        - { code: "E08000033", "LAD21NM":"Calderdale", colour: "#0DBC37","Aged 15 years and under":39997 }
+        - { code: "E07000163", "LAD21NM":"Craven", colour: "#178CFF","Aged 15 years and under":8643 }
+        - { code: "E07000165", "LAD21NM":"Harrogate", colour: "#2f529f","Aged 15 years and under":27362 }
+        - { code: "E08000034", "LAD21NM":"Kirklees", colour: "#722EA5","Aged 15 years and under":86941 }
+        - { code: "E08000035", "LAD21NM":"Leeds", colour: "#F9BC26","Aged 15 years and under":153483 }
+        - { code: "E07000169", "LAD21NM":"Selby", colour: "#1DD3A7","Aged 15 years and under":16556 }
+        - { code: "E08000036", "LAD21NM":"Wakefield", colour: "#EF3AAB","Aged 15 years and under":65832 }
+        - { code: "E06000014", "LAD21NM":"York", colour: "#F92626","Aged 15 years and under":30738 }
+      value: Aged 15 years and under
+      matchKey: code
+      scale: Viridis
+      min: 0
+      max: 160000
+      legend:
+        position: top right
+        items:
+          - value: 160000
+            label: 160k
+          - value: 120000
+            label: 120k
+          - value: 80000
+            label: 80k
+          - value: 40000
+            label: 40k
+          - value: 0
+            label: '0'
+  - title: "Custom tooltips"
+    description: |
+      Colours are set in the HexJSON. We define a `tooltip` and use a `matchKey` to define the key in the `data` to match against a hex. The `tooltip` can contain replacement values of the form `{{ key }}`.
+    config:
+      hexjson:
+        layout: odd-r
+        hexes:
+          E08000016: { n: Barnsley, colour: "#E6007C", q: 0, r: -2 }
+          E08000032: { n: Bradford, colour: "#FF6700", q: -1, r: 0 }
+          E08000033: { n: Calderdale, colour: "#0DBC37", q: -2, r: -1 }
+          E07000163: { n: Craven, colour: "#178CFF", q: -2, r: 1 }
+          E07000165: { n: Harrogate, colour: "#2f529f", q: -1, r: 1 }
+          E08000034: { n: Kirklees, colour: "#722EA5", q: -1, r: -1 }
+          E08000035: { n: Leeds, colour: "#F9BC26", q: 0, r: 0 }
+          E07000169: { n: Selby, colour: "#1DD3A7", q: 1, r: 0 }
+          E08000036: { n: Wakefield, colour: "#EF3AAB", q: 0, r: -1 }
+          E06000014: { n: York, colour: "#F92626", q: 0, r: 1 }
+      data:
+        - { code: "E08000016", "LAD21NM":"Barnsley","Aged 15 years and under":44782 }
+        - { code: "E08000032", "LAD21NM":"Bradford","Aged 15 years and under":124837 }
+        - { code: "E08000033", "LAD21NM":"Calderdale","Aged 15 years and under":39997 }
+        - { code: "E07000163", "LAD21NM":"Craven","Aged 15 years and under":8643 }
+        - { code: "E07000165", "LAD21NM":"Harrogate","Aged 15 years and under":27362 }
+        - { code: "E08000034", "LAD21NM":"Kirklees","Aged 15 years and under":86941 }
+        - { code: "E08000035", "LAD21NM":"Leeds","Aged 15 years and under":153483 }
+        - { code: "E07000169", "LAD21NM":"Selby","Aged 15 years and under":16556 }
+        - { code: "E08000036", "LAD21NM":"Wakefield","Aged 15 years and under":65832 }
+        - { code: "E06000014", "LAD21NM":"York","Aged 15 years and under":30738 }
+      value: colour
+      matchKey: code
+      tooltip: "Aged 15 and under<br />{{ LAD21NM }}: {{ Aged 15 years and under | toLocaleString() }}"
+  - title: "Big example"
+    description: |
+      This is a large map showing local authorities coloured by region with a layout loaded from an external source. We provide a key with a title and an entry for each region. Each individual hex <code>label</code> is explicitly set to be an empty string.
+    config:
+      label: ""
+      tooltip: "{{ n }}<br />{{ _id }}"
+      legend:
+        title: "Key"
+        position: "top right"
+        items:
+          - value: "#FF6700"
+            label: "East Anglia"
+          - value: "#00B6FF"
+            label: "East Midlands"
+          - value: "#D73058"
+            label: "London"
+          - value: "#D60303"
+            label: "North East"
+          - value: "#1DD3A7"
+            label: "North West"
+          - value: "#722EA5"
+            label: "Northern Ireland"
+          - value: "#2254F4"
+            label: "Scotland"
+          - value: "#67E767"
+            label: "South East"
+          - value: "#178CFF"
+            label: "South West"
+          - value: "#F9BC26"
+            label: "Yorkshire and the Humber"
+          - value: "#0DBC37"
+            label: "Wales"
+          - value: "#E6007C"
+            label: "West Midlands"
+      hexjson: hexjson.localauthorities
+      value: colour
+  
+  
 ---
