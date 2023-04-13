@@ -7,12 +7,15 @@ scales:
   - Inferno
   - Magma
   - Mako
-  - ODI
-  - Planck
   - Plasma
   - Rocket
   - Turbo
   - Viridis
+  - Planck
+  - PiPG
+  - PRGn
+  - PuOr
+  - RdBu
 ---
 
 <h1>{{ title }}</h1>
@@ -37,6 +40,7 @@ scales:
 	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale | colourScaleGradient() }});"></dd>
 {% endfor %}
 </dl>
+<p>Sources: <code>Cividis</code>/<code>Inferno</code>/<code>Magma</code>/<code>Plasma</code>/<code>Turbo</code>/<code>Viridis</code> come from <a href="https://github.com/plotly/plotly.py/blob/master/packages/python/plotly/_plotly_utils/colors/sequential.py">Plotly</a> (MIT), <code>Rocket</code> comes from the Seaborn statistical data visualization package for Python, <code>Mako</code> comes from <a href="https://github.com/sjmgarnier/viridisLite/blob/master/tests/testthat/test-palettes.R">ViridisLite</a>, <code>PiPG</code>/<code>PRGn</code>/<code>PuOr</code>/<code>RdBu</code> <a href="https://github.com/axismaps/colorbrewer/blob/9a37cbbfe7cde61c060c68ecdd1fd3a5095ef4a5/export/colorbrewer.js">come from ColorBrewer 2.0</a> (Cynthia Brewer <a href="https://github.com/axismaps/colorbrewer/blob/master/LICENCE.txt">Apache License 2.0</a>)</p>
 
 <p>You can apply a colour scale to replacement values e.g. <code>&lbrace;&lbrace; value | colourScale("Viridis",0,100) &rbrace;&rbrace;</code> passes <code>value</code> into the <code>colourScale</code> function with the scale <code>Viridis</code>, the minimum value <code>0</code>, and maximum value <code>100</code>.</p>
 
