@@ -22,6 +22,7 @@ title: Samples
 		{% if page.examples %}
 			{% comp 'oi.' + page.component, { config: page.examples[0].config } %}{% endcomp %}
 		{% endif %}
+		<p><a href="{{ page.url }}">See more examples...</a></p>
 	</div>
   {% endfor %}
 </div>
