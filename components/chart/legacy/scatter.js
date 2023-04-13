@@ -50,7 +50,7 @@ export function ScatterChart(config,csv){
 					if(typeof x==="string") x = i;
 					if(typeof y==="string") y = i;
 					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
-						label = this.opt.series[s].title+"\n"+labx+': '+(laby||"");
+						label = this.opt.series[s].title+"\n"+labx+': '+(laby);
 						if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
 						datum = {'x':x,'y':y,'title':label};
 						datum.data = {'series':this.opt.series[s].title};
