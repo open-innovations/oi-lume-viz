@@ -297,6 +297,109 @@ examples:
         lon:
           min: -3
           max: -0.3
+  - title: Out of this world example
+    description: |
+      Let's journey to Mars. This example is inspired by <a href="https://mastodon.social/@65dBnoise/109849270626537378">maps by 65dBnoise</a> and shows locations in Kim Stanley Robinson's "Mars Trilogy".
+      
+      The first thing we need to do is change the `tileLayer` so that we are using <a href="https://www.openplanetary.org/opm-basemaps/opm-mars-basemap-v0-2">martian tiles from OpenPlanetaryMap</a>. The `tileLayer` must have a `url` defined which should be the URL of some XYZ raster tiles. Make sure that the domain has CORS enabled otherwise the tiles may not load. We can now add a bunch of markers to the map using martian latitude/longitude.
+    config:
+      key: code
+      tooltip: name
+      tileLayer:
+        url: "https://cartocdn-gusc.global.ssl.fastly.net/opmbuilder/api/v1/map/named/opm-mars-basemap-v0-2/all/{z}/{x}/{y}.png"
+        attribution: 'Tiles &copy; <a href="https://www.openplanetary.org/opm-basemaps/opm-mars-basemap-v0-2">OpenPlanetaryMap</a>'
+      markers:
+        - icon: circle
+          tooltip: "Underhill<br />2027"
+          latitude: 9.4
+          longitude: -40
+        - icon: pentagon
+          tooltip: "Zygote<br />2030s"
+          latitude: -85
+          longitude: 104
+        - icon: pentagon
+          tooltip: "Burrows<br />2040s"
+          latitude: 12
+          longitude: 76
+        - icon: pentagon
+          tooltip: "Acheron<br />2040s"
+          latitude: 38
+          longitude: -147
+        - icon: pentagon
+          tooltip: "Sheffield<br />2040s"
+          latitude: 0.7
+          longitude: -108.0
+        - icon: pentagon
+          tooltip: "Senzeni Na<br />2040s"
+          latitude: -43
+          longitude: -84
+        - icon: pentagon
+          tooltip: "Nicosia<br />2056"
+          latitude: -6
+          longitude: -103.0
+        - icon: circle
+          tooltip: "Sabishii<br />2040s"
+          latitude: -9
+          longitude: 96
+        - icon: pentagon
+          tooltip: "Cairo<br />Declared neutral in 2061"
+          latitude: -2.5
+          longitude: -79
+        - icon: pentagon
+          tooltip: "Christianopolis ?"
+          latitude: -21
+          longitude: -12
+        - icon: pentagon
+          tooltip: "Bakhuysen"
+          latitude: -15
+          longitude: 53
+        - icon: pentagon
+          tooltip: "Rumi ? (Soufi)"
+          latitude: -39
+          longitude: 35
+        - icon: pentagon
+          tooltip: "Polynesians"
+          latitude: -78
+          longitude: 276
+        - icon: pentagon
+          tooltip: "Bologna"
+          latitude: -78
+          longitude: 291
+        - icon: pentagon
+          tooltip: "Mangala"
+          latitude: 51
+          longitude: -7
+        - icon: pentagon
+          tooltip: "Lyell"
+          latitude: -70
+          longitude: -11
+        - icon: circle
+          tooltip: "Lakefront"
+          latitude: -34
+          longitude: 66
+        - icon: circle
+          tooltip: "Industrial hartland"
+          latitude: -74.7
+          longitude: 67
+        - icon: circle
+          tooltip: "Bradbury Point"
+          latitude: 35
+          longitude: 83
+        - icon: circle
+          tooltip: "Arena"
+          latitude: 19
+          longitude: 70
+        - icon: star
+          tooltip: "Space elevator<br />2057"
+          latitude: 0.6
+          longitude: -112.8
+        - icon:
+            svg: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-airplane-fill" viewBox="0 0 16 16"><path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z"/></svg>'
+            size: [20,20]
+            anchor: [10,10]
+          tooltip: "Peter's airport"
+          latitude: -52
+          longitude: 110
 ---
 
 <link rel="stylesheet" href="/assets/leaflet/leaflet.css">

@@ -15,7 +15,10 @@ var icons = {
 	'pin': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-pin-fill" viewBox="0 0 16 16"><path d="M4.146.146A.5.5 0 0 1 4.5 0h7a.5.5 0 0 1 .5.5c0 .68-.342 1.174-.646 1.479-.126.125-.25.224-.354.298v4.431l.078.048c.203.127.476.314.751.555C12.36 7.775 13 8.527 13 9.5a.5.5 0 0 1-.5.5h-4v4.5c0 .276-.224 1.5-.5 1.5s-.5-1.224-.5-1.5V10h-4a.5.5 0 0 1-.5-.5c0-.973.64-1.725 1.17-2.189A5.921 5.921 0 0 1 5 6.708V2.277a2.77 2.77 0 0 1-.354-.298C4.342 1.674 4 1.179 4 .5a.5.5 0 0 1 .146-.354z" fill="currentColor" /></svg>'},
 	'balloon': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-balloon-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.48 10.901C11.211 10.227 13 7.837 13 5A5 5 0 0 0 3 5c0 2.837 1.789 5.227 4.52 5.901l-.244.487a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2.376 2.376 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.244-.487ZM4.352 3.356a4.004 4.004 0 0 1 3.15-2.325C7.774.997 8 1.224 8 1.5c0 .276-.226.496-.498.542-.95.162-1.749.78-2.173 1.617a.595.595 0 0 1-.52.341c-.346 0-.599-.329-.457-.644Z" fill="currentColor" /></svg>'},
 	'balloon-heart': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-balloon-heart-fill" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.49 10.92C19.412 3.382 11.28-2.387 8 .986 4.719-2.387-3.413 3.382 7.51 10.92l-.234.468a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2.376 2.376 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.235-.468ZM6.726 1.269c-1.167-.61-2.8-.142-3.454 1.135-.237.463-.36 1.08-.202 1.85.055.27.467.197.527-.071.285-1.256 1.177-2.462 2.989-2.528.234-.008.348-.278.14-.386Z" fill="currentColor" /></svg>'},
-	'chat-square': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-chat-square-fill" viewBox="0 0 16 16"><path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" fill="currentColor" /></svg>'}
+	'chat-square': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-chat-square-fill" viewBox="0 0 16 16"><path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" fill="currentColor" /></svg>'},
+	'circle': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg>','size':[20,20],'anchor':[10,10]},
+	'pentagon': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pentagon-fill" viewBox="0 0 16 16"><path d="M7.685.256a.5.5 0 0 1 .63 0l7.421 6.03a.5.5 0 0 1 .162.538l-2.788 8.827a.5.5 0 0 1-.476.349H3.366a.5.5 0 0 1-.476-.35L.102 6.825a.5.5 0 0 1 .162-.538l7.42-6.03Z"/></svg>','size': [20,20],'anchor': [10,10]},
+	'star': {'svg':'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>','size': [20,20],'anchor': [10,10]},
 }
 
 function clone(a){ return JSON.parse(JSON.stringify(a)); }
@@ -25,7 +28,6 @@ function clone(a){ return JSON.parse(JSON.stringify(a)); }
 // It will only get included in pages that need it by using the "data-dependencies" attribute.
 export function LeafletMap(opts){
 
-	var csv = clone(opts.data);
 	var fs = 16;
 
 	var config = {
@@ -48,41 +50,46 @@ export function LeafletMap(opts){
 	}
 	mergeDeep(config,opts);
 	
-	let geo = config.geojson.data;
-
 	var cs = ColourScale(config.scale);
 
-	// Work out default max/min from data
-	var min = 1e100;
-	var max = -1e100;
-	
-	if(config.value){
-		for(var i = 0; i < csv.length; i++){
-			if(csv[i][config.value] && typeof csv[i][config.value]==="number"){
-				min = Math.min(min,csv[i][config.value]);
-				max = Math.max(max,csv[i][config.value]);
+	if(opts.data){
+
+		var csv = clone(opts.data);
+
+		// Work out default max/min from data
+		var min = 1e100;
+		var max = -1e100;
+		
+		if(config.value){
+			for(var i = 0; i < csv.length; i++){
+				if(csv[i][config.value] && typeof csv[i][config.value]==="number"){
+					min = Math.min(min,csv[i][config.value]);
+					max = Math.max(max,csv[i][config.value]);
+				}
 			}
 		}
-	}
 
-	// Override defaults if set
-	if(typeof config.min=="number") min = config.min;
-	if(typeof config.max=="number") max = config.max;
+		// Override defaults if set
+		if(typeof config.min=="number") min = config.min;
+		if(typeof config.max=="number") max = config.max;
 
-	config.max = max;
-	config.min = min;
+		config.max = max;
+		config.min = min;
 
-	var v,i;
-	// Update the colours for the CSV rows
-	for(i = 0; i < csv.length; i++){
-		if(config.value && csv[i][config.value]){
-			v = csv[i][config.value];
-			if(typeof v==="number") csv[i].colour = cs((csv[i][config.value]-config.min)/(config.max-config.min));
+		var v,i;
+		// Update the colours for the CSV rows
+		for(i = 0; i < csv.length; i++){
+			if(config.value && csv[i][config.value]){
+				v = csv[i][config.value];
+				if(typeof v==="number") csv[i].colour = cs((csv[i][config.value]-config.min)/(config.max-config.min));
+			}
+			// Set a default colour if we don't have one
+			if(csv[i].colour === undefined) csv[i].colour = defaultbg;
 		}
-		// Set a default colour if we don't have one
-		if(csv[i].colour === undefined) csv[i].colour = defaultbg;
+		
+
 	}
-	
+
 	this.getHTML = function(){
 		var html,i,r,file;
 
@@ -120,54 +127,64 @@ export function LeafletMap(opts){
 		}
 
 		html.push('	map.attributionControl.setPrefix("'+config.attribution+'");\n');
-		
-		// Add the GeoJSON
-		html.push('	var geojson = '+JSON.stringify(geo)+';\n');
-		html.push('	var csv = '+JSON.stringify(csv)+';\n');
-		html.push('	var geokey = "'+config.geojson.key+'";\n');
-		html.push('	var key = "'+config.key+'";\n');
+
+		if(config.data){
+			html.push('	var csv = '+JSON.stringify(csv)+';\n');
+			html.push('	var key = "'+config.key+'";\n');
+		}
 		html.push('	var toolkey = "'+config.tooltip+'";\n');
+		
+		let bounds = {};
 
-		// A function to return the row for a given key
-		html.push('	function getData(k){\n');
-		html.push('		for(var i = 0; i < csv.length; i++){\n');
-		html.push('			if(csv[i][key] == k) return csv[i];\n');
-		html.push('		}\n');
-		html.push('		return {};\n');
-		html.push('	}\n');
+		// Add the GeoJSON
+		if(config.geojson){
+			html.push('	var geojson = '+JSON.stringify(config.geojson.data)+';\n');
+			html.push('	var geokey = "'+config.geojson.key+'";\n');
+			// A function to style each GeoJSON feature
+			html.push('	function style(feature){\n');
+			html.push('		var d = getData(feature.properties[geokey]);\n');
+			html.push('		return {\n');
+			html.push('			weight: 0.5,\n');
+			html.push('			opacity: 0.5,\n');
+			html.push('			color: "#ffffff",\n');
+			html.push('			fillOpacity: 1,\n');
+			html.push('			fillColor: d.colour||"transparent"\n');
+			html.push('		};\n');
+			html.push('	}\n');
 
-		// A function to style each GeoJSON feature
-		html.push('	function style(feature){\n');
-		html.push('		var d = getData(feature.properties[geokey]);\n');
-		html.push('		return {\n');
-		html.push('			weight: 0.5,\n');
-		html.push('			opacity: 0.5,\n');
-		html.push('			color: "#ffffff",\n');
-		html.push('			fillOpacity: 1,\n');
-		html.push('			fillColor: d.colour||"transparent"\n');
-		html.push('		};\n');
-		html.push('	}\n');
+			// A function to return the row for a given key
+			html.push('	function getData(k){\n');
+			if(config.data){
+				html.push('		for(var i = 0; i < csv.length; i++){\n');
+				html.push('			if(csv[i][key] == k) return csv[i];\n');
+				html.push('		}\n');
+			}
+			html.push('		return {};\n');
+			html.push('	}\n');
 
-		// Add the GeoJSON to the map
-		html.push('	var geoattrs = { "style": style };\n');
-		html.push('	geoattrs.onEachFeature = function(feature, layer){\n');
-		html.push('		var d = getData(feature.properties[geokey]);\n');
-		html.push('		layer.bindPopup(d["Label"]||d[toolkey]||feature.properties[geokey]).on("popupopen",function(ev){\n');
-		html.push('			var ps = ev.popup._container;\n');
-		// Set the background colour of the popup
-		html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["background-color"] = d.colour;\n');
-		html.push('			ps.querySelector(".leaflet-popup-tip").style["background-color"] = d.colour;\n');
-		// Set the text colour of the popup
-		html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["color"] = OI.contrastColour(d.colour);\n');
-		html.push('			ps.style["color"] = OI.contrastColour(d.colour);\n');
-		html.push('		});\n');
-		html.push('	};\n');
-					
-		html.push('	var geo = L.geoJSON(geojson,geoattrs);\n');
-		html.push('	geo.addTo(map);\n');
+			// Add the GeoJSON to the map
+			html.push('	var geoattrs = { "style": style };\n');
+			html.push('	geoattrs.onEachFeature = function(feature, layer){\n');
+			html.push('		var d = getData(feature.properties[geokey]);\n');
+			html.push('		layer.bindPopup(d["Label"]||d[toolkey]||feature.properties[geokey]).on("popupopen",function(ev){\n');
+			html.push('			var ps = ev.popup._container;\n');
+			// Set the background colour of the popup
+			html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["background-color"] = d.colour;\n');
+			html.push('			ps.querySelector(".leaflet-popup-tip").style["background-color"] = d.colour;\n');
+			// Set the text colour of the popup
+			html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["color"] = OI.contrastColour(d.colour);\n');
+			html.push('			ps.style["color"] = OI.contrastColour(d.colour);\n');
+			html.push('		});\n');
+			html.push('	};\n');
+						
+			html.push('	var geo = L.geoJSON(geojson,geoattrs);\n');
+			html.push('	geo.addTo(map);\n');
 
-		html.push('	OI.maps[id].bounds = geo.getBounds();\n');
-		if(!config.bounds) html.push('	map.fitBounds(geo.getBounds());\n');
+			html.push('	OI.maps[id].bounds = geo.getBounds();\n');
+			if(!config.bounds) html.push('	map.fitBounds(geo.getBounds());\n');
+		}else{
+			html.push('	map.setView([0, 0], 2);\n');
+		}
 
 		if(config.markers && config.markers.length > 0){
 			var icon;

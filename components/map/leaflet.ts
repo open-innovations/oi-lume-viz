@@ -70,7 +70,7 @@ type LeafletmapOptions = {
 	min: number;
 	max: number;
 	data?: Record<string, unknown>[];
-	geojson: GeoJson;
+	geojson?: GeoJson;
 	label?: string;
 	tooltip?: string;
 	margin: number;
@@ -122,22 +122,24 @@ export default function (input: { config: LeafletmapOptions }) {
 	// Set up some variables
 	let max = config.max;
 
-	let geojson = clone(config.geojson);
+	if(config.geojson){
+		let geojson = clone(config.geojson);
 
-	// Handle geojson / data as string references
-	if(typeof geojson.data === 'string'){
-		geojson.data = thingOrNameOfThing<TableData<string | number>>(
-			geojson.data,
-			input,
-		);
-	}
+		// Handle geojson / data as string references
+		if(typeof geojson.data === 'string'){
+			geojson.data = thingOrNameOfThing<TableData<string | number>>(
+				geojson.data,
+				input,
+			);
+		}
 
-	// If the GeoJSON object doesn't contain a type: FeatureCollection we stop
-	if(!geojson.data.type || geojson.data.type !== "FeatureCollection"){
-		console.error(geojson);
-		throw new Error("No FeatureCollection in the GeoJSON");
+		// If the GeoJSON object doesn't contain a type: FeatureCollection we stop
+		if(!geojson.data.type || geojson.data.type !== "FeatureCollection"){
+			console.error(geojson);
+			throw new Error("No FeatureCollection in the GeoJSON");
+		}
+		config.geojson = geojson;
 	}
-	config.geojson = geojson;
 
 	if(config.background){
 		// Handle background / data as string references
@@ -153,9 +155,8 @@ export default function (input: { config: LeafletmapOptions }) {
 	
 	
 	// Resolve data if this is a string
-	let data;
 	if (config.data) {
-		data = clone(config.data);
+		let data = clone(config.data);
 		// Convert references into actual objects
 		data = thingOrNameOfThing<TableData<string | number>>(
 			data,
@@ -163,11 +164,12 @@ export default function (input: { config: LeafletmapOptions }) {
 		);
 
 		// In case it was a CSV file loaded
-		if(config.data.rows) config.data = config.data.rows;
+		if(config.data.rows) data = data.rows;
 
 		// Create any defined columns
 		data.data = addVirtualColumns(data);
 
+		config.data = data;
 	}
 
 	const map = new LeafletMap(config);
