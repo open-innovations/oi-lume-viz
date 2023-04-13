@@ -3,8 +3,10 @@ import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 
+const defaultbg = "#dfdfdf";
+
 export const css = `
-.calendar-chart .year { fill: #aaaaaa; }
+.calendar-chart .year { fill: #dfdfdf; }
 .calendar-chart rect.in-year:focus {
 	outline: 0;
 }
@@ -142,8 +144,8 @@ function CalendarChart(input: {
 
 	if(input.order == "reverse"){
 		// For each year (starting at the lowest year)
-		for(let year = range.max.year; year >= range.min.year; year--){
-			y += (size*7 + space)*(range.max.year-year);
+		for(let year = range.max.year, i = 0; year >= range.min.year; year--, i++){
+			y = (size*7 + space)*(i);
 			props.origin.y = y;
 			svg += '<g class="data-layer">';
 			svg += buildYear(year,props,input);
@@ -151,8 +153,8 @@ function CalendarChart(input: {
 		}
 	}else{
 		// For each year (starting at the lowest year)
-		for(let year = range.min.year; year <= range.max.year; year++){
-			y += (size*7 + space)*(year-range.min.year);
+		for(let year = range.min.year, i = 0; year <= range.max.year; year++, i++){
+			y = (size*7 + space)*(i);
 			props.origin.y = y;
 			svg += '<g class="data-layer">';
 			svg += buildYear(year,props,input);
@@ -212,7 +214,7 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 
 		dat = opts.days[iso];
 
-		v = (dat && d >= syear && d <= eyear) ? dat[input.value] : (d >= syear && d <= eyear ? "#aaaaaa" : "transparent");
+		v = (dat && d >= syear && d <= eyear) ? dat[input.value] : (d >= syear && d <= eyear ? defaultbg : "transparent");
 		if(typeof v==="number" && typeof opts.scale==="function") v = opts.scale((v - opts.min)/(opts.max - opts.min));
 	
 		offx = Math.floor(((d - sday)/86400000)/7);
