@@ -6,6 +6,8 @@ import { TableData, UsefulFunction } from "./lib/hierarchy-visualisation.ts";
 import { TreeMap, TreeMapOptions } from "./lib/tree-map.ts";
 import { addVirtualColumns } from "../../lib/helpers.ts";
 
+const defaultbg = "#dfdfdf";
+
 interface ColourOptions {
   colour: string;
   scale?: string;
@@ -91,7 +93,7 @@ export default function (options: { config: TreemapComponentOptions }) {
   // Clone the data table to avoid breaking the global context and set defaults
   const config: TreeMapOptions = {
     ...options.config,
-    colourMapper: (d) => d.data.colour(d) || "#aaaaaa",
+    colourMapper: (d) => d.data.colour(d) || defaultbg,
     dataMapper: hierarchyMapper,
     grouping: grouperMaker(options.config.grouping || ["name"]),
     height: options.config.height || 400,

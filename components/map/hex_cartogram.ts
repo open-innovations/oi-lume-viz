@@ -6,6 +6,8 @@ import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 
+const defaultbg = "#dfdfdf";
+
 // This is a simple scale which returns the same value it was sent
 // Useful if the hexmap has a colour attribute
 const identityColourScale = (s: string) => s;
@@ -213,7 +215,7 @@ export default function (input: { config: HexmapOptions }) {
       let v = 0;
       if (typeof h[value] === "string") v = parseFloat(h[value]);
       else if (typeof h[value] === "number") v = h[value];
-	  else v = "#aaaaaa";
+	  else v = defaultbg;
       return v;
     }).reduce((result, current) => Math.max(result, current), 0);
   }
@@ -360,7 +362,7 @@ export default function (input: { config: HexmapOptions }) {
   const drawHex = (config: HexDefinition) => {
     const hexId = hexCounter();
     const { x, y } = getCentre(config);
-    const valuecol = <number> config[value] || "#aaaaaa";
+    const valuecol = <number> config[value] || defaultbg;
 
     const labelProp = <string> config[titleProp];
     let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
@@ -398,7 +400,7 @@ export default function (input: { config: HexmapOptions }) {
           role="listitem"
           aria-label="${labelProp} value ${valuecol}"
         >
-        <path fill="${fill !== undefined ? `${fill}` : "#aaaaaa"}" d="${hexPath}"></path>
+        <path fill="${fill !== undefined ? `${fill}` : "${defaultbg}"}" d="${hexPath}"></path>
         <text
         fill="${(Colour(fill)).contrast}"
         text-anchor="middle"
