@@ -76,6 +76,9 @@ export default function (options: { config: TreemapComponentOptions }) {
         )
         .reduce((total: number, current: number) => total + current, 0);
     }
+    if (typeof colour == 'function') {
+      data.colour = colour;
+    }
     return data;
   };
 
