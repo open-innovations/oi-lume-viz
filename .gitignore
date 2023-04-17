@@ -1,2 +1,5 @@
 coverage/
 _site/
+
+# Problems with building
+deno.lock
