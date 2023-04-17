@@ -17,10 +17,11 @@ interface TooltipOptions {
   tooltip: string;
 }
 
-interface TreemapLevelData {
+type TreemapLevelData = {
   colour: (d: unknown) => string;
   original: Record<string, unknown>[];
-  value: number;
+} & {
+  [valueKey: string]: number;
 }
 
 const grouperMaker = (grouperKeys: string[]) => {
@@ -69,7 +70,7 @@ export default function (options: { config: TreemapComponentOptions }) {
       data.colour = () => colourScale(d[0][colour]);
     }
     if (config.value !== undefined) {
-      data.value = d
+      data[config.value] = d
         .map(
           (v: Record<string, unknown>) => v[config.value as string] as number,
         )
@@ -98,7 +99,7 @@ export default function (options: { config: TreemapComponentOptions }) {
     grouping: grouperMaker(options.config.grouping || ["name"]),
     height: options.config.height || 400,
     description: options.config.description || ((d) => d.name),
-	padding: options.config.padding || 2,
+    padding: options.config.padding || 2,
     reduce: hierarchyReducer,
     width: options.config.width || 600,
   };
