@@ -20,7 +20,7 @@ title: Samples
 		<!--<p>Component: <code>{{ page.component }}</code></p>-->
 		{% if page.description %}<p>{{ page.description }}</p>{% endif %}
 		{% if page.examples %}
-			{% comp 'oi.' + page.component, { config: page.examples[0].config } %}{% endcomp %}
+			{% comp 'oi.' + page.component, { config: page.examples[page.showcase or 0].config } %}{% endcomp %}
 		{% endif %}
 		<p style="margin-top:1em;"><a href="{{ page.url }}">{{ page.title }} examples...</a></p>
 	</div>
