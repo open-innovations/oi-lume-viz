@@ -99,7 +99,6 @@ export default function (input: { config: HexmapOptions }) {
   const {
     bgColour = "none",
     scale = identityColourScale,
-    min = 0,
     hexScale = 1,
     margin: marginScale = 0.25,
     label = '',
@@ -113,6 +112,7 @@ export default function (input: { config: HexmapOptions }) {
   } = input.config;
 
   // Set up some variables
+  let min = input.config.min;
   let max = input.config.max;
 
   // Handle hexjson / data as string references
@@ -158,34 +158,34 @@ export default function (input: { config: HexmapOptions }) {
   // Generate a UUID to identify the hexes
   const uuid = crypto.randomUUID();
   
-	let labelProcessor = function(props,key){
-		var txt = key;
-		// See if this is just a straightforward key
-		if(typeof props[key]==="string") txt = props[key];
+  let labelProcessor = function(props,key){
+    var txt = key;
+    // See if this is just a straightforward key
+    if(typeof props[key]==="string") txt = props[key];
 
-		if(label){
-			// Process replacement filters 
-			txt = applyReplacementFilters(txt,props);
-		}else{
-			// The label is empty so keep it that way
-			txt = "";
-		}
-		return txt;
-	}
-	let tooltipProcessor = function(props,key){
-		var txt = key;
-		// See if this is just a straightforward key
-		if(typeof props[key]==="string") txt = props[key];
+    if(label){
+      // Process replacement filters 
+      txt = applyReplacementFilters(txt,props);
+    }else{
+      // The label is empty so keep it that way
+      txt = "";
+    }
+    return txt;
+  }
+  let tooltipProcessor = function(props,key){
+    var txt = key;
+    // See if this is just a straightforward key
+    if(typeof props[key]==="string") txt = props[key];
 
-		if(tooltip){
-			// Process replacement filters 
-			txt = applyReplacementFilters(txt,props);
-		}else{
-			// The label is empty so keep it that way
-			txt = "";
-		}
-		return txt;
-	}
+    if(tooltip){
+      // Process replacement filters 
+      txt = applyReplacementFilters(txt,props);
+    }else{
+      // The label is empty so keep it that way
+      txt = "";
+    }
+    return txt;
+  }
 
   // Merge data into hexes
   // If the matchKey and data are defined
@@ -203,7 +203,7 @@ export default function (input: { config: HexmapOptions }) {
   
   // Add IDs to hexes
   for(var key in hexes){
-  	  hexes[key]["_id"] = key;
+    hexes[key]["_id"] = key;
   }
   
   // TODO All this colourscale handling needs to be placed in a utlity function or class
@@ -215,9 +215,20 @@ export default function (input: { config: HexmapOptions }) {
       let v = 0;
       if (typeof h[value] === "string") v = parseFloat(h[value]);
       else if (typeof h[value] === "number") v = h[value];
-	  else v = defaultbg;
+      else v = defaultbg;
       return v;
     }).reduce((result, current) => Math.max(result, current), 0);
+  }
+
+  if (typeof min !== "number") {
+    // Find the smallest value in the hex map
+    min = Object.values(hexes).map((h) => {
+      let v = 0;
+      if (typeof h[value] === "string") v = parseFloat(h[value]);
+      else if (typeof h[value] === "number") v = h[value];
+    else v = defaultbg;
+      return v;
+    }).reduce((result, current) => Math.min(result, current), 1e100);
   }
 
   const fillColour = (input: number | string) => {
@@ -389,7 +400,7 @@ export default function (input: { config: HexmapOptions }) {
     }
     // TODO(@giles) Work out what the heck is going on!
     const fill = fillColour(colourValue as never);
-	
+  
     // TODO(@gilesdring) this only supports pointy-top hexes at the moment
     return `<g
           id="${uuid}-hex-${hexId}"
@@ -407,25 +418,25 @@ export default function (input: { config: HexmapOptions }) {
           dominant-baseline="middle"
           aria-hidden="true"
           >${labelText}</text>
-		<title>${tooltipText}</title>
+    <title>${tooltipText}</title>
       </g>`;
   };
 
   // Make the legend here
   let legendDiv = '';
   if(legend){
-	  let position = legend.position||"bottom right";
-	  position = position.replace(/(^| )/g,function(m,p1){ return p1+'leaflet-'; });
-	  legendDiv = '<div class="'+position+'">';
-	  var l = '<div class="legend leaflet-control">';
-	  if(typeof legend.title==="string") l += '<h3>'+legend.title+'</h3>';
-	  if(legend.items){
-		  for(var i = 0; i < legend.items.length; i++){
-			  l += '<div class="legend-item"><i style="background:'+fillColour(legend.items[i].value)+'" title="'+legend.items[i].value+'"></i> ' + legend.items[i].label + '</div>';
-		  }
-	  }
-	  l += '</div>';
-	  legendDiv += l+'</div>';
+    let position = legend.position||"bottom right";
+    position = position.replace(/(^| )/g,function(m,p1){ return p1+'leaflet-'; });
+    legendDiv = '<div class="'+position+'">';
+    var l = '<div class="legend leaflet-control">';
+    if(typeof legend.title==="string") l += '<h3>'+legend.title+'</h3>';
+    if(legend.items){
+      for(var i = 0; i < legend.items.length; i++){
+        l += '<div class="legend-item"><i style="background:'+fillColour(legend.items[i].value)+'" title="'+legend.items[i].value+'"></i> ' + legend.items[i].label + '</div>';
+      }
+    }
+    l += '</div>';
+    legendDiv += l+'</div>';
   }
 
 
@@ -440,13 +451,13 @@ export default function (input: { config: HexmapOptions }) {
       style="${bgColour ? `background: ${bgColour}` : ""}"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
-	  data-type="hex-map"
+    data-type="hex-map"
       role="list"
-	  vector-effect="non-scaling-stroke"
+    vector-effect="non-scaling-stroke"
       aria-labelledby="title-${uuid}"
     >
       <title id="title-${uuid}">${title}.</title>
-	  <g class="data-layer">
+    <g class="data-layer">
       ${Object.values(hexes).map(drawHex).join("")}
     </g></svg>${legendDiv}</div>
   `;
