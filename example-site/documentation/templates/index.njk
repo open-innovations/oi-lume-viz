@@ -1,0 +1,12 @@
+---
+layout: layout/base.njk
+title: String templates
+---
+
+<h1>{{ title }}</h1>
+
+<p>Sometimes you may need to construct a simple <code>tooltip</code> or <code>label</code> for each data point using attributes in the data. The simplest method would be to create a column in your original data file that contains the text for each tooltip. But you may not have the luxury of editing the original data. In those cases you can use simple text templates to construct a "virtual column" and refer to this column for the tooltip.</p>
+
+<p>We've allowed pattern-based-strings to be defined which will take values from the data using a double curly braces syntax e.g. <code>{% raw %}{{ key }}{% endraw %}</code>. For instance, say the data rows for a visualisation contain the attributes/columns <code>ConstituencyName</code> and <code>population</code>. We can build a very simple tooltip string as <code>{% raw %}{{ ConstituencyName }}: {{ population }}{% endraw %}</code>. In this case <code>{% raw %}{{ ConstituencyName }}{% endraw %}</code> will be replaced by that row's <code>ConstituencyName</code> value and <code>{% raw %}{{ population }}{% endraw %}</code> by the <code>population</code> value.</p>
+
+<p>In the future we plan to allow functions to be provided as string templates.</p>

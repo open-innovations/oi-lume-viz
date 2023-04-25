@@ -63,11 +63,6 @@ Creates a simple SVG-based map using a Web Mercator projection. See [SVG map sam
 
 Creates a hexagonal cartogram using [HexJSON layouts](https://open-innovations.org/projects/hexmaps/hexjson). See [hex cartogram samples](/samples/map/hex-cartogram).
 
-
-## <a name="string-building"></a> Building a string
-
-Often, within visualisations, there is a need to construct tooltips or labels from attributes in the data. In such cases we've allowed pattern-based-strings to be defined which will take values from the data using a double curly braces syntax e.g. `{{ key }}`. For instance, say the data rows for a visualisation contain the attributes `ConstituencyName` and `population`. We can build a very simple `tooltip` string as `{{ ConstituencyName }}: {{ population }}`. In this case `{{ ConstituencyName }}` will be replaced by that row's `ConstituencyName` value and `{{ population }}` by the `population` value. 
-
 ## Testing
 
 Run a test with the following command. Replace the file path with the tests you want to run.
