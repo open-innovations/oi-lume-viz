@@ -26,7 +26,7 @@ function clone(a){ return JSON.parse(JSON.stringify(a)); }
 
 // This component uses "/assets/leaflet/leaflet.js" and "/assets/leaflet/leaflet.css" to make things interactive in the browser.
 // It will only get included in pages that need it by using the "data-dependencies" attribute.
-export function LeafletMap(opts){
+export function ZoomableMap(opts){
 
 	var fs = 16;
 
@@ -34,7 +34,7 @@ export function LeafletMap(opts){
 		'scale': 'Viridis',
 		'places': [],
 		'markers': [],
-		'data-type': 'leaflet-map',
+		'data-type': 'zoomable-map',
 		'attribution': '',
 		'tileLayer': {
 			'url': 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
@@ -93,9 +93,9 @@ export function LeafletMap(opts){
 	this.getHTML = function(){
 		var html,i,r,file;
 
-		html = ['<div class="map leaflet-map" data-dependencies="/assets/leaflet/leaflet.js,/assets/js/tooltip.js">'];
+		html = ['<div class="map zoomable-map" data-dependencies="/assets/leaflet/leaflet.js,/assets/js/tooltip.js">'];
 		
-		html.push('<script>');
+		html.push('<script>console.log(document.currentScript);');
 		html.push('(function(root){');
 		html.push('	var p = document.currentScript.parentNode;');
 		html.push('	var el = document.createElement("div");');

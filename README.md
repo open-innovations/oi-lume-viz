@@ -51,9 +51,9 @@ Creates a simple horizontal bar chart. See [bar chart samples](/samples/chart/ba
 
 Creates a hierarchical treemap. See [treemap samples](/samples/hierarchy/treemap).
 
-### `map.leaflet`
+### `map.zoomable`
 
-Creates a Leaflet-based slippy map. See [Leaflet map samples](/samples/map/leaflet).
+Creates a Leaflet-based, zoomable, slippy map. See [zoomable map samples](/samples/map/leaflet).
 
 ### `map.svg`
 

@@ -5,7 +5,7 @@ import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
-import { LeafletMap } from "./legacy/map.js";
+import { ZoomableMap } from "./legacy/map.js";
 
 
 // This is a simple scale which returns the same value it was sent
@@ -36,9 +36,9 @@ export const css = `
 	.map .legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
 	.map .legend .legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
 	.map .legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
-	.map.leaflet-map .marker:focus { outline: none; }
+	.map.zoomable-map .marker:focus { outline: none; }
 
-	.map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: transparent; position: relative; }
+	.map.zoomable-map { width: 100%; aspect-ratio: 16 / 9; background: transparent; position: relative; }
 	.map .leaflet a { background-image: none!important; color: inherit!important; }
 	.map .leaflet-popup-content-wrapper { border-radius: 0; }
 	.map .leaflet-popup-content { margin: 1em; }
@@ -48,7 +48,7 @@ export const css = `
 	.map .leaflet-container a.leaflet-popup-close-button { color: inherit; }
 	.map .leaflet-control { z-index: 400; }
 	.map .leaflet-top, .leaflet-bottom { position: absolute; z-index: 400; pointer-events: none; }
-	.map.leaflet-map .place-name > svg { position: absolute; transform: translate3d(-50%,-50%,0); left: 50%; top: 50%; }
+	.map.zoomable-map .place-name > svg { position: absolute; transform: translate3d(-50%,-50%,0); left: 50%; top: 50%; }
 	.leaflet-div-icon { background: transparent!important; border: 0!important; }
 	.leaflet-control-attribution { font-size: 0.75em; }
 	.leaflet-div-icon svg { width: 100%; height: 100%; }
@@ -64,7 +64,7 @@ type ColourScaleDefinition = string |
 	((property: string) => string) |
 	((numeric: number) => string);
 
-type LeafletmapOptions = {
+type ZoomablemapOptions = {
 	bgColour: string;
 	scale: ColourScaleDefinition;
 	min: number;
@@ -86,9 +86,9 @@ type LeafletmapOptions = {
 /**
  * Function to render a hexmap
  *
- * @param options LeafletmapOptions object
+ * @param options ZoomablemapOptions object
  */
-export default function (input: { config: LeafletmapOptions }) {
+export default function (input: { config: ZoomablemapOptions }) {
 
 	// Take a copy of parameters as constants, with defaults.
 	// NB these are not cloned at this stage, as this loses information about functions passed in
@@ -101,7 +101,7 @@ export default function (input: { config: LeafletmapOptions }) {
 		label = (key: string) => key.slice(0, 3),
 		matchKey,
 		tooltip = (label: string, value) => `${label}: ${value}`,
-		title = "Leafletmap",
+		title = "Zoomablemap",
 		titleProp = "n",
 		valueProp = "colour",
 		colourValueProp,
@@ -172,7 +172,7 @@ export default function (input: { config: LeafletmapOptions }) {
 		config.data = data;
 	}
 
-	const map = new LeafletMap(config);
+	const map = new ZoomableMap(config);
 
 	return map.getHTML();
 }

@@ -20,5 +20,5 @@ export const components = [
   'hierarchy/treemap.ts',
   'map/hex_cartogram.ts',
   'map/svg.ts',
-  'map/leaflet.ts',
+  'map/zoomable.ts',
 ];
