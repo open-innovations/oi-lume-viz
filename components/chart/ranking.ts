@@ -230,7 +230,7 @@ export default function (input: {
 		talign = 'middle';
 		if(i==0) talign = 'start';
 		if(i==config.columns.length-1) talign = 'end';
-		setAttr(lbl,{'x':(xoff + i*dx + (i==0 ? -radius : (i==config.columns.length-1 ? +radius : 0))),'y': fs*0.2,'font-size':fs+'px','dominant-baseline':'hanging','text-anchor':talign});
+		setAttr(lbl,{'x':(xoff + i*dx + (i==0 ? -radius : (i==config.columns.length-1 ? +radius : 0))).toFixed(2),'y': (fs*0.2).toFixed(2),'font-size':(fs).toFixed(2)+'px','dominant-baseline':'hanging','text-anchor':talign});
 		svg.appendChild(lbl);
 	}
 
@@ -261,7 +261,7 @@ export default function (input: {
 		// Build path and circles
 		v = 0;
 		y = getY(s);
-		setAttr(series[s].label,{'x':xlbl	,'y':y,'font-size':fs+'px'});
+		setAttr(series[s].label,{'x':xlbl.toFixed(2),'y':y.toFixed(2),'font-size':(fs).toFixed(2)+'px'});
 
 		rank = series[s].data[0];
 		oldx = xoff;
