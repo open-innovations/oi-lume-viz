@@ -63,7 +63,7 @@ export default function (input: {
 	for(let col = 0; col < options.columns.length; col++){
 		scales[col] = {};
 		if(options.columns[col].scale){
-			scales[col] = {'scale':ColourScale(options.columns[col].scale),'min':(options.columns[col].min||Infinity),'max':(options.columns[col].max||-Infinity)};
+			scales[col] = {'scale':ColourScale(options.columns[col].scale),'min':(typeof options.columns[col].min==="number" ? options.columns[col].min : Infinity),'max':(typeof options.columns[col].max=="number" ? options.columns[col].max : -Infinity)};
 		}
 	}
 
