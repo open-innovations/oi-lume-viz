@@ -88,33 +88,43 @@ examples:
         - page: Liverpool City Region
           url: https://open-innovations.github.io/council-website-emissions/areas/E47000004.html
           co2: 5.33
+          size: 21.2
         - page: Tendring District Council
           url: https://open-innovations.github.io/council-website-emissions/areas/E07000076.html
           co2: 3.90
+          size: 15.5
         - page: London Borough of Newham
           url: https://open-innovations.github.io/council-website-emissions/areas/E09000025.html
           co2: 2.99
+          size: 13.7
         - page: Melton Borough Council
           url: https://open-innovations.github.io/council-website-emissions/areas/E07000133.html
           co2: 2.95
+          size: 13.5
         - page: Welwyn Hatfield Council
           url: https://open-innovations.github.io/council-website-emissions/areas/E07000241.html
           co2: 2.68
+          size: 10.6
         - page: Dacorum Council
           url: https://open-innovations.github.io/council-website-emissions/areas/E07000096.html
           co2: 2.68
+          size: 10.6
         - page: Harborough District Council
           url: https://open-innovations.github.io/council-website-emissions/areas/E07000131.html
           co2: 2.59
+          size: 10.3
         - page: Bridgend County Borough Council
           url: https://open-innovations.github.io/council-website-emissions/areas/W06000013.html
           co2: 2.53
+          size: 10.0
         - page: Reading Borough Council
           url: https://open-innovations.github.io/council-website-emissions/areas/E06000038.html
           co2: 2.34
+          size: 9.3
         - page: Bournemouth, Christchurch and Poole
           url: https://open-innovations.github.io/council-website-emissions/areas/E06000058.html
           co2: 2.27
+          size: 9.0
       columns:
         - name: "Local Authority"
           template: "{{ page }}"
@@ -124,5 +134,10 @@ examples:
           scale: Heat_r
           min: 0
           max: 6
+        - name: "Size (MB)"
+          template: "{{ size | toFixed(2) }}"
+          align: center
+          scale: Heat_r
+          min: 0
 ---
 
