@@ -1,0 +1,86 @@
+---
+title: Table
+description: |
+  Helpful table features.
+order: 1
+component: table
+layout: layout/sample-viz.njk
+examples:
+  - title: "Simple table"
+    description: |
+      This example shows three columns from a CSV file.
+    config:
+      data: test.data.table
+      columns:
+        - name: "Overall category"
+        - name: "Intervention"
+        - name: "Sub-category"
+  - title: "Merge rows"
+    description: |
+      Let's tidy up the table a little. Two of the columns contain a number of neighbouring rows that have the same values. We can choose to merge those rows by setting `mergerows` to `true` (this will set the `rowspan` property on the first table cell).
+    config:
+      data: test.data.table
+      columns:
+        - name: "Overall category"
+          mergerows: true
+        - name: "Intervention"
+          mergerows: true
+        - name: "Sub-category"
+  - title: "Colourful columns"
+    description: |
+      We can set a `colour` for a column. The text of those cells will be set to a contrasting colour.
+    config:
+      data: test.data.table
+      columns:
+        - name: "Overall category"
+          mergerows: true
+          colour: "#2254F4"
+        - name: "Intervention"
+          mergerows: true
+        - name: "Sub-category"
+  - title: "Heat map columns"
+    description: |
+      We can also set a `scale` (with optional `min` and `max`) for a column to create a heat map.
+    config:
+      data: test.data.heatmap
+      columns:
+        - name: "Rank 2018"
+          template: "{{ Ranks→2018 }}"
+          align: center
+          scale: Viridis_r
+          min: 1
+          max: 38
+        - name: "Rank 2019"
+          template: "{{ Ranks→2019 }}"
+          align: center
+          scale: Viridis_r
+          min: 1
+          max: 38
+        - name: "Rank 2020"
+          template: "{{ Ranks→2020 }}"
+          align: center
+          scale: Viridis_r
+          min: 1
+          max: 38
+        - name: "Country"
+          align: center
+        - name: "Index 2018"
+          template: "{{ Index→2018 }}"
+          align: center
+          scale: Viridis
+          min: 23
+          max: 71
+        - name: "Index 2019"
+          template: "{{ Index→2019 }}"
+          align: center
+          scale: Viridis
+          min: 23
+          max: 71
+        - name: "Index 2020"
+          template: "{{ Index→2020 }}"
+          align: center
+          scale: Viridis
+          min: 23
+          max: 71
+---
+
