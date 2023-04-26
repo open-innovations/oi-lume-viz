@@ -39,6 +39,47 @@ examples:
         - name: "Intervention"
           mergerows: true
         - name: "Sub-category"
+  - title: "Virtual columns"
+    description: |
+      In this example we will create new columns using `template`. Our generated first column creates a link using the `page` and `url` values.
+    config:
+      data:
+        - page: Liverpool City Region
+          url: https://open-innovations.github.io/council-website-emissions/areas/E47000004.html
+          co2: 5.33
+        - page: Tendring District Council
+          url: https://open-innovations.github.io/council-website-emissions/areas/E07000076.html
+          co2: 3.90
+        - page: London Borough of Newham
+          url: https://open-innovations.github.io/council-website-emissions/areas/E09000025.html
+          co2: 2.99
+        - page: Melton Borough Council
+          url: https://open-innovations.github.io/council-website-emissions/areas/E07000133.html
+          co2: 2.95
+        - page: Welwyn Hatfield Council
+          url: https://open-innovations.github.io/council-website-emissions/areas/E07000241.html
+          co2: 2.68
+        - page: Dacorum Council
+          url: https://open-innovations.github.io/council-website-emissions/areas/E07000096.html
+          co2: 2.68
+        - page: Harborough District Council
+          url: https://open-innovations.github.io/council-website-emissions/areas/E07000131.html
+          co2: 2.59
+        - page: Bridgend County Borough Council
+          url: https://open-innovations.github.io/council-website-emissions/areas/W06000013.html
+          co2: 2.53
+        - page: Reading Borough Council
+          url: https://open-innovations.github.io/council-website-emissions/areas/E06000038.html
+          co2: 2.34
+        - page: Bournemouth, Christchurch and Poole
+          url: https://open-innovations.github.io/council-website-emissions/areas/E06000058.html
+          co2: 2.27
+      columns:
+        - name: "Local Authority"
+          template: "<a href='{{ url }}'>{{ page }}</a>"
+        - name: "CO2 (g)"
+          template: "{{ co2 | toFixed(2) }}"
+          align: center
   - title: "Heat map columns"
     description: |
       We can set a `scale` (with optional `min` and `max`) for each column to create a heat map. As the data source has multiple header rows, the column names are the header cells are joined by `→`. We can tidy those names up by creating new columns with nicer names. We can also set the text alignment in a column using `align`.
