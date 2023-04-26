@@ -3,7 +3,7 @@ title: Ranking chart
 description: |
   A chart which shows how the rank of something varies.
 order: 12
-showcase: 0
+showcase: 3
 component: chart.ranking
 examples:
   - title: "Simple ranking chart"
@@ -53,7 +53,7 @@ examples:
           template: '{{ Ranks→2020 }}'
   - title: "Lines coloured using a scale"
     description: |
-      The colour of each series can be scaled by the column referenced by `colour`. This column could contain colour values but a colour scale, `scale`, can be used (with optional `min` and `max` values) for numeric values.
+      We can use a colour `scale` along with a `colour` column in the data (with optional `min` and `max` values) to set the colour using numeric values. In this case we will use the initial rank (found in the `Ranks→2018` column) to set the colours.
     config:
       data: test.data.heatmap
       key: Country
