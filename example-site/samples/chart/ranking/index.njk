@@ -1,0 +1,69 @@
+---
+title: Ranking chart
+description: |
+  A chart which shows how the rank of something varies.
+order: 12
+showcase: 0
+component: chart.ranking
+examples:
+  - title: "Simple ranking chart"
+    description: |
+      Series are created by referencing a column in the data using `key` e.g. the `Country` column. They will be ranked by the first item in `columns`.
+    config:
+      data: test.data.heatmap
+      key: Country
+      columns:
+        - name: 2018
+          template: '{{ Ranks→2018 }}'
+        - name: 2019
+          template: '{{ Ranks→2019 }}'
+        - name: 2020
+          template: '{{ Ranks→2020 }}'
+  - title: "Customise the lines"
+    description: |
+      The `curvature` of the lines can be in the range 0-1 (default of `1`). The `stroke-width` can be in the range 0-1 (default of `0.5`).
+    config:
+      data: test.data.heatmap
+      key: Country
+      columns:
+        - name: 2018
+          template: '{{ Ranks→2018 }}'
+        - name: 2019
+          template: '{{ Ranks→2019 }}'
+        - name: 2020
+          template: '{{ Ranks→2020 }}'
+      curvature: 0
+      stroke-width: 0.2
+  - title: "Coloured lines"
+    description: |
+      The colour of each series can be scaled by the column referenced by `colour`. This column contains a colour as a text string. In this example we will also add `circles` showing the ranks.
+
+      Key: <span style="padding:0.125em 0.25em;background:#f4ac36;color:black;">Asia</span> <span style="padding:0.125em 0.25em;background:#e53012;color:white;">Australia</span> <span style="padding:0.125em 0.25em;background:#0083c6;color:white;">Europe</span> <span style="padding:0.125em 0.25em;background:#009640;color:white;">N. America</span> <span style="padding:0.125em 0.25em;background:#b70d7f;color:white;">S. America</span>
+    config:
+      data: test.data.heatmap
+      key: Country
+      colour: Colour
+      circles: 0.9
+      columns:
+        - name: 2018
+          template: '{{ Ranks→2018 }}'
+        - name: 2019
+          template: '{{ Ranks→2019 }}'
+        - name: 2020
+          template: '{{ Ranks→2020 }}'
+  - title: "Lines coloured using a scale"
+    description: |
+      The colour of each series can be scaled by the column referenced by `colour`. This column could contain colour values but a colour scale, `scale`, can be used (with optional `min` and `max` values) for numeric values.
+    config:
+      data: test.data.heatmap
+      key: Country
+      colour: Ranks→2018
+      scale: Viridis
+      columns:
+        - name: 2018
+          template: '{{ Ranks→2018 }}'
+        - name: 2019
+          template: '{{ Ranks→2019 }}'
+        - name: 2020
+          template: '{{ Ranks→2020 }}'
+---
