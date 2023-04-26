@@ -21,10 +21,11 @@ examples:
           template: '{{ Ranks→2020 }}'
   - title: "Customise the lines"
     description: |
-      The `curvature` of the lines can be in the range 0-1 (default of `1`). The `stroke-width` can be in the range 0-1 (default of `0.5`).
+      The `curvature` of the lines can be in the range 0-1 (default of `1`). The `stroke-width` can be in the range 0-1 (default of `0.5`). You can add ranks on the lines by setting `circle` in the range 0-1 (default of `0`).
     config:
       data: test.data.heatmap
       key: Country
+      circles: 0.9
       columns:
         - name: 2018
           template: '{{ Ranks→2018 }}'
@@ -43,7 +44,6 @@ examples:
       data: test.data.heatmap
       key: Country
       colour: Colour
-      circles: 0.9
       columns:
         - name: 2018
           template: '{{ Ranks→2018 }}'
