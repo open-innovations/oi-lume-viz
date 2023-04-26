@@ -15,7 +15,7 @@ export const css = `
 /**
  * @param options Options to validate
  */
-function checkOptions(options: LineChartOptions): void {
+function checkOptions(options: TableOptions): void {
 	if (options.data === undefined) throw new TypeError("Data not provided");
 	if (options.data.length === 0) {
 		throw new TypeError("Data provided has no entries");
@@ -41,8 +41,6 @@ export default function (input: {
 	// Create any defined columns
 	config.data = addVirtualColumns(config);
 
-//console.log(config.data);
-
 	// We can optionally set defaults in this
 	const defaults: Partial<TableOptions> = {
 	};
@@ -56,7 +54,6 @@ export default function (input: {
 	// Error checking
 	checkOptions(options);
 
-//console.log(options.data);
 	// Create a structure to mimic the table (row indexing)
 	let cells = new Array(options.data.length);
 	let scales = new Array(options.columns.length);
