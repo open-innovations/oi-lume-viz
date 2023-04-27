@@ -44,7 +44,7 @@ type RankingChartOptions = {
 	/** The property in the data set holding the value */
 	key?: string,
 	value?: string,
-	order?: { key?: string, reverse?: boolean },
+	reverse?: boolean,
 	scale?: string,
 	min?: number,
 	max?: number,
@@ -95,7 +95,7 @@ export default function (input: {
 		'curvature': 1,
 		'circles': 0,
 		'stroke-width': 0.5,
-		'order': {'reverse':false}
+		'reverse':false
 	};
 
 
@@ -196,16 +196,14 @@ export default function (input: {
 	if(typeof options.max=="number") max = options.max;
 	
 	// If no order name has been given we set it to the first column name
-	if(!options.order.name || !options.data[0][options.order.name]) options.order.name = options.columns[0].name;
+	options.order = options.columns[0].name;
 
 	// There's no guarantee that the order of the rows in the CSV matches the first ranking column
 	// Sort the array
 	series = series.sort(function(a, b){
-		//if(options.order.reverse) return a.data[options.order.name] < b.data[options.order.name] ? 1 : -1;
-		//else 
-		let av = a.data[options.order.name];
+		let av = a.data[options.order];
 		if(!isNaN(parseInt(av))) av = parseInt(av);
-		let bv = b.data[options.order.name];
+		let bv = b.data[options.order];
 		if(!isNaN(parseInt(bv))) bv = parseInt(bv);
 		return av > bv ? 1 : -1;
 	});
@@ -246,7 +244,7 @@ export default function (input: {
 
 	function getY(v){
 		// Re-order the index as necessary
-		let v2 = (options.order.reverse ? series.length-v-1 : v);
+		let v2 = (options.reverse ? series.length-v-1 : v);
 		return yoff + ( (v2+1)*dy - dy/2 );
 	}
 
