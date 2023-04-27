@@ -126,9 +126,9 @@ export default function (input: {
 		console.warn("No columns have been given");
 		return "";
 	}
-	
+
 	for(let row = 0; row < options.data.length; row++){
-		let s = { "row": row, "title": "", "data": clone(options.data[row]), "rank": new Array(options.columns.length), "row": row };
+		let s = { "row": row, "title": "", "data": clone(options.data[row]), "rank": new Array(options.columns.length) };
 		if(typeof options.data[row][options.key]==="undefined") throw 'No column "'+options.key+'" in data.';
 		s.title = options.data[row][options.key];
 
@@ -139,18 +139,32 @@ export default function (input: {
 			v = options.data[row][options.columns[col].name];
 			if(typeof v==="string") v = parseFloat(v);
 			// If the value is a number we use it
-			if(typeof v==="number" && !isNaN(v)){
-				s.rank[col] = v;
-				min = Math.min(min,v);
-				max = Math.max(max,v);
-			}else{
+			if(typeof v!=="number" || isNaN(v)){
 				// A bad number means we will ignore this series
 				ok = false;
-				s.rank[col] = 0;
 			}
 		}
-
 		if(ok) series.push(s);
+	}
+
+	// Loop over each column and find the rank within it
+	for(let col = 0; col < options.columns.length; col++){
+		let arr = [];
+		for(let s = 0; s < series.length; s++){
+			let row = series[s].row;
+			v = options.data[row][options.columns[col].name];
+			if(typeof v==="string") v = parseFloat(v);
+			if(typeof v!=="number" || isNaN(v)) v = null;
+			arr.push(v);
+		}
+		let sorted = arr.slice().sort(function(a,b){return a-b})
+		let ranks = arr.map(function(v){ return sorted.indexOf(v)+1 });
+		for(let s = 0; s < series.length; s++){
+			series[s].rank[col] = ranks[series[s].row];
+			series[s].data[options.columns[col].name] = series[s].rank[col];
+			min = Math.min(min,ranks[series[s].row]);
+			max = Math.max(max,ranks[series[s].row]);
+		}
 	}
 
 	if(typeof options.height!=="number") options.height = Math.ceil(yoff*(series.length+1));
@@ -170,6 +184,7 @@ export default function (input: {
 		seriesgroup.classList.add('data');
 	}
 
+	// Create the SVG elements for each series
 	for(let s = 0; s < series.length; s++){
 		g = svgEl('g');
 		g.classList.add('series');
@@ -188,20 +203,16 @@ export default function (input: {
 		series[s].path = path;
 	}
 
-
 	// Set to the user-supplied values if they are numeric
 	if(typeof options.min=="number") min = options.min;
 	if(typeof options.max=="number") max = options.max;
-	
-	// If no order name has been given we set it to the first column name
-	options.order = options.columns[0].name;
 
 	// There's no guarantee that the order of the rows in the CSV matches the first ranking column
 	// Sort the array
 	series = series.sort(function(a, b){
-		let av = a.data[options.order];
+		let av = a.rank[0];
 		if(!isNaN(parseInt(av))) av = parseInt(av);
-		let bv = b.data[options.order];
+		let bv = b.rank[0];
 		if(!isNaN(parseInt(bv))) bv = parseInt(bv);
 		return av > bv ? 1 : -1;
 	});
@@ -253,22 +264,20 @@ export default function (input: {
 		// Get colour
 		bg = defaultbg;
 		if(config.colour){
-			if(typeof options.data[series[s].row][config.colour]==="undefined"){
-				throw 'No "value" column exists for "'+series[s].title+'".';
-			}else{
-				bg = options.data[series[s].row][config.colour];
-			}
+			if(typeof series[s].data[config.colour]==="undefined") console.warn('No "value" column exists for "'+series[s].title+'".',series[s].data,config.colour);
+			else bg = series[s].data[config.colour];
 		}else{
-			// Default to the first data value
-			bg = replaceNamedColours(series[s].data[0]||bg);
+			// Default to the first rank value
+			if(typeof series[s].rank==="number") bg = series[s].rank;
 		}
 
+		if(typeof bg==="string") bg = replaceNamedColours(bg);
 		if(typeof bg==="number") bg = cs((bg - min)/(max - min));
 
 		// Build path and circles
 		v = 0;
 
-		rank = series[s].data[options.columns[0].name];
+		rank = series[s].rank[0];
 		oldx = xoff;
 		oldrank = rank;
 		// There's a possibility that the first column gives the same ranking to multiple series. 
@@ -283,8 +292,8 @@ export default function (input: {
 
 		// Make path for this series
 		path = "";
-		for(i = 0; i < options.columns.length; i++){
-			rank = series[s].data[options.columns[i].name];
+		for(i = 0; i < series[s].rank.length; i++){
+			rank = series[s].rank[i];
 			yv = getY(rank-1);
 			xv = xoff + (i)*dx;
 

@@ -117,7 +117,7 @@ export function ColourScale(gradient: string): ColourScale {
       };
     }
 
-    return "rgba(" + cfinal.r + "," + cfinal.g + "," + cfinal.b + "," +
+    return "rgba(" + Math.round(cfinal.r) + "," + Math.round(cfinal.g) + "," + Math.round(cfinal.b) + "," +
       (typeof cfinal.alpha==="number" ? cfinal.alpha : 1) + ")";
   }
   getColour.orig = gradient;

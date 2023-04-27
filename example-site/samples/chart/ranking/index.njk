@@ -71,35 +71,36 @@ examples:
     description: |
       This uses a dataset of [private sector long term empty properties by ward in Leeds](https://datamillnorth.org/dataset/private-sector-long-term-empty-properties-by-ward) taken from Data Mill North. For the start of each year we calculated the rank for each ward based on the percentage of empty properties in that ward.
       
-      We `order` the series by the `Rank 2009` column (rank 1 at the top) and `colour` the lines by the `Rank 2019` column in the data.
+      We `order` the series by the `Jan-09` column (rank 1 at the top) and `colour` the lines by the `Jan-19` column in the data.
     config:
       data: test.data.dmn-lcc-private-sector-long-term-empties
       key: Ward
-      colour: Rank 2019
-      scale: Viridis_r
+      colour: "'09"
+      scale: Viridis
       stroke-width: 0.75
+      reverse: true
       columns:
         - name: "'09"
-          template: "{{ Rank 2009 }}"
+          template: "{{ Jan-09 % }}"
         - name: "'10"
-          template: "{{ Rank 2010 }}"
+          template: "{{ Jan-10 % }}"
         - name: "'11"
-          template: "{{ Rank 2011 }}"
+          template: "{{ Jan-11 % }}"
         - name: "'12"
-          template: "{{ Rank 2012 }}"
+          template: "{{ Jan-12 % }}"
         - name: "'13"
-          template: "{{ Rank 2013 }}"
+          template: "{{ Jan-13 % }}"
         - name: "'14"
-          template: "{{ Rank 2014 }}"
+          template: "{{ Jan-14 % }}"
         - name: "'15"
-          template: "{{ Rank 2015 }}"
+          template: "{{ Jan-15 % }}"
         - name: "'16"
-          template: "{{ Rank 2016 }}"
+          template: "{{ Jan-16 % }}"
         - name: "'17"
-          template: "{{ Rank 2017 }}"
+          template: "{{ Jan-17 % }}"
         - name: "'18"
-          template: "{{ Rank 2018 }}"
+          template: "{{ Jan-18 % }}"
         - name: "'19"
-          template: "{{ Rank 2019 }}"
+          template: "{{ Jan-19 % }}"
 
 ---
