@@ -3,7 +3,7 @@ title: Ranking chart
 description: |
   A chart which shows how the rank of something varies.
 order: 12
-showcase: 3
+showcase: 4
 component: chart.ranking
 examples:
   - title: "Simple ranking chart"
@@ -66,4 +66,41 @@ examples:
           template: '{{ Ranks→2019 }}'
         - name: 2020
           template: '{{ Ranks→2020 }}'
+  - title: "A more complex example"
+    description: |
+      This uses a dataset of [private sector long term empty properties by ward in Leeds](https://datamillnorth.org/dataset/private-sector-long-term-empty-properties-by-ward) taken from Data Mill North. For the start of each year we calculated the rank for each ward based on the percentage of empty properties in that ward.
+      
+      We `order` the series by the `Rank 2009` column (rank 1 at the top) and `colour` the lines by the `Rank 2019` column in the data.
+    config:
+      data: test.data.dmn-lcc-private-sector-long-term-empties
+      key: Ward
+      colour: Rank 2019
+      scale: Viridis_r
+      order:
+        name: "Rank 2009"
+      stroke-width: 0.75
+      columns:
+        - name: "'09"
+          template: "{{ Rank 2009 }}"
+        - name: "'10"
+          template: "{{ Rank 2010 }}"
+        - name: "'11"
+          template: "{{ Rank 2011 }}"
+        - name: "'12"
+          template: "{{ Rank 2012 }}"
+        - name: "'13"
+          template: "{{ Rank 2013 }}"
+        - name: "'14"
+          template: "{{ Rank 2014 }}"
+        - name: "'15"
+          template: "{{ Rank 2015 }}"
+        - name: "'16"
+          template: "{{ Rank 2016 }}"
+        - name: "'17"
+          template: "{{ Rank 2017 }}"
+        - name: "'18"
+          template: "{{ Rank 2018 }}"
+        - name: "'19"
+          template: "{{ Rank 2019 }}"
+
 ---

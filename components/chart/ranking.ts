@@ -1,14 +1,3 @@
-import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
-import { contrastColour } from '../../lib/colour/contrast.ts';
-import { replaceNamedColours } from '../../lib/colour/parse-colour-string.ts';
-import { ColourScale } from '../../lib/colour/colour-scale.ts';
-import { clone } from "../../lib/util/clone.ts";
-import { document } from '../../lib/document.ts';
-import { textLength } from './legacy/text.js';
-
-
-const defaultbg = "#dfdfdf";
-
 /*
 	Ranking Chart v 0.3
 	
@@ -37,21 +26,34 @@ const defaultbg = "#dfdfdf";
 		circles: 0 (not shown)
 */
 
+import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
+import { contrastColour } from '../../lib/colour/contrast.ts';
+import { replaceNamedColours } from '../../lib/colour/parse-colour-string.ts';
+import { ColourScale } from '../../lib/colour/colour-scale.ts';
+import { clone } from "../../lib/util/clone.ts";
+import { document } from '../../lib/document.ts';
+import { textLength } from './legacy/text.js';
+
+
+const defaultbg = "#dfdfdf";
+
+
 type RankingChartOptions = {
 	/** The data holding the values to be presented in the panels */
-	data: { [key: string]: unknown }[];
+	data: { [key: string]: unknown }[],
 	/** The property in the data set holding the value */
-	key?: string;
-	value?: string;
-	scale?: string;
-	min?: number
-	max?: number
-	curvature?: number
+	key?: string,
+	value?: string,
+	order?: { key?: string, reverse?: boolean },
+	scale?: string,
+	min?: number,
+	max?: number,
+	curvature?: number,
 	circles?: number
-}
+};
 
-export const css = `
-`;
+
+export const css = ``;
 
 
 /**
@@ -63,6 +65,7 @@ function checkOptions(options: RankingChartOptions): void {
 		throw new TypeError("Data provided has no entries");
 	}
 }
+
 
 export default function (input: {
 	config: Partial<RankingChartOptions>;
@@ -91,7 +94,8 @@ export default function (input: {
 		'font-family':'"Century Gothic",sans-serif',
 		'curvature': 1,
 		'circles': 0,
-		'stroke-width': 0.5
+		'stroke-width': 0.5,
+		'order': {'reverse':false}
 	};
 
 
@@ -129,7 +133,7 @@ export default function (input: {
 		seriesgroup.classList.add('data');
 	}
 
-	var dy,y,yv,x,xv,h,w,pad,xoff,yoff,xlbl,dx,lbl,g,v,i,ok,data,path,oldx,oldy,oldrank,rank,orderby,reverse,bg,talign,circle,radius,txt;
+	var dy,y,yv,x,xv,h,w,pad,xoff,yoff,xlbl,dx,lbl,g,v,i,ok,data,path,oldx,oldy,oldrank,rank,orderby,bg,talign,circle,radius,txt;
 
 	let fs = options['font-size'];
 	
@@ -138,9 +142,13 @@ export default function (input: {
 	let series = [];
 	let min = Infinity,max = -Infinity;
 	
+	if(config.columns.length==0){
+		console.warn("No columns have been given");
+		return "";
+	}
 	
 	for(let row = 0; row < options.data.length; row++){
-		let s = { "row": row, "title": "", "data": new Array(options.columns.length), "row": row };
+		let s = { "row": row, "title": "", "data": clone(options.data[row]), "rank": new Array(options.columns.length), "row": row };
 		if(typeof options.data[row][options.key]==="undefined") throw 'No column "'+options.key+'" in data.';
 		s.title = options.data[row][options.key];
 
@@ -152,13 +160,13 @@ export default function (input: {
 			if(typeof v==="string") v = parseFloat(v);
 			// If the value is a number we use it
 			if(typeof v==="number" && !isNaN(v)){
-				s.data[col] = v;
+				s.rank[col] = v;
 				min = Math.min(min,v);
 				max = Math.max(max,v);
 			}else{
 				// A bad number means we will ignore this series
 				ok = false;
-				s.data[col] = 0;
+				s.rank[col] = 0;
 			}
 		}
 
@@ -186,20 +194,22 @@ export default function (input: {
 	// Set to the user-supplied values if they are numeric
 	if(typeof options.min=="number") min = options.min;
 	if(typeof options.max=="number") max = options.max;
-
-	// Set the order
-	reverse = (options.order && options.order==="reverse" ? false : true);
 	
+	// If no order name has been given we set it to the first column name
+	if(!options.order.name || !options.data[0][options.order.name]) options.order.name = options.columns[0].name;
+
 	// There's no guarantee that the order of the rows in the CSV matches the first ranking column
-	if(config.columns.length > 0){
-		// Let's sort the series by the first column
-		orderby = 0;
-		// Sort the array
-		series = series.sort(function(a, b){
-			if(reverse) return a.data[orderby] > b.data[orderby] ? 1 : -1;
-			else return a.data[orderby] < b.data[orderby] ? 1 : -1;
-		});
-	}
+	// Sort the array
+	series = series.sort(function(a, b){
+		//if(options.order.reverse) return a.data[options.order.name] < b.data[options.order.name] ? 1 : -1;
+		//else 
+		let av = a.data[options.order.name];
+		if(!isNaN(parseInt(av))) av = parseInt(av);
+		let bv = b.data[options.order.name];
+		if(!isNaN(parseInt(bv))) bv = parseInt(bv);
+		return av > bv ? 1 : -1;
+	});
+
 
 	// Calculate some dimensions
 	yoff = options['font-size']*1.2;
@@ -235,7 +245,9 @@ export default function (input: {
 	}
 
 	function getY(v){
-		return yoff + ( (v+1)*dy - dy/2 );
+		// Re-order the index as necessary
+		let v2 = (options.order.reverse ? series.length-v-1 : v);
+		return yoff + ( (v2+1)*dy - dy/2 );
 	}
 
 	let cs = (options.scale ? ColourScale(options.scale) : ColourScale(defaultbg+" 0%, "+defaultbg+" 100%"));
@@ -244,7 +256,7 @@ export default function (input: {
 	for(let s = 0; s < series.length; s++){
 
 		// Get colour
-		bg = '';
+		bg = defaultbg;
 		if(config.colour){
 			if(typeof options.data[series[s].row][config.colour]==="undefined"){
 				throw 'No "value" column exists for "'+series[s].title+'".';
@@ -260,25 +272,29 @@ export default function (input: {
 
 		// Build path and circles
 		v = 0;
-		y = getY(s);
-		setAttr(series[s].label,{'x':xlbl.toFixed(2),'y':y.toFixed(2),'font-size':(fs).toFixed(2)+'px'});
 
-		rank = series[s].data[0];
+		rank = series[s].data[options.columns[0].name];
 		oldx = xoff;
 		oldrank = rank;
-		oldy = getY(s);
+		// There's a possibility that the first column gives the same ranking to multiple series. 
+		// To avoid labels sitting on top of each other, we shall force the initial ranking to 
+		// match the series index rather than its rank.
+		y = getY(s);
+		oldy = y;
+
+		// Update label position to match first column rank
+		setAttr(series[s].label,{'x':xlbl.toFixed(2),'y':y.toFixed(2),'font-size':(fs).toFixed(2)+'px'});
+
 
 		// Make path for this series
 		path = "";
-		for(i = 0; i < series[s].data.length; i++){
-			rank = series[s].data[i];
+		for(i = 0; i < options.columns.length; i++){
+			rank = series[s].data[options.columns[i].name];
 			yv = getY(rank-1);
 			xv = xoff + (i)*dx;
-			if(i == 0){
-				path += 'M'+xv.toFixed(2)+','+yv.toFixed(2);
-			}else{
-				path += 'C'+(oldx+(dx/2)*options.curvature).toFixed(2)+','+oldy.toFixed(2)+','+(xv-(dx/2)*options.curvature).toFixed(2)+','+yv.toFixed(2)+','+(xv).toFixed(2)+','+yv.toFixed(2);
-			}
+
+			if(i == 0) path += 'M'+xv.toFixed(2)+','+yv.toFixed(2);
+			else path += 'C'+(oldx+(dx/2)*options.curvature).toFixed(2)+','+oldy.toFixed(2)+','+(xv-(dx/2)*options.curvature).toFixed(2)+','+yv.toFixed(2)+','+(xv).toFixed(2)+','+yv.toFixed(2);
 			
 			if(options.circles){
 				circle = svgEl('circle');
