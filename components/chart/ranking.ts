@@ -88,8 +88,7 @@ export default function (input: {
 	// We can optionally set defaults in this
 	const defaults: Partial<RankingChartOptions> = {
 		'padding':{'left':0,'top':0,'right':0,'bottom':0},
-		'width': 1024,
-		'height': 640,
+		'width': 1048,
 		'font-size': 17,
 		'font-family':'"Century Gothic",sans-serif',
 		'curvature': 1,
@@ -108,35 +107,16 @@ export default function (input: {
 	// Limit curvature to range
 	options.curvature = Math.max(0,Math.min(1,options.curvature));
 
-
 	// Error checking
 	checkOptions(options);
 
-
-	let svgopt,clip,rect,svg,seriesgroup;
+	let svgopt,clip,rect,svg,seriesgroup,dy,y,yv,x,xv,h,w,pad,xoff,xlbl,dx,lbl,g,v,i,ok,data,path,oldx,oldy,oldrank,rank,orderby,bg,talign,circle,radius,txt;
 	const ns = 'http://www.w3.org/2000/svg';
 	// Create a random ID number
 	const id = Math.round(Math.random()*1e8);
 
-	// Create SVG container
-	if(!svg){
-		svg = svgEl('svg');
-		svgopt = {'xmlns':ns,'version':'1.1','viewBox':'0 0 '+options.width+' '+options.height,'overflow':'visible','style':'max-width:100%;','preserveAspectRatio':'none','data-type':options.type};
-		setAttr(svg,svgopt);
-		clip = svgEl("clipPath");
-		setAttr(clip,{'id':'clip-'+id});
-		//add(clip,svg); // Clip to graph area
-		rect = svgEl("rect");
-		setAttr(rect,{'x':0,'y':0,'width':options.width,'height':options.height});
-		add(rect,clip);
-		seriesgroup = svgEl('g');
-		seriesgroup.classList.add('data');
-	}
-
-	var dy,y,yv,x,xv,h,w,pad,xoff,yoff,xlbl,dx,lbl,g,v,i,ok,data,path,oldx,oldy,oldrank,rank,orderby,bg,talign,circle,radius,txt;
-
 	let fs = options['font-size'];
-	
+	let yoff = options['font-size']*1.2;
 
 	// Create an array of series
 	let series = [];
@@ -170,26 +150,44 @@ export default function (input: {
 			}
 		}
 
-		if(ok){
-			g = svgEl('g');
-			g.classList.add('series');
-			s.g = g;
-			svg.appendChild(g);
-
-			lbl = svgEl('text');
-			lbl.innerHTML = s.title;
-			setAttr(lbl,{'dominant-baseline':'middle','text-anchor':'end'});
-			s.label = lbl;
-			g.appendChild(lbl);
-
-			path = svgEl('path');
-			setAttr(path,{'stroke-width':4,'stroke':defaultbg,'fill':'transparent'});
-			g.appendChild(path);
-			s.path = path;
-
-			series.push(s);
-		}
+		if(ok) series.push(s);
 	}
+
+	if(typeof options.height!=="number") options.height = Math.ceil(yoff*(series.length+1));
+
+	// Create SVG container
+	if(!svg){
+		svg = svgEl('svg');
+		svgopt = {'xmlns':ns,'version':'1.1','viewBox':'0 0 '+options.width+' '+options.height,'overflow':'visible','style':'max-width:100%;','preserveAspectRatio':'none','data-type':options.type};
+		setAttr(svg,svgopt);
+		clip = svgEl("clipPath");
+		setAttr(clip,{'id':'clip-'+id});
+		//add(clip,svg); // Clip to graph area
+		rect = svgEl("rect");
+		setAttr(rect,{'x':0,'y':0,'width':options.width,'height':options.height});
+		add(rect,clip);
+		seriesgroup = svgEl('g');
+		seriesgroup.classList.add('data');
+	}
+
+	for(let s = 0; s < series.length; s++){
+		g = svgEl('g');
+		g.classList.add('series');
+		series[s].g = g;
+		svg.appendChild(g);
+
+		lbl = svgEl('text');
+		lbl.innerHTML = series[s].title;
+		setAttr(lbl,{'dominant-baseline':'middle','text-anchor':'end','font-family':options['font-family']});
+		series[s].label = lbl;
+		g.appendChild(lbl);
+
+		path = svgEl('path');
+		setAttr(path,{'stroke-width':4,'stroke':defaultbg,'fill':'transparent'});
+		g.appendChild(path);
+		series[s].path = path;
+	}
+
 
 	// Set to the user-supplied values if they are numeric
 	if(typeof options.min=="number") min = options.min;
@@ -210,7 +208,6 @@ export default function (input: {
 
 
 	// Calculate some dimensions
-	yoff = options['font-size']*1.2;
 	w = options.width;
 	h = options.height - yoff;
 	dy = h / series.length;
@@ -238,7 +235,7 @@ export default function (input: {
 		talign = 'middle';
 		if(i==0) talign = 'start';
 		if(i==config.columns.length-1) talign = 'end';
-		setAttr(lbl,{'x':(xoff + i*dx + (i==0 ? -radius : (i==config.columns.length-1 ? +radius : 0))).toFixed(2),'y': (fs*0.2).toFixed(2),'font-size':(fs).toFixed(2)+'px','dominant-baseline':'hanging','text-anchor':talign});
+		setAttr(lbl,{'x':(xoff + i*dx + (i==0 ? -radius : (i==config.columns.length-1 ? +radius : 0))).toFixed(2),'y': (fs*0.2).toFixed(2),'font-size':(fs).toFixed(2)+'px','dominant-baseline':'hanging','text-anchor':talign,'font-family':options['font-family']});
 		svg.appendChild(lbl);
 	}
 
@@ -301,7 +298,7 @@ export default function (input: {
 
 				txt = svgEl('text');
 				txt.innerText = rank;
-				setAttr(txt,{'font-size':fs+'px','fill':contrastColour(bg),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius*1)+'px'});
+				setAttr(txt,{'fill':contrastColour(bg),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius)+'px','font-family':options['font-family']});
 				series[s].g.appendChild(txt);
 			}
 			
