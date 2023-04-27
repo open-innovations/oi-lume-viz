@@ -161,9 +161,18 @@ export default function (input: {
 		let ranks = arr.map(function(v){ return sorted.indexOf(v)+1 });
 		for(let s = 0; s < series.length; s++){
 			series[s].rank[col] = ranks[series[s].row];
-			series[s].data[options.columns[col].name] = series[s].rank[col];
-			min = Math.min(min,ranks[series[s].row]);
-			max = Math.max(max,ranks[series[s].row]);
+			series[s].data[options.columns[col].name+"_rank"] = series[s].rank[col];
+			let v = null;
+			if(config.colour){
+				v = series[s].data[config.colour];
+			}else{
+				v = series[s].data[options.columns[col].name];
+			}
+			if(typeof v==="string") v = parseFloat(v);
+			if(!isNaN(v)){
+				min = Math.min(min,v);
+				max = Math.max(max,v);
+			}
 		}
 	}
 
@@ -266,6 +275,7 @@ export default function (input: {
 		if(config.colour){
 			if(typeof series[s].data[config.colour]==="undefined") console.warn('No "value" column exists for "'+series[s].title+'".',series[s].data,config.colour);
 			else bg = series[s].data[config.colour];
+			if(!isNaN(parseFloat(bg))) bg = parseFloat(bg);
 		}else{
 			// Default to the first rank value
 			if(typeof series[s].rank==="number") bg = series[s].rank;

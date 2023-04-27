@@ -69,13 +69,11 @@ examples:
           template: '{{ Ranks→2020 }}'
   - title: "A more complex example"
     description: |
-      This uses a dataset of [private sector long term empty properties by ward in Leeds](https://datamillnorth.org/dataset/private-sector-long-term-empty-properties-by-ward) taken from Data Mill North. For the start of each year we calculated the rank for each ward based on the percentage of empty properties in that ward.
-      
-      We `order` the series by the `Jan-09` column (rank 1 at the top) and `colour` the lines by the `Jan-19` column in the data.
+      This uses a dataset of [private sector long term empty properties by ward in Leeds](https://datamillnorth.org/dataset/private-sector-long-term-empty-properties-by-ward) taken from Data Mill North. The CSV file contains the percentage of empty properties in each ward by month. We find the rank for each `key` (e.g. `Ward`) in each of the `columns`. As we want larger percentages to give lower ranks, we set `reverse` to `true`. We `colour` the lines by the ranking of the `'19` column in the data by referring to `'19_rank`.
     config:
       data: test.data.dmn-lcc-private-sector-long-term-empties
       key: Ward
-      colour: "'09"
+      colour: "'19_rank"
       scale: Viridis
       stroke-width: 0.75
       reverse: true
