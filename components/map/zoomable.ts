@@ -33,9 +33,9 @@ export const css = `
 	.map { position: relative; }
 	.map .tooltip { margin-top: -0.75em; transition: left 0.03s linear; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }
 	.map .tooltip .inner { padding: 1em; }
-	.map .legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
-	.map .legend .legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
-	.map .legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
+	.oi-legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
+	.oi-legend .oi-legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
+	.oi-legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
 	.map.zoomable-map .marker:focus { outline: none; }
 
 	.map.zoomable-map { width: 100%; aspect-ratio: 16 / 9; background: transparent; position: relative; }

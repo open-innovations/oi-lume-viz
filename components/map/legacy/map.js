@@ -2,6 +2,7 @@ import { document } from '../../../lib/document.ts';
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { Colour, ColourScale } from "../../../lib/colour/colours.ts";
 import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
+import { Legend } from '../../../lib/chart-parts/legend.js';
 
 const defaultbg = "#dfdfdf";
 
@@ -240,13 +241,13 @@ export function ZoomableMap(opts){
 
 		if(config.legend){
 			config.legend = mergeDeep({'position':'bottom right'},config.legend);
-			var legend = getLegend(config);
+			var legend = new Legend(config);
 
 			// Create the legend and add it to the map
 			html.push('	var legend = L.control({position: "'+((config.legend.position).replace(/ /g,""))+'"});\n');
 			html.push('	legend.onAdd = function (map){\n');
-			html.push('		var div = L.DomUtil.create("div", "info legend");\n');
-			html.push('		div.innerHTML = \''+legend+'\';\n');
+			html.push('		var div = L.DomUtil.create("div", "info oi-legend");\n');
+			html.push('		div.innerHTML = \''+legend.inner("html")+'\';\n');
 			html.push('		return div;\n');
 			html.push('	}\n');
 			html.push('	legend.addTo(map);\n');
@@ -304,37 +305,6 @@ export function ZoomableMap(opts){
 	return this;
 }
 
-function getLegend(config){
-	
-	// Build a legend
-	var legend = '';
-	var cs = ColourScale(config.scale);
-	if(config.legend && config.legend.items){
-		for(var i = 0; i < config.legend.items.length; i++){
-			legend += '<i style="background:'+cs((config.legend.items[i].value-config.min)/(config.max-config.min))+'"></i> ' + config.legend.items[i].label + '<br />';
-		}
-	}
-	return legend;
-}
-
-// Build a legend in SVG
-function buildLegend(config){
-
-	var container = document.createElement('div');
-	if(config.legend){
-		if(!config.legend.position) config.legend.position = "bottom right";
-		config.legend.position = config.legend.position.replace(/(^| )/g,function(m,p1){ return p1+'leaflet-'; });
-		setAttr(container,{'class':config.legend.position});
-	}
-	
-	if(config.legend && config.legend.items){
-		var legend = document.createElement('div');
-		setAttr(legend,{'class':'legend leaflet-control'});
-		legend.innerHTML = getLegend(config);
-		add(legend,container);
-	}
-	return container;
-}
 
 function loadFromSources(path,sources){
 
@@ -560,8 +530,7 @@ function BasicMap(config,attr){
 		html.push(this.svg.outerHTML);
 
 		// Create the legend
-		var legend = buildLegend(config);
-		html.push(legend.outerHTML);
+		if(config.legend) html.push((new Legend(config)).outer("html"));
 
 		html.push('</div>\n');
 

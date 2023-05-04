@@ -67,6 +67,34 @@ examples:
           template: '{{ Ranks→2019 }}'
         - name: 2020
           template: '{{ Ranks→2020 }}'
+  - title: "Add a legend"
+    description: |
+      We can use a colour `scale` along with a `colour` column in the data (with optional `min` and `max` values) to set the colour using numeric values. In this case we will use the initial rank (found in the `Ranks→2018` column) to set the colours.
+    config:
+      data: test.data.heatmap
+      key: Country
+      colour: Ranks→2018
+      scale: Viridis
+      columns:
+        - name: 2018
+          template: '{{ Ranks→2018 }}'
+        - name: 2019
+          template: '{{ Ranks→2019 }}'
+        - name: 2020
+          template: '{{ Ranks→2020 }}'
+      legend:
+        position: top right
+        items:
+          - value: 40
+            label: 40
+          - value: 30
+            label: 30
+          - value: 20
+            label: 20
+          - value: 10
+            label: 10
+          - value: 1
+            label: 1
   - title: "A more complex example"
     description: |
       This uses a dataset of [private sector long term empty properties by ward in Leeds](https://datamillnorth.org/dataset/private-sector-long-term-empty-properties-by-ward) taken from Data Mill North. The CSV file contains the percentage of empty properties in each ward by month. We find the rank for each `key` (e.g. `Ward`) in each of the `columns`. As we want larger percentages to give lower ranks, we set `reverse` to `true`. We `colour` the lines by the ranking of the `'19` column in the data by referring to `'19_rank`.
