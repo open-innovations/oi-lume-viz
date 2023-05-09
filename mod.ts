@@ -2,6 +2,8 @@ import Site from "lume/core/site.ts";
 import { dirname } from "std/path/mod.ts";
 import { assets, components } from "./config.ts";
 import { setAssetPrefix } from "./lib/util/paths.ts";
+import { updateColourScales } from './lib/colour/colour-scale.ts';
+import { keys } from "https://deno.land/x/nunjucks@3.2.3-2/src/lib.js";
 
 /**
  * Options interface specifying available options to the module
@@ -9,6 +11,9 @@ import { setAssetPrefix } from "./lib/util/paths.ts";
 interface Options {
   assetPath?: string;
   componentNamespace?: string;
+  colour?: {
+    scales?: Record<string, string>;
+  };
 }
 
 /**
@@ -54,6 +59,14 @@ export default function (options?: Options) {
   const componentNamespace = namespaceToPath(
     options?.componentNamespace || "oi",
   );
+  const scales = options?.colour?.scales;
+
+  // If colour scales provided when instantiating the plugin, map these into the default scales provided.
+  if (scales) {
+    for(const [key, value] of Object.entries(scales) ) {
+        updateColourScales(key, value);
+    }
+  }
 
   // Update the assetPrefix to allow for correct referencing of dependencies
   setAssetPrefix(assetPath);

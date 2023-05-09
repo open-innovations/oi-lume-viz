@@ -3,7 +3,7 @@ import lume from "lume/mod.ts";
 import basePath from "lume/plugins/base_path.ts";
 import oiComponents from '../mod.ts';
 import { stringify as yamlStringify } from 'std/encoding/yaml.ts';
-import { namedColourScales } from '../lib/colour/colour-scale.ts';
+import { getColourScale } from '../lib/colour/colour-scale.ts';
 import { Colour } from '../lib/colour/colours.ts';
 
 import csvLoader from 'https://deno.land/x/oi_lume_utils@v0.2.0/loaders/csv-loader.ts'
@@ -25,7 +25,6 @@ const site = lume({
 });
 
 
-
 site.loadAssets([".css"]);
 site.loadData(['.csv'], csvLoader);
 
@@ -34,6 +33,11 @@ site.loadData(['.csv'], csvLoader);
 site.use(oiComponents({
   assetPath: '/assets',
   componentNamespace: 'oi',
+  colour: {
+    scales: {
+      'example': '#ff0000 0%, #0000ff 100%',
+    }
+  }
 }));
 
 // The autodependency processor needs to be registered before the base path plugin,
@@ -50,7 +54,7 @@ site.remoteFile('samples/chart/bar/_data/examples.yml', './test/data/bar-chart.y
 // Add filters
 site.filter('yaml', (value, options = {}) => { let str = yamlStringify(value, options); str = str.replace(/(\s)\'y\': /g,function(m,p1){ return p1+"y: ";}); return str; });
 site.filter('match', (value, regex) => { const re = new RegExp(regex); return value.match(re); });
-site.filter('colourScaleGradient', (value, options = {}) => { return namedColourScales[value]||""; });
+site.filter('colourScaleGradient', (value, options = {}) => { return getColourScale(value)||""; });
 site.filter('contrastColour', (value, options = {}) => { let cs = Colour(value); return cs.contrast||value; });
 
 

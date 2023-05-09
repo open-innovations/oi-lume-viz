@@ -5,7 +5,7 @@ import { getColourPercent } from "./get-colour-percent.ts";
 // Rocket comes from the Seaborn statistical data visualization package for Python
 // Mako comes from https://github.com/sjmgarnier/viridisLite/blob/master/tests/testthat/test-palettes.R
 // PiPG/PRGn/PuOr/RdBu come from ColorBrewer 2.0 https://github.com/axismaps/colorbrewer/blob/9a37cbbfe7cde61c060c68ecdd1fd3a5095ef4a5/export/colorbrewer.js
-export let namedColourScales = {
+const namedColourScales: Record<string, string> = {
 	'Cividis': '#00224e 0%, #123570 11.1%, #3b496c 22.222%, #575d6d 33.333%, #707173 44.444%, #8a8678 55.555%, #a59c74 66.666%, #c3b369 77.777%, #e1cc55 88.888%, #fee838 100%',
 	'Heat': 'rgb(0,0,0) 0%, rgb(128,0,0) 25%, rgb(255,128,0) 50%, rgb(255,255,128) 75%, rgb(255,255,255) 100%',
 	'Inferno': '#000004 0%, #1b0c41 11.1%, #4a0c6b 22.222%, #781c6d 33.333%, #a52c60 44.444%, #cf4446 55.555%, #ed6925 66.666%, #fb9b06 77.777%, #f7d13d 88.888%, #fcffa4 100%',
@@ -22,6 +22,28 @@ export let namedColourScales = {
 	'PuOr': '#7f3b08 0%, #b35806 10%, #e08214 20%, #fdb863 30%, #fee0b6 40%, #f7f7f7 50%, #d8daeb 60%, #b2abd2 70%, #8073ac 80%, #542788 90%, #2d004b 100%',
 	'RdBu': '#67001f 0%, #b2182b 10%, #d6604d 20%, #f4a582 30%, #fddbc7 40%, #f7f7f7 50%, #d1e5f0 60%, #92c5de 70%, #4393c3 80%, #2166ac 90%, #053061 100%',
 };
+
+/**
+ * Function to update the colour scales available to the site
+ * @param key Key of the new scale
+ * @param scale The CSS code of the new scale
+ */
+export function updateColourScales(key: string, scale: string) {
+  namedColourScales[key] = scale;
+}
+
+export function getColourScales(): Record<string, string> {
+  return namedColourScales;
+}
+
+export function getColourScale(key: string): string {
+  try {
+    return namedColourScales[key];
+  } catch(e) {
+    console.error(e.message);
+    throw new Error('Invalid colour scale requested: ' + key);
+  }
+}
 
 // Reverse a colour scale
 function reverseColourScale(scale){
