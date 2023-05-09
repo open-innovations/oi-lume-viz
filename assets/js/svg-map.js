@@ -1,7 +1,7 @@
 /*
 	Open Innovations SVG map Interactivity v0.1
-	Helper function that find ".map.svg-map" or
-	".map.hex-map" elements and adds tooltips to them.
+	Helper function that find ".oi-map.oi-svg-map" or
+	".oi-map.oi-hex-map" elements and adds tooltips to them.
 */
 
 (function(root){
@@ -53,7 +53,6 @@
 			attr = {};
 			if(typ == "hex-map"){
 				attr.show = function(e){
-					console.log('show',this,e);
 					_obj.removeOutline();
 					_obj.addOutline(e.parentNode);
 				}
@@ -69,6 +68,6 @@
 })(window || this);
 
 OI.ready(function(){
-	var svgs = document.querySelectorAll('.map.svg-map, .map.hex-map, svg.marker');
+	var svgs = document.querySelectorAll('.oi-map.oi-svg-map, .oi-map.oi-hex-map, svg.marker');
 	for(var i = 0; i < svgs.length; i++) OI.InteractiveSVGMap(svgs[i]);
 });

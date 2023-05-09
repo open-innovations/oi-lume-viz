@@ -6,10 +6,9 @@ import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 const defaultbg = "#dfdfdf";
 
 export const css = `
-.calendar-chart .year { fill: #dfdfdf; }
-.calendar-chart rect.in-year:focus {
-	outline: 0;
-}
+/* OI calendar chart component */
+.oi-calendar-chart .year { fill: #dfdfdf; }
+.oi-calendar-chart rect.in-year:focus { outline: 0; }
 `;
 
 
@@ -70,7 +69,7 @@ export default function (input: {
 
 	const chart = CalendarChart(options);
 
-	return `<div class="calendar-chart" data-dependencies="${ getAssetPath('/js/calendar-chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
+	return `<div class="oi-calendar-chart" data-dependencies="${ getAssetPath('/js/calendar-chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
 }
 
 

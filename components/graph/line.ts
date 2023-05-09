@@ -11,51 +11,17 @@ import {
 } from "../../lib/chart-parts/marker.ts";
 
 export const css = `
-.chart {
-  --colour: #444;
-  --plot-background: unset;
-  background: var(--plot-background);
-  vector-effect: non-scaling-stroke;
-  stroke-linecap: round;
-}
-.chart text {
-  fill: var(--colour);
-  stroke: none;
-}
-.chart .title {
-  text-anchor: middle;
-  dominant-baseline: hanging;
-}
-.chart .label {
-  text-anchor: middle;
-  dominant-baseline: central;
-}
-.chart .x-axis.rotated .tick-label {
-  text-anchor: end;
-}
-.chart .legend-container {
-  --width: 20rem;
-  overflow: visible;
-  width: 1px;
-  height: 1px;
-}
-.chart .legend-container * {
-  margin: 0;
-}
-.chart .legend {
-  width: var(--width);
-  display: block;
-  padding: 0.5rem;
-  list-style: none;
-}
-.chart .legend .legend-item {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-.chart .legend .series {
-  flex-shrink: 0;
-}
+/* OI graph component */
+.oi-graph { --colour: #444; --plot-background: unset; background: var(--plot-background); vector-effect: non-scaling-stroke; stroke-linecap: round; }
+.oi-graph text { fill: var(--colour); stroke: none; }
+.oi-graph .title { text-anchor: middle; dominant-baseline: hanging; }
+.oi-graph .label { text-anchor: middle; dominant-baseline: central; }
+.oi-graph .x-axis.rotated .tick-label { text-anchor: end; }
+.oi-graph .legend-container { --width: 20rem; overflow: visible; width: 1px; height: 1px; }
+.oi-graph .legend-container * { margin: 0; }
+.oi-graph .legend { width: var(--width); display: block; padding: 0.5rem; list-style: none; }
+.oi-graph .legend .legend-item { display: flex; align-items: center; cursor: pointer; }
+.oi-graph .legend .series { flex-shrink: 0; }
 `;
 
 type PlotOptions = {
@@ -287,5 +253,5 @@ export default ({ config }: {config: LineChartOptions}) => {
     ${legend}
   </svg>`;
 
-  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') }">${chart}</div>`;
+  return `<div class="graph" data-dependencies="${ getAssetPath('/js/chart.js') }">${chart}</div>`;
 };

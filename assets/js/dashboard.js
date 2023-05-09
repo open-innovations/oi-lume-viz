@@ -1,7 +1,7 @@
 /*
 	Open Innovations Dashboard Interactivity v0.1
-	Adds "animation" to numbers in ".dashboard" elements of the form:
-	<div class="dashboard">
+	Adds "animation" to numbers in ".oi-dashboard" elements of the form:
+	<div class="oi-dashboard">
 		<div class="panel">
 			<span class="bignum" data="37" data-prefix="£" data-postfix="p">£37p</span>
 		</div>
@@ -28,7 +28,7 @@
 
 	function AugmentDashboards(){
 		// Find all the dashboards on the page
-		var dashboards = document.querySelectorAll(".dashboard");
+		var dashboards = document.querySelectorAll(".oi-dashboard");
 		// A function to "animate" the number when first seen
 		function animateNumber(el,val,duration){
 			var start,pre,post,v;

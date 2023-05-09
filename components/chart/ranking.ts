@@ -53,15 +53,16 @@ type RankingChartOptions = {
 
 
 export const css = `
-	.ranking { position: relative; }
-	.leaflet-top, .leaflet-bottom, .leaflet-left, .leaflet-right { position: absolute; z-index: 400; pointer-events: none; }
-	.leaflet-top { top: 0; }
-	.leaflet-right { right: 0; }
-	.leaflet-bottom { bottom: 0; }
-	.leaflet-left { left: 0; }
-	.oi-legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
-	.oi-legend .oi-legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
-	.oi-legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
+/* OI ranking chart component */
+.oi-ranking { position: relative; }
+.leaflet-top, .leaflet-bottom, .leaflet-left, .leaflet-right { position: absolute; z-index: 400; pointer-events: none; }
+.leaflet-top { top: 0; }
+.leaflet-right { right: 0; }
+.leaflet-bottom { bottom: 0; }
+.leaflet-left { left: 0; }
+.oi-legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
+.oi-legend .oi-legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
+.oi-legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
 `;
 
 
@@ -342,7 +343,7 @@ export default function (input: {
 
 
 
-	var html = ['<div class="ranking" data-dependencies="/assets/js/ranking.js">'];
+	var html = ['<div class="oi-ranking" data-dependencies="/assets/js/ranking.js">'];
 	html.push(svg.outerHTML);
 	// Create the legend
 	if(config.legend) html.push((new Legend(config)).outer("html"));

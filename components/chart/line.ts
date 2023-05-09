@@ -4,11 +4,6 @@ import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
 
-export const css = `
-.tooltip { color: black; margin-top: -0.75em; transition: left 0.03s linear, top 0.03s linear; white-space: nowrap; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }
-.tooltip .inner { padding: 1em; }
-`;
-
 
 /**
  * Options provided to the Line Chart

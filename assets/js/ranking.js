@@ -1,6 +1,6 @@
 /*
 	Open Innovations Ranking Chart Interactivity v0.1
-	Helper function that find ".ranking" elements 
+	Helper function that find ".oi-ranking" elements 
 */
 (function(root){
 
@@ -52,7 +52,7 @@
 })(window || this);
 
 OI.ready(function(){
-	var charts = document.querySelectorAll('.ranking');
+	var charts = document.querySelectorAll('.oi-ranking');
 	for(var i = 0; i < charts.length; i++){
 		OI.InteractiveRankingChart(charts[i]);
 	}

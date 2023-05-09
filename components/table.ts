@@ -5,6 +5,7 @@ import { ColourScale } from '../lib/colour/colour-scale.ts';
 import { clone } from "../lib/util/clone.ts";
 
 export const css = `
+/* OI table component */
 .oi-table { display: block; overflow-x: auto; }
 .oi-table table { border-collapse: collapse; width: 100%; max-width: 100%; }
 .oi-table table th { font-weight: bold; }

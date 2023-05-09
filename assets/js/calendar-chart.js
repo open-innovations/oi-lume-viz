@@ -16,6 +16,6 @@
 })(window || this);
 
 OI.ready(function(){
-	var days = document.querySelectorAll('.calendar-chart rect.in-year.has-value');
+	var days = document.querySelectorAll('.oi-calendar-chart rect.in-year.has-value');
 	for(var i = 0; i < days.length; i++) OI.Tooltips.add(days[i],{});
 });
