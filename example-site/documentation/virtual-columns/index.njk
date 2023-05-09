@@ -5,18 +5,16 @@ title: Virtual columns
 
 <h1>{{ title }}</h1>
 
-<p>Sometimes your data source may not be in quite the format you need for your visualisation. For instance, say that you'd like to include a functioning weblink in a column of a table or in a tooltip. Virtual columns to the rescue.</p>
+<p>Sometimes your data source may not be in quite the format you need for your visualisation. For instance, say that you'd like to include a functioning link in a table or tooltip. The solution is to create a "virtual column".</p>
 
-
-
-<p>A virtual column can be build from existing column values that exist in the data. So, if your data source contains a column titled <code>Title</code> and a column titled <code>URL</code> we could build a new column named <code>Link</code> using e.g.:</p>
+<p>A virtual column can be built from any existing values that exist as a column in the data. So, if your data source contains a column titled <code>Title</code> and a column titled <code>URL</code> you could build a new column named <code>Link</code> using e.g.:</p>
 
 <pre><code class="hljs language-yaml">columns:
   - name: 'Link'
     template: '{% raw %}&lt;a href="{{ URL }}"&gt;{{ Title }}&lt;/a&gt;{% endraw %}'
 </code></pre>
 
-<p>Virtual columns must have a <code>name</code> and <code>template</code> which can include any existing columns from the data. The <code>template</code> can make use of <a href="../templates/">string templates</a> and can use the following filters:
+<p>Virtual columns must have <code>name</code> and <code>template</code> properties. The <code>template</code> can make use of <a href="../templates/">string templates</a> and any existing columns in the data. You can also use the following filters in a replacement value:
 
 <ul>
 	<li><code>toFixed(n)</code> - to limit a value to n decimal places</li>
@@ -26,4 +24,13 @@ title: Virtual columns
 	<li><code>contrastColour</code> - get a contrasting colour (black or white)</li>
 </ul>
 
-<p>Defining <code>columns</code> with a template is also a simple way to rename a column heading.</p>
+<p>For example, let's create a new <code>Tooltip contents</code> column:</p>
+
+<pre><code class="hljs language-yaml">columns:
+  - name: 'Tooltip contents'
+    template: '{% raw %}{{ name }}: {{ value | toLocaleString() }}{% endraw %}'
+</code></pre>
+
+<p>This new column is built from existing <code>name</code> and <code>value</code> columns but we pass the <code>value</code> into the filter <code>toLocaleString()</code> to format it. The new column can be referenced elsewhere using <code>Tooltip contents</code> in the same way as you would any pre-existing column in the data. You could have achieved the same result by creating this content directly in the data file but using virtual columns may help to keep that file cleaner.</p>
+
+<p>Defining virtual <code>columns</code> is also a very simple way to rename an exisiting column heading if you need to.</p>
