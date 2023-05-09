@@ -4,6 +4,7 @@ import { assets, components } from "./config.ts";
 import { setAssetPrefix } from "./lib/util/paths.ts";
 import { updateColourScales } from './lib/colour/colour-scale.ts';
 import { keys } from "https://deno.land/x/nunjucks@3.2.3-2/src/lib.js";
+import { setBackgroundColour } from "./lib/colour/colour.ts";
 
 /**
  * Options interface specifying available options to the module
@@ -12,6 +13,7 @@ interface Options {
   assetPath?: string;
   componentNamespace?: string;
   colour?: {
+    background?: string;
     scales?: Record<string, string>;
   };
 }
@@ -60,12 +62,18 @@ export default function (options?: Options) {
     options?.componentNamespace || "oi",
   );
   const scales = options?.colour?.scales;
+  const background = options?.colour?.background;
 
   // If colour scales provided when instantiating the plugin, map these into the default scales provided.
   if (scales) {
     for(const [key, value] of Object.entries(scales) ) {
         updateColourScales(key, value);
     }
+  }
+
+  // If background colour, update the site-wide default with this
+  if (background) {
+    setBackgroundColour(background);
   }
 
   // Update the assetPrefix to allow for correct referencing of dependencies

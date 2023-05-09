@@ -2,6 +2,11 @@ import { contrastRatio } from "./contrast.ts";
 import { parseColourString } from "./parse-colour-string.ts";
 import { Colour } from "./types.ts";
 
+let backgroundColour = "#dfdfdf";
+export const setBackgroundColour = (colour: string) => backgroundColour = colour;
+// TODO - use this function wherever we want a default background colour.
+export const getBackgroundColour = () => backgroundColour;
+
 /**
  * A Colour object can be created with:
  *    Colour('hsl(50, 50%, 78%)')
