@@ -16,6 +16,9 @@ scales:
   - PRGn
   - PuOr
   - RdBu
+bonusscales:
+  - name: "example"
+    reverse: "example_r"
 ---
 
 <h1>{{ title }}</h1>
@@ -46,29 +49,30 @@ scales:
 
 <p>It is possible to get a reversed version of each scale by adding <code>_r</code> to the name e.g. <code>Viridis_r</code>.</p>
 
-{# TODO Add documentation of defining your own colour scale
+<h3>Defining your own colour scale</h3>
 
-Update _config.[js|ts] to include the new scales as part of the config to the plugin:
+<p>Update <code>_config.[js|ts]</code> to include the new scales as part of the config to the plugin. For example, here we will create a new colour scale named <code>example</code>:</p>
 
-({
-...
-  colour: {
-    scales: {
-      'example': '#ff0000 0%, #0000ff 100%',
+<pre><code class="hljs language-json">{
+  ...
+  "colour": {
+    "scales": {
+      "example": "{{ "example" | colourScaleGradient() }}",
     }
   },
-...
-}
+  ...
+}</code></pre>
 
-This can then be referred to in the same way as the pre-defined scales
+<p>The new colour scale (<code>example</code>) and its reverse (<code>example_r</code>) can then be used in the same way as pre-defined colour scales. For instance, we can include them in this page:</p>
 
 <dl>
-{% for scale in ['example'] %}
-	<dt><code>{{ scale }}</code></dt>
-	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale | colourScaleGradient() }});"></dd>
+{% for scale in bonusscales %}
+	<dt><code>{{ scale.name }}</code></dt>
+	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale.name | colourScaleGradient() }});"></dd>
+	<dt><code>{{ scale.reverse }}</code></dt>
+	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale.reverse | colourScaleGradient() }});"></dd>
 {% endfor %}
 </dl>
-#}
 
 
 <style>
