@@ -53,14 +53,7 @@
 
 - title: Custom tooltips
   description: |
-    If a `tooltip` property is provided, and the value is the name of a column in the data, a custom tooltip will be used. The tooltip column can also be one of any virtual `columns` you may have defined.
-
-    Virtual columns must have a `name` and `template` which can include existing columns from the data e.g. "{{ level_1 }}: {{ level_2 }}" would use the `level_1` and `level_2` values from the data. Replacement values (e.g. "{{ level_1 }}") can use the following filters:
-      - `toFixed(n)` - to limit a value to `n` decimal places
-      - `multiply(n)` - to multiply a value by `n`
-      - `toLocaleString()` - to use the locale's (of the server) preferred formatting for a value
-      - `colourScale(scale,min,max)` - get a colour to, for example, use as a background style
-      - `contrastColour` - get a contrasting colour (black or white)
+    If a `tooltip` property is provided, and the value is the name of a column in the data, a custom tooltip will be used. The tooltip column can also be one of any <a href="../../../documentation/virtual-columns/">virtual columns</a> you may have defined.
   config:
     data: test.data.hierarchy.rows
     columns:
