@@ -59,10 +59,10 @@ html, body {
 	line-height: 1.44em;
 }
 h1,h2,h3,h4,.title { font-family: Poppins; line-height: 1em; }
-h1,.title { font-size: 2em; padding-top: 1em; }
-h2 { font-size: 1.7em; padding-top: 1.7647058823529411em; font-weight: 500; }
-h3 { font-size: 1.4em; padding-top: 1.428571em; }
-h1:first-child, h2:first-child, h3:first-child, .title { padding-top: 0; }
+h1,.title { font-size: 2em; margin-top: 1em; }
+h2 { font-size: 1.7em; margin-top: 1.7647058823529411em; font-weight: 500; }
+h3 { font-size: 1.4em; margin-top: 1.428571em; }
+h1:first-child, h2:first-child, h3:first-child, .title { margin-top: 0; }
 h1 + *, h2 + *, h3 + * { margin-top: 1em; }
 strong { font-weight: 700; }
 em { font-style: italic; }

@@ -234,6 +234,7 @@ function Legend(chart,svg){
 	}
 
 	this.update = function(){
+		let itemWidth = 2;
 		wkey = 0;
 		for(s = 0; s < chart.series.length; s++){
 			if(!key.items[s]){
@@ -243,7 +244,9 @@ function Legend(chart,svg){
 					'series':chart.series[s],
 					's':s,
 					'points':chart.opt.series[s].points||{},
-					'fontSize': fs 
+					'line':chart.opt.series[s].line||{},
+					'fontSize': fs,
+					'itemWidth': itemWidth
 				});
 			}
 
@@ -252,7 +255,7 @@ function Legend(chart,svg){
 		}
 
 		if(typeof chart.opt.legend.width==="number") wkey = chart.opt.legend.width;
-		else wkey += fs*2 + pd*2;	// The width is approximately half the font-size plus twice the font size (for the icon) and some padding
+		else wkey += fs*(itemWidth+0.5) + pd*2;	// The width is approximately half the font-size plus twice the font size (for the icon) and some padding
 
 		if(!chart.opt.legend.position) chart.opt.legend.position = 'top right';
 		po = chart.opt.legend.position.split(/ /);
@@ -292,7 +295,8 @@ function KeyItem(attr){
 	
 	var opts = {
 		'points': {'marker':(attr.type=="bar-chart" || attr.type=="stacked-bar-chart" ? "square" : "circle")},
-		'fontSize': 1	// Deliberately small so we can see it is bad
+		'fontSize': 1,	// Deliberately small so we can see it is bad
+		'itemWidth': 2
 	}
 	// Set some default values
 	mergeDeep(opts,attr);
@@ -310,11 +314,11 @@ function KeyItem(attr){
 	this.el.appendChild(label);
 	let tspan = svgEl('tspan');
 	tspan.innerHTML = (opts.series.getProperty('title')||"Series "+(s+1));
-	setAttr(tspan,{'dx':(opts.fontSize*2),'dy':0});
+	setAttr(tspan,{'dx':(opts.fontSize*(opts.itemWidth+0.5)),'dy':0});
 	label.appendChild(tspan);
 	
 	let line = svgEl('path');
-	setAttr(line,{'d':'M0 0 L 1 0','stroke-width':3,'stroke-linecap':'round','class':'line item-line'});
+	setAttr(line,{'d':'M0 0 L 1 0','stroke-width':opts.line['stroke-width']||4,'stroke-dasharray':opts.line['stroke-dasharray']||'','stroke-linecap':'round','class':'line item-line'});
 	
 	let mark = new Marker(opts.points);
 	mark.addClass('item-mark');
@@ -347,11 +351,11 @@ function KeyItem(attr){
 
 		let fs = opts.fontSize;
 		let p = opts.series.getProperties();
-		mark.setPosition(roundTo(fs*0.75, 3),roundTo(0.5*fs, 3),fs/2);
+		mark.setPosition(roundTo(fs*(opts.itemWidth/2), 3),roundTo(0.5*fs, 3),fs/2);
 		mark.setAttr({'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
 
 		if(opts.type=="line-chart" || opts.type=="category-chart"){
-			line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*1.5)+' 0');
+			line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*opts.itemWidth)+' 0');
 			if(p.line.color) line.setAttribute('stroke',p.line.color||"");
 		}
 		return this;

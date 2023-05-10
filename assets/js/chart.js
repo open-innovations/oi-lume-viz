@@ -257,7 +257,7 @@
 					// Make the new SVG just for the icon and add it to our new series item
 					icon = svgEl('svg');
 					add(keyseries[s].cloneNode(true),icon);
-					setAttr(icon,{'overflow':'visible','width':17*1.5,'height':'1em','viewBox':'0 0 '+(17*1.5)+' 17'});
+					setAttr(icon,{'overflow':'visible','width':17*2,'height':'1em','viewBox':'0 0 '+(17*2)+' 17'});
 					snum = keyseries[s].getAttribute('data-series');
 
 				}else{
