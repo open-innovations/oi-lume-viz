@@ -9,6 +9,7 @@ const defaultbg = getBackgroundColour();
 export const css = `
 /* OI calendar chart component */
 .oi-calendar-chart .year { fill: ${defaultbg}; }
+.oi-calendar-chart .day { dominant-baseline: middle; text-anchor: middle; }
 .oi-calendar-chart rect.in-year:focus { outline: 0; }
 `;
 
@@ -123,7 +124,7 @@ function CalendarChart(input: {
 	let yr = (range.max.year - range.min.year)+1;
 	let h = (size*7)*yr + (yr > 0 ? space*(yr-1) : 0);
 
-	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 '+w+' '+h+'" vector-effect="non-scaling-stroke" preserveAspectRatio="xMidYMin meet" overflow="hidden" data-type="calendar-chart">';
+	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 '+w.toFixed(3)+' '+h.toFixed(3)+'" vector-effect="non-scaling-stroke" preserveAspectRatio="xMidYMin meet" overflow="hidden" data-type="calendar-chart">';
 	let x = 0;
 	let y = 0;
 
@@ -149,7 +150,7 @@ function CalendarChart(input: {
 			props.origin.y = y;
 			svg += '<g class="data-layer">';
 			svg += buildYear(year,props,input);
-			svg += '</g>';
+			svg += '</g>\n';
 		}
 	}else{
 		// For each year (starting at the lowest year)
@@ -158,10 +159,10 @@ function CalendarChart(input: {
 			props.origin.y = y;
 			svg += '<g class="data-layer">';
 			svg += buildYear(year,props,input);
-			svg += '</g>';
+			svg += '</g>\n';
 		}
 	}
-	svg += '</svg>';
+	svg += '</svg>\n';
 
 	return svg;
 }
@@ -197,13 +198,13 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 
 	x = opts.origin.x + opts.size;
 	y = opts.origin.y + 3.5*opts.size;
-	svg = '<text class="year" x="'+x+'" y="'+y+'" transform="rotate(-90)" transform-origin="'+x+' '+y+'" text-anchor="middle" font-size="'+(opts.size*1.5)+'" dominant-baseline="middle">'+year+'</text>';
+	svg = '<text class="year" x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" transform="rotate(-90)" transform-origin="'+x.toFixed(3)+' '+y.toFixed(3)+'" text-anchor="middle" font-size="'+(opts.size*1.5).toFixed(3)+'" dominant-baseline="middle">'+year+'</text>';
 
 	d = new Date(sday.getTime());
 	for(i = 0; i < 7; i++){
 		x = opts.origin.x + (2.5)*opts.size;
 		y = opts.origin.y + (i+0.5)*opts.size;
-		svg += '<text class="day" x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+(opts.size*0.75)+'" dominant-baseline="middle">'+d.toLocaleDateString("en-GB",{'weekday':'narrow'})+'</text>';
+		svg += '<text class="day" x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" font-size="'+(opts.size*0.75).toFixed(3)+'">'+d.toLocaleDateString("en-GB",{'weekday':'narrow'})+'</text>';
 		d = (new Date(d.getTime() + 86400000));
 	}
 
@@ -235,7 +236,7 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 		svg += '<rect class="'+(d >= syear && d <= eyear ? "in-year" : "not-in-year")+(tooltip ? " has-value" : "")+'"';
 		if(dat && dat[input.tooltip]) svg += '	tabindex="0"';
 		svg += '	fill="'+v+'"';
-		svg += '	x="'+x+'" y="'+y+'" width="'+opts.size+'" height="'+opts.size+'">';
+		svg += '	x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" width="'+opts.size.toFixed(3)+'" height="'+opts.size.toFixed(3)+'">';
 		svg += '<title>'+tooltip+'</title>';
 		svg += '</rect>';
 
