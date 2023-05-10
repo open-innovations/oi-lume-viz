@@ -322,7 +322,8 @@ function KeyItem(attr){
 	
 	let mark = new Marker(opts.points);
 	mark.addClass('item-mark');
-	mark.setSize(attr.type=="bar-chart" || attr.type=="stacked-bar-chart" ? opts.fontSize : Math.min((opts.points.size||opts.fontSize/2),opts.fontSize));	// Default size of key item
+	let size = attr.type=="bar-chart" || attr.type=="stacked-bar-chart" ? opts.fontSize : Math.min((opts.points.size||opts.fontSize/2),opts.fontSize);
+	mark.setSize(size);	// Default size of key item
 	mark.setAttr({'fill':'silver'});
 
 	this.el.appendChild(line);
@@ -353,6 +354,7 @@ function KeyItem(attr){
 		let p = opts.series.getProperties();
 		mark.setPosition(roundTo(fs*(opts.itemWidth/2), 3),roundTo(0.5*fs, 3),fs/2);
 		mark.setAttr({'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
+		if(size <= 1) mark.setAttr({'opacity':'0.01'});
 
 		if(opts.type=="line-chart" || opts.type=="category-chart"){
 			line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*opts.itemWidth)+' 0');

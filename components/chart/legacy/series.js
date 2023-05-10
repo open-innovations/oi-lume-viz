@@ -152,7 +152,6 @@ export function Series(s,props,data,extra){
 			r = (opt['stroke-width']||1)/2;
 
 			if(opt.points){
-//if(opt.points.size > 1) console.log('setting',opt.points);
 				if(typeof opt.points.size==="number") r = Math.max(opt.points.size,r);
 				if(typeof opt.points.size==="function") r = opt.points.size.call(pt,{'series':s,'i':i,'data':data[i]});
 			}
@@ -160,6 +159,7 @@ export function Series(s,props,data,extra){
 			// Set some initial values for the point
 			if(pts[i].mark){
 				pts[i].mark.setAttr({'fill':opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
+				if(r <= 1) pts[i].mark.setAttr({'opacity':'0.01'});
 				pts[i].mark.setSize(r);
 			}
 			// Set some initial values for the bar
