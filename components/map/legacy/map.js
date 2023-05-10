@@ -4,6 +4,7 @@ import { Colour, ColourScale } from "../../../lib/colour/colours.ts";
 import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
 import { Legend } from '../../../lib/chart-parts/legend.js';
 import { getBackgroundColour } from "../../../lib/colour/colour.ts";
+import { getAssetPath } from "../../../lib/util/paths.ts"
 
 const defaultbg = getBackgroundColour();
 
@@ -95,7 +96,7 @@ export function ZoomableMap(opts){
 	this.getHTML = function(){
 		var html,i,r,file;
 
-		html = ['<div class="oi-map oi-zoomable-map" data-dependencies="/assets/leaflet/leaflet.js,/assets/leaflet/leaflet.css,/assets/css/maps.css,/assets/js/tooltip.js">'];
+		html = ['<div class="oi-map oi-zoomable-map" data-dependencies="'+getAssetPath('/leaflet/leaflet.js')+','+getAssetPath('/leaflet/leaflet.css')+','+getAssetPath('/css/maps.css')+','+getAssetPath('/js/tooltip.js')+'">'];
 		
 		html.push('<script>');
 		html.push('(function(root){');
@@ -526,7 +527,7 @@ function BasicMap(config,attr){
 	this.place = (attr.place||"");
 
 	this.getHTML = function(){
-		var html = ['<div class="oi-map oi-svg-map" data-dependencies="/assets/js/svg-map.js,/assets/css/maps.css,/assets/js/tooltip.js">'];
+		var html = ['<div class="oi-map oi-svg-map" data-dependencies="'+getAssetPath('/js/svg-map.js')+','+getAssetPath('/css/maps.css')+','+getAssetPath('/js/tooltip.js')+'">'];
 
 		html.push(this.svg.outerHTML);
 

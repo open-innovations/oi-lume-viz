@@ -35,6 +35,7 @@ import { document } from '../../lib/document.ts';
 import { textLength } from './legacy/text.js';
 import { Legend } from '../../lib/chart-parts/legend.js';
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
+import { getAssetPath } from "../../lib/util/paths.ts"
 
 const defaultbg = getBackgroundColour();
 
@@ -344,7 +345,7 @@ export default function (input: {
 
 
 
-	var html = ['<div class="oi-ranking" data-dependencies="/assets/js/ranking.js">'];
+	var html = ['<div class="oi-ranking" data-dependencies="'+getAssetPath('/js/ranking.js')+'">'];
 	html.push(svg.outerHTML);
 	// Create the legend
 	if(config.legend) html.push((new Legend(config)).outer("html"));
