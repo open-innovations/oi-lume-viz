@@ -8,6 +8,7 @@ export const assets = [
   'js/tree-map.js',
   'js/tooltip.js',
   'js/tabbed.js',
+  'css/maps.css',
   'leaflet/leaflet.js',
   'leaflet/leaflet.css',
 ];

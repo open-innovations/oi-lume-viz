@@ -95,7 +95,7 @@ export function ZoomableMap(opts){
 	this.getHTML = function(){
 		var html,i,r,file;
 
-		html = ['<div class="oi-map oi-zoomable-map" data-dependencies="/assets/leaflet/leaflet.js,/assets/leaflet/leaflet.css,/assets/js/tooltip.js">'];
+		html = ['<div class="oi-map oi-zoomable-map" data-dependencies="/assets/leaflet/leaflet.js,/assets/leaflet/leaflet.css,/assets/css/maps.css,/assets/js/tooltip.js">'];
 		
 		html.push('<script>');
 		html.push('(function(root){');
@@ -526,7 +526,7 @@ function BasicMap(config,attr){
 	this.place = (attr.place||"");
 
 	this.getHTML = function(){
-		var html = ['<div class="oi-map oi-svg-map" data-dependencies="/assets/js/svg-map.js,/assets/js/tooltip.js">'];
+		var html = ['<div class="oi-map oi-svg-map" data-dependencies="/assets/js/svg-map.js,/assets/css/maps.css,/assets/js/tooltip.js">'];
 
 		html.push(this.svg.outerHTML);
 

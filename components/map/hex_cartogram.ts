@@ -32,16 +32,8 @@ function addTspan(str: string) {
  */
 export const css = `
 /* OI hex cartogram component */
-.oi-map { position: relative; }
-.oi-map .legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
-.oi-map .legend .legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
-.oi-map .legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
-.oi-map.oi-hex-map .hex:focus { outline: none; }
-.oi-map.oi-hex-map .hex.outline path { stroke: black; stroke-width: 4px; }
-.leaflet-top { top: 0; }
-.leaflet-right { right: 0; }
-.leaflet-bottom { bottom: 0; }
-.leaflet-left { left: 0; }
+.oi-hex-map .hex:focus { outline: none; }
+.oi-hex-map .hex.outline path { stroke: black; stroke-width: 4px; }
 `;
 
 interface HexJson { layout: string; hexes: Record<string, HexDefinition> };
@@ -431,7 +423,7 @@ export default function (input: { config: HexmapOptions }) {
 
 
   // Return the HTML fragment for the visualisation that includes the dependencies and contains the SVG
-  return `<div class="oi-map oi-hex-map" data-dependencies="${ getAssetPath('/js/svg-map.js') },${ getAssetPath('/js/tooltip.js') }"><svg
+  return `<div class="oi-map oi-hex-map" data-dependencies="${ getAssetPath('/js/svg-map.js') },${ getAssetPath('/css/maps.css') },${ getAssetPath('/js/tooltip.js') }"><svg
       id="hexes-${uuid}"
       class="oi-map-inner"
       viewBox="

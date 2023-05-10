@@ -31,11 +31,7 @@ function addTspan(str: string) {
  */
 export const css = `
 /* OI svg map component */
-.oi-map { position: relative; }
-.oi-legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
-.oi-legend .oi-legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
-.oi-legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
-.oi-map.oi-svg-map .marker:focus { outline: none; }
+.oi-svg-map .marker:focus { outline: none; }
 `;
 
 interface GeoJson { type: string; features: unknown };
