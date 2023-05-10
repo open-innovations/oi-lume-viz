@@ -95,9 +95,9 @@ export function ZoomableMap(opts){
 	this.getHTML = function(){
 		var html,i,r,file;
 
-		html = ['<div class="oi-map oi-zoomable-map" data-dependencies="/assets/leaflet/leaflet.js,/assets/js/tooltip.js">'];
+		html = ['<div class="oi-map oi-zoomable-map" data-dependencies="/assets/leaflet/leaflet.js,/assets/leaflet/leaflet.css,/assets/js/tooltip.js">'];
 		
-		html.push('<script>console.log(document.currentScript.parentNode);');
+		html.push('<script>');
 		html.push('(function(root){');
 		html.push('	var p = document.currentScript.parentNode;');
 		html.push('	var el = document.createElement("div");');
