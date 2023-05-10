@@ -31,6 +31,7 @@ function addTspan(str: string) {
  */
 export const css = `
 /* OI svg map component */
+.oi-svg-map svg { width: 100%; }
 .oi-svg-map .marker:focus { outline: none; }
 `;
 
