@@ -6,7 +6,9 @@ import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { ZoomableMap } from "./legacy/map.js";
+import { getBackgroundColour } from "../../lib/colour/colour.ts";
 
+const defaultbg = getBackgroundColour();
 
 // This is a simple scale which returns the same value it was sent
 // Useful if the hexmap has a colour attribute
@@ -32,6 +34,7 @@ function addTspan(str: string) {
 export const css = `
 /* OI zoomable map component */
 .oi-map { position: relative; max-width: 100%; }
+.oi-map.oi-zoomable-map { background: ${defaultbg}; }
 .oi-legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
 .oi-legend .oi-legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
 .oi-legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }

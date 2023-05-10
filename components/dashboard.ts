@@ -1,5 +1,5 @@
 import { dashboard, DashboardOptions } from "../lib/dashboard.ts";
-import { getBackgroundColour,Colour } from "../lib/colour/colour.ts";
+import { getBackgroundColour, Colour } from "../lib/colour/colour.ts";
 
 const defaultbg = getBackgroundColour();
 const defaultbgcontrast = Colour(defaultbg).contrast;
