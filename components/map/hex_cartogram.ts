@@ -13,6 +13,11 @@ const defaultbg = getBackgroundColour();
 // Useful if the hexmap has a colour attribute
 const identityColourScale = (s: string) => s;
 
+function roundNumber(v){
+	if(typeof v==="number") return parseFloat(v.toFixed(3));
+	else return v;
+}
+
 function addTspan(str: string) {
   // If string has no newlines, just return it
   if (!str.includes("\n")) return str;
@@ -369,25 +374,23 @@ export default function (input: { config: HexmapOptions }) {
     switch (layout) {
       case "odd-r":
       case "even-r":
-        hexPath = `M ${hexCadence / 2},${-hexSide / 2} v ${hexSide} l ${-hexCadence / 2},${hexSide / 2} l ${-hexCadence / 2},${-hexSide / 2} v ${-hexSide} l ${hexCadence / 2},${-hexSide / 2} Z
-        `;
+        hexPath = "M "+roundNumber(hexCadence / 2)+","+roundNumber(-hexSide / 2)+" v "+roundNumber(hexSide)+" l "+roundNumber(-hexCadence / 2)+","+roundNumber(hexSide / 2)+" l "+roundNumber(-hexCadence / 2)+","+roundNumber(-hexSide / 2)+" v "+roundNumber(-hexSide)+" l "+roundNumber(hexCadence / 2)+","+roundNumber(-hexSide / 2)+" Z";
         break;
       case "odd-q":
       case "even-q":
-        hexPath = `M ${-hexSide / 2},${-hexCadence / 2} h ${hexSide} l ${hexSide / 2},${hexCadence / 2} l ${-hexSide / 2},${hexCadence / 2} h ${-hexSide} l ${-hexSide / 2},${-hexCadence / 2} Z
-        `;
+        hexPath = "M "+roundNumber(-hexSide / 2)+","+roundNumber(-hexCadence / 2)+" h "+roundNumber(hexSide)+" l "+roundNumber(hexSide / 2)+","+roundNumber(hexCadence / 2)+" l "+roundNumber(-hexSide / 2)+","+roundNumber(hexCadence / 2)+" h "+roundNumber(-hexSide)+" l "+roundNumber(-hexSide / 2)+","+roundNumber(-hexCadence / 2)+" Z";
         break;
       default:
         throw new TypeError("Unsupported layout");
     }
     // TODO(@giles) Work out what the heck is going on!
     const fill = fillColour(colourValue as never);
-  
+
     // TODO(@gilesdring) this only supports pointy-top hexes at the moment
     return `<g
           id="${uuid}-hex-${hexId}"
           class="hex"
-          transform="translate(${x} ${y})"
+          transform="translate(${roundNumber(x)} ${roundNumber(y)})"
           data-auto-popup="${tooltipText}"
           data-value="${valuecol}"
           role="listitem"
