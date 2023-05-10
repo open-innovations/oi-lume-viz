@@ -410,7 +410,7 @@ export default function (input: { config: HexmapOptions }) {
     let position = legend.position||"bottom right";
     position = position.replace(/(^| )/g,function(m,p1){ return p1+'leaflet-'; });
     legendDiv = '<div class="'+position+'">';
-    var l = '<div class="legend leaflet-control">';
+    var l = '<div class="oi-legend leaflet-control">';
     if(typeof legend.title==="string") l += '<h3>'+legend.title+'</h3>';
     if(legend.items){
       for(var i = 0; i < legend.items.length; i++){
