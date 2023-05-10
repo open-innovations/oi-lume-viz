@@ -32,7 +32,8 @@ function addTspan(str: string) {
 export const css = `
 /* OI svg map component */
 .oi-svg-map svg { width: 100%; }
-.oi-svg-map .marker:focus { outline: none; }
+.oi-svg-map path:focus, .oi-svg-map .marker:focus { outline: none; }
+.oi-svg-map path:focus { stroke: black; stroke-width: 4px; stroke-opacity: 0.5; /*filter: drop-shadow(0 1px 1px rgba(0,0,0,0.7));*/ }
 `;
 
 interface GeoJson { type: string; features: unknown };
