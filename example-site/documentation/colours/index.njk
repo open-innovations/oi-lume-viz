@@ -32,6 +32,10 @@ customnames:
   - "rose"
   - "forest"
   - "richblack"
+customseries:
+  - "#E52E36"
+  - "#C7B200"
+  - "#69C2C9"
 ---
 
 <h1>{{ title }}</h1>
@@ -62,6 +66,14 @@ customnames:
 
 <p>It is possible to get a reversed version of each scale by adding <code>_r</code> to the name e.g. <code>Viridis_r</code>.</p>
 
+<h2 id="series-colours">Series colours</h2>
+<p>The default series colours come from <a href="https://www.nature.com/articles/nmeth.1618/figures/2">Figure 2</a> of Wong, B. Points of view: Color blindness. <a href="https://doi.org/10.1038/nmeth.1618">Nat Methods 8, 441</a> (2011):</p>
+<ol>
+{% for i in range(0, 7) %}
+	<li><code style="background: {{ i | seriesColour }}; color: {{ i | seriesColour | contrastColour }}">{{ i | seriesColour }}</code></li>
+{% endfor %}
+</ol>
+
 <h2>Customising colours</h2>
 
 <h3>Adding named colours</h3>
@@ -79,6 +91,17 @@ customnames:
 
 <p>The new named colours can then be used in the same way as pre-defined colour names. For instance, we can include them in this page:{% for name in customnames %} <code style="background: {{ name | parseColour() }};color: {{ name | contrastColour() }}">{{ name }}</code>{% endfor %}. Note that, in this example, as well as creating some new colours we've also over-ridden several existing CSS colour names with new values.</p>
 
+
+<h3>Changing series colours</h3>
+<p>We provide a <a href="#series-colours">default set of colour-blind-safe series colours</a> but you may wish to set your own defaults. Update <code>_config.[js|ts]</code> to include an array of colours as part of the config to the plugin:</p>
+
+<pre><code class="hljs language-json">site.use(oiComponents({
+  ...
+  "colour": {
+    "series": [ {% for colour in customseries %}"{{ colour | parseColour() }}", {% endfor %}],
+  },
+  ...
+}));</code></pre>
 
 
 <h3>Adding colour scales</h3>

@@ -2,10 +2,24 @@ import { contrastRatio } from "./contrast.ts";
 import { parseColourString } from "./parse-colour-string.ts";
 import { Colour } from "./types.ts";
 
+
 let backgroundColour = "#dfdfdf";
 export const setBackgroundColour = (colour: string) => backgroundColour = colour;
 // TODO - use this function wherever we want a default background colour.
 export const getBackgroundColour = () => backgroundColour;
+
+// Set some default colour-blind-safe colours from https://www.nature.com/articles/nmeth.1618/figures/2
+//let seriesColours = ["#000000","#E69F00","#56B4E9","#009E73","#F0E442","#0072B2","#D55E00","#CC79A7"];
+let seriesColours = ["#D55E00","#0072B2","#009E73","#F0E442","#CC79A7","#56B4E9","#E69F00"];
+export const setSeriesColours = (colours: [string]) => seriesColours = colours;
+export const getSeriesColour = function(i: number){
+	if(i >= 0){
+		return seriesColours[i % seriesColours.length];
+	}else{
+		return backgroundColour;
+	}
+}
+
 
 /**
  * A Colour object can be created with:

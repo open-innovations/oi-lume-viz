@@ -9,6 +9,8 @@ import { textLength } from './text.js';
 const ns = 'http://www.w3.org/2000/svg';
 
 export function Chart(config,csv){
+
+	var colours = {};
 	if(!config) config = {};
 	var lbl,id,svg,i,ax,key,seriesgroup,categoryoffset,seriesoffset;
 	lbl = 'categorychart';

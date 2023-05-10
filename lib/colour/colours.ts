@@ -6,12 +6,13 @@ export { ColourScale } from "./colour-scale.ts";
 
 import { updateColourScales } from './colour-scale.ts';
 import { updateNamedColours } from './parse-colour-string.ts';
-import { setBackgroundColour } from "./colour.ts";
+import { setBackgroundColour, setSeriesColours } from "./colour.ts";
 
 export function setDefaultColours({
-	background, names, scales,
+	background, names, scales, series,
 }: {
 	background?: string;
+	series?: [string];
 	names?: Record<string, string>;
 	scales?: Record<string, string>;
 }) {
@@ -22,12 +23,17 @@ export function setDefaultColours({
 				updateColourScales(key, value);
 		}
 	}
+
 	// If colour names are provided when instantiating the plugin, map these into the default named colours.
-	if (scales) {
+	if (names) {
 		for(const [key, value] of Object.entries(names) ) {
 				updateNamedColours(key, value);
 		}
 	}
+
+	// If an array of series colours are provided when instantiating the plugin, map these into the default series colours.
+	if (series) setSeriesColours(series);
+
 	// If background colour, update the site-wide default with this
 	if (background) setBackgroundColour(background);
 

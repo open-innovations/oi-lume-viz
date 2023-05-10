@@ -3,8 +3,9 @@ import lume from "lume/mod.ts";
 import basePath from "lume/plugins/base_path.ts";
 import oiComponents from '../mod.ts';
 import { stringify as yamlStringify } from 'std/encoding/yaml.ts';
-import { getColourScale } from '../lib/colour/colour-scale.ts';
 import { Colour } from '../lib/colour/colours.ts';
+import { getColourScale } from '../lib/colour/colour-scale.ts';
+import { getSeriesColour } from '../lib/colour/colour.ts';
 
 import csvLoader from 'https://deno.land/x/oi_lume_utils@v0.3.0/loaders/csv-loader.ts';
 import autoDependency from 'https://deno.land/x/oi_lume_utils@v0.3.0/processors/auto-dependency.ts';
@@ -34,7 +35,7 @@ site.use(oiComponents({
   assetPath: '/assets',
   componentNamespace: 'oi',
   colour: {
-	names: {
+    names: {
 		"gold": "#F7AB3D",
 		"orange": "#E55912",
 		"turquoise": "#69C2C9",
@@ -68,9 +69,10 @@ site.remoteFile('samples/chart/bar/_data/examples.yml', './test/data/bar-chart.y
 // Add filters
 site.filter('yaml', (value, options = {}) => { let str = yamlStringify(value, options); str = str.replace(/(\s)\'y\': /g,function(m,p1){ return p1+"y: ";}); return str; });
 site.filter('match', (value, regex) => { const re = new RegExp(regex); return value.match(re); });
-site.filter('colourScaleGradient', (value, options = {}) => { return getColourScale(value)||""; });
-site.filter('contrastColour', (value, options = {}) => { let cs = Colour(value); return cs.contrast||value; });
 site.filter('parseColour', (value, options = {}) => { let cs = Colour(value); return cs.hex||value; });
+site.filter('colourScaleGradient', (value, options = {}) => { return getColourScale(value)||""; });
+site.filter('seriesColour', (value, options = {}) => { return getSeriesColour(value)||""; });
+site.filter('contrastColour', (value, options = {}) => { let cs = Colour(value); return cs.contrast||value; });
 
 
 

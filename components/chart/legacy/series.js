@@ -1,18 +1,15 @@
 import { Animate } from './animate.js';
 import { Marker } from './marker.js';
 import { add, addClasses, svgEl, setAttr, mergeDeep, clone } from './util.js';
-
+import { getSeriesColour } from '../../../lib/colour/colour.ts';
+	
 export function Series(s,props,data,extra){
 	if(!props) return this;
 
 	var id = props.id||Math.round(Math.random()*1e8);
 
 	var opt,line,path,pts,o,label;
-	var defaultcolor = '#000000';
-	if(s==0) defaultcolor = "#E55912";
-	else if(s==1) defaultcolor = "#005776";
-	else if(s==2) defaultcolor = "#F7AB3D";
-	else if(s==3) defaultcolor = "#4A783C";
+	var defaultcolor = getSeriesColour(s)||'#000000';
 	opt = {
 		'points':{show:true,color:defaultcolor,'stroke-linecap':'round','stroke':defaultcolor,'stroke-width':0,'fill-opacity':1},
 		'line':{show:true,color:defaultcolor,'stroke-width':4,'stroke-linecap':'round','stroke-linejoin':'round','stroke-dasharray':'','fill':'none'},
