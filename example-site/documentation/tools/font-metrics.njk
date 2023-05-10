@@ -1,0 +1,135 @@
+---
+layout: layout/base.njk
+title: Font metrics
+---
+
+<style>
+textarea, .textarea { width: 100%; margin: 1em 0; }
+.textarea { border: 1px solid #999; background: white; border-radius: 2px; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 1em; margin-bottom: 1em; }
+textarea { height: 10em; font-size: 1em; padding: 1em; }
+.grid .glyph-holder:last-child h3 { text-align: right; }
+.glyphs, .glyph-holder h3 { font-weight: normal; }
+#glyphs-bold .glyphs, #glyphs-bold.glyph-holder h3 { font-weight: bold; }
+.glyph-holder .glyphs { font-size: 32px; display: block; height: 10em; word-wrap: anywhere; overflow-y: auto; overflow-x: auto; }
+.glyph-holder .glyphs span { width: 1em; }
+label { font-family: Poppins; }
+</style>
+
+<h1>{{ title }}</h1>
+
+<p>This page lets you calculate font metrics for specific fonts. It finds the widths of the first 11,000 characters so that we can simulate <code>getComputedTextLength()</code> when building an SVG without a browser.</p>
+
+<label for="font-definitions">Set <code>@font-face</code> here:</label>
+<pre id="font-definitions" class="textarea" contenteditable>
+</pre>
+
+<div class="grid">
+	<div id="glyphs" class="glyph-holder b5-bg">
+		<div class="padded">
+			<h3>Regular</h3>
+			<div class="glyphs"></div>
+		</div>
+	</div>
+	<div id="glyphs-bold" class="glyph-holder b5-bg">
+		<div class="padded">
+			<h3>Bold</h3>
+			<div class="glyphs"></div>
+		</div>
+	</div>
+</div>
+
+<div style="text-align:center;margin-bottom: 1em;"><button id="calculate" class="c13-bg">Calculate font metrics</button></div>
+
+<label for="output">Output:</label>
+<textarea id="output"></textarea>
+
+
+
+<script>
+var btn = document.getElementById('calculate');
+var output = document.getElementById('output');
+var fontdefinitions = document.getElementById('font-definitions');
+var el = document.getElementById('glyphs');
+var bd = document.getElementById('glyphs-bold');
+var styles = document.createElement('style');
+
+var font = '';
+var loading = false;
+var loaded = true;
+
+document.head.prepend(styles);
+
+function updateFont(){
+
+	output.value = '';
+
+	var css = '';
+	var html = fontdefinitions.innerHTML;
+	font = '';
+	// Get first font-family
+	html.replace(/font-family:\s*[\"\']?([^\;\"\']+)[\"\']?\;/,function(m,p1){
+		font = (font ? ";":"")+p1;
+	});
+	if(font == "") font = "sans-serif";
+	css += document.getElementById('font-definitions').innerHTML+'\n';
+	css += '.glyph-holder, .glyph-holder h3 { font-family: '+font+'; }';
+	styles.innerHTML = css;
+
+	el.querySelector('h3').innerHTML = font+' regular';
+	bd.querySelector('h3').innerHTML = font+' bold';
+
+	document.fonts.ready.then(function(){ console.log('fonts loaded'); });
+}
+
+// Attach events to font definition area
+fontdefinitions.addEventListener('change',updateFont);
+fontdefinitions.addEventListener('blur',updateFont);
+
+// Set up the output area
+output.addEventListener('focus',function(e){ e.target.select(); });
+
+function buildGlyphs(){
+	var text = '';
+	for(var charCode = 0; charCode <= 11000; charCode++){
+		text += '<span data="'+charCode+'">'+String.fromCharCode(charCode)+'</span>';
+	}
+	el.querySelector('.glyphs').innerHTML = text;
+	bd.querySelector('.glyphs').innerHTML = text;
+}
+function processGlyphs(){
+
+	var fonts = {};
+	//var font = getComputedStyle(el)['font-family'].replace(/^\"?([^\"\,]+)\"?.*$/,function(m,p1){ return p1; });
+	fonts[font] = {'normal':{'font-size':parseInt(getComputedStyle(el.querySelector('.glyphs'))['font-size']),'widths':[]},'bold':{'font-size':parseInt(getComputedStyle(bd.querySelector('.glyphs'))['font-size']),'widths':[]}};
+
+
+	// Now work out widths for standard weight
+	chars = el.querySelectorAll('span');
+	codes = [];
+	for(var c = 0; c < chars.length; c++){
+		codes.push(chars[c].offsetWidth);
+	}
+	fonts[font].normal.widths = codes;
+
+	// Now work out widths for bold weight
+	chars = bd.querySelectorAll('span');
+	codes = [];
+	for(var c = 0; c < chars.length; c++){
+		codes.push(chars[c].offsetWidth);
+	}
+	fonts[font].bold.widths = codes;
+
+	output.value = JSON.stringify(fonts).replace(/(^\{|\}$)/g,"");
+}
+
+// Add event to button
+btn.addEventListener('click',processGlyphs);
+
+// Add any @font-face definitions
+updateFont();
+
+// Set up glyphs
+buildGlyphs();
+
+</script>
