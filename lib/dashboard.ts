@@ -58,7 +58,7 @@ export function dashboard(config: DashboardOptions){
     throw `Invalid value: No property named "${value}" in the data`;
   
   // Set asset path based on module config
-  const html = ['<div class="oi-dashboard" data-dependencies="' + getAssetPath('/js/dashboard.js') + '">'];
+  const html = ['<div class="oi-dashboard" data-dependencies="' + getAssetPath('/js/dashboard.js') + '"'+(width ? ' style="--auto-dashboard-min-size:'+width+';"' : '')+'>'];
 
   // Loop over the user-specified panels
   for(let p = 0 ; p < panels.length; p++){
@@ -99,7 +99,7 @@ export function dashboard(config: DashboardOptions){
       // Process the colour so we can get the 
       c = contrastColour(col);
     }
-    let panel = '<div class="panel'+(cls ? ' '+cls : '')+'"'+(col ? ' style="background-color:'+col+';color:'+c+'"' : '')+'>';
+    let panel = '<div class="panel'+(cls ? ' '+cls : '')+'"'+(col ? ' style="background-color:'+col+';color:'+c+';"' : '')+'>';
     panel += '<h3>'+panels[p].name+'</h3>';
 
     panel += '<span class="bignum" data="'+data[idx][value]+'"';
