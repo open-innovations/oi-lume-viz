@@ -709,7 +709,7 @@ function Layer(attr,map,i){
 		// Clear existing layer
 		this.clear();
 		// Find the map bounds and work out the scale
-		var f,i,j,k,dlat,dlon,feature,w,h,b,p,c,d,xy,tspan,path;
+		var f,i,j,k,dlat,dlon,feature,w,h,b,g2,p,c,d,xy,tspan,path;
 		w = map.w;
 		h = map.h;
 		b = map.getBounds();
@@ -723,6 +723,8 @@ function Layer(attr,map,i){
 				if(this.data.features[f]){
 					feature = this.data.features[f];
 					c = feature.geometry.coordinates;
+					g2 = svgEl('g');
+					g2.classList.add('area');
 
 					if(feature.geometry.type == "MultiPolygon"){
 						p = svgEl('path');
@@ -910,7 +912,10 @@ function Layer(attr,map,i){
 							if(p && typeof attr.style==="function") attr.style.call(this,feature,p);
 						}
 					}
-					if(p) g.appendChild(p);
+					if(p){
+						g2.appendChild(p);
+						g.appendChild(g2);
+					}
 				}
 			}
 		}else{

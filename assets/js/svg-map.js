@@ -51,7 +51,7 @@
 		_obj = this;
 		for(p = 0; p < pt.length; p++){
 			attr = {};
-			if(typ == "hex-map"){
+			if(typ == "hex-map" || typ == "svg-map"){
 				attr.show = function(e){
 					_obj.removeOutline();
 					_obj.addOutline(e.parentNode);
@@ -59,6 +59,9 @@
 			}
 			OI.Tooltips.add(pt[p],attr);
 		}
+		el.addEventListener('mouseleave',function(){
+			_obj.removeOutline();
+		})
 
 		return this;
 	}
