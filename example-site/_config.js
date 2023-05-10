@@ -6,7 +6,8 @@ import { stringify as yamlStringify } from 'std/encoding/yaml.ts';
 import { getColourScale } from '../lib/colour/colour-scale.ts';
 import { Colour } from '../lib/colour/colours.ts';
 
-import csvLoader from 'https://deno.land/x/oi_lume_utils@v0.2.0/loaders/csv-loader.ts'
+import csvLoader from 'https://deno.land/x/oi_lume_utils@v0.3.0/loaders/csv-loader.ts';
+import autoDependency from 'https://deno.land/x/oi_lume_utils@v0.3.0/processors/auto-dependency.ts';
 
 // Code highlighting
 import code_highlight from "lume/plugins/code_highlight.ts";
@@ -16,7 +17,6 @@ import lang_json from "https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es/langu
 import lang_powershell from "https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es/languages/powershell.min.js";
 import lang_bash from "https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es/languages/bash.min.js";
 
-import autoDependency from 'https://cdn.jsdelivr.net/gh/open-innovations/oi-lume-utils@0.2.0-pre/processors/auto-dependency.ts';
 
 
 const site = lume({
