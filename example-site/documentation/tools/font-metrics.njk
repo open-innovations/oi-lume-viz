@@ -22,6 +22,9 @@ label { font-family: Poppins; }
 
 <label for="font-definitions">Set <code>@font-face</code> here:</label>
 <pre id="font-definitions" class="textarea" contenteditable>
+.glyphs {
+  font-family: Verdana;
+}
 </pre>
 
 <div class="grid">
@@ -65,14 +68,14 @@ function updateFont(){
 	output.value = '';
 
 	var css = '';
-	var html = fontdefinitions.innerHTML;
+	var html = fontdefinitions.innerHTML.replace(/<[^\>]+>/g,"");
 	font = '';
 	// Get first font-family
 	html.replace(/font-family:\s*[\"\']?([^\;\"\']+)[\"\']?\;/,function(m,p1){
 		font = (font ? ";":"")+p1;
 	});
 	if(font == "") font = "sans-serif";
-	css += document.getElementById('font-definitions').innerHTML+'\n';
+	css += html+'\n';
 	css += '.glyph-holder, .glyph-holder h3 { font-family: '+font+'; }';
 	styles.innerHTML = css;
 
