@@ -154,6 +154,20 @@ export function ZoomableMap(opts){
 			html.push('			fillColor: d.colour||"transparent"\n');
 			html.push('		};\n');
 			html.push('	}\n');
+			
+			html.push('	function highlightFeature(e) {\n');
+			html.push('		const layer = e.target;\n');
+			html.push('		layer.setStyle({\n');
+			html.push('			weight: 4,\n');
+			html.push('			color: "#000000",\n');
+			html.push('			opacity: 1\n');
+			html.push('		});\n');
+			html.push('		layer.bringToFront();\n');
+//			html.push('		layer.openPopup();\n');
+			html.push('	}\n');
+			html.push('	function resetHighlight(e) {\n');
+			html.push('		geo.resetStyle(e.target);\n');
+			html.push('	}\n');
 
 			// A function to return the row for a given key
 			html.push('	function getData(k){\n');
@@ -177,6 +191,10 @@ export function ZoomableMap(opts){
 			// Set the text colour of the popup
 			html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["color"] = OI.contrastColour(d.colour);\n');
 			html.push('			ps.style["color"] = OI.contrastColour(d.colour);\n');
+			html.push('		});\n');
+			html.push('		layer.on({\n');
+			html.push('			mouseover: highlightFeature,\n');
+			html.push('			mouseout: resetHighlight\n');
 			html.push('		});\n');
 			html.push('	};\n');
 						
