@@ -9,17 +9,22 @@ function drawPolygon(n,cx,cy,r){
 
 	var step = 360/n;
 	var cordeg = 0;
-	var p = "M"+cx+","+cy;
+	var p = "M"+roundNumber(cx)+","+roundNumber(cy);
 	var d2r = Math.PI/180;
 	// For even-numbered sides we offset the initial angle
 	var ginit = (n%2==0 ? -step/2 : 0);
 	for(var g = ginit,j = 0; g <= 360; g += step, j++){
-		var y = (Math.sin(g*d2r)*r + cy).toFixed(3);
-		var x = (Math.cos(g*d2r)*r + cx).toFixed(3);
-		p += (j==0 ? "M":"L")+x+","+y+" ";
+		var y = (Math.sin(g*d2r)*r + cy);
+		var x = (Math.cos(g*d2r)*r + cx);
+		p += (j==0 ? "M":"L")+roundNumber(x)+","+roundNumber(y)+" ";
 	};
 	p += "Z";
 	return p;
+}
+
+function roundNumber(v){
+	if(typeof v==="number") return parseFloat(v.toFixed(3));
+	else return v;
 }
 
 // Main marker function.
@@ -48,8 +53,8 @@ export function Marker(attr){
 				setAttr(this.el,{'r':s/2});
 			},
 			'setPosition': function(x,y){
-				if(anim) anim.set({'cx':{'from':old.x||null,'to':x||null},'cy':{'from':old.y||null,'to':y||null}});
-				else setAttr(this.el,{'cx':x,'cy':y});
+				if(anim) anim.set({'cx':{'from':roundNumber(old.x||null),'to':roundNumber(x||null)},'cy':{'from':roundNumber(old.y||null),'to':roundNumber(y||null)}});
+				else setAttr(this.el,{'cx':roundNumber(x),'cy':roundNumber(y)});
 			}
 		},
 		'triangle': {
