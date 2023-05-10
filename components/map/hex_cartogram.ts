@@ -5,8 +5,9 @@ import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
+import { getBackgroundColour } from "../../lib/colour/colour.ts";
 
-const defaultbg = "#dfdfdf";
+const defaultbg = getBackgroundColour();
 
 // This is a simple scale which returns the same value it was sent
 // Useful if the hexmap has a colour attribute

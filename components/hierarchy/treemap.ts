@@ -5,8 +5,9 @@ import { getAssetPath } from "../../lib/util/paths.ts";
 import { TableData, UsefulFunction } from "./lib/hierarchy-visualisation.ts";
 import { TreeMap, TreeMapOptions } from "./lib/tree-map.ts";
 import { addVirtualColumns } from "../../lib/helpers.ts";
+import { getBackgroundColour } from "../../lib/colour/colour.ts";
 
-const defaultbg = "#dfdfdf";
+const defaultbg = getBackgroundColour();
 
 interface ColourOptions {
   colour: string;

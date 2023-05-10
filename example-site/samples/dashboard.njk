@@ -3,10 +3,67 @@ title: Dashboard
 description: |
   Panels with big numbers.
 order: 1
+showcase: 2
 component: dashboard
 layout: layout/sample-viz.njk
 examples:
   - title: "Simple panels"
+    description: |
+      This basic example shows four panels. Each has a `title` (set to the `Title` column), a `value` (set to the `Value` column), and is given the default background colour. We only show panels for specified items in the data, not every row. The order of <code>panels</code> is the order they will appear on the page and doesn't have to match the order in the <code>data</code>.
+    config:
+      title: Title
+      value: Value
+      data:
+        - Title: "Thing 1"
+          Value: 15
+        - Title: "Thing 2"
+          Value: 132
+        - Title: "Thing 3"
+          Value: 19
+        - Title: "Thing 4"
+          Value: 90
+        - Title: "Thing 5"
+          Value: 56.4
+      panels:
+        - name: "Thing 1"
+        - name: "Thing 3"
+        - name: "Thing 2"
+        - name: "Thing 4"
+  - title: "Add units and notes"
+    description: |
+      In this example we will add a `note` (set to the column `Footnote`) below the value in panels. We can also augment the displayed values with `units` by adding `prefix` or `postfix`.
+    config:
+      title: Title
+      value: Value
+      note: Footnote
+      data:
+        - Title: "Thing 1"
+          Value: 15
+          Footnote: "A note"
+          Post: "%"
+        - Title: "Thing 2"
+          Value: 132
+        - Title: "Thing 3"
+          Value: 19
+          Footnote: "2019"
+        - Title: "Thing 4"
+          Value: 90
+          Footnote: "Jan 2021"
+          Pre: "£"
+          Post: "k"
+        - Title: "Thing 5"
+          Value: 56.4
+          Footnote: Test
+          Post: "%"
+      units:
+        prefix: Pre
+        postfix: Post
+      panels:
+        - name: "Thing 1"
+        - name: "Thing 3"
+        - name: "Thing 2"
+        - name: "Thing 4"
+  - title: "Set the colours of panels"
     description: |
       This example shows four differently coloured panels. Some panels have prefixes or postfixes around the values. We only show panels for specified items in the data. The order of <code>panels</code> is the order they will appear on the page and doesn't have to match the order in the <code>data</code>.
     config:
@@ -44,7 +101,7 @@ examples:
           colour: "#F9BC26"
         - name: "Thing 4"
           colour: "#08DEF9"
-  - title: "Using a colour scale for panels"
+  - title: "Set the colours of panels using a colour scale"
     description: |
       An example of 
     config:

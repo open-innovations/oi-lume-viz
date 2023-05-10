@@ -34,6 +34,20 @@ site.use(oiComponents({
   assetPath: '/assets',
   componentNamespace: 'oi',
   colour: {
+	names: {
+		"gold": "#F7AB3D",
+		"orange": "#E55912",
+		"turquoise": "#69C2C9",
+		"cherry": "#E52E36",
+		"chartreuse": "#C7B200",
+		"plum": "#7D2248",
+		"grey": "#B2B2B2",
+		"blue": "#005776",
+		"raisin": "#874245",
+		"rose": "#FF808B",
+		"forest": "#4A783C",
+		"richblack": "#000000",
+	},
     scales: {
       'example': '#ff0000 0%, #0000ff 100%',
     }
@@ -56,6 +70,7 @@ site.filter('yaml', (value, options = {}) => { let str = yamlStringify(value, op
 site.filter('match', (value, regex) => { const re = new RegExp(regex); return value.match(re); });
 site.filter('colourScaleGradient', (value, options = {}) => { return getColourScale(value)||""; });
 site.filter('contrastColour', (value, options = {}) => { let cs = Colour(value); return cs.contrast||value; });
+site.filter('parseColour', (value, options = {}) => { let cs = Colour(value); return cs.hex||value; });
 
 
 

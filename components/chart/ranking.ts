@@ -34,8 +34,9 @@ import { clone } from "../../lib/util/clone.ts";
 import { document } from '../../lib/document.ts';
 import { textLength } from './legacy/text.js';
 import { Legend } from '../../lib/chart-parts/legend.js';
+import { getBackgroundColour } from "../../lib/colour/colour.ts";
 
-const defaultbg = "#dfdfdf";
+const defaultbg = getBackgroundColour();
 
 type RankingChartOptions = {
 	/** The data holding the values to be presented in the panels */

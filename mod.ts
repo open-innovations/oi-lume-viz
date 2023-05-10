@@ -2,8 +2,9 @@ import Site from "lume/core/site.ts";
 import { dirname } from "std/path/mod.ts";
 import { assets, components } from "./config.ts";
 import { setAssetPrefix } from "./lib/util/paths.ts";
-import { updateColourScales } from './lib/colour/colour-scale.ts';
 import { keys } from "https://deno.land/x/nunjucks@3.2.3-2/src/lib.js";
+import { updateColourScales } from './lib/colour/colour-scale.ts';
+import { updateNamedColours } from './lib/colour/parse-colour-string.ts';
 import { setBackgroundColour } from "./lib/colour/colour.ts";
 
 /**
@@ -61,7 +62,11 @@ export default function (options?: Options) {
   const componentNamespace = namespaceToPath(
     options?.componentNamespace || "oi",
   );
+
+
+  // Process colour configuration
   const scales = options?.colour?.scales;
+  const names = options?.colour?.names;
   const background = options?.colour?.background;
 
   // If colour scales provided when instantiating the plugin, map these into the default scales provided.
@@ -70,11 +75,17 @@ export default function (options?: Options) {
         updateColourScales(key, value);
     }
   }
-
+  // If colour names are provided when instantiating the plugin, map these into the default named colours.
+  if (scales) {
+    for(const [key, value] of Object.entries(names) ) {
+        updateNamedColours(key, value);
+    }
+  }
   // If background colour, update the site-wide default with this
   if (background) {
     setBackgroundColour(background);
   }
+
 
   // Update the assetPrefix to allow for correct referencing of dependencies
   setAssetPrefix(assetPath);

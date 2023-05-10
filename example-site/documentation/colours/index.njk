@@ -16,9 +16,22 @@ scales:
   - PRGn
   - PuOr
   - RdBu
-bonusscales:
+customscales:
   - name: "example"
     reverse: "example_r"
+customnames:
+  - "gold"
+  - "orange"
+  - "turquoise"
+  - "cherry"
+  - "chartreuse"
+  - "plum"
+  - "grey"
+  - "blue"
+  - "raisin"
+  - "rose"
+  - "forest"
+  - "richblack"
 ---
 
 <h1>{{ title }}</h1>
@@ -49,11 +62,30 @@ bonusscales:
 
 <p>It is possible to get a reversed version of each scale by adding <code>_r</code> to the name e.g. <code>Viridis_r</code>.</p>
 
-<h3>Defining your own colour scale</h3>
+<h2>Customising colours</h2>
 
-<p>Update <code>_config.[js|ts]</code> to include the new scales as part of the config to the plugin. For example, here we will create a new colour scale named <code>example</code>:</p>
+<h3>Adding named colours</h3>
+<p>By default we provide existing <a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">CSS colours</a> but there may be times when you'd like to define your own custom named colours (or change the values of existing named colours) for use in visualisations. Update <code>_config.[js|ts]</code> to include the new named colours as part of the config to the plugin:</p>
 
-<pre><code class="hljs language-json">{
+<pre><code class="hljs language-json">site.use(oiComponents({
+  ...
+  "colour": {
+    "names": {
+{% for name in customnames %}      "{{ name }}": "{{ name | parseColour() }}",
+{% endfor %}    },
+  },
+  ...
+}));</code></pre>
+
+<p>The new named colours can then be used in the same way as pre-defined colour names. For instance, we can include them in this page:{% for name in customnames %} <code style="background: {{ name | parseColour() }};color: {{ name | contrastColour() }}">{{ name }}</code>{% endfor %}. Note that, in this example, as well as creating some new colours we've also over-ridden several existing CSS colour names with new values.</p>
+
+
+
+<h3>Adding colour scales</h3>
+
+<p>It may be that the built-in colour scales don't meet your needs. You can add your own custom colour scales by updating <code>_config.[js|ts]</code> to include the new scales as part of the config to the plugin. For example, here we will create a new colour scale named <code>example</code>:</p>
+
+<pre><code class="hljs language-json">site.use(oiComponents({
   ...
   "colour": {
     "scales": {
@@ -61,12 +93,12 @@ bonusscales:
     }
   },
   ...
-}</code></pre>
+}));</code></pre>
 
 <p>The new colour scale (<code>example</code>) and its reverse (<code>example_r</code>) can then be used in the same way as pre-defined colour scales. For instance, we can include them in this page:</p>
 
 <dl>
-{% for scale in bonusscales %}
+{% for scale in customscales %}
 	<dt><code>{{ scale.name }}</code></dt>
 	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale.name | colourScaleGradient() }});"></dd>
 	<dt><code>{{ scale.reverse }}</code></dt>

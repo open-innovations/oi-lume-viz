@@ -2,12 +2,13 @@ import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
+import { getBackgroundColour } from "../../lib/colour/colour.ts";
 
-const defaultbg = "#dfdfdf";
+const defaultbg = getBackgroundColour();
 
 export const css = `
 /* OI calendar chart component */
-.oi-calendar-chart .year { fill: #dfdfdf; }
+.oi-calendar-chart .year { fill: ${defaultbg}; }
 .oi-calendar-chart rect.in-year:focus { outline: 0; }
 `;
 
