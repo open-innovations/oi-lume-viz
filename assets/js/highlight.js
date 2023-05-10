@@ -70,7 +70,7 @@
 OI.ready(function(){
 	blocks = document.querySelectorAll('.hljs')
 	blocks.forEach(function(b){
-		b.innerHTML = b.innerHTML.replace(/\'(\#[0-9A-Za-z]{6})\'/g,function(m,p1){
+		b.innerHTML = b.innerHTML.replace(/[\'\"](\#[0-9A-Za-z]{6})[\'\"]/g,function(m,p1){
 			return "'<span style=\"background:"+p1+";color:"+OI.contrastColour(p1)+"\">"+p1+"</span>'"
 		});
 	});
