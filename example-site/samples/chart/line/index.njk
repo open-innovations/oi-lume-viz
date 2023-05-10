@@ -247,7 +247,7 @@ examples:
           y: series3
   - title: "Custom icons"
     description: |
-      Line markers can be defined using the <code>points</code> object on a <code>series</code>. Points can have a <code>marker</code> (one of <code>circle</code>, <code>triangle</code>, <code>square</code>, <code>diamond</code>, <code>pentagon</code>, <code>hexagon</code>, <code>octagon</code>, <code>line</code>, or <code>cross</code>), a <code>size</code>, and a rotation given by <code>rotate</code> (in degrees). We can also customise the line using `stroke-width` and `stroke-dasharray`.
+      Line markers can be defined using the <code>points</code> object on a <code>series</code>. Points can have a <code>marker</code> (one of <code>circle</code>, <code>triangle</code>, <code>square</code>, <code>diamond</code>, <code>pentagon</code>, <code>hexagon</code>, <code>octagon</code>, <code>line</code>, or <code>cross</code>), a <code>size</code>, and a rotation given by <code>rotate</code> (in degrees). We can also customise the line using `stroke-width`, `stroke-dasharray` and `stroke-linecap`.
     config:
       legend:
         show: true     # Default to false
@@ -314,9 +314,11 @@ examples:
           x: value
           y: series2
           points:
-            marker: line
+            marker: cross
             rotate: 45
             size: 16
+          line:
+            stroke-dasharray: 0 10
         - title: Series 3
           colour: green
           x: value
