@@ -54,7 +54,9 @@ export function StackedBarChart(config,csv){
 
 				// Loop over each series
 				for(s = 0; s < this.opt.series.length; s++){
-					label = this.opt.series[s].title+"\n"+(""+(csv.columns[this.opt.category][i]||"")).replace(/\\n/g,"")+': '+(isNaN(csv.columns[this.opt.series[s].value][i]) ? "?" : csv.columns[this.opt.series[s].value][i]);
+					label = this.opt.series[s].title+"\n";
+					label += (""+(csv.columns[this.opt.category][i]||"")).replace(/\\n/g,"")+': ';
+					label += (isNaN(csv.columns[this.opt.series[s].value][i]) ? "?" : (this.opt.percent ? csv.columns[this.opt.series[s].value][i].toFixed(2)+"%" : csv.columns[this.opt.series[s].value][i]));
 					// If the errors have values we add them to the label
 					if(this.opt.series[s].errors){
 						if(!isNaN(csv.columns[this.opt.series[s].errors[0]][i]) && !isNaN(csv.columns[this.opt.series[s].errors[1]][i])){

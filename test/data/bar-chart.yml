@@ -271,6 +271,68 @@
         value: 25+
         colour: "#4A783C"
 
+- title: "Stacked bar chart - 100% chart"
+  description: |
+    Sometimes you want to show a part-to-whole relationship for each category i.e. you want the cumulative category bar to take up 100% of the chart width. This lets you see the relative contributions of each series to a category.
+    
+    One way to do this would be to create new columns in your data - one for each series - that contain the percentage contribution of that series' value to the total for the category. If you don't have the ability to control the input data file we can create those columns for you with the `percent: true` option. This will create a new virtual column of data for each series. These new columns will have the same name as the original columns but with `_percent` appended. This lets you refer to the original values and the normalised values in any tooltips that you create. Note that the normalised columns will be created <em>before</em> any virtual columns that you have created.
+  config:
+    data:
+      - Year: 2018
+        u19: 150
+        19-24: 15
+        25+: 20
+      - Year: 2019
+        u19: 190
+        19-24: 35
+        25+: 45
+      - Year: 2020
+        u19: 300
+        19-24: 65
+        25+: 55
+    stacked: true
+    percent: true
+    legend:
+      show: true     # Default to false
+      position: "top right"
+    axis:
+      x:
+        grid:
+          stroke-dasharray: "6 2"
+          stroke-width: 1
+        ticks:
+          - value: 20
+            label: "20"
+          - value: 40
+            label: "40"
+          - value: 60
+            label: "60"
+          - value: 80
+            label: "80"
+          - value: 100
+            label: "100"
+      y:
+        grid:
+          stroke-width: 0.5
+    category: "Year"  # Category labels come from 
+    columns:
+      - name: "19-24 tooltip"
+        template: "{{ Year }}\n19-24: {{ 19-24_percent | toFixed(2) }}% ({{ 19-24 }})\n"
+      - name: "25+ tooltip"
+        template: "{{ Year }}\n25+: {{ 25+_percent | toFixed(2) }}% ({{ 25+ }})\n"
+    series:
+      - title: "Under 19"
+        value: u19
+        colour: "#69C2C9"
+      - title: "19-24"
+        value: 19-24
+        tooltip: "19-24 tooltip"
+        colour: "#7D2248"
+      - title: "25+"
+        value: 25+
+        tooltip: "25+ tooltip"
+        colour: "#4A783C"
+
 - title: Data object
   description: |
     Get the data for the bar chart from an object

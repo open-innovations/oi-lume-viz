@@ -48,8 +48,37 @@ export default function (input: {
   // In case it was a CSV file loaded
   if(config.data.rows) config.data = config.data.rows;
 
+  // Optionally use normalised (to 100%) values
+  if(config.stacked && config.percent){
+		
+		// Find the totals for each category
+		var totals = new Array(config.data.length);
+		for(let r = 0; r < config.data.length; r++){
+			totals[r] = 0;
+			for(let s = 0; s < config.series.length; s++){
+				totals[r] += config.data[r][config.series[s].value];
+			}
+		}
+
+		// For each series create a percentage-based version
+		for(let s = 0; s < config.series.length; s++){
+			// Construct a new series ID
+			let id = config.series[s].value+"_percent";
+			// If the new series doesn't exist in the data...
+			if(!config.data[0][id]){
+				// For each row in the data
+				for(let r = 0; r < config.data.length; r++){
+					config.data[r][id] = (100*config.data[r][config.series[s].value]/totals[r]);
+				}
+				// Replace the series reference to the dummy column we have created
+				config.series[s].value = id;
+			}
+		}
+  }
+  
   // Create any defined columns
   config.data = addVirtualColumns(config);
+
 
   // We can optionally set defaults in this
   const defaults: Partial<BarChartOptions> = {
