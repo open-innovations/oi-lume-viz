@@ -276,6 +276,8 @@
     Sometimes you want to show a part-to-whole relationship for each category i.e. you want the cumulative category bar to take up 100% of the chart width. This lets you see the relative contributions of each series to a category.
     
     One way to do this would be to create new columns in your data - one for each series - that contain the percentage contribution of that series' value to the total for the category. If you don't have the ability to control the input data file we can create those columns for you with the `percent: true` option. This will create a new virtual column of data for each series. These new columns will have the same name as the original columns but with `_percent` appended. This lets you refer to the original values and the normalised values in any tooltips that you create. Note that the normalised columns will be created <em>before</em> any virtual columns that you have created.
+    
+    In this example we will define the tooltip of the final series (`25+`) so that you can see how you would be able to include both the percentage and original values. The tooltips for the first two series are auto-generated.
   config:
     data:
       - Year: 2018
@@ -316,8 +318,6 @@
           stroke-width: 0.5
     category: "Year"  # Category labels come from 
     columns:
-      - name: "19-24 tooltip"
-        template: "{{ Year }}\n19-24: {{ 19-24_percent | toFixed(2) }}% ({{ 19-24 }})\n"
       - name: "25+ tooltip"
         template: "{{ Year }}\n25+: {{ 25+_percent | toFixed(2) }}% ({{ 25+ }})\n"
     series:
@@ -326,7 +326,6 @@
         colour: "#69C2C9"
       - title: "19-24"
         value: 19-24
-        tooltip: "19-24 tooltip"
         colour: "#7D2248"
       - title: "25+"
         value: 25+

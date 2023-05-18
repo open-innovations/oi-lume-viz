@@ -38,124 +38,145 @@ customseries:
   - "#69C2C9"
 ---
 
-<h1>{{ title }}</h1>
+		<h1>{{ title }}</h1>
 
-<ol>
-	<li><a href="#colours">Colours</a></li>
-	<li><a href="#series">Series colours</a></li>
-	<li><a href="#scales">Colour scales</a></li>
-	<li><a href="#customise">Customising colours</a>
-	<ol>
-		<li><a href="#customise-named">Setting named colours</a></li>
-		<li><a href="#customise-series">Setting series colours</a></li>
-		<li><a href="#customise-scales">Setting colour scales</a></li>
-	</ol></li>
-</ol>
+		<ol>
+			<li><a href="#colours">Colours</a></li>
+			<li><a href="#scales">Colour scales</a></li>
+			<li><a href="#series-colours">Series colours</a></li>
+			<li><a href="#customise">Customising colours</a>
+			<ol>
+				<li><a href="#customise-named">Setting named colours</a></li>
+				<li><a href="#customise-series">Setting series colours</a></li>
+				<li><a href="#customise-scales">Setting colour scales</a></li>
+			</ol></li>
+		</ol>
 
+	</div>
+</div>
+<section class="padded tallpadded" id="colours">
+	<div class="holder">
+		<h2>Colours</h2>
+		<p>In many of the visualisations it is possible to set the colours of lines/points/polygons. You can set a colour using:</p>
 
-<h2 id="colours">Colours</h2>
-<p>In many of the visualisations it is possible to set the colours of lines/points/polygons. You can set a colour using:</p>
+		<ul>
+			<li>a hex code e.g. <code style="background:#396bad;color:{{ "#396bad" | contrastColour }}">#396bad</code></li>
+			<li>an RGB value e.g. <code style="background:rgb(255,0,0);color:{{ "rgb(255,0,0)" | contrastColour }}">rgb(255,0,0)</code> or <code style="background:rgba(255,0,0,0.5);color:{{ "rgba(255,0,0,0.5)" | contrastColour }}">rgba(255,0,0,0.5)</code></li>
+			<li><a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">a CSS color name</a> e.g. <code style="background:purple;color:{{ "purple" | contrastColour }}">purple</code></li>
+		</ul>
 
-<ul>
-	<li>a hex code e.g. <code style="background:#396bad;color:{{ "#396bad" | contrastColour }}">#396bad</code></li>
-	<li>an RGB value e.g. <code style="background:rgb(255,0,0);color:{{ "rgb(255,0,0)" | contrastColour }}">rgb(255,0,0)</code> or <code style="background:rgba(255,0,0,0.5);color:{{ "rgba(255,0,0,0.5)" | contrastColour }}">rgba(255,0,0,0.5)</code></li>
-	<li><a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">a CSS color name</a> e.g. <code style="background:purple;color:{{ "purple" | contrastColour }}">purple</code></li>
-</ul>
+		<h3 id="contrast">Contrasting colour</h3>
+		<p>If you are placing coloured text on a coloured background you may want to make sure you have the most <a href="https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef">contrasting colour</a> ratio. You can get that using, for example, <code>&lbrace;&lbrace; "#396bad" | contrastColour() &rbrace;&rbrace;</code> where the first argument is the colour. For <code style="background:#396bad;color:{{ "#396bad" | contrastColour }}">#396bad</code> we get the contrasting <code>{{ "#396bad" | contrastColour }}</code>.</p>
 
-<h3 id="contrast">Contrasting colour</h3>
-<p>If you are placing coloured text on a coloured background you may want to make sure you have the most <a href="https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef">contrasting colour</a> ratio. You can get that using, for example, <code>&lbrace;&lbrace; "#396bad" | contrastColour() &rbrace;&rbrace;</code> where the first argument is the colour. For <code style="background:#396bad;color:{{ "#396bad" | contrastColour }}">#396bad</code> we get the contrasting <code>{{ "#396bad" | contrastColour }}</code>.</p>
+	</div>
+</section>
+<section class="padded tallpadded" id="scales">
+	<div class="holder">
 
-<h2 id="scales">Colour scales</h2>
-<p>Sometimes items can have their colour set using a colour <code>scale</code> value. These can either be provided in the style of a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient">CSS gradient string</a> (e.g. <code>#03051A 0%, #CB1B4F 50%, #FAEBDD 100%</code>) or using one of the following named colour scales:</p>
+		<h2>Colour scales</h2>
+		<p>Sometimes items can have their colour set using a colour <code>scale</code> value. These can either be provided in the style of a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient">CSS gradient string</a> (e.g. <code>#03051A 0%, #CB1B4F 50%, #FAEBDD 100%</code>) or using one of the following named colour scales:</p>
 
-<dl>
-{% for scale in scales %}
-	<dt><code>{{ scale }}</code></dt>
-	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale | colourScaleGradient() }});"></dd>
-{% endfor %}
-</dl>
-<p>Sources: <code>Cividis</code>/<code>Inferno</code>/<code>Magma</code>/<code>Plasma</code>/<code>Turbo</code>/<code>Viridis</code> come from <a href="https://github.com/plotly/plotly.py/blob/master/packages/python/plotly/_plotly_utils/colors/sequential.py">Plotly</a> (MIT), <code>Rocket</code> comes from the Seaborn statistical data visualization package for Python, <code>Mako</code> comes from <a href="https://github.com/sjmgarnier/viridisLite/blob/master/tests/testthat/test-palettes.R">ViridisLite</a>, <code>PiPG</code>/<code>PRGn</code>/<code>PuOr</code>/<code>RdBu</code> <a href="https://github.com/axismaps/colorbrewer/blob/9a37cbbfe7cde61c060c68ecdd1fd3a5095ef4a5/export/colorbrewer.js">come from ColorBrewer 2.0</a> (Cynthia Brewer <a href="https://github.com/axismaps/colorbrewer/blob/master/LICENCE.txt">Apache License 2.0</a>)</p>
+		<dl>
+		{% for scale in scales %}
+			<dt><code>{{ scale }}</code></dt>
+			<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale | colourScaleGradient() }});"></dd>
+		{% endfor %}
+		</dl>
+		<p>Sources: <code>Cividis</code>/<code>Inferno</code>/<code>Magma</code>/<code>Plasma</code>/<code>Turbo</code>/<code>Viridis</code> come from <a href="https://github.com/plotly/plotly.py/blob/master/packages/python/plotly/_plotly_utils/colors/sequential.py">Plotly</a> (MIT), <code>Rocket</code> comes from the Seaborn statistical data visualization package for Python, <code>Mako</code> comes from <a href="https://github.com/sjmgarnier/viridisLite/blob/master/tests/testthat/test-palettes.R">ViridisLite</a>, <code>PiPG</code>/<code>PRGn</code>/<code>PuOr</code>/<code>RdBu</code> <a href="https://github.com/axismaps/colorbrewer/blob/9a37cbbfe7cde61c060c68ecdd1fd3a5095ef4a5/export/colorbrewer.js">come from ColorBrewer 2.0</a> (Cynthia Brewer <a href="https://github.com/axismaps/colorbrewer/blob/master/LICENCE.txt">Apache License 2.0</a>)</p>
 
-<p>You can apply a colour scale to replacement values e.g. <code>&lbrace;&lbrace; value | colourScale("Viridis",0,100) &rbrace;&rbrace;</code> passes <code>value</code> into the <code>colourScale</code> function with the scale <code>Viridis</code>, the minimum value <code>0</code>, and maximum value <code>100</code>.</p>
+		<p>You can apply a colour scale to replacement values e.g. <code>&lbrace;&lbrace; value | colourScale("Viridis",0,100) &rbrace;&rbrace;</code> passes <code>value</code> into the <code>colourScale</code> function with the scale <code>Viridis</code>, the minimum value <code>0</code>, and maximum value <code>100</code>.</p>
 
-<p>It is possible to get a reversed version of each scale by adding <code>_r</code> to the name e.g. <code>Viridis_r</code>.</p>
+		<p>It is possible to get a reversed version of each scale by adding <code>_r</code> to the name e.g. <code>Viridis_r</code>.</p>
 
-<h2 id="series-colours">Series colours</h2>
-<p>The default series colours come from <a href="https://www.nature.com/articles/nmeth.1618/figures/2">Figure 2</a> of Wong, B. Points of view: Color blindness. <a href="https://doi.org/10.1038/nmeth.1618">Nat Methods 8, 441</a> (2011):</p>
-<ol>
-{% for i in range(0, 7) %}
-	<li><code style="background: {{ i | seriesColour }}; color: {{ i | seriesColour | contrastColour }}">{{ i | seriesColour }}</code></li>
-{% endfor %}
-</ol>
+	</div>
+</section>
+<section class="padded tallpadded" id="series-colours">
+	<div class="holder">
 
-<h2 id="customise">Customising colours</h2>
+		<h2>Series colours</h2>
+		<p>The default series colours come from <a href="https://www.nature.com/articles/nmeth.1618/figures/2">Figure 2</a> of Wong, B. Points of view: Color blindness. <a href="https://doi.org/10.1038/nmeth.1618">Nat Methods 8, 441</a> (2011):</p>
+		<ol>
+		{% for i in range(0, 7) %}
+			<li><code style="background: {{ i | seriesColour }}; color: {{ i | seriesColour | contrastColour }}">{{ i | seriesColour }}</code></li>
+		{% endfor %}
+		</ol>
 
-<h3 id="customise-named">Setting named colours</h3>
-<p>By default we provide existing <a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">CSS colours</a> but there may be times when you'd like to define your own custom named colours (or change the values of existing named colours) for use in visualisations. Update <code>_config.[js|ts]</code> to include the new named colours as part of the config to the plugin:</p>
+	</div>
+</section>
+<section class="padded tallpadded" id="customise">
+	<div class="holder">
 
-<pre><code class="hljs language-json">site.use(oiComponents({
+		<h2>Customising colours</h2>
+
+		<h3 id="customise-named">Setting named colours</h3>
+		<p>By default we provide existing <a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">CSS colours</a> but there may be times when you'd like to define your own custom named colours (or change the values of existing named colours) for use in visualisations. Update <code>_config.[js|ts]</code> to include the new named colours as part of the config to the plugin:</p>
+
+		<pre><code class="hljs language-json">site.use(oiComponents({
   ...
   "colour": {
-    "names": {
+	"names": {
 {% for name in customnames %}      "{{ name }}": "{{ name | parseColour() }}",
 {% endfor %}    },
   },
   ...
 }));</code></pre>
 
-<p>The new named colours can then be used in the same way as pre-defined colour names. For instance, we can include them in this page:{% for name in customnames %} <code style="background: {{ name | parseColour() }};color: {{ name | contrastColour() }}">{{ name }}</code>{% endfor %}. Note that, in this example, as well as creating some new colours we've also over-ridden several existing CSS colour names with new values.</p>
+		<p>The new named colours can then be used in the same way as pre-defined colour names. For instance, we can include them in this page:{% for name in customnames %} <code style="background: {{ name | parseColour() }};color: {{ name | contrastColour() }}">{{ name }}</code>{% endfor %}. Note that, in this example, as well as creating some new colours we've also over-ridden several existing CSS colour names with new values.</p>
 
 
-<h3 id="customise-series">Setting series colours</h3>
-<p>We provide a <a href="#series-colours">default set of colour-blind-safe series colours</a> but you may wish to set your own defaults. Update <code>_config.[js|ts]</code> to include an array of colours as part of the config to the plugin:</p>
+		<h3 id="customise-series">Setting series colours</h3>
+		<p>We provide a <a href="#series-colours">default set of colour-blind-safe series colours</a> but you may wish to set your own defaults. Update <code>_config.[js|ts]</code> to include an array of colours as part of the config to the plugin:</p>
 
-<pre><code class="hljs language-json">site.use(oiComponents({
+		<pre><code class="hljs language-json">site.use(oiComponents({
   ...
   "colour": {
-    "series": [ {% for colour in customseries %}"{{ colour | parseColour() }}", {% endfor %}],
+	"series": [ {% for colour in customseries %}"{{ colour | parseColour() }}", {% endfor %}],
   },
   ...
 }));</code></pre>
 
 
-<h3 id="customise-scales">Setting colour scales</h3>
+		<h3 id="customise-scales">Setting colour scales</h3>
 
-<p>It may be that the built-in colour scales don't meet your needs. You can add your own custom colour scales by updating <code>_config.[js|ts]</code> to include the new scales as part of the config to the plugin. For example, here we will create a new colour scale named <code>example</code>:</p>
+		<p>It may be that the built-in colour scales don't meet your needs. You can add your own custom colour scales by updating <code>_config.[js|ts]</code> to include the new scales as part of the config to the plugin. For example, here we will create a new colour scale named <code>example</code>:</p>
 
-<pre><code class="hljs language-json">site.use(oiComponents({
+		<pre><code class="hljs language-json">site.use(oiComponents({
   ...
   "colour": {
-    "scales": {
-      "example": "{{ "example" | colourScaleGradient() }}",
-    }
+	"scales": {
+	  "example": "{{ "example" | colourScaleGradient() }}",
+	}
   },
   ...
 }));</code></pre>
 
-<p>The new colour scale (<code>example</code>) and its reverse (<code>example_r</code>) can then be used in the same way as pre-defined colour scales. For instance, we can include them in this page:</p>
+		<p>The new colour scale (<code>example</code>) and its reverse (<code>example_r</code>) can then be used in the same way as pre-defined colour scales. For instance, we can include them in this page:</p>
 
-<dl>
-{% for scale in customscales %}
-	<dt><code>{{ scale.name }}</code></dt>
-	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale.name | colourScaleGradient() }});"></dd>
-	<dt><code>{{ scale.reverse }}</code></dt>
-	<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale.reverse | colourScaleGradient() }});"></dd>
-{% endfor %}
-</dl>
+		<dl>
+		{% for scale in customscales %}
+			<dt><code>{{ scale.name }}</code></dt>
+			<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale.name | colourScaleGradient() }});"></dd>
+			<dt><code>{{ scale.reverse }}</code></dt>
+			<dd class="scale-preview" style="background: linear-gradient(to right, {{ scale.reverse | colourScaleGradient() }});"></dd>
+		{% endfor %}
+		</dl>
 
 
-<style>
-dl {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	grid-gap: 0.5em;
-	width: 80%;
-	margin: 2em auto;
-}
-dl dt { font-weight: bold; text-align: right; }
-.scale-preview {
-	width: 100%;
-	height: 2.5em;
-	display: block;
-}
-</style>
+		<style>
+		dl {
+			display: grid;
+			grid-template-columns: auto 1fr;
+			grid-gap: 0.5em;
+			width: 80%;
+			margin: 2em auto;
+		}
+		dl dt { font-weight: bold; text-align: right; }
+		.scale-preview {
+			width: 100%;
+			height: 2.5em;
+			display: block;
+		}
+		</style>
+	</div>
+</section>
+<div><div>

@@ -1,6 +1,7 @@
 ---
 layout: layout/base.njk
 title: String templates
+value: 1500
 ---
 
 <h1>{{ title }}</h1>
@@ -9,4 +10,18 @@ title: String templates
 
 <p>We've allowed pattern-based-strings to be defined which will take values from the data using a double curly braces syntax e.g. <code>{% raw %}{{ key }}{% endraw %}</code>. For instance, say the data rows for a visualisation contain the attributes/columns <code>ConstituencyName</code> and <code>population</code>. We can build a very simple tooltip string as <code>{% raw %}{{ ConstituencyName }}: {{ population }}{% endraw %}</code>. In this case <code>{% raw %}{{ ConstituencyName }}{% endraw %}</code> will be replaced by that row's <code>ConstituencyName</code> value and <code>{% raw %}{{ population }}{% endraw %}</code> by the <code>population</code> value.</p>
 
-<p>In the future we plan to allow functions to be provided as string templates.</p>
+<h2 id="filters">Filter functions</h2>
+
+<p>You can also use the following filters:</p>
+
+<ul>
+	<li><code>toFixed(n)</code> - to limit a value to n decimal places</li>
+	<li><code>multiply(n)</code> - to multiply a value by n</li>
+	<li><code>toLocaleString()</code> - to use the locale's (of the server) preferred formatting for a value</li>
+	<li><code>colourScale(scale,min,max)</code> - get a colour to, for example, use as a background style</li>
+	<li><code>contrastColour</code> - get a contrasting colour (black or white)</li>
+</ul>
+
+<p>For instance, to convert <code>{% raw %}{{ {% endraw %} {{ value }}{% raw %} }}{% endraw %}</code> to a locale string:</p>
+<pre><code class="hljs language-yaml">{% raw %}{{ {% endraw %} {{ value }}{% raw %} | toLocaleString("en-GB") }}{% endraw %}</code></pre>
+<p>Then <code>{{ value }}</code> becomes <code>1,500</code>.</p>

@@ -14,15 +14,7 @@ title: Virtual columns
     template: '{% raw %}&lt;a href="{{ URL }}"&gt;{{ Title }}&lt;/a&gt;{% endraw %}'
 </code></pre>
 
-<p>Virtual columns must have <code>name</code> and <code>template</code> properties. The <code>template</code> can make use of <a href="../templates/">string templates</a> and any existing columns in the data. You can also use the following filters in a replacement value:
-
-<ul>
-	<li><code>toFixed(n)</code> - to limit a value to n decimal places</li>
-	<li><code>multiply(n)</code> - to multiply a value by n</li>
-	<li><code>toLocaleString()</code> - to use the locale's (of the server) preferred formatting for a value</li>
-	<li><code>colourScale(scale,min,max)</code> - get a colour to, for example, use as a background style</li>
-	<li><code>contrastColour</code> - get a contrasting colour (black or white)</li>
-</ul>
+<p>Virtual columns must have <code>name</code> and <code>template</code> properties. The <code>template</code> can make use of <a href="../templates/">string templates</a>, <a href="../templates/#filters">filter functions</a>, and any existing columns in the data. </p>
 
 <p>For example, let's create a new <code>Tooltip contents</code> column:</p>
 
