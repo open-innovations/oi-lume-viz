@@ -130,7 +130,7 @@ export default function (input: {
 
 	const table = html.join('');
 
-	return `<div class="oi-table">${table}</div>`;
+	return `<div class="oi-viz oi-table">${table}</div>`;
 }
 
 export type TableOptions = {

@@ -8,9 +8,9 @@
 
 (function(root){
 
-  var styles = document.createElement('style');
-  styles.innerHTML = '.tooltip { color: black; margin-top: -0.75em; transition: left 0.03s linear, top 0.03s linear; white-space: nowrap; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }.tooltip .inner { padding: 1em; }';
-  document.head.prepend(styles)
+	var styles = document.createElement('style');
+	styles.innerHTML = '.tooltip { color: black; margin-top: -0.75em; transition: left 0.03s linear, top 0.03s linear; white-space: nowrap; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }.tooltip .inner { padding: 1em; }';
+	document.head.prepend(styles)
 
 	if(!root.OI) root.OI = {};
 	if(!root.OI.ready){

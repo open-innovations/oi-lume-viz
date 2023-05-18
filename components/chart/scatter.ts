@@ -68,5 +68,5 @@ export default function (input: {
   // Call the line render function
   const chart = renderScatterChart(options);
 
-  return `<div class="chart" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
+  return `<div class="oi-viz oi-chart oi-chart-scatter" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
 }

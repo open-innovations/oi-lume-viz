@@ -1,6 +1,6 @@
 /*
-	Open Innovations Chart Interactivity v0.2.1
-	Helper function that find ".chart" elements 
+	Open Innovations Chart Interactivity v0.2.2
+	Helper function that find ".oi-chart" elements 
 	looks for elements with "pane" within them,
 	finds their <h3> elements, 
 	then builds a simple tabbed interface.
@@ -16,6 +16,11 @@
 			else document.addEventListener('DOMContentLoaded', fn);
 		};
 	}
+
+
+	var styles = document.createElement('style');
+	//styles.innerHTML = '.tooltip { color: black; margin-top: -0.75em; transition: left 0.03s linear, top 0.03s linear; white-space: nowrap; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }.tooltip .inner { padding: 1em; }';
+	document.head.prepend(styles)
 
 	var ns = 'http://www.w3.org/2000/svg';
 	function svgEl(t){ return document.createElementNS(ns,t); }
@@ -311,7 +316,7 @@
 })(window || this);
 
 OI.ready(function(){
-	var charts = document.querySelectorAll('.chart');
+	var charts = document.querySelectorAll('.oi-chart');
 	for(var i = 0; i < charts.length; i++){
 		OI.InteractiveChart(charts[i]);
 	}

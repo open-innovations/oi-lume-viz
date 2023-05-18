@@ -17,7 +17,7 @@
 
 	OI.ready(function(){
 		var i,p,pts;
-		var svgs = document.querySelectorAll('.tree-map');
+		var svgs = document.querySelectorAll('.oi-tree-map');
 		for(i = 0; i < svgs.length; i++){
 			pts = svgs[i].querySelectorAll('rect');
 			for(p = 0; p < pts.length; p++){

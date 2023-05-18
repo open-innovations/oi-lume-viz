@@ -56,7 +56,7 @@ type RankingChartOptions = {
 
 export const css = `
 /* OI ranking chart component */
-.oi-ranking { position: relative; }
+.oi-chart-ranking { position: relative; }
 .leaflet-top, .leaflet-bottom, .leaflet-left, .leaflet-right { position: absolute; z-index: 400; pointer-events: none; }
 .leaflet-top { top: 0; }
 .leaflet-right { right: 0; }
@@ -345,7 +345,7 @@ export default function (input: {
 
 
 
-	var html = ['<div class="oi-ranking" data-dependencies="'+getAssetPath('/js/ranking.js')+'">'];
+	var html = ['<div class="oi-viz oi-chart-ranking" data-dependencies="'+getAssetPath('/js/ranking.js')+'">'];
 	html.push(svg.outerHTML);
 	// Create the legend
 	if(config.legend) html.push((new Legend(config)).outer("html"));

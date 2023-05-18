@@ -71,6 +71,6 @@
 })(window || this);
 
 OI.ready(function(){
-	var svgs = document.querySelectorAll('.oi-map.oi-svg-map, .oi-map.oi-hex-map, svg.marker');
+	var svgs = document.querySelectorAll('.oi-map.oi-map-svg, .oi-map.oi-map-hex, svg.marker');
 	for(var i = 0; i < svgs.length; i++) OI.InteractiveSVGMap(svgs[i]);
 });

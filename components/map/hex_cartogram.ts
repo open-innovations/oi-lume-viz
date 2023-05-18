@@ -37,8 +37,8 @@ function addTspan(str: string) {
  */
 export const css = `
 /* OI hex cartogram component */
-.oi-hex-map .hex:focus { outline: none; }
-.oi-hex-map .hex.outline path { stroke: black; stroke-width: 4px; }
+.oi-map-hex .hex:focus { outline: none; }
+.oi-map-hex .hex.outline path { stroke: black; stroke-width: 4px; }
 `;
 
 interface HexJson { layout: string; hexes: Record<string, HexDefinition> };
@@ -426,7 +426,7 @@ export default function (input: { config: HexmapOptions }) {
 
 
   // Return the HTML fragment for the visualisation that includes the dependencies and contains the SVG
-  return `<div class="oi-map oi-hex-map" data-dependencies="${ getAssetPath('/js/svg-map.js') },${ getAssetPath('/css/maps.css') },${ getAssetPath('/js/tooltip.js') }"><svg
+  return `<div class="oi-viz oi-map oi-map-hex" data-dependencies="${ getAssetPath('/js/svg-map.js') },${ getAssetPath('/css/maps.css') },${ getAssetPath('/js/tooltip.js') }"><svg
       id="hexes-${uuid}"
       class="oi-map-inner"
       viewBox="

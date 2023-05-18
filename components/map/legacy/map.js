@@ -96,7 +96,7 @@ export function ZoomableMap(opts){
 	this.getHTML = function(){
 		var html,i,r,file;
 
-		html = ['<div class="oi-map oi-zoomable-map" data-dependencies="'+getAssetPath('/leaflet/leaflet.js')+','+getAssetPath('/leaflet/leaflet.css')+','+getAssetPath('/css/maps.css')+','+getAssetPath('/js/tooltip.js')+'">'];
+		html = ['<div class="oi-viz oi-map oi-zoomable-map" data-dependencies="'+getAssetPath('/leaflet/leaflet.js')+','+getAssetPath('/leaflet/leaflet.css')+','+getAssetPath('/css/maps.css')+','+getAssetPath('/js/tooltip.js')+'">'];
 		
 		html.push('<script>');
 		html.push('(function(root){');
@@ -545,7 +545,7 @@ function BasicMap(config,attr){
 	this.place = (attr.place||"");
 
 	this.getHTML = function(){
-		var html = ['<div class="oi-map oi-svg-map" data-dependencies="'+getAssetPath('/js/svg-map.js')+','+getAssetPath('/css/maps.css')+','+getAssetPath('/js/tooltip.js')+'">'];
+		var html = ['<div class="oi-viz oi-map oi-map-svg" data-dependencies="'+getAssetPath('/js/svg-map.js')+','+getAssetPath('/css/maps.css')+','+getAssetPath('/js/tooltip.js')+'">'];
 
 		html.push(this.svg.outerHTML);
 

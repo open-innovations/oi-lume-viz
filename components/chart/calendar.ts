@@ -71,7 +71,7 @@ export default function (input: {
 
 	const chart = CalendarChart(options);
 
-	return `<div class="oi-calendar-chart" data-dependencies="${ getAssetPath('/js/calendar-chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
+	return `<div class="oi-viz oi-calendar-chart" data-dependencies="${ getAssetPath('/js/calendar-chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
 }
 
 
