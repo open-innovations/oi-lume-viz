@@ -319,7 +319,7 @@
     category: "Year"  # Category labels come from 
     columns:
       - name: "25+ tooltip"
-        template: "{{ Year }}\n25+: {{ 25+_percent | toFixed(2) }}% ({{ 25+ }})\n"
+        template: "25+\n{{ Year }}: {{ 25+_percent | toFixed(1) }}% ({{ 25+ }})\n"
     series:
       - title: "Under 19"
         value: u19

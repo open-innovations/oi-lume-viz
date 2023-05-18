@@ -5,7 +5,7 @@ title: Samples
 
 <h1>{{ title }}</h1>
 
-<p>Below you will find samples of the visualisation types we've made so far:</p>
+<p>We have created several visualisation types. Most of them are rendered as HTML or SVG with Javascript only added for some interactivity. Below you will find samples of the visualisation types we've made so far:</p>
 
 <ul>
 {% for sample in search.pages('sample order>0', 'order') | data %}
@@ -26,5 +26,3 @@ title: Samples
 	</div>
   {% endfor %}
 </div>
-
-<link rel="stylesheet" href="/assets/leaflet/leaflet.css">

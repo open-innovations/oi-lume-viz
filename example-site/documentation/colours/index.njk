@@ -54,9 +54,9 @@ customseries:
 
 	</div>
 </div>
-<section class="padded tallpadded" id="colours">
+<section class="padded tallpadded">
 	<div class="holder">
-		<h2>Colours</h2>
+		<h2>Colours{{ comp.anchor({ ref: "colours" }) | safe }}</h2>
 		<p>In many of the visualisations it is possible to set the colours of lines/points/polygons. You can set a colour using:</p>
 
 		<ul>
@@ -65,15 +65,15 @@ customseries:
 			<li><a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">a CSS color name</a> e.g. <code style="background:purple;color:{{ "purple" | contrastColour }}">purple</code></li>
 		</ul>
 
-		<h3 id="contrast">Contrasting colour</h3>
+		<h3>Contrasting colour{{ comp.anchor({ ref: "contrast" }) | safe }}</h3>
 		<p>If you are placing coloured text on a coloured background you may want to make sure you have the most <a href="https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef">contrasting colour</a> ratio. You can get that using, for example, <code>&lbrace;&lbrace; "#396bad" | contrastColour() &rbrace;&rbrace;</code> where the first argument is the colour. For <code style="background:#396bad;color:{{ "#396bad" | contrastColour }}">#396bad</code> we get the contrasting <code>{{ "#396bad" | contrastColour }}</code>.</p>
 
 	</div>
 </section>
-<section class="padded tallpadded" id="scales">
+<section class="padded tallpadded">
 	<div class="holder">
 
-		<h2>Colour scales</h2>
+		<h2>Colour scales{{ comp.anchor({ ref: "scales" }) | safe }}</h2>
 		<p>Sometimes items can have their colour set using a colour <code>scale</code> value. These can either be provided in the style of a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient">CSS gradient string</a> (e.g. <code>#03051A 0%, #CB1B4F 50%, #FAEBDD 100%</code>) or using one of the following named colour scales:</p>
 
 		<dl>
@@ -90,10 +90,10 @@ customseries:
 
 	</div>
 </section>
-<section class="padded tallpadded" id="series-colours">
+<section class="padded tallpadded">
 	<div class="holder">
 
-		<h2>Series colours</h2>
+		<h2>Series colours{{ comp.anchor({ ref: "series-colours" }) | safe }}</h2>
 		<p>The default series colours come from <a href="https://www.nature.com/articles/nmeth.1618/figures/2">Figure 2</a> of Wong, B. Points of view: Color blindness. <a href="https://doi.org/10.1038/nmeth.1618">Nat Methods 8, 441</a> (2011):</p>
 		<ol>
 		{% for i in range(0, 7) %}
@@ -103,12 +103,12 @@ customseries:
 
 	</div>
 </section>
-<section class="padded tallpadded" id="customise">
+<section class="padded tallpadded">
 	<div class="holder">
 
-		<h2>Customising colours</h2>
+		<h2>Customising colours{{ comp.anchor({ ref: "customise" }) | safe }}</h2>
 
-		<h3 id="customise-named">Setting named colours</h3>
+		<h3>Setting named colours{{ comp.anchor({ ref: "customise-named" }) | safe }}</h3>
 		<p>By default we provide existing <a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">CSS colours</a> but there may be times when you'd like to define your own custom named colours (or change the values of existing named colours) for use in visualisations. Update <code>_config.[js|ts]</code> to include the new named colours as part of the config to the plugin:</p>
 
 		<pre><code class="hljs language-json">site.use(oiComponents({
@@ -124,7 +124,7 @@ customseries:
 		<p>The new named colours can then be used in the same way as pre-defined colour names. For instance, we can include them in this page:{% for name in customnames %} <code style="background: {{ name | parseColour() }};color: {{ name | contrastColour() }}">{{ name }}</code>{% endfor %}. Note that, in this example, as well as creating some new colours we've also over-ridden several existing CSS colour names with new values.</p>
 
 
-		<h3 id="customise-series">Setting series colours</h3>
+		<h3>Setting series colours{{ comp.anchor({ ref: "customise-series" }) | safe }}</h3>
 		<p>We provide a <a href="#series-colours">default set of colour-blind-safe series colours</a> but you may wish to set your own defaults. Update <code>_config.[js|ts]</code> to include an array of colours as part of the config to the plugin:</p>
 
 		<pre><code class="hljs language-json">site.use(oiComponents({
@@ -136,7 +136,7 @@ customseries:
 }));</code></pre>
 
 
-		<h3 id="customise-scales">Setting colour scales</h3>
+		<h3>Setting colour scales{{ comp.anchor({ ref: "customise-scales" }) | safe }}</h3>
 
 		<p>It may be that the built-in colour scales don't meet your needs. You can add your own custom colour scales by updating <code>_config.[js|ts]</code> to include the new scales as part of the config to the plugin. For example, here we will create a new colour scale named <code>example</code>:</p>
 

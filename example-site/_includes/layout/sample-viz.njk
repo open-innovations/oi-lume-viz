@@ -16,10 +16,12 @@ layout: layout/base.njk
 
 {{ content | safe }}
 
+
 {% for example in examples %}
-	<section id="example-{{ loop.index }}">
-		<h2>{% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}</h2>
-    <p><a href="{{ search.page('parent.url="' + url + '" index=' + loop.index ).data.url }}">Embeddable version</a></p>
+	<section class="padded tallpadded">
+		{% set id %}example-{{ loop.index }}{% endset %}
+		<h2>{% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}{{ comp.anchor({ ref: id }) | safe }}</h2>
+		<p><a href="{{ search.page('parent.url="' + url + '" index=' + loop.index ).data.url }}">Embeddable version</a></p>
 		{% if example.description %}
 		{{ example.description | md | safe }}
 		{% endif %}
