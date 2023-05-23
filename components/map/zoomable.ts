@@ -33,9 +33,8 @@ function addTspan(str: string) {
  */
 export const css = `
 /* OI zoomable map component */
-.oi-zoomable-map { background: ${defaultbg}; }
 .oi-zoomable-map .marker:focus { outline: none; }
-.oi-zoomable-map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: transparent; position: relative; }
+.oi-zoomable-map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: ${defaultbg}; position: relative; }
 .oi-zoomable-map .place-name > svg { position: absolute; transform: translate3d(-50%,-50%,0); left: 50%; top: 50%; }
 `;
 

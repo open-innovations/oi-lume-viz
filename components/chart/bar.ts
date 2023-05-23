@@ -99,5 +99,5 @@ export default function (input: {
   // Call the bar render function
   const chart = renderBarChart(options);
 
-  return `<div class="oi-viz oi-chart oi-chart-bar" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
+  return `<div class="oi-viz oi-chart oi-chart-bar" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/css/charts.css') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
 }

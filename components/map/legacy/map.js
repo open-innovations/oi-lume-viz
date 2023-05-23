@@ -2,7 +2,7 @@ import { document } from '../../../lib/document.ts';
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { Colour, ColourScale } from "../../../lib/colour/colours.ts";
 import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
-import { Legend } from '../../../lib/chart-parts/legend.js';
+import { VisualisationHolder } from '../../../lib/holder.js';
 import { getBackgroundColour } from "../../../lib/colour/colour.ts";
 import { getAssetPath } from "../../../lib/util/paths.ts"
 
@@ -96,14 +96,11 @@ export function ZoomableMap(opts){
 	this.getHTML = function(){
 		var html,i,r,file;
 
-		html = ['<div class="oi-viz oi-map oi-zoomable-map" data-dependencies="'+getAssetPath('/leaflet/leaflet.js')+','+getAssetPath('/leaflet/leaflet.css')+','+getAssetPath('/css/maps.css')+','+getAssetPath('/js/tooltip.js')+'">'];
-		
+		html = ['<div class="leaflet">Test</div>'];
 		html.push('<script>');
 		html.push('(function(root){');
 		html.push('	var p = document.currentScript.parentNode;');
-		html.push('	var el = document.createElement("div");');
-		html.push('	el.classList.add("leaflet");');
-		html.push('	p.appendChild(el);');
+		html.push('	var el = p.querySelector(".leaflet");');
 		html.push('	var map = L.map(el);');
 
 		// Store the map in an array for the page
@@ -259,20 +256,6 @@ export function ZoomableMap(opts){
 			html.push('	})\n');
 		}
 
-		if(config.legend){
-			config.legend = mergeDeep({'position':'bottom right'},config.legend);
-			var legend = new Legend(config);
-
-			// Create the legend and add it to the map
-			html.push('	var legend = L.control({position: "'+((config.legend.position).replace(/ /g,""))+'"});\n');
-			html.push('	legend.onAdd = function (map){\n');
-			html.push('		var div = L.DomUtil.create("div", "info oi-legend");\n');
-			html.push('		div.innerHTML = \''+legend.inner("html")+'\';\n');
-			html.push('		return div;\n');
-			html.push('	}\n');
-			html.push('	legend.addTo(map);\n');
-		}
-
 		if(config.places){
 			for(var i = 0; i < config.places.length; i++){
 				var place = -1;
@@ -318,9 +301,11 @@ export function ZoomableMap(opts){
 		html.push('})(window || this);\n');
 		html.push('</script>\n');
 
-		html.push('</div>\n');
 
-		return html.join('');
+		var holder = new VisualisationHolder(config);
+		holder.addDependencies(['/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/js/tooltip.js']);
+		holder.addClasses(['oi-map','oi-zoomable-map']);
+		return holder.wrap(html.join(''));
 	};
 	return this;
 }
@@ -504,6 +489,8 @@ export function SVGMap(opts){
 
 	var map = new BasicMap(config,{
 		'background': 'transparent',
+		'classes': 'oi-map-svg',
+		'dependencies': ['/js/svg-map.js'],
 		'layers': layerlist,
 		'complete': function(){
 			if(config.bounds){
@@ -518,7 +505,6 @@ export function SVGMap(opts){
 	return map;
 
 }
-
 
 function BasicMap(config,attr){
 	if(!attr) attr = {};
@@ -545,16 +531,13 @@ function BasicMap(config,attr){
 	this.place = (attr.place||"");
 
 	this.getHTML = function(){
-		var html = ['<div class="oi-viz oi-map oi-map-svg" data-dependencies="'+getAssetPath('/js/svg-map.js')+','+getAssetPath('/css/maps.css')+','+getAssetPath('/js/tooltip.js')+'">'];
 
-		html.push(this.svg.outerHTML);
+		var holder = new VisualisationHolder(config);
+		holder.addDependencies(['/css/legend.css','/css/maps.css','/js/tooltip.js']);
+		holder.addClasses('oi-map');
+		holder.addClasses(attr.classes);
 
-		// Create the legend
-		if(config.legend) html.push((new Legend(config)).outer("html"));
-
-		html.push('</div>\n');
-
-		return html.join('');
+		return holder.wrap(this.svg.outerHTML);
 	};
 	
 	this.insertLayer = function(l,i){

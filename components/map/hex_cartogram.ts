@@ -6,6 +6,7 @@ import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
+import { VisualisationHolder } from '../../lib/holder.js';
 
 const defaultbg = getBackgroundColour();
 
@@ -14,8 +15,8 @@ const defaultbg = getBackgroundColour();
 const identityColourScale = (s: string) => s;
 
 function roundNumber(v){
-	if(typeof v==="number") return parseFloat(v.toFixed(3));
-	else return v;
+  if(typeof v==="number") return parseFloat(v.toFixed(3));
+  else return v;
 }
 
 function addTspan(str: string) {
@@ -425,8 +426,7 @@ export default function (input: { config: HexmapOptions }) {
   }
 
 
-  // Return the HTML fragment for the visualisation that includes the dependencies and contains the SVG
-  return `<div class="oi-viz oi-map oi-map-hex" data-dependencies="${ getAssetPath('/js/svg-map.js') },${ getAssetPath('/css/maps.css') },${ getAssetPath('/js/tooltip.js') }"><svg
+  var html = `<svg
       id="hexes-${uuid}"
       class="oi-map-inner"
       viewBox="
@@ -444,6 +444,11 @@ export default function (input: { config: HexmapOptions }) {
       <title id="title-${uuid}">${title}.</title>
     <g class="data-layer">
       ${Object.values(hexes).map(drawHex).join("")}
-    </g></svg>${legendDiv}</div>
-  `;
+    </g></svg>`;
+
+  var holder = new VisualisationHolder(input.config);
+  holder.addDependencies(['/js/svg-map.js','/css/maps.css','/js/tooltip.js']);
+  holder.addClasses('oi-map oi-map-hex');
+
+  return holder.wrap(html);
 }

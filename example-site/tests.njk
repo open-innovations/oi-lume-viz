@@ -1,0 +1,14 @@
+---
+title: Tests
+---
+
+
+<h1>{{ title }}</h1>
+
+<p>Some pages of tests</p>
+
+<ul>
+{% for sample in search.pages('test order>0', 'order') | data %}
+  <li><a href="{{ sample.url }}">{{ sample.title }}</a></li>
+{% endfor %}
+</ul>

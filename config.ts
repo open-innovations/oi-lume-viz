@@ -10,6 +10,7 @@ export const assets = [
   'js/tooltip.js',
   'js/tabbed.js',
   'css/maps.css',
+  'css/legend.css',
   'css/charts.css',
   'leaflet/leaflet.js',
   'leaflet/leaflet.css',

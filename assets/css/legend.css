@@ -1,0 +1,17 @@
+/* OI map components */
+.oi-legend { z-index: 1000; }
+.oi-legend-inner { color: #555; }
+.oi-legend-inner i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
+.oi-legend-inner .oi-legend-item {
+	line-height: 1.25em;
+	display: inline-block;
+	padding: 1em;
+}
+.oi-legend-inner .oi-legend-item:hover,.oi-legend-inner .oi-legend-item:focus { background: rgba(255,255,255,0.8); }
+.oi-legend-top { top: 0; text-align: center; }
+.oi-legend-right { right: 0; }
+.oi-legend-bottom { bottom: 0; text-align: center; }
+.oi-legend-left { left: 0; }
+.oi-legend-left, .oi-legend-right { margin-top: 0; margin-bottom: 0; position: absolute; text-align: left; }
+.oi-legend-left .oi-legend-item, .oi-legend-right .oi-legend-item { padding: 0; margin-right: 0; line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
+.oi-legend-top .oi-legend-item > *:first-child, .oi-legend-bottom .oi-legend-item > *:first-child { float: left; }

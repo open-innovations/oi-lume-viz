@@ -3,7 +3,6 @@ layout: layout/base.njk
 ---
 
 <h1>{{ title }}</h1>
-<p><code>Component: {{ component }}</code></p>
 {% if description %}<p>{{ description }}</p>{% endif %}
 
 {% if examples | length > 1 %}
@@ -21,16 +20,11 @@ layout: layout/base.njk
 	<section class="tallpadded">
 		{% set id %}example-{{ loop.index }}{% endset %}
 		<h2>{% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}{{ comp.anchor({ ref: id }) | safe }}</h2>
-		<p><a href="{{ search.page('parent.url="' + url + '" index=' + loop.index ).data.url }}">Embeddable version</a></p>
 		{% if example.description %}
 		{{ example.description | md | safe }}
 		{% endif %}
-		{% if example.config %}
-		{% comp 'oi.' + component, { "config": example.config } %}{% endcomp %}
-
-		<p>This example was made with config:</p>
-
-		<pre><code class="hljs language-yaml">{{ example.config | yaml }}</code></pre>
+		{% if example.config and example.component %}
+		{% comp 'oi.' + example.component, { "config": example.config } %}{% endcomp %}
 		{% endif %}
 	</section>
 {% endfor %}

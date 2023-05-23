@@ -33,7 +33,7 @@ import { ColourScale } from '../../lib/colour/colour-scale.ts';
 import { clone } from "../../lib/util/clone.ts";
 import { document } from '../../lib/document.ts';
 import { textLength } from './legacy/text.js';
-import { Legend } from '../../lib/chart-parts/legend.js';
+import { VisualisationHolder } from '../../lib/holder.js';
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 
@@ -52,20 +52,6 @@ type RankingChartOptions = {
 	curvature?: number,
 	circles?: number
 };
-
-
-export const css = `
-/* OI ranking chart component */
-.oi-chart-ranking { position: relative; }
-.leaflet-top, .leaflet-bottom, .leaflet-left, .leaflet-right { position: absolute; z-index: 400; pointer-events: none; }
-.leaflet-top { top: 0; }
-.leaflet-right { right: 0; }
-.leaflet-bottom { bottom: 0; }
-.leaflet-left { left: 0; }
-.oi-legend { text-align: left; color: #555; background: rgba(0,0,0,0.05); padding: 1em; }
-.oi-legend .oi-legend-item { line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
-.oi-legend i { display: inline-block; width: 1.25em; height: 1.25em; margin-right: 0.25em; opacity: 1; }
-`;
 
 
 /**
@@ -343,15 +329,10 @@ export default function (input: {
 		setAttr(series[s].path,{'d':path,'stroke':bg,'stroke-width':(dy*options['stroke-width']).toFixed(2)});
 	}
 
-
-
-	var html = ['<div class="oi-viz oi-chart-ranking" data-dependencies="'+getAssetPath('/js/ranking.js')+'">'];
-	html.push(svg.outerHTML);
-	// Create the legend
-	if(config.legend) html.push((new Legend(config)).outer("html"));
-	html.push('</div>');
-	
-	return html.join('');
+	var holder = new VisualisationHolder(config);
+	holder.addDependencies(['/js/ranking.js','/css/charts.css']);
+	holder.addClasses(['oi-chart','oi-chart-ranking']);
+	return holder.wrap(svg.outerHTML);
 }
 
 
