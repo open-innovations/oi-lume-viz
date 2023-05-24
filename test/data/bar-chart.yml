@@ -34,7 +34,7 @@
         series1: 15
     legend:
       show: true     # Default to false
-      position: "top right"
+      position: "top"
     axis:
       x:
         min: 0
@@ -76,7 +76,7 @@
         "Aspect 2 (%)": 10
     legend:
       show: true     # Default to false
-      position: "top right"
+      position: "top"
     axis:
       x:
         min: 15
@@ -129,7 +129,7 @@
     summary: "Employers were not asked separately about each type of placement"
     legend:
       show: true     # Default to false
-      position: "top right"
+      position: "top"
     axis:
       x:
         min: 0
@@ -193,7 +193,7 @@
     stacked: true
     legend:
       show: true     # Default to false
-      position: "top right"
+      position: "top"
     axis:
       x:
         grid:
@@ -235,7 +235,7 @@
     stacked: true
     legend:
       show: true     # Default to false
-      position: "top right"
+      position: "top"
     axis:
       x:
         min: 0
@@ -296,7 +296,7 @@
     percent: true
     legend:
       show: true     # Default to false
-      position: "top right"
+      position: "top"
     axis:
       x:
         grid:
@@ -344,7 +344,7 @@
     stacked: false
     legend:
       show: true
-      position: top right
+      position: top
     axis:
       x:
         tickSpacing: 10

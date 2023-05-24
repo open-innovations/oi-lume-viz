@@ -63,7 +63,7 @@ export function Chart(config,csv){
 		// Create SVG container
 		if(!svg){
 			svg = svgEl('svg');
-			svgopt = {'xmlns':ns,'version':'1.1','viewBox':'0 0 '+this.w+' '+this.h,'overflow':'visible','style':'max-width:100%;width:100%','preserveAspectRatio':'xMidYMin meet','data-type':this.opt.type};
+			svgopt = {'xmlns':ns,'version':'1.1','class':'oi-chart-main','viewBox':'0 0 '+this.w+' '+this.h,'overflow':'visible','style':'max-width:100%;width:100%','preserveAspectRatio':'xMidYMin meet','data-type':this.opt.type};
 			if(this.opt.width) svgopt.width = this.opt.width;
 			if(this.opt.height) svgopt.height = this.opt.height;
 			setAttr(svg,svgopt);
@@ -196,10 +196,31 @@ export function Chart(config,csv){
 
 		// Create a legend for the chart
 		if(this.opt.legend.show){
-			if(!this.legend){
-				this.legend = new Legend(this,svg);
-			}else{
-				this.legend.update();
+
+			if(!config.legend.items){
+				config.legend.items = new Array(this.series.length);
+			}
+
+			// Create the legend items
+			for(s = 0; s < this.series.length; s++){
+				let keyitem = new KeyItem({
+					'type':this.opt.type,
+					'series':this.series[s],
+					's':s,
+					'fontSize': 16,
+					'itemWidth': (this.opt.type == "scatter-chart" ? 1 : 2),
+					'points':this.opt.series[s].points||{},
+					'line':this.opt.series[s].line||{}
+				});
+				if(!config.legend.items[s]){
+					config.legend.items[s] = {};
+				}
+				config.legend.items[s].colour = keyitem.colour;
+				config.legend.items[s].label = keyitem.label;
+
+				if(this.opt.type == "scatter-chart" || this.opt.type == "line-chart"){
+					config.legend.items[s].icon = keyitem.getSVG();
+				}
 			}
 		}
 
@@ -213,81 +234,6 @@ export function Chart(config,csv){
 	return this;
 }
 
-function Legend(chart,svg){
-	let key,fs,pd,hkey,wkey,x,y,s,text,line,mark,p,cl,po,tspan,u;
-
-	fs = chart.opt['font-size']||16;
-	pd = chart.opt.legend.padding||(fs*0.5);
-	hkey = (chart.opt.legend.label ? 1:0)*fs +(2*pd) + (chart.series.length*fs);
-	x = 0;
-	y = 0;
-
-	if(!chart.legend){
-		key = {'el':svgEl("g"),'g':[],'items':[],'border':svgEl("rect")};
-		key.el.classList.add('legend');
-		setAttr(key.border,{'x':0,'y':chart.opt.top,'width':chart.w,'height':hkey});
-		if(typeof chart.opt.legend.border==="object"){
-			for(p in chart.opt.legend.border) key.border.setAttribute(p,chart.opt.legend.border[p]);
-		}
-		add(key.border,key.el);
-		add(key.el,svg);
-	}
-
-	this.update = function(){
-		let itemWidth = 2;
-		wkey = 0;
-		for(s = 0; s < chart.series.length; s++){
-			if(!key.items[s]){
-				key.items[s] = new KeyItem({
-					'type':chart.opt.type,
-					'legend':key.el,
-					'series':chart.series[s],
-					's':s,
-					'points':chart.opt.series[s].points||{},
-					'line':chart.opt.series[s].line||{},
-					'fontSize': fs,
-					'itemWidth': itemWidth
-				});
-			}
-
-			// If we had a browser we could use getBoundingClientRect().width, but we don't so we'll approximate the length
-			wkey = Math.max(wkey,key.items[s].getTextLength(chart.opt.legend.text['font-weight']||"standard",chart.opt.legend.text['font-family']||chart.opt['font-family']||"Poppins"));
-		}
-
-		if(typeof chart.opt.legend.width==="number") wkey = chart.opt.legend.width;
-		else wkey += fs*(itemWidth+0.5) + pd*2;	// The width is approximately half the font-size plus twice the font size (for the icon) and some padding
-
-		if(!chart.opt.legend.position) chart.opt.legend.position = 'top right';
-		po = chart.opt.legend.position.split(/ /);
-
-		x = y = 0;
-		for(u = 0; u < po.length; u++){
-			if(po[u]=="left") x = chart.opt.left+pd;
-			else if(po[u]=="right") x = (chart.w-chart.opt.right-wkey-pd);
-			else if(po[u]=="top") y = chart.opt.top+pd;
-			else if(po[u]=="bottom") y = chart.h-chart.opt.bottom-pd-hkey;
-		}
-
-		setAttr(key.el,{'transform':'translate('+x+' '+y+')'})
-		setAttr(key.border,{'x':0,'width':wkey,'y':0,'fill':chart.opt.legend.fill||'rgba(255,255,255,0.8)'});
-		y += pd;
-		x += pd;
-
-		x = pd;
-		y = pd;
-		for(s = 0; s < chart.series.length; s++){
-			y += key.items[s].setPosition(x,y);
-			key.items[s].updateLabel(chart.opt.legend.text,chart.opt['font-family']);
-			key.items[s].update();
-		}
-		return this;
-	};
-
-	this.update();
-
-	return this;
-}
-
 // Build a key item
 function KeyItem(attr){
 
@@ -298,6 +244,7 @@ function KeyItem(attr){
 		'fontSize': 1,	// Deliberately small so we can see it is bad
 		'itemWidth': 2
 	}
+
 	// Set some default values
 	mergeDeep(opts,attr);
 
@@ -308,15 +255,7 @@ function KeyItem(attr){
 	let cl = ['data-series','data-series-'+(opts.s+1)];
 	if(opts.series.getProperty('class')) cl.concat(series.getProperty('class').split(/ /));
 	addClasses(this.el,cl);
-	opts.legend.appendChild(this.el);
 
-	let label = svgEl('text');
-	this.el.appendChild(label);
-	let tspan = svgEl('tspan');
-	tspan.innerHTML = (opts.series.getProperty('title')||"Series "+(s+1));
-	setAttr(tspan,{'dx':(opts.fontSize*(opts.itemWidth+0.5)),'dy':0});
-	label.appendChild(tspan);
-	
 	let line = svgEl('path');
 	setAttr(line,{'d':'M0 0 L 1 0','stroke-width':opts.line['stroke-width']||4,'stroke-dasharray':opts.line['stroke-dasharray']||'','stroke-linecap':'round','class':'line item-line'});
 	
@@ -329,39 +268,29 @@ function KeyItem(attr){
 	this.el.appendChild(line);
 	this.el.appendChild(mark.el);
 	
-	setAttr(tspan,opts.series.getProperty('attr'));
+	this.label = (opts.series.getProperty('title')||"Series "+(opts.s+1));
 
-	this.getTextLength = function(fontWeight,fontFamily){
-		// If the DOM element has access to getComputedTextLength() 
-		// we use that otherwise fall back to our simplistic version
-		return (typeof label.getComputedTextLength==="function") ? label.getComputedTextLength() : textLength(tspan.innerText,opts.fontSize,fontWeight,fontFamily);
-	};
-	this.setPosition = function(x,y){
-		setAttr(this.el,{'transform':'translate('+x+' '+y+')','data':'a'});
-		return opts.fontSize;
-	};
-	this.updateLabel = function(text,fontFamily){
-		setAttr(label,{'x': 0,'y':roundTo(opts.fontSize*0.2, 3),'font-family':fontFamily||"sans-serif"});
-		if(typeof text==="object"){
-			for(let p in text) label.setAttribute(p,text[p]);
-		}
-		return this;
+
+	let fs = opts.fontSize;
+	let p = opts.series.getProperties();
+	mark.setPosition(roundTo(fs*(opts.itemWidth/2), 3),roundTo(0.5*fs, 3),fs/2);
+	mark.setAttr({'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
+	if(size <= 1) mark.setAttr({'opacity':'0.01'});
+
+	if(opts.type=="line-chart" || opts.type=="category-chart"){
+		line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*opts.itemWidth)+' 0');
+		if(p.line.color) line.setAttribute('stroke',p.line.color||"");
+		line.setAttribute('vector-effect','non-scaling-stroke');
 	}
 
-	this.update = function(){
+	this.colour = (p.points.color||"");
 
-		let fs = opts.fontSize;
-		let p = opts.series.getProperties();
-		mark.setPosition(roundTo(fs*(opts.itemWidth/2), 3),roundTo(0.5*fs, 3),fs/2);
-		mark.setAttr({'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
-		if(size <= 1) mark.setAttr({'opacity':'0.01'});
-
-		if(opts.type=="line-chart" || opts.type=="category-chart"){
-			line.setAttribute('d','M'+0+','+roundTo(fs*0.5, 3)+' l '+(fs*opts.itemWidth)+' 0');
-			if(p.line.color) line.setAttribute('stroke',p.line.color||"");
-		}
-		return this;
-	}
+	this.getSVG = function(){
+		var svg = '<svg xmlns="http://www.w3.org/2000/svg" overflow="visible" class="oi-legend-icon" data-series="'+(opts.s+1)+'" height="1em" style="aspect-ratio:'+opts.itemWidth+' / 1" viewBox="0 0 '+(opts.itemWidth*opts.fontSize)+' '+opts.fontSize+'">';
+		svg += this.el.outerHTML;
+		svg += '</svg>';
+		return svg;
+	};
 
 	return this;
 }

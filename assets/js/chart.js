@@ -19,7 +19,6 @@
 
 
 	var styles = document.createElement('style');
-	//styles.innerHTML = '.tooltip { color: black; margin-top: -0.75em; transition: left 0.03s linear, top 0.03s linear; white-space: nowrap; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }.tooltip .inner { padding: 1em; }';
 	document.head.prepend(styles)
 
 	var ns = 'http://www.w3.org/2000/svg';
@@ -40,25 +39,37 @@
 		return el;
 	}
 	function InteractiveChart(el){
-		var svg = el.querySelector('svg');
-		var key = el.querySelector('.legend');
-		var serieskey = el.querySelectorAll('.series');
-		var s,i,p;
+
+		var svg = el.querySelector('svg.oi-chart-main');
+		var key = el.querySelector('.oi-legend');
+
+		// No .oi-chart-main to attach to
+		if(!svg) return this;
+
+		var serieskey = svg.querySelectorAll('.series');
+		var s,i,p,sid;
 		var pt = el.querySelectorAll('.series .marker');
 		var pts = [];
-		var series = [];
+		var series = {};
 		var shapes = [];
 		for(p = 0; p < pt.length; p++){
 			// Set the tabIndex on every selectable point
 			pt[p].setAttribute('tabindex',0);
 			// Get the series number
-			s = parseInt(pt[p].getAttribute('data-series'));
+			s = pt[p].getAttribute('data-series');
 			// Get the item within the series
 			i = parseInt(pt[p].getAttribute('data-i'));
 			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.add(pt[p])};
-			if(!series[s]) series[s] = [];
-			if(!series[s][i]) series[s][i] = pts[p];
+			if(!series[s]) series[s] = {'i':parseInt(s),'array':[]};
+			if(!series[s].array[i]) series[s].array[i] = pts[p];
 		}
+		for(s = 0; s < serieskey.length; s++){
+			sid = serieskey[s].getAttribute('data-series');
+			if(sid && series[sid]){
+				series[sid].g = serieskey[s];
+			}
+		}
+
 		this.enabled = true;
 		this.selected = null;
 
@@ -118,6 +129,8 @@
 
 						if(serieskey[s]==selected){
 							serieskey[s].style.opacity = 1;
+							keyseries[s].classList.remove('oi-fade');
+							keyseries[s].classList.add('oi-select');
 							// Simulate z-index by moving to the end
 							if(typ == "stacked-bar-chart"){
 								serieskey[s].parentNode.appendChild(serieskey[s]);
@@ -127,6 +140,8 @@
 						}else{
 							// Fade the unselected series
 							serieskey[s].style.opacity = 0.1;
+							keyseries[s].classList.add('oi-fade');
+							keyseries[s].classList.remove('oi-select');
 							// Make points unselectable
 							for(p = 0; p < pts.length; p++) pts[p].removeAttribute('tabindex');
 						}
@@ -167,16 +182,17 @@
 			var matches = [];
 			var typ = svg.getAttribute('data-type');
 
-			for(s = 0; s < series.length; s++){
-				if(series[s]){
+			for(sid in series){
+				if(series[sid]){
+					s = series[sid].i;
 					ok = true;
 					if(this.selected != null && s!=this.selected) ok = false;
 					if(ok){
 						dist = 1e100;
 						d = -1;
 						idx = -1;
-						for(i = 0; i < series[s].length; i++){
-							p = series[s][i].el.getBoundingClientRect();
+						for(i = 0; i < series[sid].array.length; i++){
+							p = series[sid].array[i].el.getBoundingClientRect();
 							if(typ=="category-chart"){
 								dx = Math.abs((p.x+p.width/2)-e.clientX);	// Find distance from circle centre to cursor
 								dy = Math.abs((p.y+p.width/2)-e.clientY);
@@ -217,7 +233,7 @@
 							}
 						}
 						if(idx >= 0){
-							matches.push({'dist':d,'pt':series[s][idx]});
+							matches.push({'dist':d,'pt':series[sid].array[idx]});
 						}
 					}
 				}
@@ -236,54 +252,24 @@
 		};
 		addEv('mousemove',svg,{'this':this},this.findPoint);
 		if(key){
-			// We build an HTML version of the key
-			var newkey = document.createElement('div');
-			newkey.classList.add('legend');
-			el.insertBefore(newkey, el.firstChild);
 
 			// Get each of the .data-series elements from the existing key
-			var keyseries = key.querySelectorAll('.data-series');
-			
-			var keyitem,icon,txt,snum;
+			var keyseries = key.querySelectorAll('.oi-legend-item');
+			var keyitem,icon,txt,snum,icon;
+
 			for(s = 0; s < keyseries.length; s++){
-				// Create a key item <div>
-				keyitem = document.createElement('div');
-				keyitem.classList.add('legend-item');
-				add(keyitem,newkey);
 
-				txt = document.createElement('span');
-				txt.classList.add('label');
+				keyitem = keyseries[s];
+				icon = keyseries[s].querySelector('.oi-legend-icon');
+				snum = (icon) ? icon.getAttribute('data-series') : "";
 
-				if(!keyseries[s].querySelector('svg')){
-
-					// If this already is SVG get the text from a tspan
-					txt.innerHTML = keyseries[s].querySelector('text tspan').innerHTML;
-
-					// Make the new SVG just for the icon and add it to our new series item
-					icon = svgEl('svg');
-					add(keyseries[s].cloneNode(true),icon);
-					setAttr(icon,{'overflow':'visible','width':17*2,'height':'1em','viewBox':'0 0 '+(17*2)+' 17'});
-					snum = keyseries[s].getAttribute('data-series');
-
-				}else{
-					// Get the SVG item and use it
-					icon = keyseries[s].querySelector('svg').cloneNode(true);
-					setAttr(icon,{'overflow':'visible','height':'1em','style':''});
-
-					// If this is HTML containing SVG get the text from a span
-					txt.innerHTML = keyseries[s].querySelector('span').innerHTML;
-					
-					snum = keyseries[s].querySelector('.marker').getAttribute('data-series');
+				txt = "";
+				if(keyitem.querySelector('.oi-legend-label')){
+					txt = keyitem.querySelector('.oi-legend-label').innerHTML;
 				}
 
-				// Remove any text from the icon
-				if(icon.querySelector('text')) icon.querySelector('text').parentNode.removeChild(icon.querySelector('text'));
-
-				add(icon,keyitem);
-				add(txt,keyitem);
-
-				setAttr(icon.querySelector('.data-series'),{'transform':''});
-				setAttr(keyitem,{'data-series':snum,'tabindex':0,'title':'Highlight series: '+txt.innerHTML});
+				setAttr(keyitem,{'data-series':snum,'tabindex':0,'title':'Highlight series: '+txt});
+				keyitem.style.cursor = "pointer";
 
 				// Add the events for mouseover, keydown, click and mouseout
 				addEv('mouseover',keyitem,{'this':this,'s':snum},this.highlightSeries);
@@ -296,8 +282,6 @@
 				addEv('click',keyitem,{'this':this,'s':keyseries[s].getAttribute('data-series')},this.setSeries);
 				addEv('mouseout',keyitem,{'this':this,'s':null},this.highlightSeries);
 			}
-			// Hide the original key
-			key.style.display = 'none';
 			addEv('mouseleave',el,{'this':this,'s':''},this.reset);
 		}
 		return this;

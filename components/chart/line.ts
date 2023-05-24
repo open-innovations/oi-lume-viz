@@ -1,5 +1,6 @@
 import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { renderLineChart } from "./helpers.ts";
+import { VisualisationHolder } from '../../lib/holder.js';
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
@@ -69,5 +70,8 @@ export default function (input: {
   // Call the line render function
   const chart = renderLineChart(options);
 
-  return `<div class="oi-viz oi-chart oi-chart-line" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
+  var holder = new VisualisationHolder(options);
+  holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
+  holder.addClasses(['oi-chart','oi-chart-line']);
+  return holder.wrap(chart);
 }

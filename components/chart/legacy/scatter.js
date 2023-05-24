@@ -114,7 +114,11 @@ export function ScatterChart(config,csv){
 	mergeDeep(opt,config);
 
 	this.chart = new Chart(opt,csv);
-	
+
 	this.getSVG = function(){ return this.chart.getSVG(); };
+
+	// Pass back the updated legend
+	config.legend = opt.legend;
+
 	return this;
 }

@@ -4,6 +4,618 @@ description: |
   Testing the rendering of legends across visualisation types.
 order: 1
 examples:
+  - title: "Line chart - legend at the top"
+    description: |
+      Creating a line chart with a `legend→position` at the `top`.
+    component: chart.line
+    config:
+      legend:
+        show: true
+        position: top
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 0.2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+      series:
+        - title: Series 1
+          colour: red
+          x: value
+          y: series1
+          points:
+            size: 8
+        - title: Series 2
+          colour: blue
+          x: value
+          y: series2
+          points:
+            marker: cross
+            rotate: 45
+            size: 16
+          line:
+            stroke-dasharray: 0 12
+        - title: Series 3
+          colour: green
+          x: value
+          y: series3
+          points:
+            marker: triangle
+            rotate: 180
+            size: 32
+          line:
+            stroke-dasharray: 4 6
+            stroke-width: 3
+  - title: "Line chart - legend at the top left"
+    description: |
+      Creating a line chart with a `legend→position` at the `top left`.
+    component: chart.line
+    config:
+      legend:
+        show: true
+        position: top left
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 0.2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+      series:
+        - title: Series 1
+          colour: red
+          x: value
+          y: series1
+          points:
+            size: 8
+        - title: Series 2
+          colour: blue
+          x: value
+          y: series2
+          points:
+            marker: cross
+            rotate: 45
+            size: 16
+          line:
+            stroke-dasharray: 0 12
+        - title: Series 3
+          colour: green
+          x: value
+          y: series3
+          points:
+            marker: triangle
+            rotate: 180
+            size: 32
+          line:
+            stroke-dasharray: 4 6
+            stroke-width: 3
+  - title: "Line chart - legend at the top right"
+    description: |
+      Creating a line chart with a `legend→position` at the `top right`.
+    component: chart.line
+    config:
+      legend:
+        show: true
+        position: top right
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 0.2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+      series:
+        - title: Series 1
+          colour: red
+          x: value
+          y: series1
+          points:
+            size: 8
+        - title: Series 2
+          colour: blue
+          x: value
+          y: series2
+          points:
+            marker: cross
+            rotate: 45
+            size: 16
+          line:
+            stroke-dasharray: 0 12
+        - title: Series 3
+          colour: green
+          x: value
+          y: series3
+          points:
+            marker: triangle
+            rotate: 180
+            size: 32
+          line:
+            stroke-dasharray: 4 6
+            stroke-width: 3
+  - title: "Line chart - legend at the bottom"
+    description: |
+      Creating a line chart with a `legend→position` at the `bottom`.
+    component: chart.line
+    config:
+      legend:
+        show: true
+        position: bottom
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 0.2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+      series:
+        - title: Series 1
+          colour: red
+          x: value
+          y: series1
+          points:
+            size: 8
+        - title: Series 2
+          colour: blue
+          x: value
+          y: series2
+          points:
+            marker: cross
+            rotate: 45
+            size: 16
+          line:
+            stroke-dasharray: 0 12
+        - title: Series 3
+          colour: green
+          x: value
+          y: series3
+          points:
+            marker: triangle
+            rotate: 180
+            size: 32
+          line:
+            stroke-dasharray: 4 6
+            stroke-width: 3
+  - title: "Line chart - legend at the bottom left"
+    description: |
+      Creating a line chart with a `legend→position` at the `bottom left`.
+    component: chart.line
+    config:
+      legend:
+        show: true
+        position: bottom left
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 0.2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+      series:
+        - title: Series 1
+          colour: red
+          x: value
+          y: series1
+          points:
+            size: 8
+        - title: Series 2
+          colour: blue
+          x: value
+          y: series2
+          points:
+            marker: cross
+            rotate: 45
+            size: 16
+          line:
+            stroke-dasharray: 0 12
+        - title: Series 3
+          colour: green
+          x: value
+          y: series3
+          points:
+            marker: triangle
+            rotate: 180
+            size: 32
+          line:
+            stroke-dasharray: 4 6
+            stroke-width: 3
+  - title: "Line chart - legend at the bottom right"
+    description: |
+      Creating a line chart with a `legend→position` at the `bottom right`.
+    component: chart.line
+    config:
+      legend:
+        show: true
+        position: bottom right
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 0.2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+      series:
+        - title: Series 1
+          colour: red
+          x: value
+          y: series1
+          points:
+            size: 8
+        - title: Series 2
+          colour: blue
+          x: value
+          y: series2
+          points:
+            marker: cross
+            rotate: 45
+            size: 16
+          line:
+            stroke-dasharray: 0 12
+        - title: Series 3
+          colour: green
+          x: value
+          y: series3
+          points:
+            marker: triangle
+            rotate: 180
+            size: 32
+          line:
+            stroke-dasharray: 4 6
+            stroke-width: 3
+  - title: "Stacked bar chart - legend at the top"
+    description: |
+      Creating a bar chart with a `legend→position` at the `top`.
+    component: chart.bar
+    config: 
+      data: test.data.bar
+      category: category
+      series:
+        - title: A
+          value: value
+          colour: "#69C2C9"
+        - title: B
+          value: value2
+          colour: "#7D2248"
+      stacked: true
+      legend:
+        show: true
+        position: top
+      axis:
+        x:
+          tickSpacing: 10
+        y:
+          grid:
+            stroke-width: 0.5
+  - title: "Stacked bar chart - legend at the top left"
+    description: |
+      Creating a bar chart with a `legend→position` at the `top left`.
+    component: chart.bar
+    config: 
+      data: test.data.bar
+      category: category
+      series:
+        - title: A
+          value: value
+          colour: "#69C2C9"
+        - title: B
+          value: value2
+          colour: "#7D2248"
+      stacked: true
+      legend:
+        show: true
+        position: top left
+      axis:
+        x:
+          tickSpacing: 10
+        y:
+          grid:
+            stroke-width: 0.5
+  - title: "Stacked bar chart - legend at the top right"
+    description: |
+      Creating a bar chart with a `legend→position` at the `top right`.
+    component: chart.bar
+    config: 
+      data: test.data.bar
+      category: category
+      series:
+        - title: A
+          value: value
+          colour: "#69C2C9"
+        - title: B
+          value: value2
+          colour: "#7D2248"
+      stacked: true
+      legend:
+        show: true
+        position: top right
+      axis:
+        x:
+          tickSpacing: 10
+        y:
+          grid:
+            stroke-width: 0.5
+  - title: "Stacked bar chart - legend at the bottom"
+    description: |
+      Creating a bar chart with a `legend→position` at the `bottom`.
+    component: chart.bar
+    config: 
+      data: test.data.bar
+      category: category
+      series:
+        - title: A
+          value: value
+          colour: "#69C2C9"
+        - title: B
+          value: value2
+          colour: "#7D2248"
+      stacked: true
+      legend:
+        show: true
+        position: bottom
+      axis:
+        x:
+          tickSpacing: 10
+        y:
+          grid:
+            stroke-width: 0.5
+  - title: "Stacked bar chart - legend at the bottom left"
+    description: |
+      Creating a bar chart with a `legend→position` at the `bottom left`.
+    component: chart.bar
+    config: 
+      data: test.data.bar
+      category: category
+      series:
+        - title: A
+          value: value
+          colour: "#69C2C9"
+        - title: B
+          value: value2
+          colour: "#7D2248"
+      stacked: true
+      legend:
+        show: true
+        position: bottom left
+      axis:
+        x:
+          tickSpacing: 10
+        y:
+          grid:
+            stroke-width: 0.5
+  - title: "Stacked bar chart - legend at the bottom right"
+    description: |
+      Creating a bar chart with a `legend→position` at the `bottom right`.
+    component: chart.bar
+    config: 
+      data: test.data.bar
+      category: category
+      series:
+        - title: A
+          value: value
+          colour: "#69C2C9"
+        - title: B
+          value: value2
+          colour: "#7D2248"
+      stacked: true
+      legend:
+        show: true
+        position: bottom right
+      axis:
+        x:
+          tickSpacing: 10
+        y:
+          grid:
+            stroke-width: 0.5
+  - title: "Scatter chart - legend at the top"
+    description: |
+      Creating a scatter chart with a `legend→position` at the `top`.
+    component: chart.scatter
+    config:
+      legend:
+        show: true     # Default to false
+        position: top
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 75
+      series:
+        - title: Series 1
+          colour: red
+          x: category
+          y: series1
+        - title: Series 2
+          colour: blue
+          x: category
+          y: series2
+        - title: Series 3
+          colour: green
+          x: category
+          y: series3
+  - title: "Scatter chart - legend at the top left"
+    description: |
+      Creating a scatter chart with a `legend→position` at the `top left`.
+    component: chart.scatter
+    config:
+      legend:
+        show: true     # Default to false
+        position: top left
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 75
+      series:
+        - title: Series 1
+          colour: red
+          x: category
+          y: series1
+        - title: Series 2
+          colour: blue
+          x: category
+          y: series2
+        - title: Series 3
+          colour: green
+          x: category
+          y: series3
+  - title: "Scatter chart - legend at the top right"
+    description: |
+      Creating a scatter chart with a `legend→position` at the `top right`.
+    component: chart.scatter
+    config:
+      legend:
+        show: true     # Default to false
+        position: top right
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 75
+      series:
+        - title: Series 1
+          colour: red
+          x: category
+          y: series1
+        - title: Series 2
+          colour: blue
+          x: category
+          y: series2
+        - title: Series 3
+          colour: green
+          x: category
+          y: series3
+  - title: "Scatter chart - legend at the bottom"
+    description: |
+      Creating a scatter chart with a `legend→position` at the `bottom`.
+    component: chart.scatter
+    config:
+      legend:
+        show: true     # Default to false
+        position: bottom
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 75
+      series:
+        - title: Series 1
+          colour: red
+          x: category
+          y: series1
+        - title: Series 2
+          colour: blue
+          x: category
+          y: series2
+        - title: Series 3
+          colour: green
+          x: category
+          y: series3
+  - title: "Scatter chart - legend at the bottom left"
+    description: |
+      Creating a scatter chart with a `legend→position` at the `bottom left`.
+    component: chart.scatter
+    config:
+      legend:
+        show: true     # Default to false
+        position: bottom left
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 75
+      series:
+        - title: Series 1
+          colour: red
+          x: category
+          y: series1
+        - title: Series 2
+          colour: blue
+          x: category
+          y: series2
+        - title: Series 3
+          colour: green
+          x: category
+          y: series3
+  - title: "Scatter chart - legend at the bottom right"
+    description: |
+      Creating a scatter chart with a `legend→position` at the `bottom right`.
+    component: chart.scatter
+    config:
+      legend:
+        show: true     # Default to false
+        position: bottom right
+      data: test.data.example_data
+      axis:
+        x:
+          grid:
+            show: true
+          tickSpacing: 2
+        y:
+          grid:
+            show: true
+          tickSpacing: 25
+          max: 75
+      series:
+        - title: Series 1
+          colour: red
+          x: category
+          y: series1
+        - title: Series 2
+          colour: blue
+          x: category
+          y: series2
+        - title: Series 3
+          colour: green
+          x: category
+          y: series3
   - title: Ranking chart - legend at the top
     description: |
       Creating a ranking chart with a `legend` at the `top`.
@@ -21,6 +633,7 @@ examples:
         - name: 2020
           template: '{{ Ranks→2020 }}'
       legend:
+        show: true
         position: top
         items:
           - value: 40
@@ -50,6 +663,7 @@ examples:
         - name: 2020
           template: '{{ Ranks→2020 }}'
       legend:
+        show: true
         position: top left
         items:
           - value: 40
@@ -79,6 +693,7 @@ examples:
         - name: 2020
           template: '{{ Ranks→2020 }}'
       legend:
+        show: true
         position: top right
         items:
           - value: 40
@@ -108,6 +723,7 @@ examples:
         - name: 2020
           template: '{{ Ranks→2020 }}'
       legend:
+        show: true
         position: bottom
         items:
           - value: 40
@@ -137,6 +753,7 @@ examples:
         - name: 2020
           template: '{{ Ranks→2020 }}'
       legend:
+        show: true
         position: bottom left
         items:
           - value: 40
@@ -166,6 +783,7 @@ examples:
         - name: 2020
           template: '{{ Ranks→2020 }}'
       legend:
+        show: true
         position: bottom right
         items:
           - value: 40
@@ -194,6 +812,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: top
           items:
             - value: 160000
@@ -222,6 +841,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: top right
           items:
             - value: 160000
@@ -250,6 +870,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: top left
           items:
             - value: 160000
@@ -278,6 +899,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: bottom
           items:
             - value: 160000
@@ -306,6 +928,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: bottom right
           items:
             - value: 160000
@@ -334,6 +957,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: bottom left
           items:
             - value: 160000
@@ -375,6 +999,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: top
           items:
             - value: 160000
@@ -416,6 +1041,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: top left
           items:
             - value: 160000
@@ -457,6 +1083,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: top right
           items:
             - value: 160000
@@ -498,6 +1125,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: bottom
           items:
             - value: 160000
@@ -539,6 +1167,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: bottom left
           items:
             - value: 160000
@@ -580,6 +1209,7 @@ examples:
       min: 0
       max: 160000
       legend:
+          show: true
           position: bottom right
           items:
             - value: 160000

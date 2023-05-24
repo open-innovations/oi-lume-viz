@@ -1,5 +1,6 @@
 import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { renderBarChart } from "./helpers.ts";
+import { VisualisationHolder } from '../../lib/holder.js';
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
@@ -50,30 +51,30 @@ export default function (input: {
 
   // Optionally use normalised (to 100%) values
   if(config.stacked && config.percent){
-		
-		// Find the totals for each category
-		var totals = new Array(config.data.length);
-		for(let r = 0; r < config.data.length; r++){
-			totals[r] = 0;
-			for(let s = 0; s < config.series.length; s++){
-				totals[r] += config.data[r][config.series[s].value];
-			}
-		}
+    
+    // Find the totals for each category
+    var totals = new Array(config.data.length);
+    for(let r = 0; r < config.data.length; r++){
+      totals[r] = 0;
+      for(let s = 0; s < config.series.length; s++){
+        totals[r] += config.data[r][config.series[s].value];
+      }
+    }
 
-		// For each series create a percentage-based version
-		for(let s = 0; s < config.series.length; s++){
-			// Construct a new series ID
-			let id = config.series[s].value+"_percent";
-			// If the new series doesn't exist in the data...
-			if(!config.data[0][id]){
-				// For each row in the data
-				for(let r = 0; r < config.data.length; r++){
-					config.data[r][id] = (100*config.data[r][config.series[s].value]/totals[r]);
-				}
-				// Replace the series reference to the dummy column we have created
-				config.series[s].value = id;
-			}
-		}
+    // For each series create a percentage-based version
+    for(let s = 0; s < config.series.length; s++){
+      // Construct a new series ID
+      let id = config.series[s].value+"_percent";
+      // If the new series doesn't exist in the data...
+      if(!config.data[0][id]){
+        // For each row in the data
+        for(let r = 0; r < config.data.length; r++){
+          config.data[r][id] = (100*config.data[r][config.series[s].value]/totals[r]);
+        }
+        // Replace the series reference to the dummy column we have created
+        config.series[s].value = id;
+      }
+    }
   }
   
   // Create any defined columns
@@ -99,5 +100,8 @@ export default function (input: {
   // Call the bar render function
   const chart = renderBarChart(options);
 
-  return `<div class="oi-viz oi-chart oi-chart-bar" data-dependencies="${ getAssetPath('/js/chart.js') },${ getAssetPath('/css/charts.css') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
+  var holder = new VisualisationHolder(options);
+  holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
+  holder.addClasses(['oi-chart','oi-chart-bar']);
+  return holder.wrap(chart);
 }

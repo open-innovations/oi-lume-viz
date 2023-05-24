@@ -1,4 +1,5 @@
 /* OI chart styles */
+.oi-chart { position: relative; }
 .oi-chart .legend .legend-item { }
 /* OI ranking chart component */
 .oi-chart-ranking { position: relative; }
