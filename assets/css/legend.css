@@ -3,7 +3,6 @@
 .oi-legend-inner { color: #555; }
 .oi-legend-inner .oi-legend-icon { display: inline-block; height: 1.25em; aspect-ratio: 1 / 1; margin-right: 0.25em; opacity: 1; }
 .oi-legend-inner .oi-legend-item { line-height: 1.25em; display: inline-block; padding: 0.5em; }
-.oi-legend-inner .oi-legend-item:hover,.oi-legend-inner .oi-legend-item:focus { background: rgba(255,255,255,0.8); }
 .oi-legend-top { top: 0; text-align: center; }
 .oi-legend-right { right: 0; }
 .oi-legend-bottom { bottom: 0; text-align: center; }

@@ -108,7 +108,7 @@ export default function (input: {
 	// Error checking
 	checkOptions(options);
 
-	let svgopt,clip,rect,svg,seriesgroup,dy,y,yv,x,xv,h,w,pad,xoff,xlbl,dx,lbl,g,v,i,ok,data,path,oldx,oldy,oldrank,rank,orderby,bg,talign,circle,radius,txt;
+	let svgopt,clip,rect,svg,seriesgroup,dy,y,yv,x,xv,h,w,pad,xoff,xlbl,dx,ttl,lbl,g,v,i,ok,data,path,oldx,oldy,oldrank,rank,orderby,bg,talign,circle,radius,txt;
 	const ns = 'http://www.w3.org/2000/svg';
 	// Create a random ID number
 	const id = Math.round(Math.random()*1e8);
@@ -197,6 +197,11 @@ export default function (input: {
 		g.classList.add('series');
 		series[s].g = g;
 		svg.appendChild(g);
+		
+		ttl = svgEl('title');
+		ttl.innerHTML = series[s].title;
+		series[s].titleEl = ttl;
+		g.appendChild(ttl);
 
 		lbl = svgEl('text');
 		lbl.innerHTML = series[s].title;
@@ -303,6 +308,7 @@ export default function (input: {
 
 		// Make path for this series
 		path = "";
+		ttl = series[s].title+':';
 		for(i = 0; i < series[s].rank.length; i++){
 			rank = series[s].rank[i];
 			yv = getY(rank-1);
@@ -325,14 +331,25 @@ export default function (input: {
 			oldy = yv;
 			oldx = xv;
 			oldrank = rank;
+			
+			ttl += '<br />'+(i == 0 ? ' ':'; ')+config.columns[i].name+': '+getNumberWithOrdinal(rank);
 		}
 		setAttr(series[s].path,{'d':path,'stroke':bg,'stroke-width':(dy*options['stroke-width']).toFixed(2)});
+
+		// Update series title
+		series[s].titleEl.innerHTML = ttl;
 	}
 
 	var holder = new VisualisationHolder(config);
 	holder.addDependencies(['/js/ranking.js','/css/charts.css']);
 	holder.addClasses(['oi-chart','oi-chart-ranking']);
 	return holder.wrap(svg.outerHTML);
+}
+
+function getNumberWithOrdinal(n) {
+	var s = ["th", "st", "nd", "rd"],
+		v = n % 100;
+	return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
 
