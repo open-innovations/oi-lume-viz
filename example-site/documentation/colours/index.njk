@@ -114,7 +114,7 @@ customseries:
 		<pre><code class="hljs language-json">site.use(oiComponents({
   ...
   "colour": {
-	"names": {
+    "names": {
 {% for name in customnames %}      "{{ name }}": "{{ name | parseColour() }}",
 {% endfor %}    },
   },
@@ -130,7 +130,7 @@ customseries:
 		<pre><code class="hljs language-json">site.use(oiComponents({
   ...
   "colour": {
-	"series": [ {% for colour in customseries %}"{{ colour | parseColour() }}", {% endfor %}],
+    "series": [ {% for colour in customseries %}"{{ colour | parseColour() }}", {% endfor %}],
   },
   ...
 }));</code></pre>
@@ -143,9 +143,9 @@ customseries:
 		<pre><code class="hljs language-json">site.use(oiComponents({
   ...
   "colour": {
-	"scales": {
-	  "example": "{{ "example" | colourScaleGradient() }}",
-	}
+    "scales": {
+      "example": "{{ "example" | colourScaleGradient() }}",
+    }
   },
   ...
 }));</code></pre>
