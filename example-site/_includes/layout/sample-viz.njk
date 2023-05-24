@@ -20,7 +20,7 @@ layout: layout/base.njk
 {% for example in examples %}
 	<section class="tallpadded">
 		{% set id %}example-{{ loop.index }}{% endset %}
-		<h2>{% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}{{ comp.anchor({ ref: id }) | safe }}</h2>
+		<h2>{{ loop.index }}. {% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}{{ comp.anchor({ ref: id }) | safe }}</h2>
 		<p><a href="{{ search.page('parent.url="' + url + '" index=' + loop.index ).data.url }}">Embeddable version</a></p>
 		{% if example.description %}
 		{{ example.description | md | safe }}
