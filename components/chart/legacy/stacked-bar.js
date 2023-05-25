@@ -1,10 +1,11 @@
 import { mergeDeep } from './util.js';
-import { textLength } from './text.js';
-
+import { textLength, getFontFamily, getFontWeight } from '../../../lib/font/fonts.ts';
 import { Chart } from './chart.js';
 import { Series } from './series.js';
 
 const basefs = 17;
+const fontFamily = getFontFamily();
+const fontWeight = getFontWeight();
 
 // ORIGINAL FUNCTION BELOW
 export function StackedBarChart(config,csv){
@@ -118,7 +119,7 @@ export function StackedBarChart(config,csv){
 						// Work out the longest line
 						for(i = 0; i < lines.length; i++){
 							// Roughly calculate the length in pixels
-							len = Math.max(len,(this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + textLength(lines[i],this.opt['font-size'],this.opt['font-weight'],'Century Gothic') + this.opt.tick + this.opt.axis[ax].padding);
+							len = Math.max(len,(this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + textLength(lines[i],this.opt['font-size'],this.opt['font-weight']||fontWeight,fontFamily) + this.opt.tick + this.opt.axis[ax].padding);
 						}
 					}
 					align = this.opt.axis[ax].labels[l].align||(ax=="x" ? "bottom":"left");

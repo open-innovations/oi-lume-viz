@@ -32,12 +32,15 @@ import { replaceNamedColours } from '../../lib/colour/parse-colour-string.ts';
 import { ColourScale } from '../../lib/colour/colour-scale.ts';
 import { clone } from "../../lib/util/clone.ts";
 import { document } from '../../lib/document.ts';
-import { textLength } from './legacy/text.js';
+import { textLength, getFontFamily, getFontWeight, getFontSize } from '../../lib/font/fonts.ts';
 import { VisualisationHolder } from '../../lib/holder.js';
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 
 const defaultbg = getBackgroundColour();
+const fontFamily = getFontFamily();
+const fontWeight = getFontWeight();
+const fontSize = getFontSize();
 
 type RankingChartOptions = {
 	/** The data holding the values to be presented in the panels */
@@ -87,8 +90,8 @@ export default function (input: {
 	const defaults: Partial<RankingChartOptions> = {
 		'padding':{'left':0,'top':0,'right':0,'bottom':0},
 		'width': 1048,
-		'font-size': 17,
-		'font-family':'"Century Gothic",sans-serif',
+		'font-size': fontSize,
+		'font-family': fontFamily,
 		'curvature': 1,
 		'circles': 0,
 		'stroke-width': 0.5,

@@ -1,6 +1,6 @@
 import { Chart } from './chart.js';
 import { Series } from './series.js';
-import { textLength } from './text.js';
+import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
 import { mergeDeep } from './util.js';
 
 const colours = {};
@@ -8,7 +8,7 @@ const colours = {};
 // ORIGINAL FUNCTION BELOW
 export function ScatterChart(config,csv){
 
-	const basefs = 16;
+	const basefs = getFontSize();
 
 	var opt = {
 		'type': 'scatter-chart',

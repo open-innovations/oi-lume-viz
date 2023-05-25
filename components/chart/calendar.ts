@@ -3,8 +3,13 @@ import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
+import { getFontFamily, getFontWeight, getFontSize } from '../../lib/font/fonts.ts';
 
 const defaultbg = getBackgroundColour();
+const fontFamily = getFontFamily();
+const fontWeight = getFontWeight();
+const fontSize = getFontSize();
+
 
 export const css = `
 /* OI calendar chart component */
@@ -118,7 +123,7 @@ function CalendarChart(input: {
 	range.min.year = range.min.date.getFullYear();
 	range.max.year = range.max.date.getFullYear();
 
-	let w = 100;
+	let w = input.width||1048;
 	let size = w/56;
 	let space = size*2;
 	let yr = (range.max.year - range.min.year)+1;
@@ -198,13 +203,13 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 
 	x = opts.origin.x + opts.size;
 	y = opts.origin.y + 3.5*opts.size;
-	svg = '<text class="year" x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" transform="rotate(-90)" transform-origin="'+x.toFixed(3)+' '+y.toFixed(3)+'" text-anchor="middle" font-size="'+(opts.size*1.5).toFixed(3)+'" dominant-baseline="middle">'+year+'</text>';
+	svg = '<text class="year" x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" transform="rotate(-90)" transform-origin="'+x.toFixed(3)+' '+y.toFixed(3)+'" text-anchor="middle" font-size="'+(opts.size*1.5).toFixed(3)+'" font-family="'+fontFamily+'" dominant-baseline="middle">'+year+'</text>';
 
 	d = new Date(sday.getTime());
 	for(i = 0; i < 7; i++){
 		x = opts.origin.x + (2.5)*opts.size;
 		y = opts.origin.y + (i+0.5)*opts.size;
-		svg += '<text class="day" x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" font-size="'+(opts.size*0.75).toFixed(3)+'">'+d.toLocaleDateString("en-GB",{'weekday':'narrow'})+'</text>';
+		svg += '<text class="day" x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" font-size="'+(opts.size*0.75).toFixed(3)+'" font-family="'+fontFamily+'">'+d.toLocaleDateString("en-GB",{'weekday':'narrow'})+'</text>';
 		d = (new Date(d.getTime() + 86400000));
 	}
 

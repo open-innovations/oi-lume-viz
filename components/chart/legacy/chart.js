@@ -4,7 +4,7 @@ import { Axis } from './axis.js';
 import { Series } from './series.js';
 import { Marker } from './marker.js';
 import { add, svgEl, setAttr, addClasses, roundTo } from './util.js';
-import { textLength } from './text.js';
+import { textLength, getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
 
 const ns = 'http://www.w3.org/2000/svg';
 
@@ -14,6 +14,9 @@ export function Chart(config,csv){
 	if(!config) config = {};
 	var lbl,id,svg,i,ax,key,seriesgroup,categoryoffset,seriesoffset;
 	lbl = 'categorychart';
+	var fontFamily = getFontFamily();
+	var fontWeight = getFontWeight();
+	var fontSize = getFontSize();
 
 	var _obj = this;
 
@@ -25,16 +28,16 @@ export function Chart(config,csv){
 		'right':0,
 		'top':0,
 		'bottom':0,
-		'font-size': 16,
-		'font-family':'Poppins,sans-serif',
+		'font-size': fontSize,
+		'font-family': fontFamily,
 		'legend':{
 			'show':false,
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'none'},
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},
 		'axis':{
-			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'Poppins,CenturyGothicStd,"Century Gothic",sans-serif','font-weight':'normal'},
-			'y':{'padding':10,'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':'Poppins,CenturyGothicStd,"Century Gothic",sans-serif','font-weight':'normal'}
+			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight,'font-size':fontSize},
+			'y':{'padding':10,'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight}
 		},
 		'duration': '0.3s'
 	};
@@ -207,7 +210,7 @@ export function Chart(config,csv){
 					'type':this.opt.type,
 					'series':this.series[s],
 					's':s,
-					'fontSize': 16,
+					'fontSize': fontSize,
 					'itemWidth': (this.opt.type == "scatter-chart" ? 1 : 2),
 					'points':this.opt.series[s].points||{},
 					'line':this.opt.series[s].line||{}

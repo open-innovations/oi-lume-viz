@@ -3,7 +3,7 @@
 .oi-map .leaflet a { background-image: none!important; color: inherit!important; }
 .oi-map .leaflet-popup-content-wrapper { border-radius: 0; }
 .oi-map .leaflet-popup-content { margin: 1em; }
-.oi-map .leaflet-container, .oi-map .leaflet-popup-content-wrapper, .oi-map .leaflet-popup-content { font-size: 1em; font-family: "CenturyGothicStd", "Century Gothic", Helvetica, sans-serif; line-height: inherit; }
+.oi-map .leaflet-container, .oi-map .leaflet-popup-content-wrapper, .oi-map .leaflet-popup-content { font-size: 1em; line-height: inherit; }
 .oi-map .leaflet-popup-content-wrapper, .oi-map .leaflet-popup-tip { box-shadow: none; }
 .oi-map .leaflet-popup { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.7)); }
 .oi-map .leaflet-container a.leaflet-popup-close-button { color: inherit; }

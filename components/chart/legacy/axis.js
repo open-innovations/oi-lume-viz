@@ -1,9 +1,14 @@
 import { Animate } from './animate.js';
 import { add, svgEl, setAttr,addClasses, mergeDeep, roundTo } from './util.js';
+import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
 
 export function Axis(ax,from,to,attr){
 
 	var opt,lbl,fs,xmin,xmax,ymin,ymax;
+
+	const fontFamily = getFontFamily();
+	const fontWeight = getFontWeight();
+	const fontSize = getFontSize();
 
 	// Set some defaults
 	opt = {
@@ -13,9 +18,9 @@ export function Axis(ax,from,to,attr){
 		'top': 0,
 		'bottom': 0,
 		'padding': 4,
-		'font-size': 16,
-		'font-family': 'CenturyGothicStd,"Century Gothic",sans-serif',
-		'font-weight': 'bold',
+		'font-size': fontSize,
+		'font-family': fontFamily,
+		'font-weight': fontWeight,
 		'line':{'show':true,stroke:'#000000','stroke-width':1,'stroke-linecap':'round','stroke-dasharray':''},
 		'grid':{'show':false,'stroke':'#B2B2B2','stroke-width':1,'stroke-linecap':'round','stroke-dasharray':''},
 		title:{},
@@ -43,7 +48,7 @@ export function Axis(ax,from,to,attr){
 	// Add the title to the main element
 	add(this.title,this.el);
 
-	fs = opt['font-size'];
+	fs = opt['font-size']||fontSize;
 
 	xmin = ymin = xmax = ymax = 0;
 
@@ -134,10 +139,10 @@ export function Axis(ax,from,to,attr){
 						}
 						this.ticks[t].g.animate = new Animate(this.ticks[t].g.el,{duration:opt.duration});
 						add(this.ticks[t].g.el,this.el);
-//						if(len>0){
-							this.ticks[t].line = {'el':svgEl('line')};
-							add(this.ticks[t].line.el,this.ticks[t].g.el);
-//						}
+
+						this.ticks[t].line = {'el':svgEl('line')};
+						add(this.ticks[t].line.el,this.ticks[t].g.el);
+
 						this.ticks[t].text.el.setAttribute('text-anchor',(opt['text-anchor'] || talign));
 						add(this.ticks[t].text.el,this.ticks[t].g.el);
 					}else{
@@ -150,7 +155,7 @@ export function Axis(ax,from,to,attr){
 					for(l = 0; l < lines.length; l++){
 						tspan = svgEl('tspan');
 						tspan.innerHTML = lines[l];
-						setAttr(tspan,{'font-family':opt['font-family']||'sans-serif'});
+						setAttr(tspan,{'font-family':opt['font-family']||fontFamily,'font-size':fs});
 						if(ax=="x") setAttr(tspan,{'dy':fs*l,'x':0,'y':ysign*(len+pd)});
 						if(ax=="y") setAttr(tspan,{'y':fs*((l-(lines.length-1)/2)),'x':xsign*(len+pd)});
 						add(tspan,this.ticks[t].text.el);

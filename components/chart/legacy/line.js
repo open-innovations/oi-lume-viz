@@ -1,5 +1,5 @@
 import { Chart } from './chart.js';
-import { textLength } from './text.js';
+import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
 import { mergeDeep } from './util.js';
 
 const colours = {};
@@ -7,7 +7,7 @@ const colours = {};
 // ORIGINAL FUNCTION BELOW
 export function LineChart(config,csv){
 
-	const basefs = 16;
+	const basefs = getFontSize();
 
 	var opt = {
 		'type': 'line-chart',

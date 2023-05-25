@@ -7,8 +7,10 @@ import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { ZoomableMap } from "./legacy/map.js";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
+import { getFontFamily } from '../../lib/font/fonts.ts';
 
 const defaultbg = getBackgroundColour();
+const fontFamily = getFontFamily();
 
 // This is a simple scale which returns the same value it was sent
 // Useful if the hexmap has a colour attribute

@@ -18,6 +18,7 @@
 	function InteractiveSVGMap(el){
 		var svg,pt,p,_obj,typ;
 
+console.log(el);
 		if(el.tagName.toLowerCase()=="svg"){
 			// Used for markers
 			svg = el;
@@ -72,5 +73,6 @@
 
 OI.ready(function(){
 	var svgs = document.querySelectorAll('.oi-map.oi-map-svg, .oi-map.oi-map-hex, svg.marker');
+	console.log(svgs);
 	for(var i = 0; i < svgs.length; i++) OI.InteractiveSVGMap(svgs[i]);
 });
