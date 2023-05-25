@@ -171,7 +171,7 @@ export function Axis(ax,from,to,attr){
 						// Set generic properties for the line
 						setAttr(this.ticks[t].line.el,{'stroke':(opt.labels[t]['stroke']||opt.grid.stroke),'stroke-width':(opt.labels[t]['stroke-width']||opt.grid['stroke-width']||1),'stroke-dasharray':(opt.labels[t]['stroke-dasharray']||opt.grid['stroke-dasharray']||'')});
 					}
-					this.ticks[t].g.animate.set({'transform':{'to':'translate('+b.x+','+b.y+')'}});
+					this.ticks[t].g.animate.set({'transform':{'to':'translate('+b.x.toFixed(3)+','+b.y.toFixed(3)+')'}});
 				}
 			}
 		}
