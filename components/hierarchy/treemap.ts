@@ -6,8 +6,17 @@ import { TableData, UsefulFunction } from "./lib/hierarchy-visualisation.ts";
 import { TreeMap, TreeMapOptions } from "./lib/tree-map.ts";
 import { addVirtualColumns } from "../../lib/helpers.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
+import { getFontSize, getFontWeight, getFontFamily } from "../../lib/font/fonts.ts";
 
 const defaultbg = getBackgroundColour();
+const fontFamily = getFontFamily();
+const fontWeight = getFontWeight();
+const fontSize = getFontSize();
+
+export const css = `
+/* OI tree map */
+.oi-tree-map foreignObject div { color: white; font-size:${fontSize}px; font-family:${fontFamily}; padding: 0.25em; border:none; }
+`;
 
 interface ColourOptions {
   colour: string;

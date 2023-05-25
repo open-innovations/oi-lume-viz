@@ -1,11 +1,5 @@
 import { Colour } from "../../../lib/colour/colour.ts";
-import { getFontSize, getFontWeight, getFontFamily } from "../../../lib/font/fonts.ts";
 import { d3 } from "../../../lib/external/d3.ts";
-
-const fontFamily = getFontFamily();
-const fontWeight = getFontWeight();
-const fontSize = getFontSize();
-
 
 import {
   HierarchyVisualisation,
@@ -92,18 +86,6 @@ export class TreeMap extends HierarchyVisualisation {
       .classed("oi-viz treemap", true)
       .attr("viewBox", [0, 0, this.width, this.height])
 	  .attr("data-type","tree-map");
-
-    const padd = fontSize/4;
-
-    svg.append("style").text(`
-      .treemap foreignObject div {
-        color: white;
-        font-size:${fontSize}px;
-		font-family:${fontFamily};
-        padding:${padd}px;
-        border:none;
-      }
-    `);
 
     // Create a group to hold the cells
     const treeCells = svg.append("g")
