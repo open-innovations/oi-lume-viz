@@ -123,7 +123,7 @@ function CalendarChart(input: {
 	range.min.year = range.min.date.getFullYear();
 	range.max.year = range.max.date.getFullYear();
 
-	let w = input.width||1048;
+	let w = input.width||1080;
 	let size = w/56;
 	let space = size*2;
 	let yr = (range.max.year - range.min.year)+1;

@@ -101,11 +101,11 @@ export default function (options: { config: TreemapComponentOptions }) {
     colourMapper: (d) => d.data.colour(d) || defaultbg,
     dataMapper: hierarchyMapper,
     grouping: grouperMaker(options.config.grouping || ["name"]),
-    height: options.config.height || 400,
+    height: options.config.height || 720,
     description: options.config.description || ((d) => d.name),
     padding: options.config.padding || 2,
     reduce: hierarchyReducer,
-    width: options.config.width || 600,
+    width: options.config.width || 1080,
   };
 
   // Convert references into actual objects

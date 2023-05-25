@@ -89,7 +89,7 @@ export default function (input: {
 	// We can optionally set defaults in this
 	const defaults: Partial<RankingChartOptions> = {
 		'padding':{'left':0,'top':0,'right':0,'bottom':0},
-		'width': 1048,
+		'width': 1080,
 		'font-size': fontSize,
 		'font-family': fontFamily,
 		'curvature': 1,

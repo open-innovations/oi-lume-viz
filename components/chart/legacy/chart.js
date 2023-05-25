@@ -47,8 +47,8 @@ export function Chart(config,csv){
 	this.xmax = 0;
 	this.ymin = 0;
 	this.ymax = 0;
-	this.w = this.opt.width||1048;
-	this.h = this.opt.height||786;
+	this.w = this.opt.width||1080;
+	this.h = this.opt.height||810;
 	this.series = [];
 	this.axes = {};
 	id = Math.round(Math.random()*1e8);
