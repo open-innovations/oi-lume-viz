@@ -2,8 +2,6 @@ export const assets = [
   'js/chart.js',
   'js/calendar-chart.js',
   'js/dashboard.js',
-  'js/highlight.js',
-  'js/section-links.js',
   'js/ranking.js',
   'js/svg-map.js',
   'js/tree-map.js',

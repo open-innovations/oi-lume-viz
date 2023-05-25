@@ -27,6 +27,7 @@ const site = lume({
 
 
 site.loadAssets([".css"]);
+site.loadAssets([".js"]);
 site.loadData(['.csv'], csvLoader);
 
 

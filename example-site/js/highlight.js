@@ -13,6 +13,17 @@
 		};
 	}
 
+	var styles = document.createElement('style');
+	styles.innerHTML = 	`.comment { color: #444; }
+	.oi-keyword { color: #D60303; }
+	.oi-string { color: #0DBC37; }
+	.oi-title { color: #722EA5; }
+	.oi-attr { color: #2f529f; }
+	.oi-built_in, .oi-literal { color: #D60303; }
+	.oi-number { color: #2254F4; }`
+	document.head.prepend(styles)
+
+
 	// Convert to sRGB colorspace
 	// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
 	function sRGBToLinear(v){
