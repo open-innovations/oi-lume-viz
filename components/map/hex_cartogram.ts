@@ -38,7 +38,7 @@ function addTspan(str: string) {
  */
 export const css = `
 /* OI hex cartogram component */
-.oi-map-hex .hex:focus { outline: none; }
+.oi-map-hex .hex:focus, .oi-map-hex .hex path:focus { outline: none; }
 .oi-map-hex .hex.outline path { stroke: black; stroke-width: 4px; }
 `;
 
@@ -397,14 +397,13 @@ export default function (input: { config: HexmapOptions }) {
           role="listitem"
           aria-label="${labelProp} value ${valuecol}"
         >
-        <path fill="${fill !== undefined ? `${fill}` : "${defaultbg}"}" d="${hexPath}"></path>
+        <path fill="${fill !== undefined ? `${fill}` : "${defaultbg}"}" d="${hexPath}"><title>${tooltipText}</title></path>
         <text
         fill="${(Colour(fill)).contrast}"
         text-anchor="middle"
           dominant-baseline="middle"
           aria-hidden="true"
           >${labelText}</text>
-    <title>${tooltipText}</title>
       </g>`;
   };
 

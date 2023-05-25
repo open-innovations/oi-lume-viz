@@ -210,7 +210,7 @@ examples:
         - { code: "E06000014", "LAD21NM":"York","Aged 15 years and under":30738 }
       value: colour
       matchKey: code
-      tooltip: "Aged 15 and under<br />{{ LAD21NM }}: {{ Aged 15 years and under | toLocaleString() }}"
+      tooltip: "{{ LAD21NM }}<br />Aged 15 and under: {{ Aged 15 years and under | toLocaleString() }}"
   - title: "Big example"
     description: |
       This is a large map showing local authorities coloured by region with a layout loaded from an external source. We provide a key with a title and an entry for each region. Each individual hex <code>label</code> is explicitly set to be an empty string.

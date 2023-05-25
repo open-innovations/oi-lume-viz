@@ -33,7 +33,7 @@ export const css = `
 /* OI svg map component */
 .oi-map-svg svg { width: 100%; }
 .oi-map-svg path:focus, .oi-map-svg .marker:focus { outline: none; }
-.oi-map-svg .area.outline .selected { stroke: black; stroke-width: 4px; stroke-opacity: 1; }
+.oi-map-svg .area.outline .selected { stroke: black; stroke-width: 4px; stroke-opacity: 1; outline: none; }
 `;
 
 interface GeoJson { type: string; features: unknown };
