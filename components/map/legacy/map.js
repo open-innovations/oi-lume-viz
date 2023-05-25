@@ -882,7 +882,7 @@ function Layer(attr,map,i){
 								if(feature.properties.tooltip){
 									var t = svgEl('title');
 									t.innerHTML = feature.properties.tooltip;
-									p.appendChild(t);
+									p.querySelector(':first-child').appendChild(t);
 									p.classList.add('marker');
 								}
 							}else{

@@ -18,20 +18,18 @@
 	function InteractiveSVGMap(el){
 		var svg,pt,p,_obj,typ;
 
-console.log(el);
 		if(el.tagName.toLowerCase()=="svg"){
 			// Used for markers
 			svg = el;
 			el = svg.parentNode;
 			typ = "svg-map";
-			pt = svg.querySelectorAll('path');
+			pt = [svg.querySelector(':first-child')];
 		}else{
 			svg = el.querySelector('svg');
 			typ = svg.getAttribute('data-type');
 			pt = svg.querySelectorAll('.data-layer path');
 		}
 
-		
 		this.addOutline = function(e){
 			// Create an outline version of the hex that sits on top
 			var outline = e.cloneNode(true);
@@ -41,12 +39,13 @@ console.log(el);
 			outline.querySelector('path').setAttribute('vector-effect','non-scaling-stroke');
 			outline.removeAttribute('id');
 			outline.classList.add('outline');
+			outline.querySelector('path').removeAttribute('tabindex');
 			e.parentNode.appendChild(outline);
 			return this;
 		};
 		this.removeOutline = function(){
 			e = svg.querySelector('.data-layer');
-			if(e.parentNode.querySelector('.outline')) e.parentNode.querySelector('.outline').remove();
+			if(e && e.parentNode.querySelector('.outline')) e.parentNode.querySelector('.outline').remove();
 			return this;
 		};
 		_obj = this;
@@ -73,6 +72,5 @@ console.log(el);
 
 OI.ready(function(){
 	var svgs = document.querySelectorAll('.oi-map.oi-map-svg, .oi-map.oi-map-hex, svg.marker');
-	console.log(svgs);
 	for(var i = 0; i < svgs.length; i++) OI.InteractiveSVGMap(svgs[i]);
 });
