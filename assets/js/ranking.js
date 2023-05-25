@@ -16,22 +16,42 @@
 	function InteractiveRankingChart(el){
 
 		var series = el.querySelectorAll('g.series');
+		var selected = -1;
+		var locked = false;
 
 		function enableSeries(i,el){
 			el.setAttribute('tabindex',0);
 			el.addEventListener('mouseover',function(e){ focusLine(i); });
+			el.addEventListener('click',function(e){ selectLine(i); });
+			el.addEventListener('keydown',function(e){ if(e.keyCode==13){ selectLine(i); } });
 			el.addEventListener('mouseleave',function(e){ resetLines(i); });
 			el.addEventListener('focus',function(e){ focusLine(i); });
 			el.addEventListener('blur',function(e){ resetLines(i); });
 		}
+		function selectLine(i){
+			if(selected==i){
+				// If it is the currently selected line we deselect everything
+				selected = -1;
+				locked = false;
+				resetLines(i);
+			}else{
+				locked = false;
+				// Otherwise
+				focusLine(i);
+				selected = i;
+				locked = true;
+			}
+		}
 		function focusLine(i){
+			if(locked) return;
 			for(var s = 0; s < series.length; s++){
-				series[s].style = (i==s) ? '' : 'filter:grayscale(100%);opacity:0.1;transition: 0.2s ease-in opacity;';
+				series[s].style = (i==s) ? 'cursor:pointer;' : 'filter:grayscale(100%);opacity:0.1;transition: 0.2s ease-in opacity;cursor:pointer;';
 			}
 		}
 		function resetLines(){
+			if(locked) return;
 			for(var s = 0; s < series.length; s++){
-				series[s].style = 'transition: 0.2s ease-in opacity;';
+				series[s].style = 'transition: 0.2s ease-in opacity;cursor:pointer;';
 			}
 		}
 		for(var s = 0; s < series.length; s++) enableSeries(s,series[s]);
