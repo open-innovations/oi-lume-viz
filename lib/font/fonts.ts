@@ -93,7 +93,9 @@ export function setDefaultFonts({
 				console.warn('Using the metrics for "'+f.font+'" instead. This may result in badly positioned chart labels.');
 			}
 		}else{
-			console.error('Failed to set font→family to "'+family+'". Known fonts include: '+Object.keys(fontDefinitions).join(", ")+'. You could register a new font.');
+			console.error('Failed to set font→family to "'+family+'". Known fonts include:\n  - '+Object.keys(fontDefinitions).join("\n  - "));
+			console.error('You should register "'+family+'" in your site\'s _config.[js|ts].');
+			console.error('See https://open-innovations.github.io/oi-lume-charts/documentation/fonts/#customise-fonts for more details.');
 			throw 'No known font found in font-family "'+family+'".';
 		}
 	}

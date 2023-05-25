@@ -1,0 +1,84 @@
+---
+layout: layout/base.njk
+title: Fonts
+fonts:
+  - "Arial"
+  - "Century Gothic"
+  - "Courier New"
+  - "Garamond"
+  - "Georgia"
+  - "Roboto"
+  - "Tahoma"
+  - "Times New Roman"
+  - "Trebuchet MS"
+  - "Verdana"
+---
+
+		<h1>{{ title }}</h1>
+		<p>It is possible to set various default font properties for the visualisations.</p>
+
+		<ol>
+			<li><a href="#customise-family">Setting font family</a></li>
+			<li><a href="#customise-fonts">Setting font metrics</a></li>
+			<li><a href="#customise-size">Setting font size</a></li>
+			<li><a href="#customise-weight">Setting font weight</a></li>
+		</ol>
+
+	</div>
+</div>
+<section class="padded tallpadded">
+	<div class="holder">
+
+		<h2>Setting font family{{ comp.anchor({ ref: "customise-family" }) | safe }}</h3>
+		<p>The default font is <code>Arial</code>. If you want to use a different font, you can update <code>_config.[js|ts]</code> with:</p>
+		<pre><code class="hljs language-json">site.use(oiComponents({
+  ...
+  "font": {
+    "family": "Poppins, sans-serif"
+  },
+  ...
+}));</code></pre>
+
+		<h2>Setting font metrics{{ comp.anchor({ ref: "customise-fonts" }) | safe }}</h3>
+		<p>If your visualisation text will be using a font other than {% for font in fonts %}{% if loop.index0 > 0 %}, {% endif %}"<span style="font-family:{{ font }}">{{ font }}"</span>{% endfor %} you will need to make sure that you provide the font metrics so that the lengths of text labels in SVG can be calculated. We have created the <a href="../tools/font-metrics/">font metrics tool</a> to help with that. Once you have generated your font metrics you can add it to the fonts list by updating <code>_config.[js|ts]</code>:</p>
+		<pre><code class="hljs language-json">site.use(oiComponents({
+  ...
+  "font": {
+    "family": "Poppins, sans-serif",
+    "fonts": {
+      "Poppins": {
+        "normal": {"font-size":32,"widths":[0,...]},
+        "bold":{"font-size":32,"widths":[0,...]}
+      },
+    },
+  },
+  ...
+}));</code></pre>
+
+
+
+		<h2>Setting font size{{ comp.anchor({ ref: "customise-size" }) | safe }}</h3>
+		<p>The default font size is set to <code>16</code>. You can change that in <code>_config.[js|ts]</code>:</p>
+		<pre><code class="hljs language-json">site.use(oiComponents({
+  ...
+  "font": {
+    "size": 18,
+  },
+  ...
+}));</code></pre>
+
+
+		<h2>Setting font weight{{ comp.anchor({ ref: "customise-weight" }) | safe }}</h3>
+		<p>The default font weight is <code>normal</code>. You can change that in <code>_config.[js|ts]</code>:</p>
+		<pre><code class="hljs language-json">site.use(oiComponents({
+  ...
+  "font": {
+    "weight": "bold",
+  },
+  ...
+}));</code></pre>
+
+
+	</div>
+</section>
+<div><div>
