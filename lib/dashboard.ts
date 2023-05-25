@@ -99,7 +99,7 @@ export function dashboard(config: DashboardOptions){
       // Process the colour so we can get the 
       c = contrastColour(col);
     }
-    let panel = '<div class="panel'+(cls ? ' '+cls : '')+'"'+(col ? ' style="background-color:'+col+';color:'+c+';"' : '')+'>';
+    let panel = '<div class="panel'+(cls ? ' '+cls : '')+'" tabindex="0" '+(col ? ' style="background-color:'+col+';color:'+c+';"' : '')+'>';
     panel += '<h3>'+panels[p].name+'</h3>';
 
     panel += '<span class="bignum" data="'+data[idx][value]+'"';
