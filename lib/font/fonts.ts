@@ -117,7 +117,7 @@ function getFontMatch(font){
 	const fontparts = font.split(/,(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))/g);
 	let match = "";
 	for(let f = 0; f < fontparts.length; f++){
-		fontparts[f] = fontparts[f].replace(/^\"|\"$/g,"");
+		fontparts[f] = fontparts[f].replace(/^\"|\"$/g,"").trim();
 	}
 	for(let f = 0; f < fontparts.length; f++){
 		if(fontDefinitions[fontparts[f]]){
