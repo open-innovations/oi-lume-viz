@@ -11,10 +11,12 @@
 	<script src="/js/highlight.js"></script>
 </head>
 <body class="b1-bg">
+	<a class="skip-to-content-link button" href="#main">Skip to main content</a>
+
 	<div class="centred padded warning">This site and Lume package is currently under development and may not be stable.</div>
 {% include 'partials/header.njk' %}
 
-	<div class="b6-bg">
+	<div class="b6-bg" id="main">
 		<div class="padded tallpadded">
 			<div class="holder">
 			{{ content | safe }}
