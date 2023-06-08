@@ -1054,8 +1054,8 @@ function Projection(p){
 
 	}else if(p.name=="orthographic"){
 
-		var lat_0 = 53;
-		var lon_0 = 0;
+		var lat_0 = (typeof p.lat==="number" ? p.lat : 53);
+		var lon_0 = (typeof p.lon==="number" ? p.lon : 0);
 		var RE = 10000;
 		// Default to just using input coordinates
 		this.latlon2xy = function(lat,lon,zoom){
