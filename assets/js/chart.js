@@ -1,29 +1,24 @@
 /*
-	Open Innovations Chart Interactivity v0.2.2
+	Open Innovations Chart Interactivity v0.3.0
 	Helper function that find ".oi-chart" elements 
-	looks for elements with "pane" within them,
-	finds their <h3> elements, 
-	then builds a simple tabbed interface.
+	finds ".oi-legend" within them, and makes the 
+	data series interactive with tooltips.
 */
 
 (function(root){
 
-	if(!root.OI) root.OI = {};
-	if(!root.OI.ready){
-		root.OI.ready = function(fn){
+	var OI = root.OI || {};
+	if(!OI.ready){
+		OI.ready = function(fn){
 			// Version 1.1
 			if(document.readyState != 'loading') fn();
 			else document.addEventListener('DOMContentLoaded', fn);
 		};
 	}
 
-
 	var styles = document.createElement('style');
-	document.head.prepend(styles)
+	document.head.prepend(styles);
 
-	var ns = 'http://www.w3.org/2000/svg';
-	function svgEl(t){ return document.createElementNS(ns,t); }
-	function add(el,to){ return to.appendChild(el); }
 	function setAttr(el,prop){
 		for(var p in prop) el.setAttribute(p,prop[p]);
 		return el;
@@ -33,10 +28,6 @@
 			e.data = data;
 			fn.call(data.this||this,e);
 		});
-	}
-	function addClasses(el,cl){
-		for(var i = 0; i < cl.length; i++) el.classList.add(cl[i]);
-		return el;
 	}
 	function InteractiveChart(el){
 
@@ -51,7 +42,13 @@
 		var pt = el.querySelectorAll('.series .marker');
 		var pts = [];
 		var series = {};
-		var shapes = [];
+		for(s = 0; s < serieskey.length; s++){
+			i = serieskey[s].getAttribute('data-series');
+			if(i){
+				series[i] = {'shapes':[],'array':[],'i':parseInt(i)};
+				series[i].series = serieskey[s];
+			}
+		}
 		for(p = 0; p < pt.length; p++){
 			// Set the tabIndex on every selectable point
 			pt[p].setAttribute('tabindex',0);
@@ -60,22 +57,15 @@
 			// Get the item within the series
 			i = parseInt(pt[p].getAttribute('data-i'));
 			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.add(pt[p])};
-			if(!series[s]) series[s] = {'i':parseInt(s),'array':[]};
+			if(!series[s]) series[s] = {'i':parseInt(s),'array':[],'shapes':[]};
 			if(!series[s].array[i]) series[s].array[i] = pts[p];
 		}
-		for(s = 0; s < serieskey.length; s++){
-			sid = serieskey[s].getAttribute('data-series');
-			if(sid && series[sid]){
-				series[sid].g = serieskey[s];
-			}
-		}
 
-		this.enabled = true;
-		this.selected = null;
+		this.locked = 0;
 
 		// A function for setting the x-value of a shape
 		function setX(s,r,x){
-			if(typeof x==="number") shapes[s][r].setAttribute('x',x);
+			if(typeof x==="number") series[s].shapes[r].setAttribute('x',x);
 		}
 
 		this.reset = function(e){
@@ -83,95 +73,101 @@
 			return this.clearSeries(e);
 		};
 		this.setSeries = function(e){
-			this.enabled = !this.enabled;
-			if(this.enabled) e.data.s = null;
+			for(var s in series){
+				if(s==this.locked) series[s].key.classList.add('oi-series-lock');
+				else series[s].key.classList.remove('oi-series-lock');
+			}
 			this.highlightSeries(e);
 			return this;
 		};
 		this.clearSeries = function(e){
-			if(this.enabled){
-				var ev = JSON.parse(JSON.stringify(e));
-				ev.data.s = null;
-				this.enabled = true;
-				this.highlightSeries(ev);
+			if(this.locked == 0){
+				// Make a copy of the data
+				e.data = JSON.parse(JSON.stringify(e.data));
+				// Set the series to null
+				e.data.series = null;
+				this.highlightSeries(e);
+				//e.target.blur();
 			}
 			return this;
 		};
 		this.toggleSeries = function(e){
-			if(this.selected==null) this.highlightSeries(e);
-			else this.reset(e);
+			this.locked = (this.locked==e.data.series) ? 0 : e.data.series;
+			this.setSeries(e);
+			if(this.locked==0) this.clearSeries(e);
 			return this;
 		};
 		this.highlightSeries = function(e){
-			var d,selected,typ,s,r,origin,pts,p,arr,a;
-			if(this.enabled){
-				d = e.data.s;
-				this.selected = d;
-				selected = el.querySelector('.series-'+d);
-				if(!selected){
-					arr = el.querySelectorAll('.series');
-					for(a = 0; a < arr.length; a++){
-						if(arr[a].getAttribute('data-series') == d) selected = arr[a];
-					}
-				}
-				typ = svg.getAttribute('data-type');
-				if(typ == "stacked-bar-chart"){
-					// Find the origin of the bars by just taking the x-value of the first one in the first series
-					origin = parseFloat(serieskey[0].querySelector('rect').getAttribute('x'));
-					if(shapes.length==0){
-						shapes = new Array(serieskey.length);
-						for(s = 0; s < serieskey.length; s++) shapes[s] = serieskey[s].querySelectorAll('rect');
-					}
-				}
-				for(s = 0; s < serieskey.length; s++){
-					pts = serieskey[s].querySelectorAll('.marker');
-					if(d){
-
-						if(serieskey[s]==selected){
-							serieskey[s].style.opacity = 1;
-							keyseries[s].classList.remove('oi-fade');
-							keyseries[s].classList.add('oi-select');
-							// Simulate z-index by moving to the end
-							if(typ == "stacked-bar-chart"){
-								serieskey[s].parentNode.appendChild(serieskey[s]);
-							}
-							// Make points selectable
-							for(p = 0; p < pts.length; p++) pts[p].setAttribute('tabindex',0);
-						}else{
-							// Fade the unselected series
-							serieskey[s].style.opacity = 0.1;
-							keyseries[s].classList.add('oi-fade');
-							keyseries[s].classList.remove('oi-select');
-							// Make points unselectable
-							for(p = 0; p < pts.length; p++) pts[p].removeAttribute('tabindex');
-						}
-
-						// If it is a stacked bar chart we will change the left position and store that
-						if(typ == "stacked-bar-chart"){
-							// Find all the bars
-							for(r = 0; r < shapes[s].length; r++){
-								// Store the x-value if we haven't already done so
-								if(!shapes[s][r].hasAttribute('data-x')) shapes[s][r].setAttribute('data-x',shapes[s][r].getAttribute('x'));
-								// Update the x-value
-								setX(s,r,origin);
-							}
-						}
-					}else{
-						serieskey[s].style.opacity = 1;
-						// Make points selectable
-						for(p = 0; p < pts.length; p++) pts[p].setAttribute('tabindex',0);
-						// Reset bar positions
-						if(typ == "stacked-bar-chart"){
-							// Find all the bars
-							for(r = 0; r < shapes[s].length; r++){
-								// Get the stored x-value
-								// Update the x-values if we have them
-								if(shapes[s][r].hasAttribute('data-x')) setX(s,r,parseFloat(shapes[s][r].getAttribute('data-x')));
-							}
-						}
-					}
-				}
+			var selected,typ,origin,s,r,points;
+			selected = el.querySelector('.series-'+e.data.series);
+			typ = svg.getAttribute('data-type');
+			if(typ == "stacked-bar-chart"){
+				// Find the origin of the bars by just taking the x-value of the first one in the first series
+				origin = parseFloat(serieskey[0].querySelector('rect').getAttribute('x'));
 			}
+			if(typ == "stacked-bar-chart"){
+				for(s in series) series[s].shapes = series[s].series.querySelectorAll('rect');
+			}
+			for(s in series){
+				points = series[s].series.querySelectorAll('circle,rect');
+
+				// If it is a stacked bar chart we will change the left position and store that
+				if(typ == "stacked-bar-chart"){
+					// Find all the bars
+					for(r = 0; r < series[s].shapes.length; r++){
+						// Store the x-value if we haven't already done so
+						if(!series[s].shapes[r].hasAttribute('data-x')) series[s].shapes[r].setAttribute('data-x',series[s].shapes[r].getAttribute('x')||0);
+					}
+				}
+
+				// If we aren't locked we will highlight one series
+				if(this.locked == 0){
+					if(e.data.series==null || s==e.data.series){
+						series[s].series.style.opacity = 1;
+						series[s].key.classList.remove('oi-series-off');
+						series[s].key.classList.add('oi-series-on');
+						// Simulate z-index by moving to the end
+						if(typ == "stacked-bar-chart"){
+							series[s].series.parentNode.appendChild(series[s].series);
+						}
+						// Make points selectable
+						for(p = 0; p < points.length; p++) points[p].setAttribute('tabindex',0);
+					}else{
+						// Fade the unselected series
+						series[s].series.style.opacity = 0.1;
+						series[s].key.classList.remove('oi-series-on');
+						series[s].key.classList.add('oi-series-off');
+						// Make points unselectable
+						for(p = 0; p < points.length; p++) points[p].removeAttribute('tabindex');
+					}
+
+				}else{
+					if(s==this.locked){
+						series[s].series.style.opacity = 1.0;
+						// Make points selectable
+						for(p = 0; p < points.length; p++) points[p].setAttribute('tabindex',0);
+					}else{
+						series[s].series.style.opacity = 0.1;
+						// Make points unselectable
+						for(p = 0; p < points.length; p++) points[p].removeAttribute('tabindex');
+					}
+				}
+				if(typ == "stacked-bar-chart"){
+					// If it is a stacked bar chart we will change the left position and store that
+					for(r = 0; r < series[s].shapes.length; r++){
+						if(e.data.series===null){
+							// Get the stored x-value
+							// Update the x-values if we have them
+							if(series[s].shapes[r].hasAttribute('data-x')) setX(s,r,parseFloat(series[s].shapes[r].getAttribute('data-x')));
+						}else{
+							// Update the x-value
+							setX(s,r,origin);
+						}
+					}
+				}
+
+			}
+
 			return this;
 		};
 		// Find the nearest point
@@ -181,12 +177,11 @@
 			dist = 1e100;
 			var matches = [];
 			var typ = svg.getAttribute('data-type');
-
 			for(sid in series){
 				if(series[sid]){
 					s = series[sid].i;
 					ok = true;
-					if(this.selected != null && s!=this.selected) ok = false;
+					if(this.locked > 0 && this.locked!=s) ok = false;
 					if(ok){
 						dist = 1e100;
 						d = -1;
@@ -255,48 +250,42 @@
 
 			// Get each of the .data-series elements from the existing key
 			var keyseries = key.querySelectorAll('.oi-legend-item');
-			var keyitem,icon,txt,snum,icon;
+			var keyitem,icon,txt,snum;
 
 			for(s = 0; s < keyseries.length; s++){
-
 				keyitem = keyseries[s];
-				icon = keyseries[s].querySelector('.oi-legend-icon');
-				snum = (icon) ? icon.getAttribute('data-series') : "";
+				snum = keyseries[s].getAttribute('data-series');
+				if(series[snum]){
+					series[snum].key = keyitem;
+					icon = keyseries[s].querySelector('.oi-legend-icon');
+					//snum = (icon) ? icon.getAttribute('data-series') : "";
 
-				txt = "";
-				if(keyitem.querySelector('.oi-legend-label')){
-					txt = keyitem.querySelector('.oi-legend-label').innerHTML;
+					txt = (keyitem.querySelector('.oi-legend-label')) ? keyitem.querySelector('.oi-legend-label').innerHTML : "";
+
+					setAttr(keyitem,{'tabindex':0,'title':'Highlight series: '+txt});
+					keyitem.style.cursor = "pointer";
+
+					// Add the events for mouseover, keydown, click and mouseout
+					addEv('mouseover',keyitem,{'this':this,'series':snum},this.highlightSeries);
+					addEv('keydown',keyitem,{'this':this,'series':snum},function(e){
+						if(e.keyCode==13){
+							e.preventDefault();
+							this.toggleSeries(e);
+						}
+					});
+					addEv('click',keyitem,{'this':this,'series':snum},this.toggleSeries);
+					addEv('mouseout',keyitem,{'this':this,'series':null},this.clearSeries);
 				}
-
-				setAttr(keyitem,{'data-series':snum,'tabindex':0,'title':'Highlight series: '+txt});
-				keyitem.style.cursor = "pointer";
-
-				// Add the events for mouseover, keydown, click and mouseout
-				addEv('mouseover',keyitem,{'this':this,'s':snum},this.highlightSeries);
-				addEv('keydown',keyitem,{'this':this,'s':snum},function(e){
-					if(e.keyCode==13){
-						e.preventDefault();
-						this.toggleSeries(e);
-					}
-				});
-				addEv('click',keyitem,{'this':this,'s':keyseries[s].getAttribute('data-series')},this.setSeries);
-				addEv('mouseout',keyitem,{'this':this,'s':null},this.highlightSeries);
 			}
-			addEv('mouseleave',el,{'this':this,'s':''},this.reset);
+			addEv('mouseleave',el,{'this':this,'series':''},this.reset);
+			addEv('mousemove',svg,{'this':this},this.findPoint);
 		}
 		return this;
 	}
 
-	root.OI.InteractiveChart = function(el){ return new InteractiveChart(el); };
+	OI.InteractiveChart = function(el){ return new InteractiveChart(el); };
 
-	if(!root.OI) root.OI = {};
-	if(!root.OI.ready){
-		OI.ready = function(fn){
-			// Version 1.1
-			if(document.readyState != 'loading') fn();
-			else document.addEventListener('DOMContentLoaded', fn);
-		};
-	}
+	root.OI = OI;
 })(window || this);
 
 OI.ready(function(){
