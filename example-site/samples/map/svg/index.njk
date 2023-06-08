@@ -296,6 +296,74 @@ examples:
         lon:
           min: -3
           max: -0.3
+  - title: "Projection: Equirectangular"
+    description: |
+      The default projection is "web-mercator" but we could change that to [equirectangular](https://en.wikipedia.org/wiki/Equirectangular_projection) by setting the `projection` object with a `name` value of `equirectangular`.
+    config:
+      data:
+        - { code: "E08000016", name: "Barnsley" }
+        - { code: "E08000032", name: "Bradford" }
+        - { code: "E08000033", name: "Calderdale" }
+        - { code: "E07000163", name: "Craven" }
+        - { code: "E07000165", name: "Harrogate" }
+        - { code: "E08000034", name: "Kirklees" }
+        - { code: "E08000035", name: "Leeds" }
+        - { code: "E07000169", name: "Selby" }
+        - { code: "E08000036", name: "Wakefield" }
+        - { code: "E06000014", name: "York" }
+      geojson:
+        key: LAD21CD
+        data: geojson.leeds_city_region
+      projection:
+        name: equirectangular
+      key: code
+      tooltip: name
+  - title: "Projection: Gall-Peters"
+    description: |
+      The default projection is "web-mercator" but we could change that to [Gall-Peters](https://en.wikipedia.org/wiki/Gall%E2%80%93Peters_projection) by setting the `projection` object with a `name` value of `gall-peters`.
+    config:
+      data:
+        - { code: "E08000016", name: "Barnsley" }
+        - { code: "E08000032", name: "Bradford" }
+        - { code: "E08000033", name: "Calderdale" }
+        - { code: "E07000163", name: "Craven" }
+        - { code: "E07000165", name: "Harrogate" }
+        - { code: "E08000034", name: "Kirklees" }
+        - { code: "E08000035", name: "Leeds" }
+        - { code: "E07000169", name: "Selby" }
+        - { code: "E08000036", name: "Wakefield" }
+        - { code: "E06000014", name: "York" }
+      geojson:
+        key: LAD21CD
+        data: geojson.leeds_city_region
+      projection:
+        name: gall-peters
+      height: 270
+      key: code
+      tooltip: name
+  - title: "Projection: Orthographic"
+    description: |
+      The default projection is "web-mercator" but we could change that to [Orthographic](https://en.wikipedia.org/wiki/Orthographic_map_projection) by setting the `projection` object with a `name` value of `orthographic`.
+    config:
+      data:
+        - { code: "E08000016", name: "Barnsley" }
+        - { code: "E08000032", name: "Bradford" }
+        - { code: "E08000033", name: "Calderdale" }
+        - { code: "E07000163", name: "Craven" }
+        - { code: "E07000165", name: "Harrogate" }
+        - { code: "E08000034", name: "Kirklees" }
+        - { code: "E08000035", name: "Leeds" }
+        - { code: "E07000169", name: "Selby" }
+        - { code: "E08000036", name: "Wakefield" }
+        - { code: "E06000014", name: "York" }
+      geojson:
+        key: LAD21CD
+        data: geojson.leeds_city_region
+      projection:
+        name: orthographic
+      key: code
+      tooltip: name
+
 ---
 
 

@@ -519,9 +519,10 @@ function BasicMap(config,attr){
 	setAttr(this.container,{'style':'overflow:hidden'});
 
 	var o = {'width':1200,'height':675};
-	this.w = (attr.w || o.width);
-	this.h = (attr.h || o.height);
+	this.w = (config.width || attr.w || o.width);
+	this.h = (config.height || attr.h || o.height);
 	this.attr = attr;
+	this.projection = new Projection(config.projection||null);
 
 	// Add the SVG
 	this.svg = svgEl('svg');
@@ -608,7 +609,7 @@ function BasicMap(config,attr){
 	// Set the bounds of the map
 	this.setBounds = function(bbox){
 		this.bounds = bbox;
-		var tileBox = bbox.asTile(this.zoom);
+		var tileBox = this.projection.getRange(bbox,this.zoom);
 
 		// Set the view box
 		setAttr(this.svg,{'viewBox': (tileBox.x.min)+' '+(tileBox.y.max)+' '+(tileBox.x.range)+' '+(tileBox.y.range)});
@@ -744,7 +745,7 @@ function Layer(attr,map,i){
 							for(j = 0; j < c[i].length; j++){
 								for(k = 0; k < c[i][j].length; k++){
 									this.bbox.expand(c[i][j][k]);
-									xy = latlon2xy(c[i][j][k][1],c[i][j][k][0],map.zoom);
+									xy = map.projection.latlon2xy(c[i][j][k][1],c[i][j][k][0],map.zoom);
 									xy.t = (k==0 ? 'M':'L');
 									addToPath(path,xy);
 								}
@@ -772,7 +773,7 @@ function Layer(attr,map,i){
 						for(i = 0; i < c.length; i++){
 							for(j = 0; j < c[i].length; j++){
 								this.bbox.expand(c[i][j]);
-								xy = latlon2xy(c[i][j][1],c[i][j][0],map.zoom);
+								xy = map.projection.latlon2xy(c[i][j][1],c[i][j][0],map.zoom);
 								xy.t = (j==0 ? 'M':'L');
 								addToPath(path,xy);
 							}
@@ -799,7 +800,7 @@ function Layer(attr,map,i){
 						for(i = 0; i < c.length; i++){
 							for(j = 0; j < c[i].length; j++){
 								this.bbox.expand(c[i][j]);
-								xy = latlon2xy(c[i][j][1],c[i][j][0],map.zoom);
+								xy = map.projection.latlon2xy(c[i][j][1],c[i][j][0],map.zoom);
 								xy.t = (j==0 ? 'M':'L');
 								addToPath(path,xy);
 								//lat = (90 - c[i][j][1]).toFixed(5);
@@ -818,7 +819,7 @@ function Layer(attr,map,i){
 					}else if(feature.geometry.type == "Point"){
 
 						this.bbox.expand(c);
-						xy = latlon2xy(c[1],c[0],map.zoom);
+						xy = map.projection.latlon2xy(c[1],c[0],map.zoom);
 
 						var opt = {};
 
@@ -862,7 +863,7 @@ function Layer(attr,map,i){
 								// Clean up tags to make sure we have explicit closing tags
 								txt = txt.replace(/<([^\s]+)\s([^\>]+)\s*\/\s*>/g,function(m,p1,p2){ return "<"+p1+" "+p2+"></"+p1+">"});
 
-								var tileBox = map.bounds.asTile(map.zoom);
+								var tileBox = map.projection.getRange(map.bounds,map.zoom);
 								var scale = Math.max(tileBox.x.range/map.w,tileBox.y.range/map.h);
 
 								p = svgEl('svg');
@@ -963,13 +964,6 @@ function BBox(lat,lon){
 		}
 		return this;
 	};
-	this.asTile = function(zoom){
-		var x = {'min':lon2tile(this.lon.min,zoom),'max':lon2tile(this.lon.max,zoom)};
-		var y = {'min':lat2tile(this.lat.min,zoom),'max':lat2tile(this.lat.max,zoom)};
-		x.range = Math.abs(x.max-x.min);
-		y.range = Math.abs(y.max-y.min);
-		return {'x':x,'y':y };
-	};
 	return this;
 }
 
@@ -982,9 +976,110 @@ function setAttr(el,prop){
 }
 function svgEl(t){ return document.createElement(t);/*return document.createElementNS(ns,t);*/ }
 
-// Map maths for the Web Mercator projection (like Open Street Map) e.g. https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-var d2r = Math.PI/180;
-function lon2tile(lon,zoom){ return ((lon+180)/360)*Math.pow(2,zoom); }
-function lat2tile(lat,zoom){ return ((1-Math.log(Math.tan(lat*d2r) + 1/Math.cos(lat*d2r))/Math.PI)/2)*Math.pow(2,zoom); }
-function latlon2xy(lat,lon,zoom){ return {'x':lon2tile(lon,zoom),'y':lat2tile(lat,zoom)}; }
+function Projection(p){
 
+	if(!p) p = {};
+	if(typeof p.name!=="string") p.name = "none";
+
+	var d2r = Math.PI/180;
+	var r2d = 180/Math.PI;
+	var R = 6.3781371e6; // Radius of the Earth in metres
+
+	// Map maths for the Web Mercator projection (like Open Street Map) e.g. https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+	function lon2tile(lon,zoom){ return ((lon+180)/360)*Math.pow(2,zoom); }
+	function lat2tile(lat,zoom){ return ((1-Math.log(Math.tan(lat*d2r) + 1/Math.cos(lat*d2r))/Math.PI)/2)*Math.pow(2,zoom); }
+	this.latlon2xy = function(lat,lon,zoom){ return {'x':lon2tile(lon,zoom),'y':lat2tile(lat,zoom)}; };
+
+	/*if(p.name=="transverse-mercator" || p.name=="osgrid"){
+		
+		// See https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
+		var f = 1/298.257223563;
+		var n = f/(2-f);
+		var A = ((R/1000)/(1+n))*(1 + Math.pow((n/2),2) + Math.pow((n/2),4) + Math.pow((n/2),6));
+		var n2 = Math.pow(n,2);
+		var n3 = Math.pow(n,3);
+		var alpha = [
+			null,
+			0.5*n - (2/3)*n2 + (5/16)*n3,
+			(13/48)*n2 - (3/5)*n3,
+			(61/240)*n3
+		];
+		var beta = [
+			null,
+			0.5*n -(2/3)*n2 + (37/96)*n3,
+			(1/48)*n2 + (1/15)*n3,
+			(17/480)*n3
+		];
+		var delta = [
+			null,
+			2*n - (2/3)*n2 -2*n3,
+			(7/3)*n2 - (8/5)*n3,
+			(56/15)*n3
+		];
+		
+		var lat_ref = 49;
+		var lon_ref = -2;
+		var E_0 = 500;
+		var N_0 = 0;
+		var k_0 = 0.9996;
+		this.latlon2xy = function(lat,lon,zoom){
+			
+			var phi = lat*d2r;
+			var lambda = -lon*d2r;
+			var lambda_0 = lon_ref*d2r;
+
+			var t = Math.sinh(Math.atanh(Math.sin(phi)) - (2*Math.sqrt(n)/(1 + n))*Math.atanh(((2*Math.sqrt(n))/(1 + n))*Math.sin(phi)));
+			var xp = Math.atan2(1,Math.cos(lambda - lambda_0))
+			var etap = Math.atanh(Math.sin(lambda - lambda_0) / Math.sqrt(1 + t*t));
+			var sigma = 1 + ((2*1*alpha[1]*Math.cos(2*1*xp)*Math.cosh(2*1*etap)) + (2*2*alpha[2]*Math.cos(2*2*xp)*Math.cosh(2*2*etap)) + (2*3*alpha[3]*Math.cos(2*3*xp)*Math.cosh(2*3*etap)))
+			var tau = ((2*1*alpha[1]*Math.sin(2*1*xp)*Math.sinh(2*1*etap)) + (2*2*alpha[2]*Math.sin(2*2*xp)*Math.sinh(2*2*etap)) + (2*3*alpha[3]*Math.sin(2*3*xp)*Math.sinh(2*3*etap)))
+
+			var E = E_0 + k_0*A*(etap + ( alpha[1]*Math.cos(2*1*xp)*Math.sinh(2*1*etap) + alpha[2]*Math.cos(2*2*xp)*Math.sinh(2*2*etap) + alpha[3]*Math.cos(2*3*xp)*Math.sinh(2*3*etap) ));
+			var N = N_0 + k_0*A*(xp + ( alpha[1]*Math.sin(2*1*xp)*Math.cosh(2*1*etap) + alpha[2]*Math.sin(2*2*xp)*Math.cosh(2*2*etap) + alpha[3]*Math.sin(2*3*xp)*Math.cosh(2*3*etap) ) );
+
+			return {'x':E,'y':N};
+		}
+
+	}else*/
+	if(p.name=="gall-peters"){
+
+		var RE = 10000;
+		// Default to just using input coordinates
+		this.latlon2xy = function(lat,lon,zoom){
+			var x = RE*Math.PI * lon;
+			var y = RE*Math.sqrt(2) * Math.sin(lat);
+			
+			return {'x':x,'y':y};
+		};
+
+	}else if(p.name=="orthographic"){
+
+		var lat_0 = 53;
+		var lon_0 = 0;
+		var RE = 10000;
+		// Default to just using input coordinates
+		this.latlon2xy = function(lat,lon,zoom){
+			var x = RE * Math.cos(lat*d2r) * Math.sin((lon - lon_0)*d2r);
+			var y = RE * (Math.cos(lat_0*d2r)*Math.sin(lat*d2r) - Math.sin(lat_0*d2r)*Math.cos(lat*d2r)*Math.cos((lon - lon_0)*d2r));
+			
+			return {'x':x,'y':RE-y};
+		};
+
+	}else if(p.name=="equirectangular"){
+
+		// Default to just using input coordinates
+		this.latlon2xy = function(lat,lon,zoom){ return {'x':lon,'y':90-lat}; };
+	}
+
+	this.getRange = function(bbox,zoom){
+		var min = this.latlon2xy(bbox.lat.min,bbox.lon.min,zoom);
+		var max = this.latlon2xy(bbox.lat.max,bbox.lon.max,zoom);
+		var x = {'min':min.x,'max':max.x};
+		var y = {'min':min.y,'max':max.y};
+		x.range = Math.abs(x.max-x.min);
+		y.range = Math.abs(y.max-y.min);
+		return {'x':x,'y':y };
+	}
+
+	return this;
+}
