@@ -626,10 +626,10 @@ examples:
     config:
       data: test.data.uk_local_authorities_2023
       columns:
-        - name: Tooltip2
-          template: "{{ geojson.properties.LAD23NM }} / {{ geojson.properties.LAD23CD }}\n{{ region }}"
+        - name: Tooltip
+          template: "{{ geojson.properties.LAD23NM }} / {{ geojson.properties.LAD23CD }}\n{{ region }} / {{ region code }}"
       key: code
-      tooltip: Tooltip2
+      tooltip: Tooltip
       geojson:
         key: LAD23CD
         data: geojson.Local_Authority_Districts_(May_2023)_UK_BUC
