@@ -372,7 +372,7 @@ export function SVGMap(opts){
 		'data': geo,
 		'options': { 'color': '#b2b2b2' },
 		'values': { 'key': config.key, 'geokey': config.geojson.key, 'value': config.value, 'label':config.tooltip, 'min':min, 'max': max, 'data': csv, 'colour': 'red' },
-		'style': function(feature,el){
+		'style': function(feature,el,type){
 			var v,code,i,title,row,val;
 			v = this.attr.values;
 			code = feature.properties[v.geokey];
@@ -405,11 +405,11 @@ export function SVGMap(opts){
 						el.appendChild(title);
 					}
 				}
-				el.setAttribute('fill-opacity',1);
+				el.setAttribute('fill-opacity',(type == "line" ? 0 : 1));
 				el.setAttribute('fill',row.colour);
-				el.setAttribute('stroke','white');
+				el.setAttribute('stroke',(type == "line" ? row.colour : 'white'));
 				el.setAttribute('stroke-width',2);
-				el.setAttribute('stroke-opacity',0.1);
+				el.setAttribute('stroke-opacity',(type == "line" ? 1 : 0.1));
 			}else{
 				el.setAttribute('style','display:none');
 			}
@@ -701,7 +701,7 @@ function Layer(attr,map,i){
 		// Clear existing layer
 		this.clear();
 		// Find the map bounds and work out the scale
-		var f,feature,w,h,g2,p,c,d,xy,tspan,scale;
+		var f,feature,w,h,g2,p,c,d,xy,tspan,scale,cls;
 		w = map.w;
 		h = map.h;
 
@@ -712,9 +712,9 @@ function Layer(attr,map,i){
 					feature = this.data.features[f];
 					c = feature.geometry.coordinates;
 					g2 = svgEl('g');
-					g2.classList.add('area');
 
 					if(feature.geometry.type == "MultiPolygon" || feature.geometry.type == "Polygon"){
+						cls = "area";
 						p = svgEl('path');
 						setAttr(p,{
 							'stroke': this.options.color||this.options.stroke,
@@ -728,11 +728,12 @@ function Layer(attr,map,i){
 							'fill-opacity': this.options.fillOpacity,
 							'vector-effect':'non-scaling-stroke',
 							'stroke': this.options.stroke||this.options.color,
-							'stroke-width': this.options['stroke-width']||'0.4%',
+							'stroke-width': this.options['stroke-width']||(this.id=="background" ? '0' : '0.4%'),
 							'stroke-opacity': this.options['stroke-opacity']||1
 						});
-						if(typeof attr.style==="function") attr.style.call(this,feature,p);
+						if(typeof attr.style==="function") attr.style.call(this,feature,p,cls);
 					}else if(feature.geometry.type == "MultiLineString" || feature.geometry.type == "LineString"){
+						cls = "line";
 						p = svgEl('path');
 						setAttr(p,{
 							'stroke': this.options.color||this.options.stroke,
@@ -745,9 +746,9 @@ function Layer(attr,map,i){
 							'fill':'transparent',
 							'vector-effect':'non-scaling-stroke'
 						});
-						if(typeof attr.style==="function") attr.style.call(this,feature,p);
+						if(typeof attr.style==="function") attr.style.call(this,feature,p,cls);
 					}else if(feature.geometry.type == "Point"){
-
+						cls = "point";
 						xy = map.projection.latlon2xy(c[1],c[0],map.zoom);
 
 						var opt = {};
@@ -818,11 +819,12 @@ function Layer(attr,map,i){
 								throw('Bad icon');
 							}
 							if(p){
-								if(typeof attr.style==="function") attr.style.call(this,feature,p);
+								if(typeof attr.style==="function") attr.style.call(this,feature,p,cls);
 								p.setAttribute('style','color:'+(style.color)+';');
 							}
 
 						}else{
+							cls = "text";
 							p = svgEl('text');
 							tspan = svgEl('tspan');
 							tspan.innerHTML = feature.name;
@@ -843,9 +845,11 @@ function Layer(attr,map,i){
 							});
 							setAttr(p,opt);
 
-							if(p && typeof attr.style==="function") attr.style.call(this,feature,p);
+							if(p && typeof attr.style==="function") attr.style.call(this,feature,p,cls);
 						}
 					}
+					
+					g2.classList.add(cls);
 					if(p){
 						g2.appendChild(p);
 						g.appendChild(g2);
