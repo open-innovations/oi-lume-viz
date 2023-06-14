@@ -79,9 +79,12 @@ export default function (input: { config: SVGmapOptions }) {
 		config.data,
 		input,
 	);
-
+	
 	// If we don't have data, create an empty array
 	if(typeof config.data==="undefined") config.data = [];
+
+	// Simplify our complicated CSV structure
+	if(typeof config.data.rows==="object") config.data = config.data.rows;
 	
 	let geojson = clone(config.geojson);
 
