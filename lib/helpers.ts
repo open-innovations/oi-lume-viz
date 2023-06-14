@@ -39,9 +39,21 @@ export function thingOrNameOfThing<T = unknown>(thingOrName: string | T, context
 export function addVirtualColumns (
   config: unknown
 ) {
-	let c,r,v;
+	let c,r,v,f,p;
 	if(config.columns && config.columns.length > 0 && typeof config.data==="object" && config.data.length > 0){
 		for(r = 0; r < config.data.length; r++){
+
+			if(config.geojson){
+				let geo = config.geojson;
+				if(geo.data.features){
+					for(f = 0; f < geo.data.features.length; f++){
+						if(geo.data.features[f].properties[geo.key]==config.data[r][config.key]){
+							config.data[r]['geojson'] = JSON.parse(JSON.stringify(geo.data.features[f]));
+						}
+					}
+				}
+			}
+
 			for(c = 0; c < config.columns.length; c++){
 				if(config.columns[c].template && config.columns[c].name){
 					v = applyReplacementFilters(config.columns[c].template,config.data[r]);

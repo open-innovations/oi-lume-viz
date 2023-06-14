@@ -110,6 +110,10 @@
 			box.style.background = fill;
 			box.style.transform = 'none';
 			arr.style['border-top-color'] = fill;
+
+			// If the colour is similar to black we need to change the tooltip filter
+			if(contrastRatio(colour2RGB(fill),[0,0,0]) < 2) tip.style.filter = "drop-shadow(0px 1px 1px rgba(50,50,50,0.7)";
+
 			tip.style.color = root.OI.contrastColour ? root.OI.contrastColour(fill) : "black";
 			
 			// Remove wrapping if the tip is wider than the page minus the padding
@@ -147,7 +151,7 @@
 			return this;
 		}
 		if(!tt){
-			console.error('No <title> child within:',pt);
+			//console.error('No <title> child within:',pt);
 			return this;
 		}
 
@@ -205,8 +209,8 @@
 			L1 = temp;
 		}
 		return (L1 + 0.05) / (L2 + 0.05);
-	}	
-	function contrastColour(c){
+	}
+	function colour2RGB(c){
 		var rgb = [];
 		if(c.indexOf('#')==0){
 			rgb = [h2d(c.substring(1,3)),h2d(c.substring(3,5)),h2d(c.substring(5,7))];
@@ -215,6 +219,10 @@
 			if(bits.length == 4) this.alpha = parseFloat(bits[3]);
 			rgb = [parseInt(bits[0]),parseInt(bits[1]),parseInt(bits[2])];
 		}
+		return rgb;
+	}
+	function contrastColour(c){
+		var rgb = colour2RGB(c);
 		var cols = {
 			"black": [0, 0, 0],
 			"white": [255, 255, 255],

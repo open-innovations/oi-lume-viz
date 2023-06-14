@@ -12,20 +12,6 @@ import { SVGMap } from "./legacy/map.js";
 // Useful if the hexmap has a colour attribute
 const identityColourScale = (s: string) => s;
 
-function addTspan(str: string) {
-	// If string has no newlines, just return it
-	if (!str.includes("\n")) return str;
-
-	const tspan = str.split(/\n/);
-	// Build a new string
-	let newString = "";
-	for (let s = 0; s < tspan.length; s++) {
-		const dy = 3 * ((s + 0.5) - (tspan.length / 2));
-		newString += '<tspan y="' + dy + '%" x="0">' + tspan[s] + "</tspan>";
-	}
-	return newString;
-}
-
 /**
  * SVG map styles
  */
@@ -60,9 +46,8 @@ type SVGmapOptions = {
 	legend: { position: string; items: Record<number, string> };
 };
 
-// TODO(@gilesdring) set hex to something close to rems
 /**
- * Function to render a hexmap
+ * Function to render an SVG map
  *
  * @param options SVGmapOptions object
  */
@@ -94,12 +79,9 @@ export default function (input: { config: SVGmapOptions }) {
 		input,
 	);
 
-	// Create any defined columns
-	config.data = addVirtualColumns(config);
-
-	// Set up some variables
-	let max = config.max;
-
+	// If we don't have data, create an empty array
+	if(typeof config.data==="undefined") config.data = [];
+	
 	let geojson = clone(config.geojson);
 
 	// Handle geojson / data as string references
@@ -116,6 +98,12 @@ export default function (input: { config: SVGmapOptions }) {
 		throw new Error("No FeatureCollection in the GeoJSON");
 	}
 	config.geojson = geojson;
+	
+	// Create any defined columns
+	config.data = addVirtualColumns(config);
+
+	// Set up some variables
+	let max = config.max;
 
 	if(config.background){
 		// Handle background / data as string references
@@ -127,25 +115,6 @@ export default function (input: { config: SVGmapOptions }) {
 			);
 		}
 		config.background = background;
-	}
-	
-	
-	// Resolve data if this is a string
-	let data;
-	if (config.data) {
-		data = clone(config.data);
-		// Convert references into actual objects
-		data = thingOrNameOfThing<TableData<string | number>>(
-			data,
-			input,
-		);
-
-		// In case it was a CSV file loaded
-		if(config.data.rows) config.data = config.data.rows;
-
-		// Create any defined columns
-		data.data = addVirtualColumns(data);
-
 	}
 
 	const map = new SVGMap(config);
