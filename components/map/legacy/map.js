@@ -633,7 +633,7 @@ function BasicMap(config,attr){
 		}
 
 		var sty = this.svg.getAttribute('style');
-		sty = sty.replace(/aspect-ratio:([^\;\n]+)/,"aspect-ratio:"+Math.round(this.projection.metrics.width)+' / '+Math.round(this.projection.metrics.height));
+		sty = sty.replace(/aspect-ratio:([^\;\n]+)/,"aspect-ratio:"+this.projection.metrics.aspectRatio);
 
 		setAttr(this.svg,{'viewBox': this.projection.metrics.viewBox,'height':Math.round(this.projection.metrics.height),'style':sty});
 
@@ -889,55 +889,58 @@ function Projection(p,w,h){
 	let defaultheight = 720;
 	let lat_0 = (typeof p.latitude==="number" ? p.latitude : (typeof p.lat==="number" ? p.lat : 0));
 	let lon_0 = (typeof p.longitude==="number" ? p.longitude : (typeof p.lon==="number" ? p.lon : 0));
-	var proj,path;
+	var proj,path,wide,tall;
+
+	wide = w;
+	tall = h;
 
 	if(p.name=="aitoff"){
 
 		proj = d3geo.geoAitoff();
-		if(typeof w!=="number") w = defaultwidth;
-		if(typeof h!=="number") h = w/2;
+		if(typeof w!=="number") wide = defaultwidth;
+		if(typeof h!=="number") tall = wide/2;
 
 	}else if(p.name=="albers"){
 
 		proj = d3.geoAlbers();
-		if(typeof w!=="number") w = defaultwidth;
-		if(typeof h!=="number") h = w/1.5;
+		if(typeof w!=="number") wide = defaultwidth;
+		if(typeof h!=="number") tall = wide/1.5;
 
 	}else if(p.name=="equirectangular"){
 
 		proj = d3.geoEquirectangular();
-		if(typeof w!=="number") w = defaultwidth;
-		if(typeof h!=="number") h = w/2;
+		if(typeof w!=="number") wide = defaultwidth;
+		if(typeof h!=="number") tall = wide/2;
 
 	}else if(p.name=="gall-peters"){
 
 		proj = d3geo.geoCylindricalEqualArea();
-		if(typeof w!=="number") w = defaultwidth;
-		if(typeof h!=="number") h = Math.round(w * 2/Math.PI);
+		if(typeof w!=="number") wide = defaultwidth;
+		if(typeof h!=="number") tall = Math.round(wide * 2/Math.PI);
 		proj.parallel(45);
 
 	}else if(p.name=="mollweide"){
 
 		proj = d3geo.geoMollweide();
-		if(typeof w!=="number") w = defaultwidth;
-		if(typeof h!=="number") h = w/2;
+		if(typeof w!=="number") wide = defaultwidth;
+		if(typeof h!=="number") tall = wide/2;
 
 	}else if(p.name=="orthographic"){
 
 		proj = d3.geoOrthographic();
-		if(typeof w!=="number") w = defaultwidth;
-		if(typeof h!=="number") h = w;
+		if(typeof w!=="number") wide = defaultwidth;
+		if(typeof h!=="number") tall = wide;
 
 	}else{
 
 		proj = d3.geoMercator();
-		if(typeof w!=="number") w = defaultwidth;
-		if(typeof h!=="number") h = w;
+		if(typeof w!=="number") wide = defaultwidth;
+		if(typeof h!=="number") tall = wide;
 
 	}
 
-	this.w = w;
-	this.h = h;
+	this.w = wide;
+	this.h = tall;
 	this.metrics = {};
 
 	if(!proj){
@@ -945,7 +948,7 @@ function Projection(p,w,h){
 	}
 
 	proj.rotate([-lon_0,-lat_0]);
-	proj.translate([w/2,h/2]);
+	proj.translate([wide/2,tall/2]);
 
 	path = d3.geoPath().projection(proj).digits(2);
 
@@ -961,13 +964,23 @@ function Projection(p,w,h){
 	this.fitData = function(geojson){
 		geojson = new GeoJSON(geojson);
 		if(geojson.getData().features.length == 0) geojson.addFeature({ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [ [ [ -180.0, -90 ], [ -180.0, 90 ], [ 180, 90 ], [ -180, 90 ]]]} });
-//		proj.fitExtent([[0,0],[this.w,this.h]],geojson.getData());
-		proj.fitWidth(this.w,geojson.getData());
+
+		if(typeof w==="number" && typeof h==="number"){
+			proj.fitExtent([[0,0],[this.w,this.h]],geojson.getData());
+		}else if(typeof w!=="number" && typeof h==="number"){
+			proj.fitExtent([[0,0],[this.w,h]],geojson.getData());
+		}else if(typeof w==="number" && typeof h!=="number"){
+			proj.fitExtent([[0,0],[w,this.h]],geojson.getData());
+		}else{
+			proj.fitWidth(this.w,geojson.getData());
+		}
+
 		path = d3.geoPath().projection(proj).digits(2);
 		this.metrics.bounds = this.getBounds(geojson);
 		this.metrics.width = this.metrics.bounds[1][0] - this.metrics.bounds[0][0];
 		this.metrics.height = this.metrics.bounds[1][1] - this.metrics.bounds[0][1];
 		this.metrics.viewBox = Math.round(this.metrics.bounds[0][0]) + " " + Math.round(this.metrics.bounds[0][1]) + " " + Math.round(this.metrics.bounds[1][0]) + " " + Math.round(this.metrics.bounds[1][1]);
+		this.metrics.aspectRatio = Math.round(Math.max(this.w,this.metrics.width))+' / '+Math.round(this.metrics.height);
 		return this;
 	};
 

@@ -306,10 +306,10 @@ examples:
 
   - title: "Projection: Aitoff"
     description: |
-      The default projection is "web-mercator" but we could change that to [Aitoff](https://en.wikipedia.org/wiki/Aitoff_projection) by setting the `projection➝name` value to `aitoff`.
+      The default projection is "web-mercator" but we can change that to [Aitoff](https://en.wikipedia.org/wiki/Aitoff_projection) by setting the `projection➝name` value to `aitoff`.
     config:
       geojson:
-        key: SOV_A3
+        key: ISO_A3_EH
         data: geojson.world
       projection:
         name: aitoff
@@ -317,10 +317,10 @@ examples:
 
   - title: "Projection: Equirectangular"
     description: |
-      The default projection is "web-mercator" but we could change that to [equirectangular](https://en.wikipedia.org/wiki/Equirectangular_projection) by setting the `projection➝name` value to `equirectangular`. As the map would automatically adjust the size to the GeoJSON data (which doesn't have land above ~85&deg;), we'll explicitly set the bounds to the full range of latitude/longitude.
+      The default projection is "web-mercator" but we can change that to [equirectangular](https://en.wikipedia.org/wiki/Equirectangular_projection) by setting the `projection➝name` value to `equirectangular`. As the map would automatically adjust the size to the GeoJSON data (which doesn't have land above ~85&deg;), we'll explicitly set the bounds to the full range of latitude/longitude.
     config:
       geojson:
-        key: SOV_A3
+        key: ISO_A3_EH
         data: geojson.world
       projection:
         name: equirectangular
@@ -335,10 +335,10 @@ examples:
 
   - title: "Projection: Gall-Peters"
     description: |
-      The default projection is "web-mercator" but we could change that to [Gall-Peters](https://en.wikipedia.org/wiki/Gall%E2%80%93Peters_projection) by setting the `projection➝name` value to `gall-peters`.
+      The default projection is "web-mercator" but we can change that to [Gall-Peters](https://en.wikipedia.org/wiki/Gall%E2%80%93Peters_projection) by setting the `projection➝name` value to `gall-peters`.
     config:
       geojson:
-        key: SOV_A3
+        key: ISO_A3_EH
         data: geojson.world
       projection:
         name: gall-peters
@@ -346,14 +346,74 @@ examples:
 
   - title: "Projection: Orthographic"
     description: |
-      The default projection is "web-mercator" but we could change that to [Orthographic](https://en.wikipedia.org/wiki/Orthographic_map_projection) by setting the `projection➝name` value to `orthographic`. Orthographic projection behaves as if we are viewing the Earth from a distance.
+      The default projection is "web-mercator" but we can change that to [Orthographic](https://en.wikipedia.org/wiki/Orthographic_map_projection) by setting the `projection➝name` value to `orthographic`. Orthographic projection behaves as if we are viewing the Earth from a distance. Let's make <a href="https://en.wikipedia.org/wiki/Choropleth_map">a choropleth map</a> showing total populations by country in Africa. We can rotate the globe by setting `projection➝lon`.
     config:
+      data:
+        - code: TZA
+        - code: B28
+        - code: COD
+        - code: SOM
+        - code: KEN
+        - code: SDN
+        - code: TCD
+        - code: ZAF
+        - code: LSO
+        - code: ZWE
+        - code: BWA
+        - code: NAM
+        - code: SEN
+        - code: MLI
+        - code: MRT
+        - code: BEN
+        - code: NER
+        - code: NGA
+        - code: CMR
+        - code: TGO
+        - code: GHA
+        - code: CIV
+        - code: GIN
+        - code: GNB
+        - code: LBR
+        - code: SLE
+        - code: BFA
+        - code: CAF
+        - code: COG
+        - code: GAB
+        - code: GNQ
+        - code: ZMB
+        - code: MWI
+        - code: MOZ
+        - code: SWZ
+        - code: AGO
+        - code: BDI
+        - code: MDG
+        - code: GMB
+        - code: TUN
+        - code: DZA
+        - code: ERI
+        - code: MAR
+        - code: EGY
+        - code: LBY
+        - code: ETH
+        - code: DJI
+        - code: UGA
+        - code: RWA
+        - code: SDS
+        - code: SOL
       geojson:
-        key: SOV_A3
+        key: BRK_A3
         data: geojson.world
+      key: code
       projection:
         name: orthographic
-      key: code
+        lon: 16
+      scale: Viridis
+      value: "geojson.properties.POP_EST"
+      min: 0
+      columns:
+        - name: Tooltip
+          template: "{{ geojson.properties.NAME_LONG }} / {{ code }}\nPopulation ({{ geojson.properties.POP_YEAR }}): {{ geojson.properties.POP_EST | toLocaleString() }}"
+      tooltip: Tooltip
 
   - title: "Projection: Orthographic zoomed"
     description: |
