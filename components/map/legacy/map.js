@@ -954,7 +954,7 @@ function Projection(p,w,h){
 	proj.rotate([-lon_0,-lat_0]);
 	proj.translate([wide/2,tall/2]);
 
-	path = d3.geoPath().projection(proj).digits(2);
+	path = d3.geoPath().projection(proj).digits(1);
 
 	this.toPath = function(feature){
 		return path(feature);
@@ -979,7 +979,7 @@ function Projection(p,w,h){
 			proj.fitWidth(this.w,geojson.getData());
 		}
 
-		path = d3.geoPath().projection(proj).digits(2);
+		path = d3.geoPath().projection(proj).digits(1);
 		this.metrics.bounds = this.getBounds(geojson);
 		this.metrics.width = this.metrics.bounds[1][0] - this.metrics.bounds[0][0];
 		this.metrics.height = this.metrics.bounds[1][1] - this.metrics.bounds[0][1];
