@@ -101,7 +101,7 @@
 		document.addEventListener('scroll',scrolled);
 
 		if(els) this.add(els);	// Add the elements
-		scrolled();	// Trigger the scroll event even though we haven't scrolled
+
 		return this;
 	}
 
