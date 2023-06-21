@@ -8,7 +8,6 @@ import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fon
 import { d3, d3geo } from "../../../lib/external/d3.ts";
 import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
 
-
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
 const fontWeight = getFontWeight();
@@ -321,171 +320,208 @@ export function ZoomableMap(opts){
 // That will only get included in pages that need it by using the "data-dependencies" attribute.
 export function SVGMap(opts){
 
-	var csv = clone(opts.data);
-	var fs = getFontSize();
-
-	var config = {
+	let csv = clone(opts.data);
+	let fs = getFontSize();
+	let config = {
 		'scale': 'Viridis',
-		'places': [],
-		'markers': [],
 		'data-type':'svg-map'
 	};
 	mergeDeep(config,opts);
 
 	let geo = config.geojson.data;
 
-	var cs = ColourScale(config.scale);
+	let cs = ColourScale(config.scale);
 
-	// Work out default max/min from data
-	var min = 1e100;
-	var max = -1e100;
-	var v;
 
-	if(config.value){
-		for(var i = 0; i < csv.length; i++){
-			v = recursiveLookup(config.value,csv[i]);
-			if(typeof v==="number"){
-				min = Math.min(min,v);
-				max = Math.max(max,v);
-			}
-		}
-	}
+	let layerlist = [];
+	let min,max,v,i,l;
 
-	// Override defaults if set
-	if(typeof config.min=="number") min = config.min;
-	if(typeof config.max=="number") max = config.max;
+	
+	for(l = 0; l < config.layers.length; l++){
+		
+		if(config.layers[l].type=="background"){
 
-	config.max = max;
-	config.min = min;
-	var layerlist = [];
+			layerlist.push({
+				'id': 'background',
+				'class': 'background',
+				'data': config.layers[l].data,
+				'options': { 'color': Colour(config.layers[l].colour||"#fafaf8").hex }
+			});
+			
+		}else if(config.layers[l].type=="data"){
 
-	if(config.background){
-		var colour = Colour(config.background.colour||"#fafaf8");
-		layerlist.push({
-			'id': 'background',
-			'data': config.background.data,
-			'options': { 'color': colour.hex }
-		});
-	}
-	layerlist.push({
-		'id': 'data-layer',
-		'data': geo,
-		'options': { 'color': '#b2b2b2' },
-		'values': { 'key': config.key, 'geokey': config.geojson.key, 'value': config.value, 'label':config.tooltip, 'min':min, 'max': max, 'data': csv, 'colour': 'red' },
-		'style': function(feature,el,type){
-			var v,code,i,title,row,val;
-			v = this.attr.values;
-			code = feature.properties[v.geokey];
+			// Work out max/min for this layer
+			min = 1e100;
+			max = -1e100;
+			v;
 
-			row = {};
-			for(i = 0; i < v.data.length; i++){
-				if(v.data[i][v.key] == code) row = v.data[i];
-			}
-
-			if(typeof v.value==="string"){
-				val = recursiveLookup(v.value,row);
-
-				// Add a colour-scale colour to each row based on the "value" column
-				if(typeof val==="number"){
-					row.colour = cs((val-v.min)/(v.max-v.min));
-				}
-			}
-
-			if(typeof row.colour === "string") row.colour = replaceNamedColours(row.colour);
-			// Set a default colour if we don't have one
-			if(row.colour === undefined) row.colour = defaultbg;
-
-			if(row){
-				if(typeof v.label==="string"){
-					val = recursiveLookup(v.label,row);
-					if(val){
-						// Add a text label 
-						title = document.createElement('title');
-						title.innerHTML = val;
-						el.appendChild(title);
+			if(config.layers[l].value){
+				for(i = 0; i < csv.length; i++){
+					v = recursiveLookup(config.layers[l].value,csv[i]);
+					if(typeof v==="number"){
+						min = Math.min(min,v);
+						max = Math.max(max,v);
 					}
 				}
-				el.setAttribute('fill-opacity',(type == "line" ? 0 : 1));
-				el.setAttribute('fill',row.colour);
-				el.setAttribute('stroke',(type == "line" ? row.colour : 'white'));
-				el.setAttribute('stroke-width',2);
-				el.setAttribute('stroke-opacity',(type == "line" ? 1 : 0.1));
-			}else{
-				el.setAttribute('style','display:none');
 			}
-		}
-	});
-	layerlist.push({
-		'id': 'labels',
-		'options': { 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},
-		'type': 'text',
-		'values': {'data':clone(places),'places':config.places},
-		'process': function(d,map){
-			var i,c,locations,f,loc,threshold,place,p;
 
-			locations = [];
-			threshold = 0;
+			// Override defaults if set
+			if(typeof config.layers[l].min=="number") min = config.layers[l].min;
+			if(typeof config.layers[l].max=="number") max = config.layers[l].max;
 
-			for(p = 0; p < this.attr.values.places.length; p++){
 
-				place = -1;
-				for(i = 0; i < this.attr.values.data.length; i++){
-					if(this.attr.values.places[p].name==this.attr.values.data[i].Name) place = i;
-				}
+			layerlist.push({
+				'id': 'data',
+				'class': 'data-layer',
+				'data': config.layers[l].data,
+				'options': { 'color': '#b2b2b2' },
+				'values': { 'key': config.layers[l].key, 'geokey': config.geojson.key, 'value': config.layers[l].value, 'label':config.layers[l].tooltip, 'min':min, 'max': max, 'data': csv, 'colour': 'red' },
+				'style': function(feature,el,type){
+					var v,code,i,title,row,val;
+					v = this.attr.values;
+					code = feature.properties[v.geokey];
 
-				if(place < 0){
-					this.attr.values.data.push({'Name':this.attr.values.places[p].name,'Population':this.attr.values.places[p].population||0,'Latitude':this.attr.values.places[p].latitude,'Longitude':this.attr.values.places[p].longitude});
-					place = this.attr.values.data.length-1;
-				}
+					row = {};
+					for(i = 0; i < v.data.length; i++){
+						if(v.data[i][v.key] == code) row = v.data[i];
+					}
 
-				if(place >= 0){
-					loc = {'type':'Feature','properties':{},'style':{},'geometry':{'type':'Point','coordinates':[]}};
+					if(typeof v.value==="string"){
+						val = recursiveLookup(v.value,row);
 
-					for(c in this.attr.values.data[place]) loc.properties[c] = this.attr.values.data[place][c];
-					for(c in this.attr.values.places[p]) loc.style[c] = this.attr.values.places[p][c];
-					loc.name = loc.properties.Name;
-
-					if(!loc.style['font-size']){
-						f = fs*0.75;
-						if(loc.properties.Population){
-							if(loc.properties.Population > 100000) f += fs*0.125;
-							if(loc.properties.Population > 250000) f += fs*0.125;
-							if(loc.properties.Population > 750000) loc.name = loc.name.toUpperCase();
+						// Add a colour-scale colour to each row based on the "value" column
+						if(typeof val==="number"){
+							row.colour = cs((val-v.min)/(v.max-v.min));
 						}
-						loc.style['font-size'] = f;
 					}
-					loc.geometry.coordinates = [loc.properties.Longitude,loc.properties.Latitude];
+					if(typeof row.colour === "string") row.colour = replaceNamedColours(row.colour);
+					// Set a default colour if we don't have one
+					if(row.colour === undefined) row.colour = defaultbg;
 
-					if(typeof loc.properties.Population==="undefined") loc.properties.Population = 0;
-					if(typeof this.attr.values.places[p].longitude==="number") loc.geometry.coordinates[0] = this.attr.values.places[p].longitude;
-					if(typeof this.attr.values.places[p].latitude==="number") loc.geometry.coordinates[1] = this.attr.values.places[p].latitude;
-					if(loc.properties.Population >= threshold) locations.push(loc);
+					if(row){
+						if(typeof v.label==="string"){
+							val = recursiveLookup(v.label,row);
+							if(val){
+								// Add a text label 
+								title = document.createElement('title');
+								title.innerHTML = val;
+								el.appendChild(title);
+							}
+						}
+						el.setAttribute('fill-opacity',(type == "line" ? 0 : 1));
+						el.setAttribute('fill',row.colour);
+						el.setAttribute('stroke',(type == "line" ? row.colour : 'white'));
+						el.setAttribute('stroke-width',2);
+						el.setAttribute('stroke-opacity',(type == "line" ? 1 : 0.1));
+					}else{
+						el.setAttribute('style','display:none');
+					}
 				}
+			});
+
+		}else if(config.layers[l].type=="graticule"){
+
+			var step = (typeof config.layers[l].step==="object" ? config.layers[l].step : [2, 2]);
+			var grid = d3.geoGraticule().step(step).precision(step[0]/20);
+			if(config.bounds){
+				var dlat = Math.abs(config.bounds.lat.max-config.bounds.lat.min)*0.1;
+				var dlon = Math.abs(config.bounds.lon.max-config.bounds.lon.min)*0.1;
+				grid.extent([[config.bounds.lon.min-dlon,config.bounds.lat.max+dlat],[config.bounds.lon.max+dlon,config.bounds.lat.min-dlat]]);
 			}
-			this.data = {'type':'FeatureCollection','features':locations};
+			layerlist.push({
+				'id': 'grid',
+				'class': 'graticule',
+				'data': { 'type':'FeatureCollection', 'features': [ {"type": "Feature", "properties": {}, "geometry": grid() }] },
+				'options': { 'color': '#000000' }
+			});
+
+		}else if(config.layers[l].type=="labels"){
+
+			layerlist.push({
+				'id': 'labels',
+				'class': 'labels',
+				'options': { 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},
+				'type': 'text',
+				'values': {'data':clone(places||[]),'places':config.layers[l].labels},
+				'process': function(d,map){
+					var i,c,locations,f,loc,threshold,place,p;
+
+					locations = [];
+					threshold = 0;
+
+					for(p = 0; p < this.attr.values.places.length; p++){
+
+						place = -1;
+						for(i = 0; i < this.attr.values.data.length; i++){
+							if(this.attr.values.places[p].name==this.attr.values.data[i].Name) place = i;
+						}
+
+						if(place < 0){
+							this.attr.values.data.push({'Name':this.attr.values.places[p].name,'Population':this.attr.values.places[p].population||0,'Latitude':this.attr.values.places[p].latitude,'Longitude':this.attr.values.places[p].longitude});
+							place = this.attr.values.data.length-1;
+						}
+
+						if(place >= 0){
+							loc = {'type':'Feature','properties':{},'style':{},'geometry':{'type':'Point','coordinates':[]}};
+
+							for(c in this.attr.values.data[place]) loc.properties[c] = this.attr.values.data[place][c];
+							for(c in this.attr.values.places[p]) loc.style[c] = this.attr.values.places[p][c];
+							loc.name = loc.properties.Name;
+
+							if(!loc.style['font-size']){
+								f = fs*0.75;
+								if(loc.properties.Population){
+									if(loc.properties.Population > 100000) f += fs*0.125;
+									if(loc.properties.Population > 250000) f += fs*0.125;
+									if(loc.properties.Population > 750000) loc.name = loc.name.toUpperCase();
+								}
+								loc.style['font-size'] = f;
+							}
+							loc.geometry.coordinates = [loc.properties.Longitude,loc.properties.Latitude];
+
+							if(typeof loc.properties.Population==="undefined") loc.properties.Population = 0;
+							if(typeof this.attr.values.places[p].longitude==="number") loc.geometry.coordinates[0] = this.attr.values.places[p].longitude;
+							if(typeof this.attr.values.places[p].latitude==="number") loc.geometry.coordinates[1] = this.attr.values.places[p].latitude;
+							if(loc.properties.Population >= threshold) locations.push(loc);
+						}
+					}
+					this.data = {'type':'FeatureCollection','features':locations};
+				}
+			});
+
+		}else if(config.layers[l].type=="markers"){
+
+			layerlist.push({
+				'id': 'markers',
+				'class': 'markers',
+				'options': { 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},
+				'type': 'text',
+				'values': {'markers':config.layers[l].markers||[]},
+				'process': function(d,map){
+					var i,pin,markers = [];
+
+					for(i = 0; i < this.attr.values.markers.length; i++){
+						if(typeof this.attr.values.markers[i].longitude==="number" && typeof this.attr.values.markers[i].latitude==="number"){
+							pin = {'type':'Feature','properties':this.attr.values.markers[i],'style':{},'geometry':{'type':'Point','coordinates':[this.attr.values.markers[i].longitude,this.attr.values.markers[i].latitude]}};
+							markers.push(pin);
+						}
+					}
+					this.data = {'type':'FeatureCollection','features':markers};
+				}
+			});
+
+		}else{
+
+			throw "Unknown layer type '"+config.layers[l].type+"' for map";
+
 		}
-	});
-
-	// Add a "markers" layer if needed
-	if(config.markers.length > 0){
-		layerlist.push({
-			'id': 'markers',
-			'options': { 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},
-			'type': 'text',
-			'values': {'markers':config.markers},
-			'process': function(d,map){
-				var i,pin,markers = [];
-
-				for(i = 0; i < this.attr.values.markers.length; i++){
-					if(typeof this.attr.values.markers[i].longitude==="number" && typeof this.attr.values.markers[i].latitude==="number"){
-						pin = {'type':'Feature','properties':this.attr.values.markers[i],'style':{},'geometry':{'type':'Point','coordinates':[this.attr.values.markers[i].longitude,this.attr.values.markers[i].latitude]}};
-						markers.push(pin);
-					}
-				}
-				this.data = {'type':'FeatureCollection','features':markers};
-			}
-		});
+		
 	}
+
+if(config.test){
+	console.log('test',config.layers.length);
+	//throw "Stop";
+}
 
 	var map = new BasicMap(config,{
 		'background': 'transparent',
@@ -497,7 +533,7 @@ export function SVGMap(opts){
 				if(typeof config.bounds==="string") return this.zoomToData(config.bounds);
 				else if(typeof config.bounds.lat==="object" && typeof config.bounds.lon==="object") return this.setBounds(config.bounds);
 			}else{
-				if(this.getLayerPos('data-layer') >= 0) this.zoomToData('data-layer');
+				if(this.getLayerPos('data') >= 0) this.zoomToData('data');
 				else this.zoomToData('background');
 			}
 		}
@@ -506,6 +542,7 @@ export function SVGMap(opts){
 	return map;
 
 }
+
 
 function BasicMap(config,attr){
 	if(!attr) attr = {};
@@ -658,7 +695,6 @@ function BasicMap(config,attr){
 	if(attr.layers) this.addLayers(attr.layers,attr.complete);
 
 	return this;
-
 }
 
 function Layer(attr,map,i){
@@ -683,7 +719,7 @@ function Layer(attr,map,i){
 
 	var g = svgEl('g');
 	var gs;
-	setAttr(g,{'class':this.class||this.id});
+	setAttr(g,{'class':this.class||attr.class||this.id});
 
 	if(map && map.svg){
 		if(typeof i==="number"){
@@ -935,6 +971,15 @@ function Projection(p,w,h){
 		if(typeof w!=="number") wide = defaultwidth;
 		if(typeof h!=="number") tall = wide;
 
+	}else if(p.name=="osgb"){
+
+		proj = d3.geoTransverseMercator();
+		// Explicitly set the centre coordinates
+		lat_0 = 49;
+		lon_0 = -2;
+		if(typeof w!=="number") wide = defaultwidth;
+		if(typeof h!=="number") tall = wide;
+
 	}else{
 
 		proj = d3.geoMercator();
@@ -979,12 +1024,16 @@ function Projection(p,w,h){
 			proj.fitWidth(this.w,geojson.getData());
 		}
 
-		path = d3.geoPath().projection(proj).digits(1);
 		this.metrics.bounds = this.getBounds(geojson);
 		this.metrics.width = this.metrics.bounds[1][0] - this.metrics.bounds[0][0];
 		this.metrics.height = this.metrics.bounds[1][1] - this.metrics.bounds[0][1];
 		this.metrics.viewBox = Math.round(this.metrics.bounds[0][0]) + " " + Math.round(this.metrics.bounds[0][1]) + " " + Math.round(this.metrics.bounds[1][0]) + " " + Math.round(this.metrics.bounds[1][1]);
 		this.metrics.aspectRatio = Math.round(Math.max(this.w,this.metrics.width))+' / '+Math.round(this.metrics.height);
+
+		// Clip GeoJSON to the bounds to avoid lots of unseen polygons
+		proj.clipExtent(this.metrics.bounds);
+
+		path = d3.geoPath().projection(proj).digits(1);
 		return this;
 	};
 
@@ -993,6 +1042,7 @@ function Projection(p,w,h){
 		var xy = proj([lon,lat]);
 		return {'x':xy[0],'y':xy[1]};
 	};
+
 
 	return this;
 }

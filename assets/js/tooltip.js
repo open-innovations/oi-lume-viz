@@ -112,8 +112,12 @@
 			arr.style['border-top-color'] = fill;
 
 			// If the colour is similar to black we need to change the tooltip filter
-			if(contrastRatio(colour2RGB(fill),[0,0,0]) < 2) tip.style.filter = "drop-shadow(0px 1px 1px rgba(50,50,50,0.7)";
-
+			if(contrastRatio(colour2RGB(fill),[0,0,0]) < 2){
+				box.style.border = "1px solid rgba(255,255,255,0.3)";
+				box.style.borderBottom = "0";
+			}else{
+				box.style.border = "0px";
+			}
 			tip.style.color = root.OI.contrastColour ? root.OI.contrastColour(fill) : "black";
 			
 			// Remove wrapping if the tip is wider than the page minus the padding

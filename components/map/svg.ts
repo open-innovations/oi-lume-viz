@@ -32,10 +32,11 @@ type ColourScaleDefinition = string |
 type SVGmapOptions = {
 	bgColour: string;
 	scale: ColourScaleDefinition;
-	min: number;
-	max: number;
+	min?: number;
+	max?: number;
 	data?: Record<string, unknown>[];
 	geojson: GeoJson;
+	layers?: Record<number,unknown>[];
 	label?: string;
 	tooltip?: string;
 	margin: number;
@@ -43,6 +44,8 @@ type SVGmapOptions = {
 	title?: string;
 	titleProp: string;
 	valueProp: string;
+	places?: [];
+	markers?: [];
 	colourValueProp?: string;
 	legend: { position: string; items: Record<number, string> };
 };
@@ -79,15 +82,17 @@ export default function (input: { config: SVGmapOptions }) {
 		config.data,
 		input,
 	);
-	
+
+
 	// If we don't have data, create an empty array
 	if(typeof config.data==="undefined") config.data = [];
 
 	// Simplify our complicated CSV structure
 	if(typeof config.data.rows==="object") config.data = config.data.rows;
-	
-	let geojson = clone(config.geojson);
 
+
+	// We need to update the GeoJSON in case we need to call on values
+	let geojson = clone(config.geojson);
 	// Handle geojson / data as string references
 	if(typeof geojson.data === 'string'){
 		geojson.data = thingOrNameOfThing<TableData<string | number>>(
@@ -95,33 +100,89 @@ export default function (input: { config: SVGmapOptions }) {
 			input,
 		);
 	}
-
 	// If the GeoJSON object doesn't contain a type: FeatureCollection we stop
 	if(!geojson.data.type || geojson.data.type !== "FeatureCollection"){
 		console.error(geojson);
 		throw new Error("No FeatureCollection in the GeoJSON");
 	}
 	config.geojson = geojson;
-	
+
+
 	// Create any defined columns
 	config.data = addVirtualColumns(config);
 
 	// Set up some variables
 	let max = config.max;
 
-	if(config.background){
-		// Handle background / data as string references
-		let background = clone(config.background);
-		if(typeof background.data === 'string'){
-			background.data = thingOrNameOfThing<TableData<string | number>>(
-				background.data,
-				input,
-			);
-		}
-		config.background = background;
-	}
+	// Build the layer structure
+	config = buildLayers(config,input);
 
 	const map = new SVGMap(config);
 
 	return map.getHTML();
+}
+
+function buildLayers(config,input){
+
+	let l,lyrs = [];
+
+	if(typeof config.layers!=="object"){
+
+		// Add the background layer
+		if(config.background){
+			l = config.background;
+			l.type = "background";
+			lyrs.push(l);
+		}
+
+		// Add the data layer
+		l = {'type':'data'};
+		if(typeof config.key==="string") l.key = config.key;
+		if(typeof config.value==="string") l.value = config.value;
+		if(typeof config.tooltip==="string") l.tooltip = config.tooltip;
+		if(typeof config.min=="number") l.min = config.min;
+		if(typeof config.max=="number") l.max = config.max;
+		l.data = config.geojson.data;
+		lyrs.push(l);
+
+
+		// Add any graticule layer
+		if(config.graticule){
+			l = config.graticule;
+			l.type = "graticule";
+			lyrs.push(l);
+		}
+
+		// Add labels
+		if(typeof config.places==="object" && config.places.length > 0){
+			l = {};
+			l.type = "labels";
+			l.labels = config.places;
+			lyrs.push(l);
+		}
+
+		// Add markers
+		if(typeof config.markers==="object" && config.markers.length > 0){
+			l = {};
+			l.type = "markers";
+			l.markers = config.markers;
+			lyrs.push(l);
+		}
+		config.layers = lyrs;
+	}
+
+	// Load any "data" attributes
+	for(let l = 0; l < config.layers.length; l++){
+		if(config.layers[l].type=="data" && typeof config.layers[l].data==="undefined"){
+			config.layers[l].data = clone(config.geojson.data);
+		}
+		if(typeof config.layers[l].data==="string"){
+			config.layers[l].data = clone(thingOrNameOfThing<TableData<string | number>>(
+				config.layers[l].data,
+				input
+			));
+		}
+	}
+
+	return config;
 }

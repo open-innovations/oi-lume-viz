@@ -16,9 +16,6 @@
 		};
 	}
 
-	var styles = document.createElement('style');
-	document.head.prepend(styles);
-
 	function setAttr(el,prop){
 		for(var p in prop) el.setAttribute(p,prop[p]);
 		return el;
