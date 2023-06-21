@@ -1,3 +1,11 @@
+# v0.9.1 changes since v0.9.0
+
+* Fixes OI legend on zoomable map
+
+Authors:
+
+* Giles Dring
+
 # v0.9.0 Changes since v0.8.0
 
 * Add code to example
