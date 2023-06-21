@@ -1,3 +1,28 @@
+# v0.9.0 Changes since v0.8.0
+
+* Add code to example
+* Add line example to SVG maps
+* Add skip-link to example site
+* Add some projection tests #33
+* Big improvements for map projections
+* Dealing with spaces in string
+* Don't show all of Europe in example
+* Generalise code for detecting if in view
+* Improve tooltips
+* Line hover state
+* Move example data to CSV
+* Port more changes from YFF chart interactions
+* Reduce SVG map precision
+* Remove trigger
+* Set the centre lat/lon for orthographic projection
+* Show graticules and order layers for SVG map
+* Update map examples
+
+Authors:
+
+* Giles Dring
+* slowe
+
 # v0.8.0
 
 Changes since v0.7.2
