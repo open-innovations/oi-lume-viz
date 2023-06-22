@@ -6,6 +6,7 @@ import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { SVGMap } from "./legacy/map.js";
+import { buildLayers } from "./legacy/layers.ts";
 
 
 // This is a simple scale which returns the same value it was sent
@@ -120,69 +121,4 @@ export default function (input: { config: SVGmapOptions }) {
 	const map = new SVGMap(config);
 
 	return map.getHTML();
-}
-
-function buildLayers(config,input){
-
-	let l,lyrs = [];
-
-	if(typeof config.layers!=="object"){
-
-		// Add the background layer
-		if(config.background){
-			l = config.background;
-			l.type = "background";
-			lyrs.push(l);
-		}
-
-		// Add the data layer
-		l = {'type':'data'};
-		if(typeof config.key==="string") l.key = config.key;
-		if(typeof config.value==="string") l.value = config.value;
-		if(typeof config.tooltip==="string") l.tooltip = config.tooltip;
-		if(typeof config.min=="number") l.min = config.min;
-		if(typeof config.max=="number") l.max = config.max;
-		l.data = config.geojson.data;
-		lyrs.push(l);
-
-
-		// Add any graticule layer
-		if(config.graticule){
-			l = config.graticule;
-			l.type = "graticule";
-			lyrs.push(l);
-		}
-
-		// Add labels
-		if(typeof config.places==="object" && config.places.length > 0){
-			l = {};
-			l.type = "labels";
-			l.labels = config.places;
-			lyrs.push(l);
-		}
-
-		// Add markers
-		if(typeof config.markers==="object" && config.markers.length > 0){
-			l = {};
-			l.type = "markers";
-			l.markers = config.markers;
-			lyrs.push(l);
-		}
-		config.layers = lyrs;
-	}
-
-	// Load any "data" attributes
-	for(let l = 0; l < config.layers.length; l++){
-		if(config.layers[l].type=="data" && typeof config.layers[l].data==="undefined"){
-			config.layers[l].data = clone(config.geojson.data);
-		}
-		if(typeof config.layers[l].data==="string"){
-			config.layers[l].data = clone(thingOrNameOfThing<TableData<string | number>>(
-				config.layers[l].data,
-				input
-			));
-		}
-	}
-
-	return config;
 }
