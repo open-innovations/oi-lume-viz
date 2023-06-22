@@ -24,9 +24,9 @@ const iconDefinitions: Record<string, IconOptions> = {
 
 
 /**
- * Function to update the colour scales available to the site
- * @param key Key of the new scale
- * @param scale The CSS code of the new scale
+* Function to update the icons available to the site
+ * @param key Key of the new icon
+ * @param props The icon options
  */
 export function updateIcons(key: string, props: IconOptions) {
 	iconDefinitions[key] = props;
