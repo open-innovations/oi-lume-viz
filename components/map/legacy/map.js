@@ -1,5 +1,5 @@
-import { document } from '../../../lib/document.ts';
 import { recursiveLookup } from '../../../lib/util.js';
+import { svgEl, newEl, setAttr } from '../../../lib/util/dom.ts';
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { Colour, ColourScale } from "../../../lib/colour/colours.ts";
 import { VisualisationHolder } from '../../../lib/holder.js';
@@ -391,7 +391,7 @@ export function SVGMap(opts){
 							val = recursiveLookup(v.label,row);
 							if(val){
 								// Add a text label 
-								title = document.createElement('title');
+								title = newEl('title');
 								title.innerHTML = val;
 								el.appendChild(title);
 							}
@@ -534,7 +534,7 @@ if(config.test){
 
 function BasicMap(config,attr){
 	if(!attr) attr = {};
-	var el = document.createElement('div');
+	var el = newEl('div');
 	this.container = el;
 	el.innerHTML = "";
 	setAttr(this.container,{'style':'overflow:hidden'});
@@ -899,14 +899,6 @@ function Layer(attr,map,i){
 
 	return this;
 }
-
-function setAttr(el,prop){
-	for(var p in prop){
-		if(prop[p]) el.setAttribute(p,prop[p]);
-	}
-	return el;
-}
-function svgEl(t){ return document.createElement(t);/*return document.createElementNS(ns,t);*/ }
 
 function Projection(p,w,h){
 
