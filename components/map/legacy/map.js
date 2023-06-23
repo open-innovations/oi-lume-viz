@@ -99,7 +99,7 @@ export function ZoomableMap(opts){
 		html = [];
 		html.push('(function(root){\n');
 		html.push('	var p = document.currentScript.parentNode;\n');
-		html.push('	var map = new OI.ZoomableMap(p.querySelector(".leaflet"),{"attribution":"'+config.attribution+'"});\n');
+		html.push('	var map = new OI.ZoomableMap(p.querySelector(".leaflet"),{"attribution":'+JSON.stringify(config.attribution||'<a href="https://open-innovations.org/">Open Innovations</a>')+'});\n');
 
 		if(config.bounds){
 			// Create the bounds object required by Leaflet

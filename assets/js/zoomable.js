@@ -17,10 +17,11 @@
 	// Store the map in an array for the page
 	if(!root.OI.maps) root.OI.maps = [];
 
-	function ZoomableMap(el){
+	function ZoomableMap(el,attr){
 		
 		var list = [];
 		var map = L.map(el);
+		if(attr.attribution) map.attributionControl.setPrefix(attr.attribution);
 		map.setView([0, 0], 2);
 		var tiles;
 		
