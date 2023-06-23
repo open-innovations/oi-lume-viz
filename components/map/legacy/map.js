@@ -50,8 +50,6 @@ export function ZoomableMap(opts){
 
 	cs = ColourScale(config.scale);
 
-console.log('zoomable map layers=',config.layers);
-
 	for(l = 0; l < config.layers.length; l++){
 
 		if(config.layers[l].data){
@@ -242,7 +240,6 @@ export function SVGMap(opts){
 	};
 	mergeDeep(config,opts);
 
-console.log('SVGMap layers='+config.layers.length);
 	let geo = config.geojson.data;
 	let cs = ColourScale(config.scale);
 	let layerlist = [];
@@ -268,8 +265,8 @@ console.log('SVGMap layers='+config.layers.length);
 			v;
 
 			if(config.layers[l].value){
-				for(i = 0; i < csv.length; i++){
-					v = recursiveLookup(config.layers[l].value,csv[i]);
+				for(i = 0; i < config.layers[l].data.length; i++){
+					v = recursiveLookup(config.layers[l].value,config.layers[l].data[i]);
 					if(typeof v==="number"){
 						min = Math.min(min,v);
 						max = Math.max(max,v);
@@ -281,14 +278,13 @@ console.log('SVGMap layers='+config.layers.length);
 			if(typeof config.layers[l].min=="number") min = config.layers[l].min;
 			if(typeof config.layers[l].max=="number") max = config.layers[l].max;
 
-//console.log('\ttooltip',config.layers[l].tooltip,config.layers[l].data[0][config.layers[l].tooltip]);
 			layerlist.push({
 				'id': 'data',
 				'class': 'data-layer',
 				'data': config.layers[l].data,
 				'geojson': config.layers[l].geojson,
 				'options': { 'color': '#b2b2b2' },
-				'values': { 'key': config.layers[l].key, 'geokey': config.geojson.key, 'value': config.layers[l].value, 'label':config.layers[l].tooltip, 'min':min, 'max': max, 'data': csv, 'colour': 'red' },
+				'values': { 'key': config.layers[l].key, 'geokey': config.geojson.key, 'value': config.layers[l].value, 'label':config.layers[l].tooltip, 'min':min, 'max': max, 'data': config.layers[l].data, 'colour': 'red' },
 				'style': function(feature,el,type){
 					var v,code,i,title,row,val;
 					v = this.attr.values;
@@ -314,18 +310,19 @@ console.log('SVGMap layers='+config.layers.length);
 					if(row.colour === undefined) row.colour = defaultbg;
 
 					if(row){
-						/*
 						if(typeof v.label==="string"){
 							val = recursiveLookup(v.label,row);
 							if(typeof val!=="string"){
-								console.warn('The tooltip lookup "'+v.label+'" does not return a string.',val,row);
-								val = "?";
+								//console.warn('The tooltip lookup "'+v.label+'" does not return a string.',val,row);
+								val = "";
 							}
-							// Add a text label 
-							title = newEl('title');
-							title.innerHTML = val;
-							el.appendChild(title);
-						}*/
+							if(val){
+								// Add a text label 
+								title = newEl('title');
+								title.innerHTML = val;
+								el.appendChild(title);
+							}
+						}
 						el.setAttribute('fill-opacity',(type == "line" ? 0 : 1));
 						el.setAttribute('fill',row.colour);
 						el.setAttribute('stroke',(type == "line" ? row.colour : 'white'));
@@ -436,10 +433,6 @@ console.log('SVGMap layers='+config.layers.length);
 		
 	}
 
-if(config.test){
-	console.log('TEST layers=',config.layers);
-//	throw "Stop";
-}
 
 	var map = new BasicMap(config,{
 		'background': 'transparent',
