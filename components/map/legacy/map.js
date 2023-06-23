@@ -25,7 +25,7 @@ function clone(a){ return JSON.parse(JSON.stringify(a)); }
 export function ZoomableMap(opts){
 
 	var fs = fontSize;
-	var i;
+	let i,l,min,max,v,cs;
 
 	var config = {
 		'scale': 'Viridis',
@@ -43,262 +43,187 @@ export function ZoomableMap(opts){
 			'url': 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
 			'attribution': "",
 			'pane': "labels"
-		}
+		},
+		'layers': []
 	};
 	mergeDeep(config,opts);
 
-	var cs = ColourScale(config.scale);
+	cs = ColourScale(config.scale);
 
-	if(opts.data){
+console.log('zoomable map layers=',config.layers);
 
-		var csv = clone(opts.data);
+	for(l = 0; l < config.layers.length; l++){
 
-		// Work out default max/min from data
-		var min = 1e100;
-		var max = -1e100;
-		var v;
+		if(config.layers[l].data){
 
-		if(config.value){
-			for(var i = 0; i < csv.length; i++){
-				v = recursiveLookup(config.value,csv[i]);
-				if(typeof v==="number"){
-					min = Math.min(min,v);
-					max = Math.max(max,v);
+			// Work out default max/min from data
+			min = 1e100;
+			max = -1e100;
+
+			if(config.layers[l].value){
+				for(i = 0; i < config.layers[l].data.length; i++){
+					v = recursiveLookup(config.layers[l].value,config.layers[l].data[i]);
+					if(typeof v==="number"){
+						min = Math.min(min,v);
+						max = Math.max(max,v);
+					}
 				}
 			}
-		}
+			
+			
+			// Override defaults for min/max if set
+			if(typeof config.layers[l].min=="number") min = config.layers[l].min;
+			if(typeof config.layers[l].max=="number") max = config.layers[l].max;
 
-		// Override defaults if set
-		if(typeof config.min=="number") min = config.min;
-		if(typeof config.max=="number") max = config.max;
+			// Update values of min/max
+			config.layers[l].max = max;
+			config.layers[l].min = min;
 
-		config.max = max;
-		config.min = min;
 
-		// Update the colours for the CSV rows
-		for(i = 0; i < csv.length; i++){
-			if(config.value && csv[i][config.value]){
-				v = recursiveLookup(config.value,csv[i]);
-				if(typeof v==="number") csv[i].colour = cs((v-config.min)/(config.max-config.min));
+			// Update the colours for the CSV rows
+			for(i = 0; i < config.layers[l].data.length; i++){
+				if(config.layers[l].value && config.layers[l].data[i][config.layers[l].value]){
+					v = recursiveLookup(config.layers[l].value,config.layers[l].data[i]);
+					// Find the colour by passing the fractional value within the range
+					if(typeof v==="number") config.layers[l].data[i].colour = cs((v - config.layers[l].min)/(config.layers[l].max - config.layers[l].min));
+				}
+				// Set a default colour if we don't have one
+				if(config.layers[l].data[i].colour === undefined) config.layers[l].data[i].colour = defaultbg;
 			}
-			// Set a default colour if we don't have one
-			if(csv[i].colour === undefined) csv[i].colour = defaultbg;
+
 		}
-
-
 	}
 
+
 	this.getHTML = function(){
-		var html,i;
+		var html,i,l,props;
 
-		html = ['<div class="leaflet">Test</div>'];
-		html.push('<script>');
-		html.push('(function(root){');
-		html.push('	var p = document.currentScript.parentNode;');
-		html.push('	var el = p.querySelector(".leaflet");');
-		html.push('	var map = L.map(el);');
-
-		// Store the map in an array for the page
-		html.push('	if(!root.OI) root.OI = {};\n');
-		html.push('	if(!root.OI.maps) root.OI.maps = [];\n');
-
-		html.push('	var id = root.OI.maps.length;\n');
-		html.push('	root.OI.maps.push({"map":map});\n');
+		html = [];
+		html.push('(function(root){\n');
+		html.push('	var p = document.currentScript.parentNode;\n');
+		html.push('	var map = new OI.ZoomableMap(p.querySelector(".leaflet"),{"attribution":"'+config.attribution+'"});\n');
 
 		if(config.bounds){
 			// Create the bounds object required by Leaflet
-			var bstr = '[['+config.bounds.lat.min+','+config.bounds.lon.min+'],['+config.bounds.lat.max+','+config.bounds.lon.max+']]';
-			html.push(' OI.maps[id].bounds = '+bstr+';\n');
-			html.push('	map.fitBounds('+bstr+');\n');
+			html.push('	map.fitBounds([['+config.bounds.lat.min+','+config.bounds.lon.min+'],['+config.bounds.lat.max+','+config.bounds.lon.max+']]);\n');
 		}
 
-		if(config.background){
-			var colour = Colour(config.background.colour||"#fafaf8");
-			html.push(' var bggeo = '+JSON.stringify(config.background.data)+';\n');
-			html.push('	var bg = L.geoJSON(bggeo,{"style":{"color":"'+colour.hex+'","weight":0,"fillOpacity":1}});\n');
-			html.push('	bg.addTo(map);\n');
-		}else{
-			html.push('	L.tileLayer("'+config.tileLayer.url+'", '+JSON.stringify(config.tileLayer)+').addTo(map);\n');
+		// Check if a background layer is provided.
+		var needsTiles = true;
+		for(l = 0; l < config.layers.length; l++){
+			if(config.layers[l].type=="background" || config.layers[l].type=="tile") needsTiles = false;
 		}
+		// If there is no background layer or tile layer we add some by default
+		if(needsTiles) html.push('	map.setTiles(' + JSON.stringify(config.tileLayer) + ');\n');
 
-		html.push('	map.attributionControl.setPrefix("'+config.attribution+'");\n');
+		for(l = 0; l < config.layers.length; l++){
+	
+			if(config.layers[l].type=="tile"){
 
-		if(config.data){
-			html.push('	var csv = '+JSON.stringify(csv)+';\n');
-			html.push('	var key = "'+config.key+'";\n');
-		}
-		html.push('	var toolkey = "'+config.tooltip+'";\n');
+				html.push('	map.setTiles(' + JSON.stringify(config.layers[l].props) + ');\n');
 
-		// Add the GeoJSON
-		if(config.geojson){
-			html.push('	var geojson = '+JSON.stringify(config.geojson.data)+';\n');
-			html.push('	var geokey = "'+config.geojson.key+'";\n');
-			// A function to style each GeoJSON feature
-			html.push('	function style(feature){\n');
-			html.push('		var d = getData(feature.properties[geokey]);\n');
-			html.push('		return {\n');
-			html.push('			weight: 0.5,\n');
-			html.push('			opacity: 0.5,\n');
-			html.push('			color: "#ffffff",\n');
-			html.push('			fillOpacity: 1,\n');
-			html.push('			fillColor: d.colour||"transparent"\n');
-			html.push('		};\n');
-			html.push('	}\n');
+			}else if(config.layers[l].type=="background"){
 
-			html.push('	function highlightFeature(e) {\n');
-			html.push('		const layer = e.target;\n');
-			html.push('		layer.setStyle({\n');
-			html.push('			weight: 4,\n');
-			html.push('			color: "#000000",\n');
-			html.push('			opacity: 1\n');
-			html.push('		});\n');
-			html.push('		layer.bringToFront();\n');
-//			html.push('		layer.openPopup();\n');
-			html.push('	}\n');
-			html.push('	function resetHighlight(e) {\n');
-			html.push('		geo.resetStyle(e.target);\n');
-			html.push('	}\n');
+				var colour = Colour(config.layers[l].colour||"#fafaf8");
+				html.push('	map.addLayer({\n');
+				html.push('		layer: L.geoJSON(' + JSON.stringify(config.layers[l].geojson.data) +',{"style":{"color":"'+colour.hex+'","weight":0,"fillOpacity":1}})\n');
+				html.push('	});\n');
 
-			// A function to return the row for a given key
-			html.push('	function getData(k){\n');
-			if(config.data){
-				html.push('		for(var i = 0; i < csv.length; i++){\n');
-				html.push('			if(csv[i][key] == k) return csv[i];\n');
-				html.push('		}\n');
-			}
-			html.push('		return {};\n');
-			html.push('	}\n');
+			}else if(config.layers[l].type=="data"){
 
-			// Add the GeoJSON to the map
-			html.push('	var geoattrs = { "style": style };\n');
-			html.push('	geoattrs.onEachFeature = function(feature, layer){\n');
-			html.push('		var d = getData(feature.properties[geokey]);\n');
-			html.push('		layer.bindPopup(d["Label"]||d[toolkey]||feature.properties[geokey]).on("popupopen",function(ev){\n');
-			html.push('			var ps = ev.popup._container;\n');
-			// Set the background colour of the popup
-			html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["background-color"] = d.colour;\n');
-			html.push('			ps.querySelector(".leaflet-popup-tip").style["background-color"] = d.colour;\n');
-			// Set the text colour of the popup
-			html.push('			ps.querySelector(".leaflet-popup-content-wrapper").style["color"] = OI.contrastColour(d.colour);\n');
-			html.push('			ps.style["color"] = OI.contrastColour(d.colour);\n');
-			html.push('		});\n');
-			html.push('		layer.on({\n');
-			html.push('			mouseover: highlightFeature,\n');
-			html.push('			mouseout: resetHighlight\n');
-			html.push('		});\n');
-			html.push('	};\n');
+				if(config.layers[l].data && config.layers[l].geojson){
 
-			html.push('	var geo = L.geoJSON(geojson,geoattrs);\n');
-			html.push('	geo.addTo(map);\n');
-
-			html.push('	OI.maps[id].bounds = geo.getBounds();\n');
-			if(!config.bounds) html.push('	map.fitBounds(geo.getBounds());\n');
-		}else{
-			html.push('	map.setView([0, 0], 2);\n');
-		}
-
-		if(config.markers && config.markers.length > 0){
-			var icon;
-			for(var m = 0; m < config.markers.length; m++){
-				icon;
-				if(typeof config.markers[m].icon==="undefined") config.markers[m].icon = "default";
-				if(icons[config.markers[m].icon]) icon = clone(icons[config.markers[m].icon]);
-				else{ icon = config.markers[m].icon; }
-				if(!icon.svg){
-					throw("No SVG within marker "+m);
-				}
-				if(!icon.size) icon.size = [40,40];
-				if(!icon.anchor) icon.anchor = [20,0];
-				if(icon.svg){
-					// Clean up tags to make sure we have explicit closing tags
-					icon.svg = icon.svg.replace(/<([^\s]+)\s([^\>]+)\s*\/\s*>/g,function(m,p1,p2){ return "<"+p1+" "+p2+"></"+p1+">"; });
-				}else{
-					icon.svg = '?';
-				}
-				icon.color = 'black';
-				if(config.markers[m].color) icon.color = config.markers[m].color;
-				if(config.markers[m].colour) icon.color = config.markers[m].colour;
-
-				icon.bgPos = [icon.anchor[0],icon.size[1]-icon.anchor[1]];
-				icon.html = '<div style="color:'+icon.color+'">'+icon.svg+'</div>';
-				delete config.markers[m].svg;
-				config.markers[m].icon = icon;
-			}
-			html.push('	var markers = '+JSON.stringify(config.markers)+';\n');
-			html.push('	var mark;\n');
-			html.push('	for(var m = 0; m < markers.length; m++){\n');
-			html.push('		icon = L.divIcon({"html":markers[m].icon.html,"iconSize":markers[m].icon.size,"iconAnchor":markers[m].icon.bgPos});\n');
-			html.push('		mark = L.marker([markers[m].latitude,markers[m].longitude], {icon: icon})\n');
-			html.push('		mark.addTo(map);\n');
-			html.push('		if(markers[m].tooltip) mark.bindPopup(markers[m].tooltip,{"className":"popup"});\n');
-			html.push('	}\n');
-			html.push('	function wrap(el,colour) { const wrappingElement = document.createElement("div"); el.replaceWith(wrappingElement); wrappingElement.appendChild(el); }');
-
-			html.push('	map.on("popupopen", function (e) {\n');
-			html.push('		var colour = "";\n');
-			html.push('		if(e.popup._source._path){\n');
-			html.push('			colour = window.getComputedStyle(e.popup._source._path).fill;\n');
-			html.push('		}else{\n');
-			html.push('			colour = window.getComputedStyle(e.popup._source._icon.querySelector("div")).color;\n');
-			html.push('		}\n');
-			html.push('		el = e.popup._container;\n');
-			html.push('		var style = "background-color:"+colour+"!important;color:"+OI.contrastColour(colour)+"!important;";\n');
-			html.push('		el.querySelector(".leaflet-popup-content-wrapper").setAttribute("style",style);\n');
-			html.push('		el.querySelector(".leaflet-popup-tip").setAttribute("style",style);\n');
-			html.push('		el.querySelector(".leaflet-popup-close-button").setAttribute("style",style);\n');
-			html.push('	})\n');
-		}
-
-		if(config.places){
-			for(i = 0; i < config.places.length; i++){
-				var place = -1;
-				for(var p = 0; p < places.length; p++){
-					if(places[p].Name==config.places[i].name){
-						place = p;
-						continue;
+					html.push('	map.addLayer({\n');
+					html.push('		"key": "' + (config.layers[l].key||"") + '",\n');
+					html.push('		"toolkey": "' + (config.layers[l].tooltip||"") + '",\n');
+					html.push('		"data": ' + JSON.stringify(config.layers[l].data) + ',\n');
+					if(config.layers[l].geojson){
+						html.push('		"geo": {\n');
+						html.push('			"key": "' + (config.layers[l].geojson.key || "") + '",\n');
+						html.push('			"json": ' + JSON.stringify(config.layers[l].geojson.data) + '\n');
+						html.push('		}\n');
 					}
+					html.push('	});\n');
+
 				}
-				var f = fs*0.75;
-				if(place >= 0){
-					p = clone(places[place]);
-					if(typeof config.places[i].latitude!=="number") config.places[i].latitude = p.Latitude;
-					if(typeof config.places[i].longitude!=="number") config.places[i].longitude = p.Longitude;
-					if(p.Population){
-						if(p.Population > 100000) f += fs*0.125;
-						if(p.Population > 250000) f += fs*0.125;
-						if(p.Population > 750000) config.places[i].name = config.places[i].name.toUpperCase();
+
+			}else if(config.layers[l].type=="markers"){
+				
+				if(config.layers[l].markers && config.layers[l].markers.length > 0){
+					var icon,svg;
+					for(var m = 0; m < config.layers[l].markers.length; m++){
+						icon;
+						if(typeof config.layers[l].markers[m].icon==="undefined") config.layers[l].markers[m].icon = "default";
+						if(icons[config.layers[l].markers[m].icon]) icon = clone(icons[config.layers[l].markers[m].icon]);
+						else{ icon = config.layers[l].markers[m].icon; }
+						if(!icon.svg){
+							throw("No SVG within marker "+m);
+						}
+						if(!icon.size) icon.size = [40,40];
+						if(!icon.anchor) icon.anchor = [20,0];
+						if(icon.svg){
+							// Clean up tags to make sure we have explicit closing tags
+							icon.svg = icon.svg.replace(/<([^\s]+)\s([^\>]+)\s*\/\s*>/g,function(m,p1,p2){ return "<"+p1+" "+p2+"></"+p1+">"; });
+						}else{
+							icon.svg = '?';
+						}
+						icon.color = 'black';
+						if(config.layers[l].markers[m].color) icon.color = config.layers[l].markers[m].color;
+						if(config.layers[l].markers[m].colour) icon.color = config.layers[l].markers[m].colour;
+
+						icon.bgPos = [icon.anchor[0],icon.size[1]-icon.anchor[1]];
+						icon.html = '<div style="color:'+icon.color+';width:'+icon.size[0]+'px;height:'+icon.size[1]+'px;">'+icon.svg.replace(/(<svg[^\>]+) width="([^\"]+)"/g,function(m,p1,p2){ return p1; }).replace(/(<svg[^\>]+) height="([^\"]+)"/g,function(m,p1,p2){ return p1; })+'</div>';
+						delete icon.svg;
+						delete config.layers[l].markers[m].svg;
+						config.layers[l].markers[m].icon = icon;
 					}
+					html.push('	map.addLayer({\n');
+					html.push('		"markers": '+JSON.stringify(config.layers[l].markers)+',\n');
+					html.push('	})\n');
 				}
-				config.places[i] = mergeDeep({'font-size':f,'font-weight':fontWeight,'font-family':fontFamily,'colour':'black','border':'white'},config.places[i]);
-				if(typeof config.places[i].latitude==="number" && typeof config.places[i].longitude==="number"){
-					html.push('	new L.Marker(['+config.places[i].latitude+', '+config.places[i].longitude+'], { icon: new L.DivIcon({className: "place-name", html: "<svg xmlns=\'http://www.w3.org/2000/svg\' version=\'1.1\' preserveAspectRatio=\'xMidYMin meet\' overflow=\'visible\'><text fill=\''+config.places[i]['colour']+'\' stroke=\''+config.places[i]['border']+'\' stroke-width=\'7%\' paint-order=\'stroke\'><tspan style=\'font-size:'+(config.places[i]['font-size'])+'px;font-weight:'+config.places[i]['font-weight']+';font-family:'+config.places[i]['font-family']+';\'>'+(config.places[i].name||"")+'</tspan></text></svg>"}) }).addTo(map);\n');
+
+				
+			}else if(config.layers[l].type=="labels"){
+
+				if(config.layers[l].labels){
+					html.push('	var labels = [];\n');
+					for(i = 0; i < config.layers[l].labels.length; i++){
+						var place = -1;
+						for(var p = 0; p < places.length; p++){
+							if(places[p].Name==config.layers[l].labels[i].name){
+								place = p;
+								continue;
+							}
+						}
+						var f = fs*0.75;
+						if(place >= 0){
+							p = clone(places[place]);
+							if(typeof config.layers[l].labels[i].latitude!=="number") config.layers[l].labels[i].latitude = p.Latitude;
+							if(typeof config.layers[l].labels[i].longitude!=="number") config.layers[l].labels[i].longitude = p.Longitude;
+							if(p.Population){
+								if(p.Population > 100000) f += fs*0.125;
+								if(p.Population > 250000) f += fs*0.125;
+								if(p.Population > 750000) config.layers[l].labels[i].name = config.layers[l].labels[i].name.toUpperCase();
+							}
+						}
+						config.layers[l].labels[i] = mergeDeep({'font-size':f,'font-weight':fontWeight,'font-family':fontFamily.replace(/[\"\']/g,''),'colour':'black','border':'white'},config.layers[l].labels[i]);
+					}
+					html.push('	map.addLayer({\n');
+					html.push('		"labels": '+JSON.stringify(config.layers[l].labels) + ',\n');
+					html.push('	})\n');
 				}
+
 			}
-			html.push('	function fitSvgTextElements() {\n');
-			html.push('		const elements = document.querySelectorAll(".place-name svg");\n');
-			html.push('		for( const el of elements ) {\n');
-			html.push('			const box = el.querySelector("text").getBBox();\n');
-			html.push('			el.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);\n');
-			html.push('			el.setAttribute("width", box.width);\n');
-			html.push('		}\n');
-			html.push('	}\n');
-			html.push('	fitSvgTextElements();\n');
-		}else{
-			// Create a map label pane so labels can sit above polygons
-			html.push('	map.createPane("labels");\n');
-			html.push('	map.getPane("labels").style.zIndex = 650;\n');
-			html.push('	map.getPane("labels").style.pointerEvents = "none";\n');
-			html.push('	L.tileLayer("'+config.labelLayer.url+'", '+JSON.stringify(config.labelLayer)+').addTo(map);\n');
 		}
+
+		if(!config.bounds) html.push('	map.fitBounds("data");\n');
 
 		html.push('})(window || this);\n');
-		html.push('</script>\n');
-
 
 		var holder = new VisualisationHolder(config);
-		holder.addDependencies(['/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/tooltip.js']);
+		holder.addDependencies(['/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/tooltip.js','/js/zoomable.js']);
 		holder.addClasses(['oi-map','oi-zoomable-map']);
-		return holder.wrap(html.join(''));
+		return holder.wrap('<div class="leaflet"></div><script>'+html.join('')+'</script>');
 	};
 	return this;
 }
@@ -312,27 +237,26 @@ export function SVGMap(opts){
 	let fs = getFontSize();
 	let config = {
 		'scale': 'Viridis',
-		'data-type':'svg-map'
+		'data-type':'svg-map',
+		'layers': []
 	};
 	mergeDeep(config,opts);
 
+console.log('SVGMap layers='+config.layers.length);
 	let geo = config.geojson.data;
-
 	let cs = ColourScale(config.scale);
-
-
 	let layerlist = [];
 	let min,max,v,i,l;
 
-	
 	for(l = 0; l < config.layers.length; l++){
-		
+
 		if(config.layers[l].type=="background"){
 
 			layerlist.push({
 				'id': 'background',
 				'class': 'background',
 				'data': config.layers[l].data,
+				'geojson': config.layers[l].geojson,
 				'options': { 'color': Colour(config.layers[l].colour||"#fafaf8").hex }
 			});
 			
@@ -357,19 +281,20 @@ export function SVGMap(opts){
 			if(typeof config.layers[l].min=="number") min = config.layers[l].min;
 			if(typeof config.layers[l].max=="number") max = config.layers[l].max;
 
-
+//console.log('\ttooltip',config.layers[l].tooltip,config.layers[l].data[0][config.layers[l].tooltip]);
 			layerlist.push({
 				'id': 'data',
 				'class': 'data-layer',
 				'data': config.layers[l].data,
+				'geojson': config.layers[l].geojson,
 				'options': { 'color': '#b2b2b2' },
 				'values': { 'key': config.layers[l].key, 'geokey': config.geojson.key, 'value': config.layers[l].value, 'label':config.layers[l].tooltip, 'min':min, 'max': max, 'data': csv, 'colour': 'red' },
 				'style': function(feature,el,type){
 					var v,code,i,title,row,val;
 					v = this.attr.values;
 					code = feature.properties[v.geokey];
-
 					row = {};
+
 					for(i = 0; i < v.data.length; i++){
 						if(v.data[i][v.key] == code) row = v.data[i];
 					}
@@ -382,20 +307,25 @@ export function SVGMap(opts){
 							row.colour = cs((val-v.min)/(v.max-v.min));
 						}
 					}
+
 					if(typeof row.colour === "string") row.colour = replaceNamedColours(row.colour);
+
 					// Set a default colour if we don't have one
 					if(row.colour === undefined) row.colour = defaultbg;
 
 					if(row){
+						/*
 						if(typeof v.label==="string"){
 							val = recursiveLookup(v.label,row);
-							if(val){
-								// Add a text label 
-								title = newEl('title');
-								title.innerHTML = val;
-								el.appendChild(title);
+							if(typeof val!=="string"){
+								console.warn('The tooltip lookup "'+v.label+'" does not return a string.',val,row);
+								val = "?";
 							}
-						}
+							// Add a text label 
+							title = newEl('title');
+							title.innerHTML = val;
+							el.appendChild(title);
+						}*/
 						el.setAttribute('fill-opacity',(type == "line" ? 0 : 1));
 						el.setAttribute('fill',row.colour);
 						el.setAttribute('stroke',(type == "line" ? row.colour : 'white'));
@@ -419,7 +349,7 @@ export function SVGMap(opts){
 			layerlist.push({
 				'id': 'grid',
 				'class': 'graticule',
-				'data': { 'type':'FeatureCollection', 'features': [ {"type": "Feature", "properties": {}, "geometry": grid() }] },
+				'geojson': { 'data': { 'type':'FeatureCollection', 'features': [ {"type": "Feature", "properties": {}, "geometry": grid() }] }},
 				'options': { 'color': '#000000' }
 			});
 
@@ -473,7 +403,7 @@ export function SVGMap(opts){
 							if(loc.properties.Population >= threshold) locations.push(loc);
 						}
 					}
-					this.data = {'type':'FeatureCollection','features':locations};
+					this.geojson = { 'data': {'type':'FeatureCollection','features':locations} };
 				}
 			});
 
@@ -494,7 +424,7 @@ export function SVGMap(opts){
 							markers.push(pin);
 						}
 					}
-					this.data = {'type':'FeatureCollection','features':markers};
+					this.geojson = { 'data': {'type':'FeatureCollection','features':markers} };
 				}
 			});
 
@@ -507,8 +437,8 @@ export function SVGMap(opts){
 	}
 
 if(config.test){
-	console.log('test',config.layers.length);
-	//throw "Stop";
+	console.log('TEST layers=',config.layers);
+//	throw "Stop";
 }
 
 	var map = new BasicMap(config,{
@@ -642,8 +572,8 @@ function BasicMap(config,attr){
 		// Get bounding box range from all layers
 		var geojson = new GeoJSON();
 		for(var l = 0; l < this.layers.length; l++){
-			if(this.layers[l].data && (!id || id == this.layers[l].id)){
-				geojson.addFeatures(this.layers[l].data.features);
+			if(this.layers[l].geojson && (!id || id == this.layers[l].id)){
+				geojson.addFeatures(this.layers[l].geojson.data.features);
 			}
 		}
 		return this.updateView(geojson);
@@ -693,10 +623,16 @@ function Layer(attr,map,i){
 	this.id = attr.id;
 
 	if(typeof attr.data==="string"){
-		this._url = attr.data;
+		this._urldata = attr.data;
 		this.data = null;
 	}else{
 		this.data = attr.data||{};
+	}
+	if(typeof attr.geojson==="string"){
+		this._url = attr.geojson;
+		this.geojson = null;
+	}else{
+		this.geojson = attr.geojson||{};
 	}
 	this.attr = (attr || {});
 	this.options = (this.attr.options || {});
@@ -729,11 +665,11 @@ function Layer(attr,map,i){
 		w = map.w;
 		h = map.h;
 
-		if(this.data && this.data.features){
+		if(this.geojson && this.geojson.data && this.geojson.data.features){
 
-			for(f = 0; f < this.data.features.length; f++){
-				if(this.data.features[f]){
-					feature = this.data.features[f];
+			for(f = 0; f < this.geojson.data.features.length; f++){
+				if(this.geojson.data.features[f]){
+					feature = this.geojson.data.features[f];
 					c = feature.geometry.coordinates;
 					g2 = svgEl('g');
 
@@ -833,10 +769,15 @@ function Layer(attr,map,i){
 
 								// Add title to the SVG
 								if(feature.properties.tooltip){
-									var t = svgEl('title');
-									t.innerHTML = feature.properties.tooltip;
-									p.querySelector(':first-child').appendChild(t);
-									p.classList.add('marker');
+									if(typeof feature.properties.tooltip==="string"){
+										var t = svgEl('title');
+										t.innerHTML = feature.properties.tooltip;
+										p.querySelector(':first-child').appendChild(t);
+										p.classList.add('marker');
+									}else{
+										console.log('Bad tooltip',feature.properties.tooltip);
+										throw "Bad tooltip";
+									}
 								}
 							}else{
 								console.error(feature);
@@ -881,16 +822,16 @@ function Layer(attr,map,i){
 				}
 			}
 		}else{
-			console.warn('No data features',this.data);
+			console.warn('No GeoJSON data features',this.geojson);
 		}
 		return this;
 	};
 
 	this.load = function(){
-		if(!this.data){
-			console.error('No data structure given',this);
+		if(!this.geojson){
+			console.error('No GeoJSON data structure given',this);
 		}else{
-			if(typeof attr.process==="function") attr.process.call(this,this.data||{},map);
+			if(typeof attr.process==="function") attr.process.call(this,this.geojson.data||{},map);
 			//this.update();
 			// Final callback
 			if(typeof attr.callback==="function") attr.callback.call(map);

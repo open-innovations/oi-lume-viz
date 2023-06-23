@@ -195,7 +195,7 @@
 		};
 		return this;
 	}
-	root.OI.Tooltips = new Tooltips();
+	if(!root.OI.Tooltips) root.OI.Tooltips = new Tooltips();
 
 	// Convert to sRGB colorspace
 	// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
@@ -249,6 +249,6 @@
 		}
 		return contrast;
 	}
-	root.OI.contrastColour = contrastColour;
+	if(!root.OI.contrastColour) root.OI.contrastColour = contrastColour;
 
 })(window || this);

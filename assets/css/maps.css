@@ -17,3 +17,15 @@
 .leaflet-right { right: 0; }
 .leaflet-bottom { bottom: 0; }
 .leaflet-left { left: 0; }
+
+/* OI svg map component */
+.oi-map-svg svg { width: 100%; }
+.oi-map-svg path:focus, .oi-map-svg .marker:focus { outline: none; }
+.oi-map-svg .area.outline .selected { stroke: black; stroke-width: 4px; stroke-opacity: 1; outline: none; }
+.oi-map-svg .line .selected { stroke-width: 0.4%; }
+
+/* OI zoomable map component */
+.oi-zoomable-map .marker:focus { outline: none; }
+.oi-zoomable-map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: ${defaultbg}; position: relative; }
+.oi-zoomable-map .oi-label > svg { position: absolute; transform: translate3d(-50%,-50%,0); left: 50%; top: 50%; width: 100%; height: 100%; }
+.oi-zoomable-map .oi-marker > svg { width: 100%; height: 100%; } 

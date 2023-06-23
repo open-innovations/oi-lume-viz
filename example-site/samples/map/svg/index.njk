@@ -294,7 +294,7 @@ examples:
       value: "Aged 15 years and under"
       scale: Viridis
       background:
-        data: geojson.england
+        geojson: geojson.england
         colour: silver
       bounds:
         lat:
@@ -327,7 +327,7 @@ examples:
       value: "Aged 15 years and under"
       scale: Viridis
       background:
-        data: geojson.england
+        geojson: geojson.england
         colour: silver
       graticule:
         step: [0.5,0.5]
@@ -366,7 +366,7 @@ examples:
           max: -0.3
       layers:
         - type: background
-          data: geojson.england
+          geojson: geojson.england
           colour: silver
         - type: graticule
           step: [0.5,0.5]
@@ -375,6 +375,7 @@ examples:
           value: "Aged 15 years and under"
           tooltip: LAD21NM
           scale: Viridis
+      test: true
 
   - title: "Display a line"
     description: |
@@ -514,7 +515,7 @@ examples:
           template: "{{ geojson.properties.stroke }}"
       tooltip: Tooltip
       background:
-        data: geojson.europe
+        geojson: geojson.europe
         colour: "#dfdfdf"
       bounds:
         lat:
@@ -713,7 +714,7 @@ examples:
         - type: "graticule"
           step: [1,1]
         - type: "background"
-          data: geojson.IRL
+          geojson: geojson.IRL
           colour: "#dfdfdf"
         - type: "data"
           key: code

@@ -8,6 +8,8 @@ import { getAssetPath } from "../../lib/util/paths.ts";
 import { ZoomableMap } from "./legacy/map.js";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import { getFontFamily } from '../../lib/font/fonts.ts';
+import { buildLayers } from "./legacy/layers.ts";
+import { GeoJson, dataLayer, backLayer, gratLayer, lablLayer, markLayer } from "./types.ts";
 
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
@@ -16,35 +18,6 @@ const fontFamily = getFontFamily();
 // Useful if the hexmap has a colour attribute
 const identityColourScale = (s: string) => s;
 
-function addTspan(str: string) {
-	// If string has no newlines, just return it
-	if (!str.includes("\n")) return str;
-
-	const tspan = str.split(/\n/);
-	// Build a new string
-	let newString = "";
-	for (let s = 0; s < tspan.length; s++) {
-		const dy = 3 * ((s + 0.5) - (tspan.length / 2));
-		newString += '<tspan y="' + dy + '%" x="0">' + tspan[s] + "</tspan>";
-	}
-	return newString;
-}
-
-/**
- * Leaflet map styles
- */
-export const css = `
-/* OI zoomable map component */
-.oi-zoomable-map .marker:focus { outline: none; }
-.oi-zoomable-map .leaflet { width: 100%; aspect-ratio: 16 / 9; background: ${defaultbg}; position: relative; }
-.oi-zoomable-map .place-name > svg { position: absolute; transform: translate3d(-50%,-50%,0); left: 50%; top: 50%; }
-`;
-
-interface GeoJson { type: string; features: unknown };
-
-type ColourScaleDefinition = string |
-	((property: string) => string) |
-	((numeric: number) => string);
 
 type ZoomablemapOptions = {
 	bgColour: string;
@@ -90,69 +63,10 @@ export default function (input: { config: ZoomablemapOptions }) {
 		legend,
 	} = input.config;
 	
-	var config = clone(input.config);
+	// Build the layer structure
+	var config = buildLayers(input);
 
-	// Convert references into actual objects
-	config.data = thingOrNameOfThing<TableData<string | number>>(
-		config.data,
-		input,
-	);
-
-	// Create any defined columns
-	config.data = addVirtualColumns(config);
-
-	// Set up some variables
-	let max = config.max;
-
-	if(config.geojson){
-		let geojson = clone(config.geojson);
-
-		// Handle geojson / data as string references
-		if(typeof geojson.data === 'string'){
-			geojson.data = thingOrNameOfThing<TableData<string | number>>(
-				geojson.data,
-				input,
-			);
-		}
-
-		// If the GeoJSON object doesn't contain a type: FeatureCollection we stop
-		if(!geojson.data.type || geojson.data.type !== "FeatureCollection"){
-			console.error(geojson);
-			throw new Error("No FeatureCollection in the GeoJSON");
-		}
-		config.geojson = geojson;
-	}
-
-	if(config.background){
-		// Handle background / data as string references
-		let background = clone(config.background);
-		if(typeof background.data === 'string'){
-			background.data = thingOrNameOfThing<TableData<string | number>>(
-				background.data,
-				input,
-			);
-		}
-		config.background = background;
-	}
-	
-	
-	// Resolve data if this is a string
-	if (config.data) {
-		let data = clone(config.data);
-		// Convert references into actual objects
-		data = thingOrNameOfThing<TableData<string | number>>(
-			data,
-			input,
-		);
-
-		// In case it was a CSV file loaded
-		if(config.data.rows) data = data.rows;
-
-		// Create any defined columns
-		data.data = addVirtualColumns(data);
-
-		config.data = data;
-	}
+console.log('zoomable layers='+config.layers.length+' (using '+input.layout+')');
 
 	const map = new ZoomableMap(config);
 
