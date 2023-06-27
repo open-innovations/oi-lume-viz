@@ -26,10 +26,21 @@ examples:
       series:
         - value: "Percentage of people aged 75+"
           colour: "#019c91"
-      padding: 10
+      padding: 16
+  - title: "Set width/height"
+    description: |
+      By default the waffle chart is 1080px across but we can set the `width` and/or `height` of the waffle to other values if we wish.
+    config:
+      data:
+        - Total vaccinated aged 75+: 3725152
+          Percentage of people aged 75+: 67.9
+      series:
+        - value: "Percentage of people aged 75+"
+          colour: "#019c91"
+      width: 300
   - title: "Set waffle grid size"
     description: |
-      We can set the `size` of the waffle.
+      We can set the `size`, in grid cells, of the waffle grid.
     config:
       data:
         - Total vaccinated aged 75+: 3725152
@@ -38,9 +49,10 @@ examples:
         - value: "Percentage of people aged 75+"
           colour: "#019c91"
       size: 5
+      width: 300
   - title: "Set waffle grid size in both dimensions"
     description: |
-      We can set the `size`, in grid cells, of the waffle in both dimensions (horizontal first).
+      We can set the `size`, in grid cells, of the waffle grid horizontally and vertically.
     config:
       data:
         - Total vaccinated aged 75+: 3725152
@@ -49,6 +61,7 @@ examples:
         - value: "Percentage of people aged 75+"
           colour: "#019c91"
       size: [20,5]
+      width: 300
   - title: "Set the rounding type"
     description: |
       By default the values are rounded using `Math.round()` but we can choose to use `Math.floor()` by setting `rounding` to `floor` (you could also use `ceil`). In this example it will mean 67 waffle cells are coloured in rather than 68.
@@ -59,7 +72,7 @@ examples:
       series:
         - value: "Percentage of people aged 75+"
           colour: "#019c91"
-      size: [20,5]
+      width: 300
       rounding: floor
   - title: "Set direction"
     description: |
@@ -72,6 +85,7 @@ examples:
         - value: "Percentage of people aged 75+"
           colour: "#019c91"
       direction: rtl
+      width: 300
   - title: "Set gravity direction"
     description: |
       By default, the `gravity` is set to `bottom` which means that values start at the bottom and build upwards. We can also set `gravity` to `top`, `left` or `right`.
@@ -83,6 +97,7 @@ examples:
         - value: "Percentage of people aged 75+"
           colour: "#019c91"
       gravity: top
+      width: 300
   - title: "Add tooltips"
     description: |
       In this example we will build a custom `tooltip` to the `series` created using <a href="/documentation/virtual-columns/">virtual columns</a>.
@@ -97,6 +112,7 @@ examples:
         - value: "Percentage of people aged 75+"
           colour: "#019c91"
           tooltip: Tooltip
+      width: 300
   - title: "Add legend"
     description: |
       In this example we will add a `legend` to `position→top`.
@@ -112,6 +128,7 @@ examples:
           value: "Percentage of people aged 75+"
           colour: "#019c91"
           tooltip: Tooltip
+      width: 300
       legend:
         show: true
         position: top

@@ -15,6 +15,7 @@ const fontSize = getFontSize();
 
 export const css = `
 /* OI waffle chart component */
+.oi-waffle-chart { text-align: center; }
 .oi-waffle-chart .marker:hover, .oi-waffle-chart .marker:focus { outline: 4px solid black; }
 `;
 
@@ -156,7 +157,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	let dw = (w - p*(cols - 1))/cols;
 	let dh = (h - p*(rows - 1))/rows;
 
-	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 '+w.toFixed(3)+' '+h.toFixed(3)+'" vector-effect="non-scaling-stroke" preserveAspectRatio="xMidYMin meet" overflow="visible" class="oi-chart-main" data-type="waffle-chart" data-gravity="'+config.gravity+'">';
+	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="'+w+'" height="'+h+'" viewBox="0 0 '+w.toFixed(3)+' '+h.toFixed(3)+'" vector-effect="non-scaling-stroke" preserveAspectRatio="xMidYMin meet" overflow="visible" class="oi-chart-main" data-type="waffle-chart" data-gravity="'+config.gravity+'">';
 	let x,y,i,j,r,c;
 
 
