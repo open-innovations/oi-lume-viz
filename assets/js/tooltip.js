@@ -105,6 +105,7 @@
 			if(typ=="hex-map") off = (bb.height/2);
 			if(typ=="tree-map") off = (bb.height/2);
 			if(typ=="calendar-chart") off = (bb.height/2);
+			if(typ=="waffle-chart") off = (bb.height/2);
 
 			tip.setAttribute('style','position:absolute;left:'+(bb.left + bb.width/2 - bbo.left).toFixed(2)+'px;top:'+(bb.top + bb.height/2 - bbo.top).toFixed(2)+'px;display:'+(title ? 'block':'none')+';z-index:1000;transform:translate3d(-50%,calc(-100% - '+off+'px),0);transition:all 0s;');
 			box.style.background = fill;

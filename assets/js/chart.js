@@ -101,8 +101,6 @@
 			if(typ == "stacked-bar-chart"){
 				// Find the origin of the bars by just taking the x-value of the first one in the first series
 				origin = parseFloat(serieskey[0].querySelector('rect').getAttribute('x'));
-			}
-			if(typ == "stacked-bar-chart"){
 				for(s in series) series[s].shapes = series[s].series.querySelectorAll('rect');
 			}
 			for(s in series){
@@ -121,19 +119,23 @@
 				if(this.locked == 0){
 					if(e.data.series==null || s==e.data.series){
 						series[s].series.style.opacity = 1;
-						series[s].key.classList.remove('oi-series-off');
-						series[s].key.classList.add('oi-series-on');
-						// Simulate z-index by moving to the end
-						if(typ == "stacked-bar-chart"){
-							series[s].series.parentNode.appendChild(series[s].series);
+						if(series[s].key){
+							series[s].key.classList.remove('oi-series-off');
+							series[s].key.classList.add('oi-series-on');
+							// Simulate z-index by moving to the end
+							if(typ == "stacked-bar-chart"){
+								series[s].series.parentNode.appendChild(series[s].series);
+							}
 						}
 						// Make points selectable
 						for(p = 0; p < points.length; p++) points[p].setAttribute('tabindex',0);
 					}else{
 						// Fade the unselected series
 						series[s].series.style.opacity = 0.1;
-						series[s].key.classList.remove('oi-series-on');
-						series[s].key.classList.add('oi-series-off');
+						if(series[s].key){
+							series[s].key.classList.remove('oi-series-on');
+							series[s].key.classList.add('oi-series-off');
+						}
 						// Make points unselectable
 						for(p = 0; p < points.length; p++) points[p].removeAttribute('tabindex');
 					}
@@ -174,6 +176,8 @@
 			dist = 1e100;
 			var matches = [];
 			var typ = svg.getAttribute('data-type');
+			// Don't bother trying to find nearest for waffle-chart
+			if(typ=="waffle-chart") return this;
 			for(sid in series){
 				if(series[sid]){
 					s = series[sid].i;

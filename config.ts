@@ -1,8 +1,8 @@
 export const assets = [
   'js/chart.js',
-  'js/calendar-chart.js',
+  'js/chart-calendar.js',
+  'js/chart-ranking.js',
   'js/dashboard.js',
-  'js/ranking.js',
   'js/svg-map.js',
   'js/tabbed.js',
   'js/tooltip.js',
@@ -17,10 +17,11 @@ export const assets = [
 
 export const components = [
   'chart/bar.ts',
-  'chart/line.ts',
-  'chart/scatter.ts',
   'chart/calendar.ts',
+  'chart/line.ts',
   'chart/ranking.ts',
+  'chart/scatter.ts',
+  'chart/waffle.ts',
   'dashboard.ts',
   'table.ts',
   'graph/line.ts',

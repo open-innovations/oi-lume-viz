@@ -344,7 +344,7 @@ export default function (input: {
 	}
 
 	var holder = new VisualisationHolder(config);
-	holder.addDependencies(['/js/ranking.js','/css/charts.css']);
+	holder.addDependencies(['/js/chart-ranking.js','/css/charts.css']);
 	holder.addClasses(['oi-chart','oi-chart-ranking']);
 	return holder.wrap(svg.outerHTML);
 }
