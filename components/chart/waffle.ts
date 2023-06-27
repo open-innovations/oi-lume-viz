@@ -196,7 +196,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 
 		if(b==0 || (b > 0 && bins[b].series!=bins[b-1].series)) svg += '<g class="series" data-series="'+s+'">';
 
-		svg += '<rect class="marker cell'+(bins[b].data ? ' has-value' : '')+'" data-i="'+b+'" data-series="'+s+'" data-col="'+c+'" data-row="'+r+'" x="'+x+'" y="'+y+'" width="'+dw+'" height="'+dh+'" fill="'+(bins[b].colour||defaultbg)+'">' + ('<title>'+bins[b].tooltip+'</title>') + '</rect>';
+		svg += '<rect class="marker" data-i="'+b+'" data-series="'+s+'" data-col="'+c+'" data-row="'+r+'" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+dw+'" height="'+dh+'" fill="'+(bins[b].colour||defaultbg)+'">' + (bins[b].tooltip ? '<title>'+bins[b].tooltip+'</title>' : '') + '</rect>';
 
 		if(b == bins.length-1 || (b > 0 && b < bins.length-1 && bins[b+1].series!=bins[b].series)) svg += '</g>';
 
@@ -277,7 +277,7 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 			tooltip = iso;
 		}
 
-		svg += '<rect class="'+(d >= syear && d <= eyear ? "in-year" : "not-in-year")+(tooltip ? " has-value" : "")+'"';
+		svg += '<rect class="'+(d >= syear && d <= eyear ? "in-year" : "not-in-year")+'"';
 		if(dat && dat[input.tooltip]) svg += '	tabindex="0"';
 		svg += '	fill="'+v+'"';
 		svg += '	x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" width="'+opts.size.toFixed(3)+'" height="'+opts.size.toFixed(3)+'">';
