@@ -1,6 +1,7 @@
 import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
+import { VisualisationHolder } from '../../lib/holder.js';
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import { getFontFamily, getFontWeight, getFontSize } from '../../lib/font/fonts.ts';
@@ -76,7 +77,10 @@ export default function (input: {
 
 	const chart = CalendarChart(options);
 
-	return `<div class="oi-viz oi-calendar-chart" data-dependencies="${ getAssetPath('/js/calendar-chart.js') },${ getAssetPath('/js/tooltip.js') }">${chart}</div>`;
+	var holder = new VisualisationHolder(config);
+	holder.addDependencies(['/js/chart-calendar.js','/js/tooltip.js']);
+	holder.addClasses(['oi-calendar-chart']);
+	return holder.wrap(chart);
 }
 
 

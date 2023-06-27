@@ -2,7 +2,7 @@
 title: SVG map
 description: |
   A simple map to show GeoJSON. It can have place labels and markers.
-order: 30
+order: 31
 showcase: 2
 component: map.svg
 examples:
@@ -273,7 +273,7 @@ examples:
 
   - title: Add a background
     description: |
-      A non-interactive `background` can be added as a layer behind the interactive map. It should contain GeoJSON `data`. It can have its `colour` set. We can also adjust the map `bounds` if we'd like the view to cover an area smaller/larger than the bounds of the data. Note that the exact bounding of map will also depend on the aspect ratio that the map ends up on the end-user's display.
+      A non-interactive `background` can be added as a layer behind the interactive map. It should contain GeoJSON `data`. It can have its `colour` set. We can also adjust the map `bounds` if we'd like the view to cover an area smaller/larger than the bounds of the data. Note that the exact bounding of the map will also depend on the aspect ratio that the map ends up on the end-user's display.
     config:
       data:
         - { code: "E08000016", "LAD21NM":"Barnsley", colour: "#E6007C","Aged 15 years and under":44782 }
@@ -294,7 +294,7 @@ examples:
       value: "Aged 15 years and under"
       scale: Viridis
       background:
-        data: geojson.england
+        geojson: geojson.england
         colour: silver
       bounds:
         lat:
@@ -327,7 +327,7 @@ examples:
       value: "Aged 15 years and under"
       scale: Viridis
       background:
-        data: geojson.england
+        geojson: geojson.england
         colour: silver
       graticule:
         step: [0.5,0.5]
@@ -366,7 +366,7 @@ examples:
           max: -0.3
       layers:
         - type: background
-          data: geojson.england
+          geojson: geojson.england
           colour: silver
         - type: graticule
           step: [0.5,0.5]
@@ -375,6 +375,7 @@ examples:
           value: "Aged 15 years and under"
           tooltip: LAD21NM
           scale: Viridis
+      test: true
 
   - title: "Display a line"
     description: |
@@ -514,7 +515,7 @@ examples:
           template: "{{ geojson.properties.stroke }}"
       tooltip: Tooltip
       background:
-        data: geojson.europe
+        geojson: geojson.europe
         colour: "#dfdfdf"
       bounds:
         lat:
@@ -628,7 +629,7 @@ examples:
         name: orthographic
         lon: 16
       scale: Viridis
-      value: "geojson.properties.POP_EST"
+      value: geojson.properties.POP_EST
       min: 0
       columns:
         - name: Tooltip
@@ -713,11 +714,38 @@ examples:
         - type: "graticule"
           step: [1,1]
         - type: "background"
-          data: geojson.IRL
+          geojson: geojson.IRL
           colour: "#dfdfdf"
         - type: "data"
           key: code
           tooltip: Tooltip
+      legend:
+        position: bottom
+        items:
+          - label: "Scotland"
+            colour: "#2254F4"
+          - label: "Northern Ireland"
+            colour: "#722EA5"
+          - label: "North East"
+            colour: "#D60303"
+          - label: "North West"
+            colour: "#1DD3A7"
+          - label: "Yorks and the Humber"
+            colour: "#F9BC26"
+          - label: "Wales"
+            colour: "#0DBC37"
+          - label: "West Midlands"
+            colour: "#E6007C"
+          - label: "East Midlands"
+            colour: "#00B6FF"
+          - label: "East of England"
+            colour: "#FF6700"
+          - label: "London"
+            colour: "#D73058"
+          - label: "South East"
+            colour: "#67E767"
+          - label: "South West"
+            colour: "#178CFF"
 
 
   - title: "Projection: OS Grid"
@@ -746,6 +774,33 @@ examples:
         lon:
           min: -8
           max: 3
+      legend:
+        position: bottom
+        items:
+          - label: "Scotland"
+            colour: "#2254F4"
+          - label: "Northern Ireland"
+            colour: "#722EA5"
+          - label: "North East"
+            colour: "#D60303"
+          - label: "North West"
+            colour: "#1DD3A7"
+          - label: "Yorks and the Humber"
+            colour: "#F9BC26"
+          - label: "Wales"
+            colour: "#0DBC37"
+          - label: "West Midlands"
+            colour: "#E6007C"
+          - label: "East Midlands"
+            colour: "#00B6FF"
+          - label: "East of England"
+            colour: "#FF6700"
+          - label: "London"
+            colour: "#D73058"
+          - label: "South East"
+            colour: "#67E767"
+          - label: "South West"
+            colour: "#178CFF"
 ---
 
 
