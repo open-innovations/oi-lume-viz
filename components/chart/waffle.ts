@@ -139,7 +139,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		// For this series, create the bins
 		for(let i = 0; i < v; i++){
 			icon = config.series[s].icon||config.icon;
-			bins[bin] = {'series':s,'icon':icon,'colour':config.series[s].colour||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||"",'data':true};
+			bins[bin] = {'series':s,'icon':icon,'colour':config.series[s].colour||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||((config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value]),'data':true};
 			bin++;
 		}
 
@@ -194,11 +194,11 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 
 		let s = bins[b].series+1;
 
-		if(b==0 || (b > 0 && bins[b].series!=bins[b-1].series)) svg += '<g class="series" data-series="'+s+'">';
+		if(b==0 || (b > 0 && bins[b].series!=bins[b-1].series)) svg += '<g class="series" data-series="'+s+'"><path class="marker" data-series="'+s+'" fill="'+(bins[b].colour||defaultbg)+'" d="';
 
-		svg += '<rect class="marker" data-i="'+b+'" data-series="'+s+'" data-col="'+c+'" data-row="'+r+'" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+dw+'" height="'+dh+'" fill="'+(bins[b].colour||defaultbg)+'">' + (bins[b].tooltip ? '<title>'+bins[b].tooltip+'</title>' : '') + '</rect>';
+		svg += 'M '+x.toFixed(1)+' '+y.toFixed(1)+' l '+dw+' 0 l 0 '+dh+' l -'+dw+' 0z ';
 
-		if(b == bins.length-1 || (b > 0 && b < bins.length-1 && bins[b+1].series!=bins[b].series)) svg += '</g>';
+		if(b == bins.length-1 || (b > 0 && b < bins.length-1 && bins[b+1].series!=bins[b].series)) svg += '">' + (bins[b].tooltip ? '<title>'+bins[b].tooltip+'</title>' : '') + '</path></g>';
 
 	}
 
