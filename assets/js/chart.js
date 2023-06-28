@@ -47,8 +47,10 @@
 			}
 		}
 		for(p = 0; p < pt.length; p++){
-			// Set the tabIndex on every selectable point
-			pt[p].setAttribute('tabindex',0);
+			if(pt[p].querySelector('title')){
+				// Set the tabIndex on every selectable point
+				pt[p].setAttribute('tabindex',0);
+			}
 			// Get the series number
 			s = pt[p].getAttribute('data-series');
 			// Get the item within the series
