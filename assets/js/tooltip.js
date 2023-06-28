@@ -9,7 +9,7 @@
 (function(root){
 
 	var styles = document.createElement('style');
-	styles.innerHTML = '.tooltip { z-index: 10000; color: black; margin-top: -0.75em; filter: drop-shadow(0px 1px 1px rgba(0,0,0,0.7)); }.tooltip .inner { padding: 1em; }';
+	styles.innerHTML = '.tooltip {z-index:10000;color:black;margin-top:-0.75em;filter:drop-shadow(0px 1px 1px rgba(0,0,0,0.7));text-align:left;}.tooltip .inner { padding: 1em; }';
 	document.head.prepend(styles)
 
 	if(!root.OI) root.OI = {};
