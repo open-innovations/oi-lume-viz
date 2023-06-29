@@ -253,5 +253,5 @@ export default ({ config }: {config: LineChartOptions}) => {
     ${legend}
   </svg>`;
 
-  return `<div class="graph" data-dependencies="${ getAssetPath('/js/chart.js') }">${chart}</div>`;
+  return `<div class="oi-graph" data-dependencies="${ getAssetPath('/js/chart.js') }">${chart}</div>`;
 };
