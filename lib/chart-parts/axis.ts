@@ -48,15 +48,15 @@ export function drawAxes({
     <g class='axis'>
       <g class='y-axis'>
         <title>Y Axis</title>
-        <path d='M ${origin.join(',')} v -${height}' stroke="#444" />
-        <path d='${yTickPath}' stroke="#444" />
+        <path d='M ${origin.join(',')} v -${height}' stroke="${(yAxisOptions.colour !== undefined ? yAxisOptions.colour : '')}" />
+        <path d='${yTickPath}' stroke="${(yAxisOptions.colour !== undefined ? yAxisOptions.colour : '')}" />
         ${yLabels.map(({ y, label }) => `<text class='tick-label' x=${origin[0]} y=${y} dx=${-tickSpacing * 2} text-anchor='end' dominant-baseline='middle'>${label}</text>`).join('')}
         ${yLabel}
       </g>
       <g class='x-axis${xAxisOptions.labelRotate ? ' rotated' : ''}'>
         <title>X Axis</title>
-        <path d='M ${origin.join(',')} h ${width}' stroke="#444" />
-        <path d='${xTickPath}' stroke="#444" />
+        <path d='M ${origin.join(',')} h ${width}' stroke="${(xAxisOptions.colour !== undefined ? xAxisOptions.colour : '')}" />
+        <path d='${xTickPath}' stroke="${(xAxisOptions.colour !== undefined ? xAxisOptions.colour : '')}" />
         ${xLabels.map(({ x, label }) => `<text class='tick-label' x=0 y=0 transform="translate(${x} ${origin[1] + tickSpacing * 2}) ${xAxisOptions.labelRotate ? 'rotate(-' + xAxisOptions.labelRotate + ')' : ''}" text-anchor="middle" dominant-baseline="hanging">${label}</text>`).join('')}
         ${xLabel}
       </g>
