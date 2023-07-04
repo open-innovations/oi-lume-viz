@@ -22,7 +22,7 @@ import lang_bash from "https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es/langu
 
 
 const site = lume({
-  location: new URL("https://open-innovations.github.io/oi-lume-charts/"),
+  location: new URL("https://open-innovations.github.io/oi-lume-viz/"),
   src: '.',
 });
 
