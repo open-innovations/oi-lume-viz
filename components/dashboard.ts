@@ -1,5 +1,7 @@
 import { dashboard, DashboardOptions } from "../lib/dashboard.ts";
 import { getBackgroundColour, Colour } from "../lib/colour/colour.ts";
+import { addVirtualColumns, thingOrNameOfThing } from "../lib/helpers.ts";
+import { clone } from "../lib/util/clone.ts";
 
 const defaultbg = getBackgroundColour();
 const defaultbgcontrast = Colour(defaultbg).contrast;
@@ -18,8 +20,26 @@ export const css = `
 }
 `;
 
-export default function ({ config}: {config: DashboardOptions}) {
-  if (!config.data) throw "No data source provided";
-  const html = dashboard(config);
-  return html;
+export default function (input: {
+	config: DashboardOptions;
+}): string {
+
+	const config = clone(input.config);
+
+	if (!config.data) throw "No data source provided";
+
+	// Convert references into actual objects
+	config.data = thingOrNameOfThing<TableData<string | number>>(
+		config.data,
+		input,
+	);
+
+	// In case it was a CSV file loaded
+	if(config.data.rows) config.data = config.data.rows;
+
+	// Create any defined columns
+	config.data = addVirtualColumns(config);
+
+	const html = dashboard(config);
+	return html;
 }

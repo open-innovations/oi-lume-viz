@@ -1,6 +1,10 @@
 import { contrastColour } from './colour/contrast.ts';
 import { ColourScale } from './colour/colour-scale.ts';
+import { getBackgroundColour, Colour } from "./colour/colour.ts";
+import { replaceNamedColours, parseColourString } from './colour/parse-colour-string.ts';
 import { getAssetPath } from './util/paths.ts';
+
+const defaultbg = getBackgroundColour();
 
 export type DashboardOptions = {
   /** The data holding the values to be presented in the panels */
@@ -80,6 +84,14 @@ export function dashboard(config: DashboardOptions){
     let cls = className||'';
     cls += (cls ? " ":"")+(panels[p].class||'');
     let col = (panels[p].colour||'');
+
+	try {
+		col = replaceNamedColours(col);
+	}catch(error){
+		console.error('Bad colour',col);
+		col = defaultbg;
+	}
+
     let c;
     if(col) c = contrastColour(col);
     let v = "";
@@ -118,7 +130,7 @@ export function dashboard(config: DashboardOptions){
 
     panel += '</div>';
 
-    html.push(panel);      
+    html.push(panel);
   }
   html.push('</div>');
 
