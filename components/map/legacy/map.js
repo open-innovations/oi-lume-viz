@@ -144,7 +144,7 @@ export function ZoomableMap(opts){
 					html.push('	map.addLayer({\n');
 					html.push('		"key": "' + (config.layers[l].key||"") + '",\n');
 					html.push('		"toolkey": "' + (config.layers[l].tooltip||"") + '",\n');
-					html.push('		"defaultmarker": "' + (icons["default"].svg.replace(/\"/g,"\\\"").replace(/ width=\\\"([0-9]+)\\\"/,' width=\\"32\\"').replace(/ height=\\\"([0-9]+)\\\"/,' height=\\"32\\"')) + '",\n');
+					html.push('		"defaultmarker": ' + JSON.stringify(icons["default"]) + ',\n');
 					html.push('		"data": ' + JSON.stringify(config.layers[l].data) + ',\n');
 					if(config.layers[l].geojson){
 						html.push('		"geo": {\n');

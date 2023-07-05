@@ -141,7 +141,8 @@
 				},
 				"pointToLayer": function(feature, latlng){
 					var d = getData(feature.properties[props.geo.key]);
-					var myIcon = L.divIcon({'html':'<div style="color:'+d.colour+'">'+props.defaultmarker+'</div>','className': 'my-div-icon'})
+					var marker = props.defaultmarker;
+					var myIcon = L.divIcon({'html':marker.svg.replace(/currentColor/,d.colour),'iconSize':marker.size||[32,32],'iconAnchor':marker.anchor||[16,32],'popupAnchor':marker.popup||[0,-32]})
 					return L.marker(latlng,{icon: myIcon});
 				}
 			}
