@@ -7,7 +7,7 @@ import { getBackgroundColour } from "../../../lib/colour/colour.ts";
 import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
 import { getIcons } from '../../../lib/icon/icons.ts';
 import { d3, d3geo } from "../../../lib/external/d3.ts";
-import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
+import { replaceNamedColours, parseColourString } from '../../../lib/colour/parse-colour-string.ts';
 
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
@@ -25,7 +25,7 @@ function clone(a){ return JSON.parse(JSON.stringify(a)); }
 export function ZoomableMap(opts){
 
 	var fs = fontSize;
-	let i,l,min,max,v,cs;
+	let i,l,min,max,v,cs,col;
 
 	var config = {
 		'scale': 'Viridis',
@@ -84,6 +84,16 @@ export function ZoomableMap(opts){
 					v = recursiveLookup(config.layers[l].value,config.layers[l].data[i]);
 					// Find the colour by passing the fractional value within the range
 					if(typeof v==="number") config.layers[l].data[i].colour = cs((v - config.layers[l].min)/(config.layers[l].max - config.layers[l].min));
+					else if(typeof v==="string"){
+						config.layers[l].data[i].colour = replaceNamedColours(v);
+						// Test to see if the colour we now have parses
+						try {
+							col = parseColourString(config.layers[l].data[i].colour)
+						} catch (error) {
+							// If it doesn't parse, we'll set it to the default background colour
+							config.layers[l].data[i].colour = defaultbg;
+						}
+					}
 				}
 				// Set a default colour if we don't have one
 				if(config.layers[l].data[i].colour === undefined) config.layers[l].data[i].colour = defaultbg;
@@ -134,6 +144,7 @@ export function ZoomableMap(opts){
 					html.push('	map.addLayer({\n');
 					html.push('		"key": "' + (config.layers[l].key||"") + '",\n');
 					html.push('		"toolkey": "' + (config.layers[l].tooltip||"") + '",\n');
+					html.push('		"defaultmarker": "' + (icons["default"].svg.replace(/\"/g,"\\\"").replace(/ width=\\\"([0-9]+)\\\"/,' width=\\"32\\"').replace(/ height=\\\"([0-9]+)\\\"/,' height=\\"32\\"')) + '",\n');
 					html.push('		"data": ' + JSON.stringify(config.layers[l].data) + ',\n');
 					if(config.layers[l].geojson){
 						html.push('		"geo": {\n');

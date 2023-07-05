@@ -95,12 +95,17 @@
 		};
 		function highlightFeature(e){
 			const l = e.target;
-			l.setStyle({
-				weight: 4,
-				color: "#000000",
-				opacity: 1
-			});
-			l.bringToFront();
+
+			if(typeof l.setStyle==="function"){
+				l.setStyle({
+					weight: 4,
+					color: "#000000",
+					opacity: 1
+				});
+			}else console.warn('No layer to setStyle for',l);
+
+			if(typeof l.bringToFront==="function") l.bringToFront();
+			else console.warn('No layer to bring to front',l);
 		}
 		function resetHighlight(e){
 			if(props.layer) props.layer.resetStyle(e.target);
@@ -116,7 +121,6 @@
 		}
 
 		if(props.geo && !props.layer){
-			
 			var geoattrs = {
 				"style": style,
 				"onEachFeature": function(feature, layer){
@@ -134,6 +138,11 @@
 						mouseover: highlightFeature,
 						mouseout: resetHighlight
 					});
+				},
+				"pointToLayer": function(feature, latlng){
+					var d = getData(feature.properties[props.geo.key]);
+					var myIcon = L.divIcon({'html':'<div style="color:'+d.colour+'">'+props.defaultmarker+'</div>','className': 'my-div-icon'})
+					return L.marker(latlng,{icon: myIcon});
 				}
 			}
 
