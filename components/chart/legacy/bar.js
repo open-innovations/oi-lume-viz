@@ -93,6 +93,11 @@ export function BarChart(config,csv){
 				// Work out x-axis padding
 				for(l in this.opt.axis[ax].labels){
 					len = 0;
+					if(typeof this.opt.axis[ax].labels[l].label==="number") this.opt.axis[ax].labels[l].label = ""+this.opt.axis[ax].labels[l].label;
+					if(typeof this.opt.axis[ax].labels[l].label!=="string"){
+						console.log(this.opt.axis[ax].labels[l].label);
+						throw "Label "+l+" on axis "+ax+" is not a string.";
+					}
 					// Split the label by any new line characters
 					lines = this.opt.axis[ax].labels[l].label.split(/\n/g);
 					if(ax=="x"){
