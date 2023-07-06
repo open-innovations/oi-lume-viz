@@ -102,6 +102,10 @@
 
 		if(els) this.add(els);	// Add the elements
 
+		this.init = function(){
+			scrolled();
+		};
+
 		return this;
 	}
 
@@ -153,6 +157,7 @@
 			var panels = e.el.querySelectorAll('.bignum');
 			for(var p = 0; p < panels.length; p++) animateNumber(panels[p]);
 		});
+		monitor.init();
 	}
 	root.OI.AugmentDashboards = AugmentDashboards;
 
