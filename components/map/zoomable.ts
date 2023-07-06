@@ -45,24 +45,6 @@ type ZoomablemapOptions = {
  */
 export default function (input: { config: ZoomablemapOptions }) {
 
-	// Take a copy of parameters as constants, with defaults.
-	// NB these are not cloned at this stage, as this loses information about functions passed in
-	const {
-		bgColour = "none",
-		scale = identityColourScale,
-		min = 0,
-		hexScale = 1,
-		margin: marginScale = 0.25,
-		label = (key: string) => key.slice(0, 3),
-		matchKey,
-		tooltip = (label: string, value) => `${label}: ${value}`,
-		title = "Zoomablemap",
-		titleProp = "n",
-		valueProp = "colour",
-		colourValueProp,
-		legend,
-	} = input.config;
-	
 	// Build the layer structure
 	var config = buildLayers(input);
 
