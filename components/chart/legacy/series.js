@@ -158,12 +158,12 @@ export function Series(s,props,data,extra){
 
 			// Set some initial values for the point
 			if(pts[i].mark){
-				pts[i].mark.setAttr({'fill':opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
+				pts[i].mark.setAttr({'fill':data[i].colour||opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
 				if(r <= 1) pts[i].mark.setAttr({'opacity':'0.01'});
 				pts[i].mark.setSize(r);
 			}
 			// Set some initial values for the bar
-			if(pts[i].bar) setAttr(pts[i].bar,{'r':r,'fill':opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
+			if(pts[i].bar) setAttr(pts[i].bar,{'r':r,'fill':data[i].colour||opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
 			
 			ps = opt.getXY(data[i].x,data[i].y);
 			p.push(ps);
@@ -176,7 +176,7 @@ export function Series(s,props,data,extra){
 					b = opt.getXY(data[i].x+data[i].error[ax][1],data[i].y);
 					// If the x-values are numbers we update the attributes
 					if(!isNaN(a.x) && !isNaN(b.x)){
-						setAttr(pts[i].errorbar[ax],{'x1':roundTo(a.x, 3),'y1':roundTo(a.y, 3),'x2':roundTo(b.x, 3),'y2':roundTo(b.y, 3),'stroke':opt.errorbars.stroke||opt.points.color,'stroke-width':opt.errorbars['stroke-width']||1,'class':'errorbar'});
+						setAttr(pts[i].errorbar[ax],{'x1':roundTo(a.x, 3),'y1':roundTo(a.y, 3),'x2':roundTo(b.x, 3),'y2':roundTo(b.y, 3),'stroke':data[i].colour||opt.errorbars.stroke||opt.points.color,'stroke-width':opt.errorbars['stroke-width']||1,'class':'errorbar'});
 					}
 				}
 			}

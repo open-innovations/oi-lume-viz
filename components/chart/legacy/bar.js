@@ -1,9 +1,10 @@
 import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
+import { replaceNamedColours, getNamedColours, getNamedColour } from '../../../lib/colour/parse-colour-string.ts';
 import { mergeDeep } from './util.js';
 
-const colours = {};
+const colours = getNamedColours();
 
 // ORIGINAL FUNCTION BELOW
 export function BarChart(config,csv){
@@ -29,14 +30,18 @@ export function BarChart(config,csv){
 		'duration': '0.3s',
 		'buildSeries': function(){
 			// Series
-			var data,datum,label,i,s,categoryoffset,seriesoffset;
+			var data,datum,label,i,s,categoryoffset,seriesoffset,colour,colouri;
 			for(s = 0; s < this.opt.series.length; s++){
+
+				colour = this.opt.series[s].colour||colours[this.opt.series[s].colour]||colours[this.opt.series[s].title]||null;
+
 				mergeDeep(this.opt.series[s],{
-					'line':{'show':false,'color':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
-					'points':{'show':false,'size':(this.opt.series[s].points ? this.opt.series[s].points.size : null)||4, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
-					'bars':{'show':true,'color':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
-					'errorbars':{'stroke':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null),'stroke-width':2}
+					'line':{'show':false,'color':colour},
+					'points':{'show':false,'size':(this.opt.series[s].points ? this.opt.series[s].points.size : null)||4, 'color': colour},
+					'bars':{'show':true,'color':colour},
+					'errorbars':{'stroke':colour,'stroke-width':2}
 				});
+
 				// Duplicate errors if only one error value given
 				if(this.opt.series[s].errors && this.opt.series[s].errors.length==1) this.opt.series[s].errors.push(this.opt.series[s].errors[0]);
 				data = [];
@@ -54,12 +59,19 @@ export function BarChart(config,csv){
 							}
 						}
 					}
+
 					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
+
+					colouri = colour;
+					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = replaceNamedColours(csv.columns[this.opt.series[s].colour][i]);
+
 					datum = {
 						'x':(isNaN(csv.columns[this.opt.series[s].value][i]) ? null : csv.columns[this.opt.series[s].value][i]),
 						'y':categoryoffset+seriesoffset,
-						'title':label
+						'title':label,
+						'colour': colouri
 					};
+
 					// Add errors if we have them
 					if(this.opt.series[s].errors) datum.error = {'x':[csv.columns[this.opt.series[s].errors[0]][i],csv.columns[this.opt.series[s].errors[1]][i]]};
 					datum.data = {'category':csv.columns[this.opt.category][i],'series':this.opt.series[s].title};
