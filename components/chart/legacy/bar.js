@@ -4,12 +4,12 @@ import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
 import { replaceNamedColours, getNamedColours, getNamedColour } from '../../../lib/colour/parse-colour-string.ts';
 import { mergeDeep } from './util.js';
 
-const colours = getNamedColours();
 
 // ORIGINAL FUNCTION BELOW
 export function BarChart(config,csv){
 
 	const basefs = getFontSize();
+	const colours = getNamedColours();
 
 	var opt = {
 		'type': 'bar-chart',

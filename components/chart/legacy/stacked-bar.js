@@ -2,6 +2,7 @@ import { mergeDeep } from './util.js';
 import { textLength, getFontFamily, getFontWeight } from '../../../lib/font/fonts.ts';
 import { Chart } from './chart.js';
 import { Series } from './series.js';
+import { replaceNamedColours, getNamedColours, getNamedColour } from '../../../lib/colour/parse-colour-string.ts';
 
 const basefs = 17;
 const fontFamily = getFontFamily();
@@ -9,6 +10,8 @@ const fontWeight = getFontWeight();
 
 // ORIGINAL FUNCTION BELOW
 export function StackedBarChart(config,csv){
+
+	const colours = getNamedColours();
 
 	var opt = {
 		'type': 'stacked-bar-chart',
@@ -28,17 +31,20 @@ export function StackedBarChart(config,csv){
 		'duration': '0.3s',
 		'buildSeries': function(){
 			// Series
-			var data,datum,label,i,s,categoryoffset,seriesoffset,x,xo;
+			var data,datum,label,i,s,categoryoffset,seriesoffset,x,xo,colour,colouri;
 			data = new Array(this.opt.series.length);
 
 			// First update the properties for each series
 			for(s = 0; s < this.opt.series.length; s++){
 				data[s] = [];
+
+				colour = this.opt.series[s].colour||colours[this.opt.series[s].colour]||colours[this.opt.series[s].title]||null;
+
 				mergeDeep(this.opt.series[s],{
-					'line':{'show':false,'color':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
-					'points':{'show':false,'size':4, 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
-					'bars':{'show':true,'color':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null)},
-					'errorbars':{'stroke':(this.opt.series[s].colour||colours[this.opt.series[s].title]||null),'stroke-width':2}
+					'line':{'show':false,'color':colour},
+					'points':{'show':false,'size':4, 'color': colour},
+					'bars':{'show':true,'color':colour},
+					'errorbars':{'stroke':colour,'stroke-width':2}
 				});
 				// Duplicate errors if only one error value given
 				if(this.opt.series[s].errors && this.opt.series[s].errors.length==1) this.opt.series[s].errors.push(this.opt.series[s].errors[0]);
@@ -70,8 +76,12 @@ export function StackedBarChart(config,csv){
 					}
 					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
 					x = (isNaN(csv.columns[this.opt.series[s].value][i]) ? 0 : csv.columns[this.opt.series[s].value][i]);
+
+					colouri = colour;
+					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = replaceNamedColours(csv.columns[this.opt.series[s].colour][i]);
+
 					// The final x-value is the current starting value plus the current value
-					datum = {'x':(typeof x==="null" ? null : x+xo),'xstart':xo,'y':categoryoffset,'title':label};
+					datum = {'x':(typeof x==="null" ? null : x+xo),'xstart':xo,'y':categoryoffset,'title':label,'colour':colouri};
 
 					xo += x;
 					// Add errors if we have them

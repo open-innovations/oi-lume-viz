@@ -2,13 +2,13 @@ import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
 import { mergeDeep } from './util.js';
-
-const colours = {};
+import { replaceNamedColours, getNamedColours, getNamedColour } from '../../../lib/colour/parse-colour-string.ts';
 
 // ORIGINAL FUNCTION BELOW
 export function ScatterChart(config,csv){
 
 	const basefs = getFontSize();
+	const colours = getNamedColours();
 
 	var opt = {
 		'type': 'scatter-chart',
@@ -26,19 +26,21 @@ export function ScatterChart(config,csv){
 		'axis':{'x':{'padding':5,'tickSize':0.5,'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tickSize':0.5,'labels':{}}},
 		'duration': '0.3s',
 		'buildSeries': function(){
-			let s,i,labx,laby,x,y,label,datum,data;
+			let s,i,labx,laby,x,y,label,datum,data,colour,colouri;
 			// Build the series
 			for(s = 0; s < this.opt.series.length; s++){
+
+				colour = this.opt.series[s].colour||colours[this.opt.series[s].colour]||colours[this.opt.series[s].title]||null;
 
 				// Over-write some series options
 				mergeDeep(this.opt.series[s],{
 					'line':{
 						'show': false,
-						'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')
+						'color': colour
 					},
 					'points':{
 						'size':(this.opt.series[s].points && typeof this.opt.series[s].points.size==="number" ? this.opt.series[s].points.size : 5),
-						'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')
+						'color': colour
 					}
 				});
 
@@ -52,7 +54,9 @@ export function ScatterChart(config,csv){
 					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
 						label = this.opt.series[s].title+"\n"+labx+': '+(laby);
 						if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
-						datum = {'x':x,'y':y,'title':label};
+						colouri = colour;
+						if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = replaceNamedColours(csv.columns[this.opt.series[s].colour][i]);
+						datum = {'x':x,'y':y,'title':label,'colour':colouri};
 						datum.data = {'series':this.opt.series[s].title};
 						data.push(datum);
 					}
