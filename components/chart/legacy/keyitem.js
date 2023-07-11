@@ -11,7 +11,8 @@ export function KeyItem(attr){
 	var opts = {
 		'points': {'marker':(attr.type=="bar-chart" || attr.type=="stacked-bar-chart" ? "square" : "circle")},
 		'fontSize': 1,	// Deliberately small so we can see it is bad
-		'itemWidth': 2
+		'itemWidth': 2,
+		'line':{}
 	}
 
 	// Set some default values
@@ -22,7 +23,8 @@ export function KeyItem(attr){
 
 	// Update class of line
 	let cl = ['data-series','data-series-'+(opts.s+1)];
-	if(opts.series.getProperty('class')) cl.concat(series.getProperty('class').split(/ /));
+	let cls = (typeof opts.class==="string" ? opts.class : opts.series.getProperty('class'));
+	if(cls) cl.concat(cls.split(/ /));
 	addClasses(this.el,cl);
 
 	let line = svgEl('path');
@@ -37,11 +39,11 @@ export function KeyItem(attr){
 	this.el.appendChild(line);
 	this.el.appendChild(mark.el);
 	
-	this.label = (opts.series.getProperty('title')||"Series "+(opts.s+1));
+	this.label = (opts.title||opts.series.getProperty('title')||"Series "+(opts.s+1));
 
 
 	let fs = opts.fontSize;
-	let p = opts.series.getProperties();
+	let p = (opts.series ? opts.series.getProperties() : opts);
 	mark.setPosition(roundTo(fs*(opts.itemWidth/2), 3),roundTo(0.5*fs, 3),fs/2);
 	mark.setAttr({'fill':(p.points.color||""),'stroke-width':p.points['stroke-width']||0,'stroke':p.points.stroke||""});
 	if(size <= 1) mark.setAttr({'opacity':'0.01'});

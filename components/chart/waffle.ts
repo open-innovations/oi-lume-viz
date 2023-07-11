@@ -118,22 +118,6 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		if(!config.series[s].points) config.series[s].points = clone(defaultmark);
 	}
 
-	// Create a legend for the chart
-	if(config.legend.show){
-
-		if(!config.legend.items) config.legend.items = new Array(config.series.length);
-
-		// Create the legend items
-		for(let s = 0; s < config.series.length; s++){
-
-			if(!config.legend.items[s]) config.legend.items[s] = {};
-			config.legend.items[s].colour = config.series[s].colour||defaultbg;
-			config.legend.items[s].label = config.series[s].title||config.series[s].value;
-			config.legend.items[s].icon = config.series[s].icon;
-
-		}
-	}
-
 	// Loop over series and create the bins
 	for(let s = 0; s < config.series.length; s++){
 
@@ -221,6 +205,36 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	}
 
 	svg += '</svg>';
+
+
+
+	// Create a legend for the chart
+	if(config.legend.show){
+
+		if(!config.legend.items) config.legend.items = new Array(config.series.length);
+
+		// Create the legend items
+		for(let s = 0; s < config.series.length; s++){
+
+			config.series[s].points.color = config.series[s].colour||defaultbg;
+			let keyitem = new KeyItem({
+				'type':'waffle',
+				'title':config.series[s].title||config.series[s].value,
+				'class':'',
+				's':s,
+				'fontSize': fontSize,
+				'itemWidth': 1,
+				'points':config.series[s].points,
+				'line':config.series[s].line||{}
+			});
+			if(!config.legend.items[s]) config.legend.items[s] = {};
+			config.legend.items[s].colour = config.series[s].colour||defaultbg;
+			config.legend.items[s].label = keyitem.label;
+
+			config.legend.items[s].icon = keyitem.getSVG();
+		}
+	}
+
 
 	var holder = new VisualisationHolder(config);
 	holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
