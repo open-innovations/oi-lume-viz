@@ -214,30 +214,6 @@ export function Marker(attr){
 	};
 	this.addClass = function(cls){ this.el.classList.add(cls); }
 
-	this.getPath = function(){
-		let path = "";
-		if(this.el){
-			if(this.el.tagName == "PATH"){
-				path = this.el.getAttribute('d');
-			}else if(this.el.tagName == "CIRCLE"){
-				let cx = this.el.getAttribute('cx');
-				let cy = this.el.getAttribute('cy');
-				let r = parseFloat(this.el.getAttribute('r'));
-				path = 'M '+cx+' '+cy+' ';
-				path += 'm '+r+', 0';
-				path += 'a '+r+','+r+' 0 1,0 -'+(r * 2)+',0';
-				path += 'a '+r+','+r+' 0 1,0 '+(r * 2)+',0';
-				path;
-			}
-		}
-		// If we have set the rotation (as a "transform" attribute)
-		// we will need to convert the path here
-		if(typeof opts.rotate==="number"){
-			// TO DO:
-			// If we want rotation for waffle charts we will need to transform the path here
-		}
-		return path;
-	};
 	this.getType = function(){
 		return opts.marker;
 	};

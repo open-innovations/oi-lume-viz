@@ -78,6 +78,7 @@
 			if(!fill) fill = pt.closest('svg').getAttribute('fill');
 			// If the fill is "currentColor" we compute what that is
 			if(fill == "currentColor") fill = window.getComputedStyle(pt)['color'];
+			if(fill == "transparent" && pt.getAttribute('data-fill')) fill = pt.getAttribute('data-fill');
 
 			// Remove current selections
 			selected = svg.querySelectorAll('.selected');

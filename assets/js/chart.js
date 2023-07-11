@@ -106,7 +106,7 @@
 				for(s in series) series[s].shapes = series[s].series.querySelectorAll('rect');
 			}
 			for(s in series){
-				points = series[s].series.querySelectorAll('circle,rect');
+				points = series[s].series.querySelectorAll('.marker');
 
 				// If it is a stacked bar chart we will change the left position and store that
 				if(typ == "stacked-bar-chart"){
