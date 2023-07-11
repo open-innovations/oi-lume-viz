@@ -55,6 +55,7 @@ export function Marker(attr){
 			'setPosition': function(x,y){
 				if(anim) anim.set({'cx':{'from':roundNumber(old.x||null),'to':roundNumber(x||null)},'cy':{'from':roundNumber(old.y||null),'to':roundNumber(y||null)}});
 				else setAttr(this.el,{'cx':roundNumber(x),'cy':roundNumber(y)});
+				if(opts.size) setAttr(this.el,{'r':opts.size/2});
 			}
 		},
 		'triangle': {
@@ -188,6 +189,20 @@ export function Marker(attr){
 		if(typeof opts.setSize==="function") opts.setSize.call(this,s);
 		return this;
 	};
+	this.setTitle = function(title){
+		if(this.el){
+			var t = this.el.querySelector('title');
+			if(title){
+				if(!t){
+					t = svgEl('title');
+					this.el.append(t);
+				}
+				if(t) t.innerHTML = title;
+			}else{
+				if(t) t.parentNode.removeChild(t);
+			}
+		}
+	};
 	this.setPosition = function(x,y){
 		// Update point position
 		if(typeof markers[opts.marker].setPosition==="function"){
@@ -198,6 +213,27 @@ export function Marker(attr){
 		return this;
 	};
 	this.addClass = function(cls){ this.el.classList.add(cls); }
+
+	this.getPath = function(){
+		if(this.el){
+			if(this.el.tagName == "PATH"){
+				return this.el.getAttribute('d');
+			}else if(this.el.tagName == "CIRCLE"){
+				let cx = this.el.getAttribute('cx');
+				let cy = this.el.getAttribute('cy');
+				let r = parseFloat(this.el.getAttribute('r'));
+				var path = 'M '+cx+' '+cy+' ';
+				path += 'm '+r+', 0';
+				path += 'a '+r+','+r+' 0 1,0 -'+(r * 2)+',0';
+				path += 'a '+r+','+r+' 0 1,0 '+(r * 2)+',0';
+				return path;
+			}
+		}
+		return "";
+	};
+	this.getType = function(){
+		return opts.marker;
+	};
 	
 	return this;
 }

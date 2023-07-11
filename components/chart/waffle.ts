@@ -6,6 +6,8 @@ import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getFontFamily, getFontWeight, getFontSize } from '../../lib/font/fonts.ts';
+import { Marker } from './legacy/marker.js';
+import { KeyItem } from './legacy/keyitem.js';
 
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
@@ -110,6 +112,11 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	let icon;
 	let bin = 0;
 	let nbins = bins.length;
+	let defaultmark = {'marker':'square'};
+
+	for(let s = 0; s < config.series.length; s++){
+		if(!config.series[s].points) config.series[s].points = clone(defaultmark);
+	}
 
 	// Create a legend for the chart
 	if(config.legend.show){
@@ -139,7 +146,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		// For this series, create the bins
 		for(let i = 0; i < v; i++){
 			icon = config.series[s].icon||config.icon;
-			bins[bin] = {'series':s,'icon':icon,'colour':config.series[s].colour||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||((config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value]),'data':true};
+			bins[bin] = {'series':s,'icon':icon,'colour':config.series[s].colour||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||((config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value]),'data':true,'point':clone(config.series[s].points)};
 			bin++;
 		}
 
@@ -147,7 +154,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 
 
 	// Fill up the rest of the bins
-	for(let i = bin; i < bins.length; i++) bins[i] = {'series':-1,'icon':icon,'colour':defaultbg,'tooltip':'','data':false};
+	for(let i = bin; i < bins.length; i++) bins[i] = {'series':-1,'icon':icon,'colour':defaultbg,'tooltip':'','data':false,'point':clone(defaultmark)};
 
 	let w = config.width || 1080;
 	let h = config.height || (w*size[1]/size[0]);
@@ -158,8 +165,10 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	let dh = (h - p*(rows - 1))/rows;
 
 	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width:'+w+'px;max-width:100%;height:'+h+'px" viewBox="0 0 '+w.toFixed(3)+' '+h.toFixed(3)+'" vector-effect="non-scaling-stroke" preserveAspectRatio="xMidYMin meet" overflow="visible" class="oi-chart-main" data-type="waffle-chart" data-gravity="'+config.gravity+'">';
-	let x,y,i,j,r,c;
+	let x,y,i,j,r,c,dw2;
 
+	// Scale by the diagonal
+	dw2 = dw * Math.sqrt(2);
 
 	for(let b = 0; b < bins.length; b++){
 
@@ -189,24 +198,33 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 
 		}
 
-		x = i*dw + Math.max(0,i*p);
-		y = j*dh + Math.max(0,j*p);
+		x = i*dw + Math.max(0,i*p) + dw/2;
+		y = j*dh + Math.max(0,j*p) + dh/2;
 
 		let s = bins[b].series+1;
 
+		if(!bins[b].point.size){
+			if(bins[b].point.marker=="square") bins[b].point.size = dw2;
+			else bins[b].point.size = dw;
+		}
+
+		let mark = new Marker(bins[b].point);
+		mark.setAttr({'tabindex':0,'data-series':s,'fill':(bins[b].colour||defaultbg)}); // Update the point
+		mark.addClass('marker');
+		mark.setPosition(x,y);
+		mark.setTitle(bins[b].tooltip ? bins[b].tooltip : '');
+
 		if(b==0 || (b > 0 && bins[b].series!=bins[b-1].series)) svg += '<g class="series" data-series="'+s+'"><path class="marker" data-series="'+s+'" fill="'+(bins[b].colour||defaultbg)+'" d="';
-
-		svg += 'M '+x.toFixed(1)+' '+y.toFixed(1)+' l '+dw+' 0 l 0 '+dh+' l -'+dw+' 0z ';
-
+		svg += mark.getPath()+' ';
 		if(b == bins.length-1 || (b > 0 && b < bins.length-1 && bins[b+1].series!=bins[b].series)) svg += '">' + (bins[b].tooltip ? '<title>'+bins[b].tooltip+'</title>' : '') + '</path></g>';
 
 	}
 
 	svg += '</svg>';
 
-
 	var holder = new VisualisationHolder(config);
 	holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
 	holder.addClasses(['oi-chart','oi-waffle-chart']);
+
 	return holder.wrap(svg);
 }
