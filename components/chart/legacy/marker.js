@@ -233,8 +233,8 @@ export function Marker(attr){
 		// If we have set the rotation (as a "transform" attribute)
 		// we will need to convert the path here
 		if(typeof opts.rotate==="number"){
-			// TO DO transform the path
-			//console.log('getPath',path,this.el.getAttribute('transform'),opts.rotate,origin,separateNumbers(path));
+			// TO DO:
+			// If we want rotation for waffle charts we will need to transform the path here
 		}
 		return path;
 	};
@@ -243,17 +243,4 @@ export function Marker(attr){
 	};
 	
 	return this;
-}
-// Separate numbers from string and create object with value and extension
-function separateNumbers(text) {
-    var splitter = text.toString().split(" ");
-    var returnArray = [];
-    splitter.forEach(function(item){
-        var numberObj = {
-            value: parseFloat(item),
-            extension: item.replace(/^-?\d+((.|,)\d+)?/g, '')
-        }
-        returnArray.push(numberObj);
-    });
-    return returnArray;
 }
