@@ -271,8 +271,8 @@ function Grid(cols,rows){
 		this.cell[r][c] = 1;
 	};
 
-	this.getBoundary = function(size){
-		return getPathFromValue(this.cell,1,size);
+	this.getBoundary = function(size,pad){
+		return getPathFromValue(this.cell,1,size,pad);
 	};
 	return this;
 }
@@ -282,7 +282,9 @@ function Grid(cols,rows){
 function getPathFromValue(pattern,v,cellSize,pad){
 	var pointEquals = function (a, b) { return a[0] === b[0] && a[1] === b[1]; };
 	if(typeof cellSize!=="number") cellSize = 1;
-	if(!pad) pad = {'left':0,'top':0};
+	if(!pad) pad = {};
+	if(typeof pad.left!=="number") pad.left = 0;
+	if(typeof pad.top!=="number") pad.top = 0;
 
 	// Mark all four edges of each square in clockwise drawing direction
 	let edges = [];
@@ -290,8 +292,8 @@ function getPathFromValue(pattern,v,cellSize,pad){
 	for (row = 0; row < pattern.length; row++) {
 		for (col = 0; col < pattern[row].length; col++) {
 			if (pattern[row][col]==v){
-				x0 = col * cellSize + pad.left;
-				y0 = row * cellSize + pad.top;
+				x0 = col * cellSize + (col > 0 ? pad.left : 0);
+				y0 = row * cellSize + (row > 0 ? pad.top : 0);
 				x1 = (col + 1) * cellSize + pad.left;
 				y1 = (row + 1) * cellSize + pad.top;
 				edges.push([[x0, y0], [x1, y0]]);	 // top edge (to right)
