@@ -218,10 +218,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 
 	}
 
-
 	svg += '</svg>';
-
-
 
 	// Create a legend for the chart
 	if(config.legend.show){
@@ -249,7 +246,6 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 			config.legend.items[s].icon = keyitem.getSVG();
 		}
 	}
-
 
 	var holder = new VisualisationHolder(config);
 	holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);

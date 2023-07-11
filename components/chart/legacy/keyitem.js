@@ -29,16 +29,16 @@ export function KeyItem(attr){
 
 	let line = svgEl('path');
 	setAttr(line,{'d':'M0 0 L 1 0','stroke-width':opts.line['stroke-width']||4,'stroke-dasharray':opts.line['stroke-dasharray']||'','stroke-linecap':'round','class':'line item-line'});
-	
+
 	let mark = new Marker(opts.points);
 	mark.addClass('item-mark');
 	let size = attr.type=="bar-chart" || attr.type=="stacked-bar-chart" ? opts.fontSize : Math.min((opts.points.size||opts.fontSize/2),opts.fontSize);
 	mark.setSize(size);	// Default size of key item
 	mark.setAttr({'fill':'silver'});
 
-	this.el.appendChild(line);
-	this.el.appendChild(mark.el);
-	
+	this.el.append(line);
+	this.el.append(mark.el);
+
 	this.label = (opts.title||opts.series.getProperty('title')||"Series "+(opts.s+1));
 
 
@@ -58,7 +58,7 @@ export function KeyItem(attr){
 
 	this.getSVG = function(){
 		var svg = '<svg xmlns="http://www.w3.org/2000/svg" overflow="visible" class="oi-legend-icon" data-series="'+(opts.s+1)+'" height="1em" style="aspect-ratio:'+opts.itemWidth+' / 1" viewBox="0 0 '+(opts.itemWidth*opts.fontSize)+' '+opts.fontSize+'">';
-		svg += this.el.outerHTML;
+		svg += this.el.outerHTML.replace(/\&lt;/g,"<").replace(/\&gt;/g,">").replace(/fill="silver"/g,'fill="'+this.colour+'"');
 		svg += '</svg>';
 		return svg;
 	};

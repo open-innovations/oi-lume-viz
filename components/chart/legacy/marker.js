@@ -169,12 +169,26 @@ export function Marker(attr){
 			}
 		}
 	};
-
+	
 	mergeDeep(opts,attr);
+
+	if(typeof opts.marker!=="string"){
+		var div = document.createElement('div');
+		div.innerHTML = opts.marker.svg||"";
+		this.el = div.firstChild;
+		markers.icon = {
+			'type':'svg',
+			'setPosition': function(x,y){
+				setAttr(this.el,{'x':x-opts.size/2,'y':y-opts.size/2,'width':opts.size,'height':opts.size});
+			}
+		};
+		opts.marker = "icon";
+	}
+
 
 	if(markers[opts.marker]){
 		mergeDeep(opts,markers[opts.marker]);
-		this.el = svgEl(opts.type);
+		if(!this.el) this.el = svgEl(opts.type);
 		if(typeof markers[opts.marker].init==="function") markers[opts.marker].init.call(this);
 	}else{
 		throw new Error('Marker "'+opts.marker+'" is not a valid type from: '+Object.keys(markers).join(', ')+'.');
