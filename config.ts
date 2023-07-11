@@ -8,6 +8,7 @@ export const assets = [
   'js/tooltip.js',
   'js/tree-map.js',
   'js/zoomable.js',
+  'css/holder.css',
   'css/maps.css',
   'css/legend.css',
   'css/charts.css',

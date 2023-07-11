@@ -7,6 +7,7 @@ import { TreeMap, TreeMapOptions } from "./lib/tree-map.ts";
 import { addVirtualColumns } from "../../lib/helpers.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import { getFontSize, getFontWeight, getFontFamily } from "../../lib/font/fonts.ts";
+import { VisualisationHolder } from '../../lib/holder.js';
 
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
@@ -139,6 +140,10 @@ export default function (options: { config: TreemapComponentOptions }) {
   }
   
   const treemap = new TreeMap(config);
-  const dependencies = `data-dependencies="${ getAssetPath('/js/tree-map.js') },${ getAssetPath('/js/tooltip.js') }"`;
-  return `<div class="oi-viz oi-tree-map" ${dependencies}>${treemap.render()}</div>`;
+
+
+  var holder = new VisualisationHolder(config);
+  holder.addDependencies(['/js/tree-map.js','/js/tooltip.js']);
+  holder.addClasses(['oi-tree-map']);
+  return holder.wrap(treemap.render());
 }
