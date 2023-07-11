@@ -39,10 +39,10 @@ export function Marker(attr){
 		return {};
 	}
 
-	var anim,opts,old,markers;
+	var anim,opts,origin,markers;
 
 	opts = {'marker': 'circle'};
-	old = {'x':null,'y':null};
+	origin = {'x':null,'y':null};
 	markers = {
 		'circle': {
 			'type': 'circle',
@@ -53,7 +53,7 @@ export function Marker(attr){
 				setAttr(this.el,{'r':s/2});
 			},
 			'setPosition': function(x,y){
-				if(anim) anim.set({'cx':{'from':roundNumber(old.x||null),'to':roundNumber(x||null)},'cy':{'from':roundNumber(old.y||null),'to':roundNumber(y||null)}});
+				if(anim) anim.set({'cx':{'from':roundNumber(origin.x||null),'to':roundNumber(x||null)},'cy':{'from':roundNumber(origin.y||null),'to':roundNumber(y||null)}});
 				else setAttr(this.el,{'cx':roundNumber(x),'cy':roundNumber(y)});
 				if(opts.size) setAttr(this.el,{'r':opts.size/2});
 			}
@@ -207,33 +207,53 @@ export function Marker(attr){
 		// Update point position
 		if(typeof markers[opts.marker].setPosition==="function"){
 			markers[opts.marker].setPosition.call(this,x,y);
-			old = {'x':x,'y':y};
-			if(opts.rotate) setAttr(this.el,{'transform':'rotate('+opts.rotate+' '+old.x+' '+old.y+')'});
+			origin = {'x':x,'y':y};
+			if(opts.rotate) setAttr(this.el,{'transform':'rotate('+opts.rotate+' '+origin.x+' '+origin.y+')'});
 		}
 		return this;
 	};
 	this.addClass = function(cls){ this.el.classList.add(cls); }
 
 	this.getPath = function(){
+		let path = "";
 		if(this.el){
 			if(this.el.tagName == "PATH"){
-				return this.el.getAttribute('d');
+				path = this.el.getAttribute('d');
 			}else if(this.el.tagName == "CIRCLE"){
 				let cx = this.el.getAttribute('cx');
 				let cy = this.el.getAttribute('cy');
 				let r = parseFloat(this.el.getAttribute('r'));
-				var path = 'M '+cx+' '+cy+' ';
+				path = 'M '+cx+' '+cy+' ';
 				path += 'm '+r+', 0';
 				path += 'a '+r+','+r+' 0 1,0 -'+(r * 2)+',0';
 				path += 'a '+r+','+r+' 0 1,0 '+(r * 2)+',0';
-				return path;
+				path;
 			}
 		}
-		return "";
+		// If we have set the rotation (as a "transform" attribute)
+		// we will need to convert the path here
+		if(typeof opts.rotate==="number"){
+			// TO DO transform the path
+			//console.log('getPath',path,this.el.getAttribute('transform'),opts.rotate,origin,separateNumbers(path));
+		}
+		return path;
 	};
 	this.getType = function(){
 		return opts.marker;
 	};
 	
 	return this;
+}
+// Separate numbers from string and create object with value and extension
+function separateNumbers(text) {
+    var splitter = text.toString().split(" ");
+    var returnArray = [];
+    splitter.forEach(function(item){
+        var numberObj = {
+            value: parseFloat(item),
+            extension: item.replace(/^-?\d+((.|,)\d+)?/g, '')
+        }
+        returnArray.push(numberObj);
+    });
+    return returnArray;
 }

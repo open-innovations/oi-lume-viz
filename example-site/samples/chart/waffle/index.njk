@@ -153,13 +153,45 @@ examples:
         - value: "Female"
           colour: "#722EA5"
           tooltip: "F tooltip"
+        - value: "Male"
+          colour: "#0dbc37"
+          tooltip: "M tooltip"
+        - value: "Other/diverse"
+          colour: "#fac900"
+          tooltip: "O tooltip"
+      size: [20,5]
+      legend:
+        show: true
+        position: top
+  - title: "Custom markers"
+    description: |
+      In this example we show the gender breakdown of <a href="https://strudel.org.uk/panelshows/shows/taskmaster.html">appearances on Channel 4's Taskmaster</a> as of the end of series 15. We will create a `tooltip` for each `series` as virtual columns. In this example the data consists of appearances rather than percentages so we define a `total` key (to the column `Total`) in order to scale the values into percentages. We can set custom `points→marker` values for each `series`.
+    config:
+      data:
+        - Female: 283
+          Male: 675
+          Other/diverse: 10
+          Total: 968
+      total: Total
+      columns:
+        - name: "F tooltip"
+          template: "Appearances: female\n{{ Female | toLocaleString() }} ({{ Female | multiply(100 / Total) | toFixed(1) }}%)"
+        - name: "M tooltip"
+          template: "Appearances: male\n{{ Male | toLocaleString() }} ({{ Male | multiply(100 / Total) | toFixed(1) }}%)"
+        - name: "O tooltip"
+          template: "Appearances: diverse/non-binary genders\n{{ Other/diverse | toLocaleString() }} ({{ Other/diverse | multiply(100 / Total) | toFixed(1) }}%)"
+      series:
+        - value: "Female"
+          colour: "#722EA5"
+          tooltip: "F tooltip"
           points:
             marker: circle
         - value: "Male"
           colour: "#0dbc37"
           tooltip: "M tooltip"
           points:
-            marker: hexagon
+            marker: triangle
+            rotate: 30
         - value: "Other/diverse"
           colour: "#fac900"
           tooltip: "O tooltip"

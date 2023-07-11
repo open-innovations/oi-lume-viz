@@ -193,6 +193,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		}
 
 		let mark = new Marker(bins[b].point);
+
 		mark.setAttr({'tabindex':0,'data-series':s,'fill':(bins[b].colour||defaultbg)}); // Update the point
 		mark.addClass('marker');
 		mark.setPosition(x,y);
