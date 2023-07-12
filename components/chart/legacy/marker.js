@@ -169,22 +169,21 @@ export function Marker(attr){
 			}
 		}
 	};
-	
-	mergeDeep(opts,attr);
 
-	if(typeof opts.marker!=="string"){
+	// If a marker is defined and it isn't a string, process it
+	if(attr.marker && typeof attr.marker!=="string"){
 		var div = document.createElement('div');
-		div.innerHTML = opts.marker.svg||"";
+		div.innerHTML = attr.marker.svg||"";
 		this.el = div.firstChild;
-		markers.icon = {
-			'type':'svg',
-			'setPosition': function(x,y){
-				setAttr(this.el,{'x':x-opts.size/2,'y':y-opts.size/2,'width':opts.size,'height':opts.size});
-			}
-		};
-		opts.marker = "icon";
+		markers.icon = attr.marker;
+		markers.icon.type = 'svg';
+		markers.icon.setPosition = function(x,y){
+			setAttr(this.el,{'x':x-opts.size/2,'y':y-opts.size/2,'width':opts.size,'height':opts.size});
+		}
+		attr.marker = "icon";
 	}
 
+	mergeDeep(opts,attr);
 
 	if(markers[opts.marker]){
 		mergeDeep(opts,markers[opts.marker]);
