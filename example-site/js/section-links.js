@@ -20,8 +20,12 @@ OI.ready(function(){
 	function offsetAnchor() {
 		if(location.hash.length !== 0){
 			var el = document.querySelector(location.hash);
-			var y = Math.max(0,window.scrollY + el.getBoundingClientRect().top - 32);
-			window.scrollTo(window.scrollX, y);
+			if(el){
+				var y = Math.max(0,window.scrollY + el.getBoundingClientRect().top - 32);
+				window.scrollTo(window.scrollX, y);
+			}else{
+				console.warn('No element for '+location.hash);
+			}
 		}
 	}
 	offsetAnchor();
