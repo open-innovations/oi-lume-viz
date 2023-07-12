@@ -2,7 +2,7 @@
 	position: absolute !important;
 	width: 1px !important;
 	height: 1px !important;
-	margin: 0 !important;
+	margin: 0;
 	overflow: hidden !important;
 	clip: rect(0 0 0 0) !important;
 	-webkit-clip-path: inset(50%) !important;
@@ -14,7 +14,7 @@
 	width: auto !important;
 	height: auto !important;
 	left: 0;
-	margin: inherit !important;
+	margin: inherit;
 	overflow: visible !important;
 	clip: auto !important;
 	-webkit-clip-path: none !important;
