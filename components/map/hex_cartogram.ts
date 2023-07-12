@@ -392,8 +392,6 @@ export default function (input: { config: HexmapOptions }) {
           id="${uuid}-hex-${hexId}"
           class="hex"
           transform="translate(${roundNumber(x)} ${roundNumber(y)})"
-          data-auto-popup="${tooltipText}"
-          data-value="${valuecol}"
           role="listitem"
           aria-label="${labelProp} value ${valuecol}"
         >
