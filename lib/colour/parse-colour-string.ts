@@ -7,6 +7,7 @@ import {
 } from "./converters.ts";
 import { splitStringToNumbers } from "./split-string-to-numbers.ts";
 import { Colour } from "./types.ts";
+import { getBackgroundColour } from "./colour.ts";
 
 export function validateNumberList(list: number[], options: {
 	expectedLength?: number;
@@ -62,7 +63,10 @@ export function replaceNamedColours(
 export function parseColourString(
 	input: string,
 ): Pick<Colour, "hsl" | "rgb" | "hex"> {
-	if (typeof input !== "string") throw new TypeError("Invalid input type");
+	if (typeof input !== "string"){
+		console.warn('WARNING: Trying to pass non-string to OI Lume Viz: hex cartogram: parseColourString',input,typeof input);
+		input = getBackgroundColour();
+	}
 
 	input = replaceNamedColours(input);
 	let expectedLength = 3;

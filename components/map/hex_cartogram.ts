@@ -203,7 +203,7 @@ export default function (input: { config: HexmapOptions }) {
       let v = 0;
       if (typeof h[value] === "string") v = parseFloat(h[value]);
       else if (typeof h[value] === "number") v = h[value];
-      else v = defaultbg;
+      else v = -Infinity;
       return v;
     }).reduce((result, current) => Math.max(result, current), 0);
   }
@@ -214,7 +214,7 @@ export default function (input: { config: HexmapOptions }) {
       let v = 0;
       if (typeof h[value] === "string") v = parseFloat(h[value]);
       else if (typeof h[value] === "number") v = h[value];
-    else v = defaultbg;
+    else v = Infinity;
       return v;
     }).reduce((result, current) => Math.min(result, current), 1e100);
   }
@@ -361,7 +361,7 @@ export default function (input: { config: HexmapOptions }) {
   const drawHex = (config: HexDefinition) => {
     const hexId = hexCounter();
     const { x, y } = getCentre(config);
-    const valuecol = <number> config[value] || defaultbg;
+    const valuecol = <number> config[value] || 0;
 
     const labelProp = <string> config[titleProp];
     let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
@@ -392,6 +392,7 @@ export default function (input: { config: HexmapOptions }) {
           id="${uuid}-hex-${hexId}"
           class="hex"
           transform="translate(${roundNumber(x)} ${roundNumber(y)})"
+		  data-value="${valuecol}"
           role="listitem"
           aria-label="${labelProp} value ${valuecol}"
         >
