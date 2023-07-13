@@ -7,9 +7,7 @@ import { clone } from "../lib/util/clone.ts";
 export const css = `
 /* OI table component */
 .oi-table { display: block; overflow-x: auto; }
-.oi-table table { border-collapse: collapse; width: 100%; max-width: 100%; }
-.oi-table table th { font-weight: bold; }
-.oi-table table td, .oi-table table th { border: 1px solid black; padding: 0 0.25em; line-height: 1.5em; }
+.oi-table table { border-collapse: collapse; max-width: 100%; }
 `;
 
 
@@ -83,8 +81,11 @@ export default function (input: {
 			}
 		}
 	}
-	
-	const html = ['<table><tr>'];
+
+	let sty = '';
+	if(options.width) sty += 'width:'+options.width+';';
+
+	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+'><tr>'];
 	for(let col = 0; col < options.columns.length; col++){
 		html.push('<th>'+(options.columns[col].name||"")+'</th>');
 	}

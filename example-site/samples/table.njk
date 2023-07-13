@@ -138,5 +138,54 @@ examples:
           align: center
           scale: Heat_r
           min: 0
+  - title: "Set table width"
+    description: |
+      No default width is set for tables. If, say, you would like to make a specific table take up 100% of the width of the container you can set the `width` value.
+    config:
+      width: "100%"
+      data:
+        - page: Liverpool City Region
+          co2: 5.33
+          size: 21.2
+        - page: Tendring District Council
+          co2: 3.90
+          size: 15.5
+        - page: London Borough of Newham
+          co2: 2.99
+          size: 13.7
+        - page: Melton Borough Council
+          co2: 2.95
+          size: 13.5
+        - page: Welwyn Hatfield Council
+          co2: 2.68
+          size: 10.6
+        - page: Dacorum Council
+          co2: 2.68
+          size: 10.6
+        - page: Harborough District Council
+          co2: 2.59
+          size: 10.3
+        - page: Bridgend County Borough Council
+          co2: 2.53
+          size: 10.0
+        - page: Reading Borough Council
+          co2: 2.34
+          size: 9.3
+        - page: Bournemouth, Christchurch and Poole
+          co2: 2.27
+          size: 9.0
+      columns:
+        - name: "Local Authority"
+          template: "{{ page }}"
+        - name: "CO2 (g)"
+          template: "{{ co2 | toFixed(2) }}"
+          align: center
+          scale: Heat_r
+          min: 0
+        - name: "Size (MB)"
+          template: "{{ size | toFixed(2) }}"
+          align: center
+          scale: Heat_r
+          min: 0
 ---
 
