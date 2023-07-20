@@ -40,6 +40,10 @@ export function addVirtualColumns (
   config: unknown
 ) {
 	let c,r,v,f,p;
+	if(config.columns && typeof config.columns.length!=="number"){
+		console.log('Columns:',config.columns);
+		throw new TypeError('The columns should be an array.');
+	}
 	if(config.columns && config.columns.length > 0 && typeof config.data==="object" && config.data.length > 0){
 		for(r = 0; r < config.data.length; r++){
 

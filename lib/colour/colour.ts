@@ -37,6 +37,8 @@ export const getSeriesColour = function(i: number){
  * @returns
  */
 export function Colour(str: string) {
+  // Use the background colour if we don't have a string
+  if(typeof str != "string") str = getBackgroundColour();
   // Parse the string
   const { rgb, hex, hsl } = parseColourString(str);
   let contrast = "white";

@@ -4,6 +4,7 @@ export const assets = [
   'js/chart-ranking.js',
   'js/dashboard.js',
   'js/map.js',
+  'js/map-filter.js',
   'js/tabbed.js',
   'js/tooltip.js',
   'js/tree-map.js',

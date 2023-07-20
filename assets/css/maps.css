@@ -1,5 +1,6 @@
 /* OI map components */
 .oi-map { position: relative; max-width: 100%; }
+.oi-map .oi-map-inner { position: relative; }
 .oi-map .leaflet a { background-image: none!important; color: inherit!important; }
 .oi-map .leaflet-popup-content-wrapper { border-radius: 0; }
 .oi-map .leaflet-popup-content { margin: 1em; }

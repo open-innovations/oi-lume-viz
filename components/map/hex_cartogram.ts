@@ -10,10 +10,6 @@ import { VisualisationHolder } from '../../lib/holder.js';
 
 const defaultbg = getBackgroundColour();
 
-// This is a simple scale which returns the same value it was sent
-// Useful if the hexmap has a colour attribute
-const identityColourScale = (s: string) => s;
-
 function roundNumber(v){
   if(typeof v==="number") return parseFloat(v.toFixed(3));
   else return v;
@@ -71,6 +67,7 @@ type HexmapOptions = {
   titleProp: string;
   value?: string;
   colourValueProp?: string;
+  filter?: { label?: string; };
   legend: { position: string; items: Record<number, string> };
 };
 
@@ -84,9 +81,9 @@ export default function (input: { config: HexmapOptions }) {
 
   // Take a copy of parameters as constants, with defaults.
   // NB these are not cloned at this stage, as this loses information about functions passed in
-  const {
+  let {
     bgColour = "none",
-    scale = identityColourScale,
+    scale = "Viridis",
     hexScale = 1,
     margin: marginScale = 0.25,
     label = '',
@@ -97,6 +94,7 @@ export default function (input: { config: HexmapOptions }) {
     value = "",
     colourValueProp,
     legend,
+    filter,
   } = input.config;
 
   // Set up some variables
@@ -113,26 +111,7 @@ export default function (input: { config: HexmapOptions }) {
       input,
     );
   }
-  
-  // Resolve data if this is a string
-  let data;
-  if (input.config.data) {
-    data = clone(input.config.data);
 
-
-    // Convert references into actual objects
-    data = thingOrNameOfThing<TableData<string | number>>(
-      data,
-      input,
-    );
-
-    // In case it was a CSV file loaded
-    if(data.rows) data = data.rows;
-
-    // Create any defined columns
-    data.data = addVirtualColumns(data);
-
-  }
 
   // Capture the layout and hexes from the hexjson
   const layout = hexjson.layout;
@@ -145,7 +124,37 @@ export default function (input: { config: HexmapOptions }) {
 
   // Generate a UUID to identify the hexes
   const uuid = crypto.randomUUID().substr(0,8);
-  
+
+  // Resolve data if this is a string
+  let data;
+  let copyconfig = clone(input.config);
+  if (copyconfig.data) {
+
+    // Convert references into actual objects
+    copyconfig.data = thingOrNameOfThing<TableData<string | number>>(
+      copyconfig.data,
+      input,
+    );
+
+    // In case it was a CSV file loaded
+    if(copyconfig.data.rows) copyconfig.data = input.config.data.rows;
+
+  }
+
+  // If there is no data specified we will build it from the hexes
+  if(!copyconfig.data){
+    copyconfig.data = [];
+    for(var id in hexes){
+      let hexdata = clone(hexes[id]);
+      hexdata._id = id;
+      copyconfig.data.push(hexdata);
+    }
+    if(!matchKey) matchKey = '_id';
+  }
+
+  // Create any defined columns
+  data = addVirtualColumns(copyconfig);
+
   let labelProcessor = function(props,key){
     var txt = key;
     // See if this is just a straightforward key
@@ -205,7 +214,7 @@ export default function (input: { config: HexmapOptions }) {
       else if (typeof h[value] === "number") v = h[value];
       else v = -Infinity;
       return v;
-    }).reduce((result, current) => Math.max(result, current), 0);
+    }).reduce((result, current) => Math.max(result, current), -Infinity);
   }
 
   if (typeof min !== "number") {
@@ -216,15 +225,22 @@ export default function (input: { config: HexmapOptions }) {
       else if (typeof h[value] === "number") v = h[value];
     else v = Infinity;
       return v;
-    }).reduce((result, current) => Math.min(result, current), 1e100);
+    }).reduce((result, current) => Math.min(result, current), Infinity);
   }
 
   const fillColour = (input: number | string) => {
-    if (typeof input === "string") return input;
-    if (typeof input === "number") return cs((input - min) / (max - min));
-
+  let colour = undefined;
+  if (typeof input === "string") colour = input;
+  else if (typeof input === "number"){
+    if(min != Infinity && max != -Infinity){
+      let c = (input - min) / (max - min);
+      if(!isNaN(c)) colour = cs(c);
+    }
+  }else{
     // How did we get here???
     throw new TypeError("Invalid type provided to fillColour function");
+  }
+  return colour;
   };
 
   // Function to calculate if a given row should be shifted to the right
@@ -385,19 +401,20 @@ export default function (input: { config: HexmapOptions }) {
         throw new TypeError("Unsupported layout");
     }
     // TODO(@giles) Work out what the heck is going on!
-    const fill = fillColour(colourValue as never);
+    let fill = fillColour(colourValue as never);
+    if(typeof fill!=="string") fill = defaultbg;
 
     // TODO(@gilesdring) this only supports pointy-top hexes at the moment
     return `<g
           id="${uuid}-hex-${hexId}"
           class="hex"
           transform="translate(${roundNumber(x)} ${roundNumber(y)})"
-		  data-value="${valuecol}"
-		  data-id="${config._id}"
+      data-value="${valuecol}"
+      data-id="${config._id}"
           role="listitem"
           aria-label="${labelProp} value ${valuecol}"
         >
-        <path fill="${fill !== undefined ? `${fill}` : "${defaultbg}"}" d="${hexPath}"><title>${tooltipText}</title></path>
+        <path fill="${fill}" d="${hexPath}"><title>${tooltipText}</title></path>
         <text
         fill="${(Colour(fill)).contrast}"
         text-anchor="middle"
@@ -424,8 +441,12 @@ export default function (input: { config: HexmapOptions }) {
     legendDiv += l+'</div>';
   }
 
+  var filterdata = {};
+  for(var id in hexes){
+    filterdata[id] = (filter && filter.label && filter.label in hexes[id] ? hexes[id][filter.label] : '');
+  }
 
-  var html = `<svg
+  var html = `<div class="oi-map-holder"><div class="oi-map-inner"><svg
       id="hexes-${uuid}"
       class="oi-map-inner"
       viewBox="
@@ -444,9 +465,13 @@ export default function (input: { config: HexmapOptions }) {
     <g class="data-layer">
       ${Object.values(hexes).map(drawHex).join("")}
     </g></svg>`;
+  html += '</div>';
+  if(filter) html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
+  html += '</div>';
 
   var holder = new VisualisationHolder(input.config);
   holder.addDependencies(['/js/map.js','/css/maps.css','/js/tooltip.js']);
+  if(input.config.filter) holder.addDependencies(['/js/map-filter.js']);
   holder.addClasses('oi-map oi-map-hex');
 
   return holder.wrap(html);
