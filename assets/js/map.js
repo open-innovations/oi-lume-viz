@@ -1,5 +1,5 @@
 /*
-	Open Innovations SVG map Interactivity v0.1
+	Open Innovations map Interactivity v0.2
 	Helper function that find ".oi-map.oi-svg-map" or
 	".oi-map.oi-hex-map" elements and adds tooltips to them.
 */

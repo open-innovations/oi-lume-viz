@@ -238,7 +238,7 @@ export function ZoomableMap(opts){
 }
 
 
-// This component uses "/assets/js/svg-map.js" to make things interactive in the browser.
+// This component uses "/assets/js/map.js" to make things interactive in the browser.
 // That will only get included in pages that need it by using the "data-dependencies" attribute.
 export function SVGMap(opts){
 
@@ -448,7 +448,7 @@ export function SVGMap(opts){
 	var map = new BasicMap(config,{
 		'background': 'transparent',
 		'classes': 'oi-map-svg',
-		'dependencies': ['/js/svg-map.js','/css/maps.css','/js/tooltip.js'],
+		'dependencies': ['/js/map.js','/css/maps.css','/js/tooltip.js'],
 		'layers': layerlist,
 		'complete': function(){
 			if(config.bounds){

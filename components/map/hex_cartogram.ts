@@ -144,7 +144,7 @@ export default function (input: { config: HexmapOptions }) {
   const margin = marginScale * hexCadence;
 
   // Generate a UUID to identify the hexes
-  const uuid = crypto.randomUUID();
+  const uuid = crypto.randomUUID().substr(0,8);
   
   let labelProcessor = function(props,key){
     var txt = key;
@@ -393,6 +393,7 @@ export default function (input: { config: HexmapOptions }) {
           class="hex"
           transform="translate(${roundNumber(x)} ${roundNumber(y)})"
 		  data-value="${valuecol}"
+		  data-id="${config._id}"
           role="listitem"
           aria-label="${labelProp} value ${valuecol}"
         >
@@ -445,7 +446,7 @@ export default function (input: { config: HexmapOptions }) {
     </g></svg>`;
 
   var holder = new VisualisationHolder(input.config);
-  holder.addDependencies(['/js/svg-map.js','/css/maps.css','/js/tooltip.js']);
+  holder.addDependencies(['/js/map.js','/css/maps.css','/js/tooltip.js']);
   holder.addClasses('oi-map oi-map-hex');
 
   return holder.wrap(html);
