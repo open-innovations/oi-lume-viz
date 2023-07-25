@@ -114,7 +114,7 @@
 		var dashboards = document.querySelectorAll(".oi-dashboard");
 		// A function to "animate" the number when first seen
 		function animateNumber(el,val,duration){
-			var start,pre,post,v;
+			var start,pre,post,v,prec;
 			// Get the number from the data attribute (or the HTML content if not set)
 			if(typeof val!=="number"){
 				val = el.getAttribute('data')||el.innerHTML;
@@ -124,6 +124,7 @@
 			start = new Date();
 			pre = el.getAttribute('data-prefix')||'';
 			post = el.getAttribute('data-postfix')||'';
+			prec = el.getAttribute("data-precision") || "";
 			if(typeof duration!=="number") duration = 500;
 			function frame(){
 				var now,f;
@@ -135,7 +136,7 @@
 					el.innerHTML = pre+v+post;
 					window.requestAnimFrame(frame);
 				}else{
-					el.innerHTML = (pre||"")+formatNumber(val)+(post||"");
+					el.innerHTML = (pre||"")+formatNumber(val,prec)+(post||"");
 				}
 			}
 			// If the value is a number we animate it
@@ -143,12 +144,32 @@
 			return;			
 		}
 		// Shorten big numbers
-		function formatNumber(v){
+		function formatNumber(v,p){
 			if(typeof v !== "number") return v;
 			if(v > 1e7) return Math.round(v/1e6)+"M";
 			if(v > 1e6) return (v/1e6).toFixed(1)+"M";
 			if(v > 1e5) return Math.round(v/1e3)+"k";
 			if(v > 1e4) return Math.round(v/1e3)+"k";
+			return toPrecision(v,p);
+		}
+		function countDecimals(v){
+			var txt = v.toString();
+			// If it is in scientific notation
+			if(txt.indexOf('e-') > -1){
+				var [base, trail] = txt.split('e-');
+				return parseInt(trail, 10);
+			}
+			// Otherwise count decimals
+			if(Math.floor(v) !== v) return v.toString().split(".")[1].length || 0;
+			return 0;
+		}
+		function toPrecision(v,prec){
+			if(typeof prec!=="number") return v;
+			var n = Math.round(v/prec);
+			var dp = countDecimals(prec);
+			// Rebuild the number
+			v = prec*n;
+			if(prec < 1) v = v.toFixed(dp);
 			return v;
 		}
 		var monitor = new InView(dashboards);

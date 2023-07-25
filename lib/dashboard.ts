@@ -18,6 +18,7 @@ export type DashboardOptions = {
     'scale-value': string;
     min: unknown;
     max: unknown;
+    precision: number;
   }[];
   /** The property in the data holding the panel name */
   title: string;
@@ -119,6 +120,7 @@ export function dashboard(config: DashboardOptions){
       if(units.prefix && data[idx][units.prefix]) panel += ' data-prefix="'+data[idx][units.prefix]+'"';
       if(units.postfix && data[idx][units.postfix]) panel += ' data-postfix="'+data[idx][units.postfix]+'"';
     }
+    if(typeof panels[p].precision==="number") panel += ' data-precision="'+panels[p].precision+'"';
     panel += '>';
     panel += units?.prefix ? data[idx][units.prefix] || '' : ''
     panel += (data[idx][value] as string).toLocaleString();
