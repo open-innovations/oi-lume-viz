@@ -31,7 +31,7 @@ examples:
         - name: "Thing 4"
   - title: "Add units and notes"
     description: |
-      In this example we will add a `note` (set to the column `Footnote`) below the value in panels. We can also augment the displayed values with `units` by adding `prefix` or `postfix`. For the fourth panel we will set the `precision` to "0.1" to force the number to be displayed with one decimal place.
+      In this example we will add a `note` (set to the column `Footnote`) below the value in panels. We can also augment the displayed values with `units` by adding `prefix` or `postfix`. For the "Thing 3" panel we set the `precision` to "0.1" to force the number to be displayed with one decimal place.
     config:
       title: Title
       value: Value
@@ -44,7 +44,7 @@ examples:
         - Title: "Thing 2"
           Value: 132
         - Title: "Thing 3"
-          Value: 19
+          Value: 19.234
           Footnote: "2019"
         - Title: "Thing 4"
           Value: 90
@@ -61,9 +61,9 @@ examples:
       panels:
         - name: "Thing 1"
         - name: "Thing 3"
+          precision: 0.1
         - name: "Thing 2"
         - name: "Thing 4"
-          precision: 0.1
   - title: "Set the colours of panels"
     description: |
       This example shows four differently coloured panels. Some panels have prefixes or postfixes around the values. We only show panels for specified items in the data. The order of <code>panels</code> is the order they will appear on the page and doesn't have to match the order in the <code>data</code>.

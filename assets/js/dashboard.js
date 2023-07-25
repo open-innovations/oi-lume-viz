@@ -124,15 +124,16 @@
 			start = new Date();
 			pre = el.getAttribute('data-prefix')||'';
 			post = el.getAttribute('data-postfix')||'';
-			prec = el.getAttribute("data-precision") || "";
+			prec = el.getAttribute("data-precision") ? parseFloat(el.getAttribute("data-precision")) : "";
 			if(typeof duration!=="number") duration = 500;
+			console.log(val,prec);
 			function frame(){
 				var now,f;
 				now = new Date();
 				// Set the current time in milliseconds
 				f = (now - start)/duration;
 				if(f < 1){
-					v = formatNumber(Math.round(val*f));
+					v = formatNumber(Math.round(val*f),prec);
 					el.innerHTML = pre+v+post;
 					window.requestAnimFrame(frame);
 				}else{
@@ -146,10 +147,10 @@
 		// Shorten big numbers
 		function formatNumber(v,p){
 			if(typeof v !== "number") return v;
-			if(v > 1e7) return Math.round(v/1e6)+"M";
-			if(v > 1e6) return (v/1e6).toFixed(1)+"M";
-			if(v > 1e5) return Math.round(v/1e3)+"k";
-			if(v > 1e4) return Math.round(v/1e3)+"k";
+			if (v > 1e7) return toPrecision(v / 1e6,(p ? p/1e6 : 1)) + "M";
+			if (v > 1e6) return toPrecision(v / 1e6,(p ? p/1e6 : 0.1)) + "M";
+			if (v > 1e4) return toPrecision(v / 1e3,(p ? p/1e3 : 1)) + "k";
+			if (v > 1e3) return toPrecision(v / 1e3,(p ? p/1e3 : 0.1)) + "k";
 			return toPrecision(v,p);
 		}
 		function countDecimals(v){
