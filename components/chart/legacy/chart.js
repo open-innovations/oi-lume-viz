@@ -115,13 +115,24 @@ export function Chart(config,csv){
 		// Build the series
 		for(s = 0; s < this.opt.series.length; s++){
 			mergeDeep(this.opt.series[s],{
-				'line':{'show':true,'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')},
-				'points':{'size':(this.opt.series[s].points && typeof this.opt.series[s].points.size==="number" ? this.opt.series[s].points.size : 1), 'color': (this.opt.series[s].colour||colours[this.opt.series[s].title]||'')}
+				'line':{'show':true,'color': replaceNamedColours(this.opt.series[s].colour||colours[this.opt.series[s].title]||'')},
+				'points':{'size':(this.opt.series[s].points && typeof this.opt.series[s].points.size==="number" ? this.opt.series[s].points.size : 1), 'color': replaceNamedColours(this.opt.series[s].colour||colours[this.opt.series[s].title]||'')}
 			});
 			data = [];
+			if(typeof this.opt.series[s].x==="undefined" || typeof this.opt.series[s].y==="undefined"){
+				console.log(this.opt.series[s]);
+				throw new TypeError('Missing x/y values for series '+s);
+			}
 			for(i = 0; i < csv.rows.length; i++){
 				labx = x = csv.columns[this.opt.series[s].x][i];
 				laby = y = csv.columns[this.opt.series[s].y][i];
+				// Convert to dates
+				if(typeof x==="string" && x.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
+					x = parseInt(x.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
+				}
+				if(typeof y==="string" && y.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
+					y = parseInt(y.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
+				}
 				if(typeof x==="string") x = i;
 				if(typeof y==="string") y = i;
 				if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
@@ -218,7 +229,7 @@ export function Chart(config,csv){
 				if(!config.legend.items[s]){
 					config.legend.items[s] = {};
 				}
-				config.legend.items[s].colour = keyitem.colour;
+				config.legend.items[s].colour = replaceNamedColours(keyitem.colour);
 				config.legend.items[s].label = keyitem.label;
 
 				if(this.opt.type == "scatter-chart" || this.opt.type == "line-chart"){

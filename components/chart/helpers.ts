@@ -7,6 +7,7 @@ import { LineChart } from "./legacy/line.js";
 import { ScatterChart } from "./legacy/scatter.js";
 import { BarChart } from "./legacy/bar.js";
 import { StackedBarChart } from "./legacy/stacked-bar.js";
+import { getTimeTicks } from "../../lib/external/DateMaths.js";
 
 const arraySum = (array: number[]) => array.reduce((a, b) => a + b, 0);
 const findSmallest = (a: number, v: number[]) => Math.min(a, ...v);
@@ -58,6 +59,11 @@ export function updateAxis (
 				if(key){
 					for(let i = 0; i < config.data.length; i++){
 						let v = config.data[i][key];
+						// Convert dates to dummy dates
+						if(typeof v==="string" && v.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
+							v = parseInt(v.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
+							if(!config.data[i][key+'__dummy']) config.data[i][key+'__dummy'] = v;
+						}
 						if(typeof v==="number"){
 							range.min = Math.min(range.min,v);
 							range.max = Math.max(range.max,v);
@@ -74,15 +80,20 @@ export function updateAxis (
 				range.max = ncategories;
 			}
 
-			// Update the min.max values 
-			if(typeof config.axis[ax].tickSpacing==="number"){
-				if (config.axis[ax].min === undefined) config.axis[ax].min = Math.floor(range.min/config.axis[ax].tickSpacing)*config.axis[ax].tickSpacing;
-				if (config.axis[ax].max === undefined) config.axis[ax].max = Math.ceil(range.max/config.axis[ax].tickSpacing)*config.axis[ax].tickSpacing;
-			}else{
+			// Update the min.max values
+			if(typeof config.axis[ax].tickType==="string"){
 				config.axis[ax].min = range.min;
 				config.axis[ax].max = range.max;
-				if (config.axis[ax].ticks === undefined) {
-					config.axis[ax].ticks = [{'value':range.min,'label':'','grid':true}];
+			}else{
+				if(typeof config.axis[ax].tickSpacing==="number"){
+					if (config.axis[ax].min === undefined) config.axis[ax].min = Math.floor(range.min/config.axis[ax].tickSpacing)*config.axis[ax].tickSpacing;
+					if (config.axis[ax].max === undefined) config.axis[ax].max = Math.ceil(range.max/config.axis[ax].tickSpacing)*config.axis[ax].tickSpacing;
+				}else{
+					config.axis[ax].min = range.min;
+					config.axis[ax].max = range.max;
+					if (config.axis[ax].ticks === undefined) {
+						config.axis[ax].ticks = [{'value':range.min,'label':'','grid':true}];
+					}
 				}
 			}
 		}
@@ -93,6 +104,9 @@ export function updateAxis (
 			// If the grid→show property is set we will make sure that each generated tick has grid set to true
 			if(config.axis[ax].grid && config.axis[ax].grid.show){
 				for(let t = 0; t < config.axis[ax].ticks.length; t++) config.axis[ax].ticks[t].grid = true;
+			}else if(config.axis[ax].line && config.axis[ax].line.show){
+				// If the line is set, enable the grid line for the first tick mark
+				config.axis[ax].ticks[0].grid = true;
 			}
 		}
 	}
@@ -137,28 +151,47 @@ function countDecimals(value) {
 }
 
 export function generateTicks(config: AxisOptions): TickOptions[] {
-  const { tickSpacing } = config;
-  if (tickSpacing === undefined) return [];
-  // If tickSpacing undefined, set a sensible default based on max and min
-  const max = Math.floor(config.max / tickSpacing) * tickSpacing;
-  const min = Math.floor(config.min / tickSpacing) * tickSpacing;
-  // Make sure to round the tickCount to the nearest integer
-  // to avoid floating point precision errors
-  const tickCount = Math.round(((max - min) / tickSpacing) + 1);
+	let ticks = [];
 
-  // Find the precision of the tickSpacing
-  var precision = countDecimals(tickSpacing);
+	if(typeof config.tickType==="string"){
 
-  const ticks = Array.from(new Array(tickCount)).map<TickOptions>((_, i) => {
-	// Round the value to the required precision
-    const v = (i * tickSpacing + min).toFixed(precision);
-    return {
-      value: parseFloat(v),
-      label: v,
-      "font-weight": "normal",
-    };
-  });
-  return ticks;
+		let rtn = getTimeTicks(config);
+		config.min = rtn.min.toValue();
+		config.max = rtn.max.toValue();
+		ticks = rtn.ticks;
+		for(let t = 0; t < ticks.length; t++) ticks[t]["font-weight"] = "normal";
+
+	}else{
+
+		const { tickSpacing } = config;
+		if (tickSpacing === undefined) return [];
+
+		// If tickSpacing undefined, set a sensible default based on max and min
+		const max = Math.floor(config.max / tickSpacing) * tickSpacing;
+		const min = Math.floor(config.min / tickSpacing) * tickSpacing;
+
+		// Make sure to round the tickCount to the nearest integer
+		// to avoid floating point precision errors
+		const tickCount = Math.round(((max - min) / tickSpacing) + 1);
+
+		// Find the precision of the tickSpacing
+		var precision = countDecimals(tickSpacing);
+
+		ticks = Array.from(new Array(tickCount)).map<TickOptions>((_, i) => {
+			// Round the value to the required precision
+			let v = (i * tickSpacing + min).toFixed(precision);
+			let label =  (config.tickLabels ? config.tickLabels[Math.floor(config.tickLabels.length*i/tickCount)] : v);
+			if(typeof config.tickFormat==="function"){
+				label = config.tickFormat.call(this,i * tickSpacing + min);
+			}
+			return {
+				value: parseFloat(v),
+				label: label,
+				"font-weight": "normal",
+			};
+		});
+	}
+	return ticks;
 }
 
 // Simple wrapper around existing legacy
