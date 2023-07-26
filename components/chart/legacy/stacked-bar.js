@@ -78,6 +78,7 @@ export function StackedBarChart(config,csv){
 					x = (isNaN(csv.columns[this.opt.series[s].value][i]) ? 0 : csv.columns[this.opt.series[s].value][i]);
 
 					colouri = colour;
+					if(this.opt.series[s].colour) colouri = this.opt.series[s].colour;
 					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = replaceNamedColours(csv.columns[this.opt.series[s].colour][i]);
 
 					// The final x-value is the current starting value plus the current value
