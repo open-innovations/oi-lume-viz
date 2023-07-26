@@ -11,6 +11,7 @@
 .oi-map .leaflet-control { z-index: 1001; }
 .oi-map .leaflet-top, .leaflet-bottom { position: absolute; z-index: 1001; pointer-events: none; }
 .oi-zoomable-map .oi-legend.oi-legend-left, .oi-zoomable-map .oi-legend.oi-legend-right { padding: 1em; }
+.oi-map .oi-map-holder { position: relative; }
 .leaflet-div-icon { background: transparent!important; border: 0!important; }
 .leaflet-control-attribution { font-size: 0.75em; }
 .leaflet-div-icon svg { width: 100%; height: 100%; }

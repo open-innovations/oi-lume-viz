@@ -252,10 +252,15 @@ examples:
       This is a large map showing local authorities coloured by region with a layout loaded from an external source. We provide a key with a title and an entry for each region. Each individual hex <code>label</code> is explicitly set to be an empty string.
     config:
       label: ""
+      attribution: |
+        Credit: Open Innovations
+      columns:
+        - name: "filterLabel"
+          template: "{{ n }} ({{ RGNNM }})"
       tooltip: "{{ n }}<br />{{ _id }}"
       legend:
         title: "Key"
-        position: bottom
+        position: top
         items:
           - value: "#FF6700"
             label: "East Anglia"
@@ -284,5 +289,5 @@ examples:
       hexjson: hexjson.localauthorities
       value: colour
       filter:
-        label: "n"
+        label: "filterLabel"
 ---

@@ -101,6 +101,8 @@ examples:
     description: |
       In this example we've <a href="https://open-innovations.github.io/traffic-growth/data/leeds/cycle-100642-1.csv">processed</a> a <a href="https://datamillnorth.org/dataset/leeds-annual-cycle-growth-">dataset from Data Mill North</a> to find the total daily counts for the St Peters Street (Lane 1) cycle counter in Leeds. We set the `value` of each day to the `Counts` field in the data and then colour each day using a defined colour `scale` (`Viridis`). If `min` and `max` are not set, the scale will use the range in the data.
     config:
+      attribution: |
+        Data: <a href="https://open-innovations.github.io/traffic-growth/data/leeds/cycle-100642-1.csv">processed</a> (Open Innovations); <a href="https://datamillnorth.org/dataset/leeds-annual-cycle-growth-">source</a> (Leeds City Council)
       data: test.data.cycle-100643-1
       value: Counts
       key: Date
