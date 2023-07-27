@@ -4,7 +4,7 @@ layout: layout/base.njk
 
 <h1>{{ title }}</h1>
 <p><code>Component: {{ component }}</code></p>
-{% if description %}<p>{{ description }}</p>{% endif %}
+{% if description %}<p>{{ description | md | safe }}</p>{% endif %}
 
 {% if examples | length > 1 %}
 <ol>
