@@ -139,8 +139,11 @@ header nav ul li { display: inline-block; }
 header nav ul > li > a { padding: 0.5em 1em; display: inline-block; width: 100%; color: inherit; }
 header nav ul > li > a:hover, header nav ul > li > a:focus { background: white; color: black; }
 
-.grid { display: grid; grid-template-columns: 50% 50%; grid-gap: 1em; }
+.grid { display: grid; grid-template-columns: repeat(2,1fr); grid-gap: 1em; }
 .grid .pane { background: #f9f9f9; }
+
+.grid-list { display: grid; grid-template-columns: repeat(3,1fr); grid-gap: 1em; list-style: none; margin: 0; margin-bottom: 2em; }
+.grid-list > li > a { padding: 1em; background: #dfdfdf; text-decoration: none; display: block; text-align: center; height: 100%; }
 
 .legend { margin-bottom: 1em; text-align: center; }
 .legend .legend-item { display: inline-block; line-height: 1em; margin-right: 1em; cursor: pointer; }
@@ -161,4 +164,5 @@ footer hr.about { margin: 32px 0; border: 0; border-top:1px solid #444; }
 .oi-table table th { font-weight: bold; }
 .oi-table table td, .oi-table table th { border: 1px solid black; padding: 0 0.25em; line-height: 1.5em; }
 
+.icon-inline { width: 2em; height: 2em; display: table-cell; vertical-align: middle; margin-right: 0.5em; }
 .oi-viz .oi-attribution { text-align: right; font-size: 0.8em; color: #777; }

@@ -35,17 +35,29 @@ TODO add some documentation!
 
 Creates a simple panelled dashboard. See [dashboard samples](/samples/dashboard).
 
+### `chart.bar`
+
+Creates a simple horizontal bar chart. See [bar chart samples](/samples/chart/bar).
+
+### `chart.calendar`
+
+Creates a calendar chart to quickly see weekly or seasonal changes in data. See [calendar chart samples](/samples/chart/calendar).
+
 ### `chart.line`
 
 Creates a line chart. See [line chart samples](/samples/chart/line).
+
+### `chart.ranking`
+
+<img src="img/ranking.svg" class="icon-inline" />A chart which shows how the rank of something varies. See [ranking chart samples](/samples/chart/ranking).
 
 ### `chart.scatter`
 
 Similar to line charts but with lines turned off. See [scatter chart samples](/samples/chart/scatter).
 
-### `chart.bar`
+### `chart.waffle`
 
-Creates a simple horizontal bar chart. See [bar chart samples](/samples/chart/bar).
+A heat map style grid. See [waffle chart samples](/samples/chart/waffle).
 
 ### `hierarchy.treemap`
 
@@ -62,6 +74,10 @@ Creates a simple SVG-based map using a Web Mercator projection. See [SVG map sam
 ### `map.hex_cartogram`
 
 Creates a hexagonal cartogram using [HexJSON layouts](https://open-innovations.org/projects/hexmaps/hexjson). See [hex cartogram samples](/samples/map/hex-cartogram).
+
+### `table`
+
+Create heat-map tables and easily merge across rows. See [table samples](/samples/table).
 
 ## Testing
 
