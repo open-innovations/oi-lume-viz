@@ -86,6 +86,7 @@ export default function (input: { config: HexmapOptions }) {
 		bgColour = "none",
 		scale = "Viridis",
 		hexScale = 1,
+		width,
 		margin: marginScale = 0.25,
 		label = '',
 		matchKey,
@@ -335,10 +336,10 @@ export default function (input: { config: HexmapOptions }) {
 	const shim = getShim();
 
 	// Overall width of svg (from centre of left-most to centre of right-most)
-	const width = (dimensions.right - dimensions.left + shim.width) * qWidth;
+	const widthSVG = (dimensions.right - dimensions.left + shim.width) * qWidth;
 
 	// Overall height of svg (from centre of top-most to centre of bottom-most)
-	const height = (dimensions.bottom - dimensions.top) * rHeight;
+	const heightSVG = (dimensions.bottom - dimensions.top) * rHeight;
 
 	/**
 	 * Calculate the row offset given the prevailing layout
@@ -373,7 +374,7 @@ export default function (input: { config: HexmapOptions }) {
 	 */
 	function getCentre({ q, r }: HexDefinition) {
 		const x = (q - dimensions.left + rOffset(r) + shim.x) * qWidth;
-		const y = height - (r - dimensions.top + qOffset(q) + shim.y) * rHeight;
+		const y = heightSVG - (r - dimensions.top + qOffset(q) + shim.y) * rHeight;
 		return { x, y };
 	}
 
@@ -455,9 +456,10 @@ export default function (input: { config: HexmapOptions }) {
 			class="oi-map-inner"
 			viewBox="
 				${-margin - qWidth / 2} ${-margin - hexSide}
-				${width + qWidth + 2 * margin} ${height + 2 * hexSide + 2 * margin}
+				${widthSVG + qWidth + 2 * margin} ${heightSVG + 2 * hexSide + 2 * margin}
 			"
-			style="${bgColour ? `background: ${bgColour}` : ""}"
+			preserveAspectRatio="xMidYMin meet"
+			style="width:${width ? `${width}px`:"100%"};max-width:100%;margin:auto;${bgColour ? `background: ${bgColour}` : ""}"
 			xmlns="http://www.w3.org/2000/svg"
 			xmlns:xlink="http://www.w3.org/1999/xlink"
 		data-type="hex-map"
@@ -482,7 +484,7 @@ export default function (input: { config: HexmapOptions }) {
 	}
 	if(tools.slider){
 		holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
-		html += '<script>(function(root){ OI.SliderMap({"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.min==="number" ? ',"min":'+input.min : '')+(typeof input.max==="number" ? ',"max":'+input.max : '')+',"colours":{"background":"'+defaultbg+'","scale":"'+getColourScale(scale)+'"},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"data":'+JSON.stringify(hexes)+'}); })(window || this);</script>';
+		html += '<script>(function(root){ OI.SliderMap({"width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.min==="number" ? ',"min":'+input.min : '')+(typeof input.max==="number" ? ',"max":'+input.max : '')+',"colours":{"background":"'+defaultbg+'","scale":"'+getColourScale(scale)+'"},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"data":'+JSON.stringify(hexes)+'}); })(window || this);</script>';
 	}
 
 	html += '</div>';

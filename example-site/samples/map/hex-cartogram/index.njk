@@ -257,6 +257,7 @@ examples:
       
       In the previous example we used `2021` in the `tooltip` to reference the column that the `value` was taken from. But now the active column depends on the slider position. We need to refer to the current `value` differently; use the special replacement `{{ _value }}` to access the active data column.
     config:
+      width: 500
       hexjson:
         layout: odd-r
         hexes:
@@ -290,6 +291,7 @@ examples:
       tools:
         slider:
           columns: ['2016','2017','2018','2019','2020','2021']
+          width: 50%
       tooltip: "Median Private Sector Rents<br />{{ LAD21NM }} ({{ _value }}): <strong>&pound;{{ {{ _value }} | toLocaleString() }}</strong>"
       attribution: |
         Data: <a href="https://www.westyorks-ca.gov.uk/media/8790/lcr-housing-delivery-monitoring-report-2020-21-4.pdf">West Yorkshire Combined Authority</a>

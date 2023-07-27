@@ -52,6 +52,10 @@
 		if(!el){
 			el = document.createElement('div');
 			el.classList.add('oi-slider');
+			el.style.width = opt.width;
+			inner = document.createElement('div');
+			inner.classList.add('oi-slider-inner');
+			el.append(inner);
 			p.append(el);
 		}
 		if(!range){
@@ -63,14 +67,14 @@
 			range.setAttribute('min',0);
 			range.setAttribute('max',opt.columns.length-1);
 			range.setAttribute('value',idx);
-			el.append(range);
+			inner.append(range);
 			range.addEventListener('change',function(e){ _obj.updateMap(e.target.value); });
 		}
 		if(!label){
 			label = document.createElement('label');
 			label.innerHTML = opt.value;
 			label.setAttribute('for',uid+'-slider');
-			el.append(label);
+			inner.append(label);
 		}
 		this.updateMap = function(i){
 			key = opt.columns[i];
