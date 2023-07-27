@@ -53,6 +53,7 @@
 			el = document.createElement('div');
 			el.classList.add('oi-slider');
 			el.style.width = opt.width;
+			el.style.maxWidth = "100%";
 			inner = document.createElement('div');
 			inner.classList.add('oi-slider-inner');
 			el.append(inner);
