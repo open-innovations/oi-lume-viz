@@ -18,7 +18,6 @@ export function BarChart(config,csv){
 		'right':0,
 		'top':0,
 		'bottom':0,
-		'tick':5,
 		'font-size': basefs,
 		'font-weight': 'normal',
 		'legend':{
@@ -26,7 +25,7 @@ export function BarChart(config,csv){
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'rgba(255,255,255,0.9)'},
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},
-		'axis':{'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':10,'labels':{}}},
+		'axis':{'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'tick':{'size':5}},'y':{'padding':10,'labels':{},'tick':{'size':5}}},
 		'duration': '0.3s',
 		'buildSeries': function(){
 			// Series
@@ -92,7 +91,7 @@ export function BarChart(config,csv){
 			// Build y-axis labels
 			for(i = 0 ; i < csv.rows.length; i++){
 				this.opt.axis.y.labels[csv.rows.length-i-1.5] = {'label':'','grid':true};
-				this.opt.axis.y.labels[csv.rows.length-i-1] = {'label':(""+(csv.rows[i][this.opt.category]||"")).replace(/\\n/g,"\n"),'ticksize':0,'grid':false,'data':{'category':csv.rows[i][this.opt.category]},'font-weight':'bold'};
+				this.opt.axis.y.labels[csv.rows.length-i-1] = {'label':(""+(csv.rows[i][this.opt.category]||"")).replace(/\\n/g,"\n"),'tickSize':0,'grid':false,'data':{'category':csv.rows[i][this.opt.category]},'font-weight':'bold'};
 				this.opt.axis.y.labels[csv.rows.length-i-0.5] = {'label':'','grid':true};
 			}
 			return this;
@@ -102,6 +101,7 @@ export function BarChart(config,csv){
 			// Work out padding
 			pad = {'l':0,'t':0,'b':0,'r':0};
 			for(ax in this.opt.axis){
+
 				// Work out x-axis padding
 				for(l in this.opt.axis[ax].labels){
 					len = 0;
@@ -114,12 +114,12 @@ export function BarChart(config,csv){
 					lines = this.opt.axis[ax].labels[l].label.split(/\n/g);
 					if(ax=="x"){
 						// Length is based on the 
-						len = (this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + (this.opt['font-size']*lines.length) + this.opt.tick + (this.opt.axis[ax].labels[l].offset||this.opt.axis[ax].padding||0);
+						len = (this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + (this.opt['font-size']*lines.length) + this.opt.axis[ax].tick.size + (this.opt.axis[ax].labels[l].offset||this.opt.axis[ax].padding||0);
 					}else{
 						// Work out the longest line
 						for(i = 0; i < lines.length; i++){
 							// Roughly calculate the length in pixels
-							len = Math.max(len,(this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + textLength(lines[i],this.opt['font-size'],this.opt['font-weight'],this.opt['font-family']) + this.opt.tick + this.opt.axis[ax].padding);
+							len = Math.max(len,(this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + textLength(lines[i],this.opt['font-size'],this.opt['font-weight'],this.opt['font-family']) + this.opt.axis[ax].tick.size + this.opt.axis[ax].padding);
 						}
 					}
 					align = this.opt.axis[ax].labels[l].align||(ax=="x" ? "bottom":"left");

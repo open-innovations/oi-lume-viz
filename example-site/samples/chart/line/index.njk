@@ -8,7 +8,7 @@ component: chart.line
 examples:
   - title: "Basic"
     description: |
-      This is a basic line chart with one data series showing unemployment over time for 16-17 year olds (data from the ONS's <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>). The graph is auto-scaled to the data using <code>axis → x → tickSpacing</code> and <code>axis → y → tickSpacing</code>. The tick marks for each <code>axis</code> are defined using those same properties and styled with <code>axis → x → grid</code>. 
+      This is a basic line chart with one data series showing unemployment over time for 16-17 year olds (data from the ONS's <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>). The graph is auto-scaled to the data using <code>axis → x → tick→ pacing</code> and <code>axis → y → tick→ spacing</code>. The tick marks for each <code>axis</code> are defined using those same properties and styled with <code>axis → x → grid</code>. 
     config:
       data: test.data.unemploymentByAge
       series:
@@ -18,18 +18,20 @@ examples:
           colour: "#e52e36"
   - title: "Auto-generated grid"
     description: |
-      This is a basic line chart showing the same data as above. In this example we have auto-scaled each axis to the data using <code>axis → x → tickSpacing</code> and <code>axis → y → tickSpacing</code>. The <code>tickSpacing</code> values are used to auto generate tick marks which are styled with <code>axis → x → grid</code> and  <code>axis → y → grid</code>. 
+      This is a basic line chart showing the same data as above. In this example we have auto-scaled each axis to the data using <code>axis → x → tick → spacing</code> and <code>axis → y → tick → spacing</code>. The <code>tick → spacing</code> values are used to auto generate tick marks which are styled with <code>axis → x → grid</code> and  <code>axis → y → grid</code>. 
     config:
       data: test.data.unemploymentByAge
       axis:
         x:
           grid:
             show: true
-          tickSpacing: 5
+          tick:
+            spacing: 5
         y:
           grid:
             show: true
-          tickSpacing: 5
+          tick:
+            spacing: 5
       series:
         - title: 16-17
           x: Year
@@ -37,7 +39,7 @@ examples:
           colour: "#e52e36"
   - title: "Explicitly defined grid"
     description: |
-      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tickSize</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by creating virtual <code>columns</code> (each column has a <code>name</code> and <code>template</code>). We also create an interactive legend.
+      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tick → size</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by creating virtual <code>columns</code> (each column has a <code>name</code> and <code>template</code>). We also create an interactive legend.
     config:
       data: test.data.unemploymentByAge
       legend:
@@ -126,7 +128,8 @@ examples:
             - value: 45
               grid: true
               label: ''
-          tickSize: 5
+          tick:
+            size: 5
       columns:
         - name: "16-17 Label"
           template: "16-17<br />{{ Date }}: {{ 16-17→rate (%)1 | toFixed(1) }}%"
@@ -233,7 +236,8 @@ examples:
         y:
           grid:
             show: true
-          tickSpacing: 25
+          tick:
+            spacing: 25
           max: 100
       series:
         - title: Series 1
@@ -296,11 +300,13 @@ examples:
         x:
           grid:
             show: true
-          tickSpacing: 0.2
+          tick:
+            spacing: 0.2
         y:
           grid:
             show: true
-          tickSpacing: 25
+          tick:
+            spacing: 25
           max: 100
       series:
         - title: Series 1

@@ -29,10 +29,18 @@ export interface BarChartOptions {
  * @param options Options to validate
  */
 function checkOptions(options: BarChartOptions): void {
-  if (options.data === undefined) throw new TypeError("Data not provided");
-  if (options.data.length === 0) {
-    throw new TypeError("Data provided has no entries");
-  }
+	if (options.data === undefined) throw new TypeError("Data not provided");
+	if (options.data.length === 0) {
+		throw new TypeError("Data provided has no entries");
+	}
+	for(let ax in options.axis){
+		if(options.axis[ax].tick === undefined){
+			options.axis[ax].tick = {};
+		}
+		if(typeof options.axis[ax].tick.size!=="number"){
+			options.axis[ax].tick.size = 5;
+		}
+	}
 }
 
 export default function (input: {

@@ -22,7 +22,7 @@ export function LineChart(config,csv){
 			'border':{'stroke':'#000000','stroke-width':1,'fill':'rgba(255,255,255,0.9)'},
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},
-		'axis':{'x':{'padding':5,'tickSize':0.5,'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tickSize':0.5,'labels':{}}},
+		'axis':{'x':{'padding':5,'tick':{'size':0.5},'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tick':{'size':0.5},'labels':{}}},
 		'duration': '0.3s',
 		'updatePadding': function(){
 			var l,pad,ax,lines,align,titlesize,extent,lbl,tick;
@@ -50,7 +50,7 @@ export function LineChart(config,csv){
 					align = this.opt.axis[ax].labels[l].align||(ax=="x" ? "bottom":"left");
 
 					tick = 0;
-					if(typeof this.opt.axis[ax].tickSize==="number") tick = this.opt.axis[ax].tickSize;
+					if(typeof this.opt.axis[ax].tick.size==="number") tick = this.opt.axis[ax].tick.size;
 					if(typeof this.opt.axis[ax].labels[l].tickSize==="number") tick = this.opt.axis[ax].labels[l].tickSize;
 					extent += tick;
 					extent += (this.opt.axis[ax].labels[l].offset||(lbl ? this.opt.axis[ax].padding : 0)||0);

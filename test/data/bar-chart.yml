@@ -1,6 +1,6 @@
 - title: "One series - minimal config with auto scaling and auto-ticks"
   description: |
-    If you have regularly updated "live" data you may not know the scale that will be needed for the values in advance. In that case you can set a <code>axis &rarr; x &rarr; tickSpacing</code> and let the chart calculate an automatic range and tick marks.
+    If you have regularly updated "live" data you may not know the scale that will be needed for the values in advance. In that case you can set a <code>axis &rarr; x &rarr; tick &rarr; spacing</code> and let the chart calculate an automatic range and tick marks.
   config:
     data:
       - category: First category
@@ -17,7 +17,8 @@
         value: series1
     axis:
       x:
-        tickSpacing: 7.5
+        tick:
+          spacing: 7.5
 
 - title: "One series - defined scaling and ticks"
   description: |
@@ -199,7 +200,8 @@
         grid:
           stroke-dasharray: "6 2"
           stroke-width: 1
-        tickSpacing: 100
+        tick:
+          spacing: 100
       y:
         grid:
           stroke-width: 0.5
@@ -347,7 +349,8 @@
       position: top
     axis:
       x:
-        tickSpacing: 10
+        tick:
+          spacing: 10
       y:
         grid:
           stroke-width: 0.5

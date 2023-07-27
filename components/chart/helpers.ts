@@ -2,7 +2,7 @@ import { applyReplacementFilters } from "../../lib/util.js";
 import type { LineChartOptions } from "./line.ts";
 import type { ScatterChartOptions } from "./scatter.ts";
 import type { BarChartOptions } from "./bar.ts";
-import type { AxisOptions, TickOptions } from "./types.ts";
+import type { AxisOptions, TickArray } from "./types.ts";
 import { LineChart } from "./legacy/line.js";
 import { ScatterChart } from "./legacy/scatter.js";
 import { BarChart } from "./legacy/bar.js";
@@ -43,6 +43,8 @@ export function updateAxis (
 	// Process each axis
 	for(const ax in config.axis){
 
+		if(!config.axis[ax].tick){ config.axis[ax].tick = {}; }
+
 		// If either the min or max value for this axis aren't set, we will calculate them
 		if (config.axis[ax].min === undefined || config.axis[ax].max === undefined){
 			let range = {'min':Infinity,'max':-Infinity};
@@ -81,13 +83,13 @@ export function updateAxis (
 			}
 
 			// Update the min.max values
-			if(typeof config.axis[ax].tickType==="string"){
+			if(typeof config.axis[ax].tick.type==="string"){
 				config.axis[ax].min = range.min;
 				config.axis[ax].max = range.max;
 			}else{
-				if(typeof config.axis[ax].tickSpacing==="number"){
-					if (config.axis[ax].min === undefined) config.axis[ax].min = Math.floor(range.min/config.axis[ax].tickSpacing)*config.axis[ax].tickSpacing;
-					if (config.axis[ax].max === undefined) config.axis[ax].max = Math.ceil(range.max/config.axis[ax].tickSpacing)*config.axis[ax].tickSpacing;
+				if(typeof config.axis[ax].tick.spacing==="number"){
+					if (config.axis[ax].min === undefined) config.axis[ax].min = Math.floor(range.min/config.axis[ax].tick.spacing)*config.axis[ax].tick.spacing;
+					if (config.axis[ax].max === undefined) config.axis[ax].max = Math.ceil(range.max/config.axis[ax].tick.spacing)*config.axis[ax].tick.spacing;
 				}else{
 					config.axis[ax].min = range.min;
 					config.axis[ax].max = range.max;
@@ -118,6 +120,7 @@ export function calculateRange(
   config: Partial<BarChartOptions|LineChartOptions|ScatterChartOptions>,
   tickSpacing: number | undefined = undefined,
 ) {
+
 
   const seriesKeys = config.series!.map((s) => s.value!);
   const values = (config.data as Record<string, unknown>[]).map((d) =>
@@ -150,10 +153,12 @@ function countDecimals(value) {
 	return value.toString().split(".")[1].length || 0;
 }
 
-export function generateTicks(config: AxisOptions): TickOptions[] {
+export function generateTicks(config: AxisOptions): TickArray[] {
 	let ticks = [];
 
-	if(typeof config.tickType==="string"){
+	if(!config.tick){ config.tick = {}; }
+
+	if(typeof config.tick.type==="string"){
 
 		let rtn = getTimeTicks(config);
 		config.min = rtn.min.toValue();
@@ -163,26 +168,25 @@ export function generateTicks(config: AxisOptions): TickOptions[] {
 
 	}else{
 
-		const { tickSpacing } = config;
-		if (tickSpacing === undefined) return [];
+		if(config.tick.spacing === undefined) return [];
 
-		// If tickSpacing undefined, set a sensible default based on max and min
-		const max = Math.floor(config.max / tickSpacing) * tickSpacing;
-		const min = Math.floor(config.min / tickSpacing) * tickSpacing;
+		// If config.tick.spacing undefined, set a sensible default based on max and min
+		const max = Math.floor(config.max / config.tick.spacing) * config.tick.spacing;
+		const min = Math.floor(config.min / config.tick.spacing) * config.tick.spacing;
 
 		// Make sure to round the tickCount to the nearest integer
 		// to avoid floating point precision errors
-		const tickCount = Math.round(((max - min) / tickSpacing) + 1);
+		const tickCount = Math.round(((max - min) / config.tick.spacing) + 1);
 
-		// Find the precision of the tickSpacing
-		var precision = countDecimals(tickSpacing);
+		// Find the precision of the config.tick.spacing
+		var precision = countDecimals(config.tick.spacing);
 
-		ticks = Array.from(new Array(tickCount)).map<TickOptions>((_, i) => {
+		ticks = Array.from(new Array(tickCount)).map<TickArray>((_, i) => {
 			// Round the value to the required precision
-			let v = (i * tickSpacing + min).toFixed(precision);
-			let label =  (config.tickLabels ? config.tickLabels[Math.floor(config.tickLabels.length*i/tickCount)] : v);
-			if(typeof config.tickFormat==="function"){
-				label = config.tickFormat.call(this,i * tickSpacing + min);
+			let v = (i * config.tick.spacing + min).toFixed(precision);
+			let label =  (config.tick.abels ? config.tick.labels[Math.floor(config.tick.labels.length*i/tickCount)] : v);
+			if(typeof config.tick.format==="function"){
+				label = config.tick.format.call(this,i * config.tick.spacing + min);
 			}
 			return {
 				value: parseFloat(v),
@@ -222,8 +226,9 @@ export function renderScatterChart(config: ScatterChartOptions) {
 
 // Simple wrapper around existing legacy
 export function renderBarChart(config: BarChartOptions) {
+  if(!config.axis.x.tick) config.axis.x.tick = {};
   // Auto set range for x axis
-  const range = calculateRange(config, config.axis.x.tickSpacing);
+  const range = calculateRange(config, config.axis.x.tick.spacing);
   if (config.axis.x.min === undefined) config.axis.x.min = range.min;
   if (config.axis.x.max === undefined) config.axis.x.max = range.max;
 

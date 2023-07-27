@@ -10,6 +10,12 @@ export function Axis(ax,from,to,attr){
 	const fontWeight = getFontWeight();
 	const fontSize = getFontSize();
 
+	// Move old style tickSpacing/tickSize
+	if(!attr) attr = {};
+	if(!attr.tick) attr.tick = {};
+	if(typeof attr.tickSpacing!==undefined) attr.tick.spacing = attr.tickSpacing;
+	if(typeof attr.tickSize!==undefined) attr.tick.size = attr.tickSize;
+
 	// Set some defaults
 	opt = {
 		'label': 'axis',
@@ -23,10 +29,10 @@ export function Axis(ax,from,to,attr){
 		'font-weight': fontWeight,
 		'line':{'show':true,stroke:'#000000','stroke-width':1,'stroke-linecap':'round','stroke-dasharray':''},
 		'grid':{'show':false,'stroke':'#B2B2B2','stroke-width':1,'stroke-linecap':'round','stroke-dasharray':''},
-		title:{},
-		ticks:{'show':true},
-		tickSize: 5,
-		labels:{},
+		'title':{},
+		'ticks':{'show':true},
+		'tick': {'size':5},
+		'labels':{},
 		'getXY':function(x,y){ return {x:x,y:y}; }
 	};
 
@@ -109,7 +115,7 @@ export function Axis(ax,from,to,attr){
 				talign = opt.labels[t]['text-anchor']||(ax=="y" ? (align=="left" ? "end":"start") : "middle");
 				baseline = (ax=="x" ? ((align=="bottom") ? "hanging" : "text-bottom") : "middle");
 				if(opt['dominant-baseline']) baseline = opt['dominant-baseline'];
-				len = (typeof opt.labels[t].tickSize==="number" ? opt.labels[t].tickSize : opt.tickSize);
+				len = (typeof opt.labels[t].tickSize==="number" ? opt.labels[t].tickSize : opt.tick.size);
 
 				pd = (typeof opt.labels[t].offset==="number" ? opt.labels[t].offset : opt.padding);
 				x = (ax=="x" ? parseFloat(t) : (align=="left" ? xmin:xmax));

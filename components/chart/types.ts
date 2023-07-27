@@ -11,7 +11,14 @@ export interface SeriesOptions {
   errorbars: { stroke?: string; "stroke-width": number };
 }
 
+
 export interface TickOptions {
+	spacing?: number|string;
+	type?: string;
+	format?: string;
+	size?: number;
+}
+export interface TickArray {
   /** Position on the axis of the tick */
   value: number;
   /** Label for the tick */
@@ -26,9 +33,9 @@ export interface AxisOptions {
   /** Maxiumum number on axis. Defaults to largest of 0 or maximum value of presented of data. */
   max: number;
   /** Size of ticks for auto generated or rounding */
-  tickSpacing: number;
-  /** Ticks to display on axis. Auto generated if ommitted and tickSpacing provided. Otherwise defaults to empty. */
-  ticks: TickOptions[];
+  tick: TickOptions;
+  /** Ticks to display on axis. Auto generated if ommitted and tick.spacing provided. Otherwise defaults to empty. */
+  ticks: TickArray[];
   /** Font weight for the axis */
   "font-weight": FontWeightOptions;
 }
