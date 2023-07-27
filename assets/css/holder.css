@@ -9,6 +9,8 @@
 	clip-path: inset(50%) !important;
 	white-space: nowrap !important;
 	display: inline-block;
+	top: 0;
+	left: 0;
 }
 .oi-viz .skip-link:focus, .oi-viz .skip-link:active {
 	width: auto !important;
@@ -21,4 +23,4 @@
 	clip-path: none !important;
 	white-space: inherit !important;
 }
-.oi-viz .skip-link-bottom { bottom: 0; }
+.oi-viz .skip-link-bottom { bottom: 0; top: unset; }
