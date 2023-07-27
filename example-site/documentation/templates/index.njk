@@ -15,11 +15,12 @@ value: 1500
 <p>You can also use the following filters:</p>
 
 <ul>
-	<li><code>toFixed(n)</code> - to limit a value to n decimal places</li>
-	<li><code>multiply(n)</code> - to multiply a value by n</li>
-	<li><code>toLocaleString()</code> - to use the locale's (of the server) preferred formatting for a value</li>
 	<li><code>colourScale(scale,min,max)</code> - get a colour to, for example, use as a background style</li>
 	<li><code>contrastColour</code> - get a contrasting colour (black or white)</li>
+	<li><code>multiply(n)</code> - to multiply a value by n</li>
+	<li><code>strftime("%Y-%m-%d")</code> - convert an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO8601 date</a> or Unix timestamp into <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a></li>
+	<li><code>toFixed(n)</code> - to limit a value to n decimal places</li>
+	<li><code>toLocaleString()</code> - to use the locale's (of the server) preferred formatting for a value</li>
 </ul>
 
 <p>For instance, to convert <code>{% raw %}{{ {% endraw %} {{ value }}{% raw %} }}{% endraw %}</code> to a locale string:</p>
