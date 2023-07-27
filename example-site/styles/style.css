@@ -167,3 +167,33 @@ footer hr.about { margin: 32px 0; border: 0; border-top:1px solid #444; }
 
 .icon-inline { width: 2em; height: 2em; display: table-cell; vertical-align: middle; margin-right: 0.5em; }
 .oi-viz .oi-attribution { text-align: right; font-size: 0.8em; color: #777; }
+
+.oi-slider { display: flex; align-items: center; justify-content: flex-end; }
+.oi-slider-control {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 0.5em;
+	border-radius: 0.25em;
+	background: #d3d3d3;
+	outline: none;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+	margin-right: 1em;
+}
+
+
+.oi-slider-control:focus::-webkit-slider-thumb, .oi-slider-control:focus::-moz-range-thumb {
+	border: 4px solid black;
+}
+.oi-slider-control::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+}
+.oi-slider-control::-webkit-slider-thumb, .oi-slider-control::-moz-range-thumb {
+	width: 1.5em;
+	height: 1.5em;
+	border: 0;
+	border-radius: 50%;
+	background: #888;
+	cursor: pointer;
+}
