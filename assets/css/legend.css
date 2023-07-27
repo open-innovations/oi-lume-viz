@@ -1,9 +1,9 @@
 /* OI map components */
 .oi-legend { z-index: 1000; }
 .oi-legend-inner { color: #555; }
-.oi-legend-inner .oi-legend-icon { display: inline-block; height: 1.25em; aspect-ratio: 1 / 1; margin-right: 0.25em; opacity: 1; }
+.oi-legend-inner .oi-legend-icon { display: inline-block; height: 1.25em; aspect-ratio: 1 / 1; margin-right: 0.25em; opacity: 1; float: left; }
 .oi-legend-inner .oi-legend-item { line-height: 1.25em; display: inline-block; padding: 0.25em; }
-.oi-legend-inner .oi-legend-item .oi-legend-icon { display: table-cell; vertical-align: middle; }
+.oi-legend-inner .oi-legend-item svg.oi-legend-icon { display: table-cell; vertical-align: middle; float: none; }
 .oi-legend-top { top: 0; text-align: center; }
 .oi-legend-right { right: 0; }
 .oi-legend-bottom { bottom: 0; text-align: center; }

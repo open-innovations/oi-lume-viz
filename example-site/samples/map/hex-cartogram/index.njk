@@ -213,7 +213,7 @@ examples:
       tooltip: "{{ LAD21NM }}<br />Aged 15 and under: {{ Aged 15 years and under | toLocaleString() }}"
   - title: "Filter hexes"
     description: |
-      We can add an interactive `filter` to our hex map. We can set `filter → label` to the `name` of a column in the data - this defines the text used in the filter drop-down list. We can set the maximum number of results to show in the filter drop down using `filter → max`.
+      We can add an interactive `filter` to our hex map. We can set `tools → filter → label` to the `name` of a column in the data - this defines the text used in the filter drop-down list. We can set the maximum number of results to show in the filter drop down using `tools → filter → max`.
     config:
       hexjson:
         layout: odd-r
@@ -244,8 +244,9 @@ examples:
           template: "{{ LAD21NM }} ({{ code }})"
       value: colour
       matchKey: code
-      filter:
-        label: "filterLabel"
+      tools:
+        filter:
+          label: "filterLabel"
       tooltip: "{{ LAD21NM }}<br />Aged 15 and under: {{ Aged 15 years and under | toLocaleString() }}"
   - title: "Big example"
     description: |
@@ -288,6 +289,7 @@ examples:
             label: "West Midlands"
       hexjson: hexjson.localauthorities
       value: colour
-      filter:
-        label: "filterLabel"
+      tools:
+        filter:
+          label: "filterLabel"
 ---

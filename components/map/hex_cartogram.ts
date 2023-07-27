@@ -67,7 +67,7 @@ type HexmapOptions = {
   titleProp: string;
   value?: string;
   colourValueProp?: string;
-  filter?: { label?: string; };
+  tools?: { filter?: { label?: string; } };
   legend: { position: string; items: Record<number, string> };
 };
 
@@ -94,7 +94,7 @@ export default function (input: { config: HexmapOptions }) {
     value = "",
     colourValueProp,
     legend,
-    filter,
+    tools,
   } = input.config;
 
   // Set up some variables
@@ -441,10 +441,9 @@ export default function (input: { config: HexmapOptions }) {
     legendDiv += l+'</div>';
   }
 
-  var filterdata = {};
-  for(var id in hexes){
-    filterdata[id] = (filter && filter.label && filter.label in hexes[id] ? hexes[id][filter.label] : '');
-  }
+  var holder = new VisualisationHolder(input.config);
+  holder.addDependencies(['/js/map.js','/css/maps.css','/js/tooltip.js']);
+  holder.addClasses('oi-map oi-map-hex');
 
   var html = `<div class="oi-map-holder"><div class="oi-map-inner"><svg
       id="hexes-${uuid}"
@@ -466,13 +465,18 @@ export default function (input: { config: HexmapOptions }) {
       ${Object.values(hexes).map(drawHex).join("")}
     </g></svg>`;
   html += '</div>';
-  if(filter) html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
-  html += '</div>';
 
-  var holder = new VisualisationHolder(input.config);
-  holder.addDependencies(['/js/map.js','/css/maps.css','/js/tooltip.js']);
-  if(input.config.filter) holder.addDependencies(['/js/map-filter.js']);
-  holder.addClasses('oi-map oi-map-hex');
+  if(!tools) tools = {};
+  if(tools.filter){
+    holder.addDependencies(['/js/map-filter.js'])
+    var filterdata = {};
+    for(var id in hexes){
+      filterdata[id] = (tools.filter.label && tools.filter.label in hexes[id] ? hexes[id][tools.filter.label] : '');
+    }
+    html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
+  }
+
+  html += '</div>';
 
   return holder.wrap(html);
 }
