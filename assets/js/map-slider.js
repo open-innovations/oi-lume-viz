@@ -104,6 +104,7 @@
 				// Update tooltip
 				hexes[id].title.innerHTML = applyReplacementFilters(opt.tooltip,hexes[id].data);
 			}
+			if(OI.Tooltips) OI.Tooltips.update();
 		};
 		return this;
 	}

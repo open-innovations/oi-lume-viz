@@ -1,5 +1,5 @@
 /*
-	Open Innovations Tooltip v0.1
+	Open Innovations Tooltip v0.2
 	Helper function to add tooltips. A suitable candidate must:
 	  - be in an SVG
 	  - have a <title> child
@@ -148,6 +148,7 @@
 			arr.style.transform = 'translate3d(calc(-50% - ' + shift + 'px),0,0)';
 
 			if(typeof attr.show==="function") attr.show.call(this,pt,attr);
+			attr._parent.active = this;
 
 			return this;
 		};
@@ -177,6 +178,7 @@
 		this.clear = function(){
 			if(tip && tip.parentNode) tip.parentNode.removeChild(tip);
 			tip = null;
+			this.active = null;
 			return this;
 		};
 
@@ -195,6 +197,11 @@
 			tips.push(new Tooltip(pt,attr));
 			return tips[tips.length-1];
 		};
+
+		this.update = function(){
+			if(this.active) this.active.show();
+		};
+
 		return this;
 	}
 	if(!root.OI.Tooltips) root.OI.Tooltips = new Tooltips();
