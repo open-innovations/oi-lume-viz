@@ -70,7 +70,7 @@ export default function (input: {
 	}
 
 	// Can't sort tables with merged cells, sorry
-	if(merging && sortable) sortable = false;
+	//if(merging && sortable) sortable = false;
 
 	for(let row = 0; row < options.data.length; row++){
 		// Create an array of columns for this row
@@ -141,7 +141,7 @@ export default function (input: {
 	const table = html.join('');
 
 	var holder = new VisualisationHolder(options);
-	if(sortable) holder.addDependencies(['/js/table-sort.min.js']);
+	if(sortable) holder.addDependencies(['/js/table-sort.js']);
 	holder.addClasses(['oi-table']);
 	return holder.wrap(table);
 }

@@ -8,7 +8,7 @@ export const assets = [
   'js/map-filter.js',
   'js/map-slider.js',
   'js/tabbed.js',
-  'js/table-sort.min.js',
+  'js/table-sort.js',
   'js/tooltip.js',
   'js/tree-map.js',
   'js/zoomable.js',
