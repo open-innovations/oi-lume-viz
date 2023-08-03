@@ -3,6 +3,7 @@ import { contrastColour } from '../lib/colour/contrast.ts';
 import { replaceNamedColours } from '../lib/colour/parse-colour-string.ts';
 import { ColourScale } from '../lib/colour/colour-scale.ts';
 import { clone } from "../lib/util/clone.ts";
+import { VisualisationHolder } from '../lib/holder.js';
 
 export const css = `
 /* OI table component */
@@ -56,12 +57,20 @@ export default function (input: {
 	// Create a structure to mimic the table (row indexing)
 	let cells = new Array(options.data.length);
 	let scales = new Array(options.columns.length);
+	let sortable = false;
+	let merging = false;
+
 	for(let col = 0; col < options.columns.length; col++){
 		scales[col] = {};
 		if(options.columns[col].scale){
 			scales[col] = {'scale':ColourScale(options.columns[col].scale),'min':(typeof options.columns[col].min==="number" ? options.columns[col].min : Infinity),'max':(typeof options.columns[col].max=="number" ? options.columns[col].max : -Infinity)};
 		}
+		if(options.columns[col].sortable) sortable = true;
+		if(options.columns[col].mergerows) merging = true;
 	}
+
+	// Can't sort tables with merged cells, sorry
+	if(merging && sortable) sortable = false;
 
 	for(let row = 0; row < options.data.length; row++){
 		// Create an array of columns for this row
@@ -85,9 +94,9 @@ export default function (input: {
 	let sty = '';
 	if(options.width) sty += 'width:'+options.width+';';
 
-	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+'><tr>'];
+	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+(sortable ? ' class="table-sort table-arrows"':'')+'><tr>'];
 	for(let col = 0; col < options.columns.length; col++){
-		html.push('<th>'+(options.columns[col].name||"")+'</th>');
+		html.push('<th'+(sortable && !options.columns[col].sortable ? ' class="disable-sort"':'')+'>'+(options.columns[col].name||"")+'</th>');
 	}
 	html.push('</tr>');
 	
@@ -131,7 +140,10 @@ export default function (input: {
 
 	const table = html.join('');
 
-	return `<div class="oi-viz oi-table">${table}</div>`;
+	var holder = new VisualisationHolder(options);
+	if(sortable) holder.addDependencies(['/js/table-sort.min.js']);
+	holder.addClasses(['oi-table']);
+	return holder.wrap(table);
 }
 
 export type TableOptions = {
