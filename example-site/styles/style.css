@@ -166,7 +166,7 @@ footer hr.about { margin: 32px 0; border: 0; border-top:1px solid #444; }
 .oi-table table td, .oi-table table th { border: 1px solid black; padding: 0 0.25em; line-height: 1.5em; }
 
 .icon-inline { width: 2em; height: 2em; display: table-cell; vertical-align: middle; margin-right: 0.5em; }
-.oi-viz .oi-attribution { text-align: right; font-size: 0.8em; color: #777; }
+.oi-viz .oi-attribution { text-align: right; font-size: 0.8em; color: #555; }
 
 .oi-slider { margin:auto; }
 .oi-slider-inner { display: flex; align-items: center; justify-content: flex-end; }

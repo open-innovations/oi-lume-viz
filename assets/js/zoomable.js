@@ -175,7 +175,7 @@
 				marks.push(new L.marker([labels[i].latitude,labels[i].longitude],{
 					icon: new L.divIcon({
 						"className": "oi-label",
-						"html": '<div><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMin meet" viewBox="0 0 12 12" overflow="visible"><text x="6" y="6" text-anchor="middle" dominant-baseline="middle" fill="'+labels[i]['colour']+'" stroke="'+labels[i]['border']+'" stroke-width="25%" paint-order="stroke"><tspan style="font-size:'+(labels[i]['font-size'])+'px;font-weight:'+labels[i]['font-weight']+';font-family:'+labels[i]['font-family']+';">'+(labels[i].name||"")+'</tspan></text></svg></div>'
+						"html": '<div><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMin meet" viewBox="0 0 12 12" overflow="visible" aria-label="'+(labels[i].name||"")+'"><text x="6" y="6" text-anchor="middle" dominant-baseline="middle" fill="'+labels[i]['colour']+'" stroke="'+labels[i]['border']+'" stroke-width="25%" paint-order="stroke"><tspan style="font-size:'+(labels[i]['font-size'])+'px;font-weight:'+labels[i]['font-weight']+';font-family:'+labels[i]['font-family']+';">'+(labels[i].name||"")+'</tspan></text></svg></div>'
 					})
 				}));
 			}

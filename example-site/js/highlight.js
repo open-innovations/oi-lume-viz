@@ -16,7 +16,7 @@
 	var styles = document.createElement('style');
 	styles.innerHTML = 	`.comment { color: #444; }
 	.oi-keyword { color: #D60303; }
-	.oi-string { color: #0DBC37; }
+	.oi-string { color: #087823; }
 	.oi-title { color: #722EA5; }
 	.oi-attr { color: #2f529f; }
 	.oi-built_in, .oi-literal { color: #D60303; }

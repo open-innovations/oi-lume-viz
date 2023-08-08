@@ -19,6 +19,7 @@
 	function FilterMap(p,opt,data){
 
 		var el,areas,a,as,btn,inp,results,hexes = {};
+		var id = "filter-" + Math.random().toString(16).slice(2);
 
 		if(!opt) opt = {};
 		if(!opt.max) opt.max = 8;
@@ -41,7 +42,7 @@
 		if(!el){
 			el = document.createElement('div');
 			el.classList.add('oi-filter');
-			el.innerHTML = '<label for="oi-filter-input" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-filter-input" id="oi-filter-input" value="" placeholder="e.g. '+areas[0].data.label+'"><ul class="oi-filter-results"></ul>';
+			el.innerHTML = '<label for="oi-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-'+id+'" id="oi-'+id+'" value="" placeholder="e.g. '+areas[0].data.label+'"><ul class="oi-filter-results"></ul>';
 			p.prepend(el);
 		}
 		btn = el.querySelector('.oi-filter-button');

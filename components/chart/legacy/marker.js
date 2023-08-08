@@ -22,9 +22,23 @@ function drawPolygon(n,cx,cy,r){
 	return p;
 }
 
-function roundNumber(v){
-	if(typeof v==="number") return parseFloat(v.toFixed(3));
-	else return v;
+function roundNumber(v,n){
+	if(typeof n!=="number" || n < 0) n = 3;
+	if(typeof v==="string"){
+		// Try to parse it into a number
+		v = parseFloat(v);
+		if(isNaN(v)){
+			console.log('Not a number:',v,typeof v);
+			throw new TypeError('NaN in roundNumber()');
+		}
+	}
+	if(typeof v==="number" && !isNaN(v)){
+		return parseFloat(v.toFixed(n));
+	}else{
+		console.log('The value passed to roundNumber ('+v+') is of type '+(typeof v));
+		throw new TypeError('Not a number');
+		return v;
+	}
 }
 
 // Main marker function.
@@ -53,8 +67,8 @@ export function Marker(attr){
 				setAttr(this.el,{'r':s/2});
 			},
 			'setPosition': function(x,y){
-				if(anim) anim.set({'cx':{'from':roundNumber(origin.x||null),'to':roundNumber(x||null)},'cy':{'from':roundNumber(origin.y||null),'to':roundNumber(y||null)}});
-				else setAttr(this.el,{'cx':roundNumber(x),'cy':roundNumber(y)});
+				if(anim) anim.set({'cx':{'from':roundNumber(origin.x||0,2),'to':roundNumber(x||0,2)},'cy':{'from':roundNumber(origin.y||0,2),'to':roundNumber(y||0,2)}});
+				else setAttr(this.el,{'cx':roundNumber(x,2),'cy':roundNumber(y,2)});
 				if(opts.size) setAttr(this.el,{'r':opts.size/2});
 			}
 		},
@@ -173,6 +187,7 @@ export function Marker(attr){
 	// If a marker is defined and it isn't a string, process it
 	if(attr.marker && typeof attr.marker!=="string"){
 		var div = document.createElement('div');
+		div.classList.add('test');
 		div.innerHTML = attr.marker.svg||"";
 		this.el = div.firstChild;
 		markers.icon = attr.marker;

@@ -463,12 +463,11 @@ export default function (input: { config: HexmapOptions }) {
 			xmlns="http://www.w3.org/2000/svg"
 			xmlns:xlink="http://www.w3.org/1999/xlink"
 		data-type="hex-map"
-			role="list"
 		vector-effect="non-scaling-stroke"
 			aria-labelledby="title-${uuid}"
 		>
 			<title id="title-${uuid}">${title}.</title>
-		<g class="data-layer">
+		<g class="data-layer" role="list">
 			${Object.values(hexes).map(drawHex).join("")}
 		</g></svg>`;
 	html += '</div>';
