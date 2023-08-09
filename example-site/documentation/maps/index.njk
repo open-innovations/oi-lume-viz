@@ -1,0 +1,63 @@
+---
+layout: layout/base.njk
+title: Map tiles
+tileLayers:
+  - "CartoDB.Positron"
+  - "CartoDB.PositronOnlyLabels"
+  - "CartoDB.DarkMatter"
+  - "CartoDB.DarkMatterNoLabels"
+  - "CartoDB.Voyager"
+  - "CartoDB.VoyagerNoLabels"
+  - "CartoDB.VoyagerOnlyLabels"
+  - "ESRI.WorldImagery"
+  - "OpenStreetMap.Mapnik"
+  - "Stadia.OSMBright"
+---
+
+		<h1>{{ title }}</h1>
+		<p>It is possible to set various default tileLayer properties for zoomable map visualisations</p>
+
+		<ol>
+			<li><a href="#customise-tileLayer">Setting default tile layer</a></li>
+			<li><a href="#customise-tileLayers">Setting new tile layers</a></li>
+		</ol>
+
+	</div>
+</div>
+<section class="padded tallpadded">
+	<div class="holder">
+
+		<h2>Setting default tile layer{{ comp.anchor({ ref: "customise-tileLayer" }) | safe }}</h3>
+		<p>The default tile layer is <code>CartoDB.Positron</code>. You can change it to one of
+		{% for layer in tileLayers %}{% if loop.index0 > 0 %}, {% endif %}<code>{{ layer }}</code>{% endfor %}
+		by updating <code>_config.[js|ts]</code> with e.g.:</p>
+		<pre><code class="hljs language-json">site.use(oiComponents({
+	...
+	"map": {
+		"tileLayer": "CartoDB.DarkMatter"
+	},
+	...
+}));</code></pre>
+
+		<h2>Setting new tile layers{{ comp.anchor({ ref: "customise-tileLayers" }) | safe }}</h3>
+		<p>If you would like to set your default tile layer to something else, you can add it to the tile layers list by updating <code>_config.[js|ts]</code> e.g.:</p>
+		<pre><code class="hljs language-json">site.use(oiComponents({
+	...
+	"map": {
+		"tileLayers": {
+			"OpenPlanetary.Mars": {
+				"url": "https://cartocdn-gusc.global.ssl.fastly.net/opmbuilder/api/v1/map/named/opm-mars-basemap-v0-2/all/{z}/{x}/{y}.png",
+				"attribution": "Tiles &copy; OpenPlanetaryMapd"
+			},
+		},
+		"tileLayer": "OpenPlanetary.Mars"
+	},
+	...
+}));</code></pre>
+		<p>This defines a tile layer named "OpenPlanetary.Mars" and then sets that as the default.</p>
+
+
+
+	</div>
+</section>
+<div><div>

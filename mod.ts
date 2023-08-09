@@ -5,6 +5,7 @@ import { setAssetPrefix } from "./lib/util/paths.ts";
 import { keys } from "https://deno.land/x/nunjucks@3.2.3-2/src/lib.js";
 import { setDefaultColours } from "./lib/colour/colours.ts";
 import { setDefaultFonts } from "./lib/font/fonts.ts";
+import { setDefaultMap } from "./lib/tiles/layers.ts";
 
 /**
  * Options interface specifying available options to the module
@@ -68,6 +69,9 @@ export default function (options?: Options) {
 
   // Set the default font options
   if(options?.font) setDefaultFonts(options.font);
+
+  // Set the default map options
+  if(options?.map) setDefaultMap(options.map);
 
   // Update the assetPrefix to allow for correct referencing of dependencies
   setAssetPrefix(assetPath);

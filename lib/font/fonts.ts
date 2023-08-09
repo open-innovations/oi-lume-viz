@@ -33,9 +33,9 @@ let defaultWeight = 'normal';
 let defaultSize = 16;
 
 /**
- * Function to update the colour scales available to the site
- * @param key Key of the new scale
- * @param scale The CSS code of the new scale
+ * Function to update the fonts available to the site
+ * @param key Key of the new font
+ * @param props Define the new font metrics
  */
 export function updateFonts(key: string, props: FontOptions) {
 	fontDefinitions[key] = props;
@@ -75,7 +75,7 @@ export function setDefaultFonts({
 	fonts?: Record<string, FontOptions>;
 }){
 
-	// If colour names are provided when instantiating the plugin, map these into the default named colours.
+	// If fonts are provided when instantiating the plugin, map these into the defaults.
 	if(fonts){
 		for(const [key, props] of Object.entries(fonts) ) {
 			updateFonts(key, props);

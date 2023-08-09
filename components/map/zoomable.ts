@@ -14,11 +14,6 @@ import { GeoJson, dataLayer, backLayer, gratLayer, lablLayer, markLayer } from "
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
 
-// This is a simple scale which returns the same value it was sent
-// Useful if the hexmap has a colour attribute
-const identityColourScale = (s: string) => s;
-
-
 type ZoomablemapOptions = {
 	bgColour: string;
 	scale: ColourScaleDefinition;

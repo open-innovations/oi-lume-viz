@@ -5,6 +5,7 @@ import { Colour, ColourScale } from "../../../lib/colour/colours.ts";
 import { VisualisationHolder } from '../../../lib/holder.js';
 import { getBackgroundColour } from "../../../lib/colour/colour.ts";
 import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
+import { getTileLayer } from '../../../lib/tiles/layers.ts';
 import { getIcons } from '../../../lib/icon/icons.ts';
 import { d3, d3geo } from "../../../lib/external/d3.ts";
 import { replaceNamedColours, parseColourString } from '../../../lib/colour/parse-colour-string.ts';
@@ -33,17 +34,7 @@ export function ZoomableMap(opts){
 		'markers': [],
 		'data-type': 'zoomable-map',
 		'attribution': '',
-		'tileLayer': {
-			'url': 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-			'maxZoom': 19,
-			'attribution': "Tiles: &copy; OpenStreetMap/CartoDB",
-			'subdomains': "abcd"
-		},
-		'labelLayer': {
-			'url': 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
-			'attribution': "",
-			'pane': "labels"
-		},
+		'tileLayer': getTileLayer(),
 		'layers': []
 	};
 	mergeDeep(config,opts);
@@ -121,14 +112,15 @@ export function ZoomableMap(opts){
 		for(l = 0; l < config.layers.length; l++){
 			if(config.layers[l].type=="background" || config.layers[l].type=="tile") needsTiles = false;
 		}
+		
 		// If there is no background layer or tile layer we add some by default
-		if(needsTiles) html.push('	map.setTiles(' + JSON.stringify(config.tileLayer) + ');\n');
+		if(needsTiles) html.push('	map.setTiles(' + JSON.stringify(getTileLayer(config.tileLayer)) + ');\n');
 
 		for(l = 0; l < config.layers.length; l++){
 	
 			if(config.layers[l].type=="tile"){
 
-				html.push('	map.setTiles(' + JSON.stringify(config.layers[l].props) + ');\n');
+				html.push('	map.setTiles(' + JSON.stringify(getTileLayer(config.layers[l].props)) + ');\n');
 
 			}else if(config.layers[l].type=="background"){
 
