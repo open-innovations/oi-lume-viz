@@ -266,6 +266,28 @@ examples:
           longitude: -1.0808
         - latitude: 53.9617
           longitude: -2.0201
+  - title: Use a different background tile set
+    description: |
+      This example is similar to an earlier one but we set the `tileLayer` to `CartoDB.DarkMatter`. The built-in options include: <code>CartoDB.Positron</code>, <code>CartoDB.PositronOnlyLabels</code>, <code>CartoDB.DarkMatter</code>, <code>CartoDB.DarkMatterNoLabels</code>, <code>CartoDB.Voyager</code>, <code>CartoDB.VoyagerNoLabels</code>, <code>CartoDB.VoyagerOnlyLabels</code>, <code>ESRI.WorldImagery</code>, <code>OpenStreetMap.Mapnik</code>, <code>Stadia.OSMBright</code> but you can also define <a href="/documentation/maps/">your own site-wide tileLayer defaults</a>.
+    config:
+      data:
+        - { code: "E08000016", name: "Barnsley", colour: "#E6007C" }
+        - { code: "E08000032", name: "Bradford", colour: "#FF6700" }
+        - { code: "E08000033", name: "Calderdale", colour: "#0DBC37" }
+        - { code: "E07000163", name: "Craven", colour: "#178CFF" }
+        - { code: "E07000165", name: "Harrogate", colour: "#2f529f" }
+        - { code: "E08000034", name: "Kirklees", colour: "#722EA5" }
+        - { code: "E08000035", name: "Leeds", colour: "#F9BC26" }
+        - { code: "E07000169", name: "Selby", colour: "#1DD3A7" }
+        - { code: "E08000036", name: "Wakefield", colour: "#EF3AAB" }
+        - { code: "E06000014", name: "York", colour: "#F92626" }
+      geojson:
+        key: LAD21CD
+        data: geojson.leeds_city_region
+      key: code
+      tooltip: name
+      value: colour
+      tileLayer: "CartoDB.DarkMatter"
   - title: Add a background
     description: |
       A non-interactive `background` can be added as a layer behind the interactive map. It should contain GeoJSON `data`. It can have its `colour` set. We can also adjust the map `bounds` if we'd like the view to cover an area smaller/larger than the bounds of the data. Note that the exact bounding of map will also depend on the aspect ratio that the map ends up on the end-user's display.

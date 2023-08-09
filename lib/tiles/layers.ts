@@ -84,7 +84,6 @@ export function getTileLayers(): Record<string, string> {
 }
 
 export function getTileLayer(key?: string, TileLayerOptions): TileLayerOptions {
-	if(typeof key==="undefined") key = defaultTileLayer;
 	if(typeof key==="object") return key;
 	if(typeof key==="string"){
 		if(key in TileLayerDefinitions) return TileLayerDefinitions[key];
@@ -92,6 +91,7 @@ export function getTileLayer(key?: string, TileLayerOptions): TileLayerOptions {
 			throw new Error('TileLayer ' + key + ' not registered. You should add to tileLayers first.');
 		}
 	}
+	return TileLayerDefinitions[defaultTileLayer]
 }
 
 export function setDefaultMap({
@@ -118,6 +118,5 @@ export function setDefaultMap({
 			updateTileLayer(key, props);
 		}
 	}
-
 
 }

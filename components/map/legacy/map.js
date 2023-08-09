@@ -34,11 +34,10 @@ export function ZoomableMap(opts){
 		'markers': [],
 		'data-type': 'zoomable-map',
 		'attribution': '',
-		'tileLayer': getTileLayer(),
 		'layers': []
 	};
 	mergeDeep(config,opts);
-
+	
 	cs = ColourScale(config.scale);
 
 	for(l = 0; l < config.layers.length; l++){
