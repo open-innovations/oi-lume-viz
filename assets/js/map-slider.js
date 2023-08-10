@@ -179,7 +179,7 @@
 				rtn = bits[b].match(/toFixed\(([0-9]+)\)/);
 				if(p1 && rtn && rtn.length == 2){
 					if(typeof p1==="string") p1 = parseFloat(p1);
-					p1 = p1.toFixed(rtn[1]);
+					if(typeof p1==="number") p1 = p1.toFixed(rtn[1]);
 				}
 
 				// slice(a,b)
