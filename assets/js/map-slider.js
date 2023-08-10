@@ -215,8 +215,6 @@
 					if(typeof p1==="string") p1 = parseFloat(p1);
 					if(typeof p1==="number") p1 = p1.toLocaleString(rtn[1]||{});
 					else p1 = "";
-				}else{
-					p1 = "";
 				}
 
 				// strftime("%Y-%m-%d")
