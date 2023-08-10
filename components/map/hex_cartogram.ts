@@ -382,8 +382,8 @@ export default function (input: { config: HexmapOptions }) {
 	const drawHex = (config: HexDefinition) => {
 		const hexId = hexCounter();
 		const { x, y } = getCentre(config);
-		const valuecol = <number> config[value] || 0;
-
+		const valuecol = <number> config[value]||0;
+		
 		const labelProp = <string> config[titleProp];
 		let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
 		let tooltipText = tooltipProcessor(config, <string> (typeof tooltip==="function" ? tooltip(labelProp, valuecol) : tooltip));
@@ -407,7 +407,7 @@ export default function (input: { config: HexmapOptions }) {
 		}
 		// TODO(@giles) Work out what the heck is going on!
 		let fill = fillColour(colourValue as never);
-		if(typeof fill!=="string") fill = defaultbg;
+		if(isNaN(config[value])) fill = defaultbg;
 
 		// TODO(@gilesdring) this only supports pointy-top hexes at the moment
 		return `<g
@@ -448,10 +448,10 @@ export default function (input: { config: HexmapOptions }) {
 		vector-effect="non-scaling-stroke"
 			aria-labelledby="title-${uuid}"
 		>
-			<title id="title-${uuid}">${title}.</title>
-		<g class="data-layer" role="list">
-			${Object.values(hexes).map(drawHex).join("")}
-		</g></svg>`;
+			<title id="title-${uuid}">${title}.</title>`;
+	html += '<g class="data-layer" role="list">';
+	html += Object.values(hexes).map(drawHex).join("");
+	html += '</g></svg>';
 	html += '</div>';
 
 	if(!tools) tools = {};
@@ -465,7 +465,7 @@ export default function (input: { config: HexmapOptions }) {
 	}
 	if(tools.slider){
 		holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
-		html += '<script>(function(root){ OI.SliderMap({"width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.min==="number" ? ',"min":'+input.min : '')+(typeof input.max==="number" ? ',"max":'+input.max : '')+',"colours":{"background":"'+defaultbg+'","scale":"'+getColourScale(scale)+'"},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"data":'+JSON.stringify(hexes)+'}); })(window || this);</script>';
+		html += '<script>(function(root){ OI.SliderMap({"width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'","scale":"'+getColourScale(scale)+'"},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"data":'+JSON.stringify(hexes)+'}); })(window || this);</script>';
 	}
 
 	html += '</div>';

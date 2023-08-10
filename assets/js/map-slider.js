@@ -83,19 +83,27 @@
 			if(!opt.key) console.error('No key');
 			var min,max,v,id,colour;
 			// Find range of data
-			min = Infinity;
-			max = -Infinity;
-			for(id in hexes){
-				min = Math.min(min,hexes[id].data[key]);
-				max = Math.max(max,hexes[id].data[key]);
+			if(opt.min) min = opt.min;
+			else{
+				min = Infinity;
+				for(id in hexes) min = Math.min(min,hexes[id].data[key]);
+			}
+			if(opt.max) max = opt.max;
+			else{
+				max = -Infinity;
+				for(id in hexes) max = Math.max(max,hexes[id].data[key]);
 			}
 			if(typeof opt.min==="number") min = opt.min;
 			if(typeof opt.max==="number") max = opt.max;
 			for(id in hexes){
 
 				// Update colours
-				v = (hexes[id].data[key]-min)/(max-min);
-				colour = cs(v);
+				if(typeof hexes[id].data[key]==="number"){
+					v = (hexes[id].data[key]-min)/(max-min);
+					colour = cs(v);
+				}else{
+					colour = opt.defaultbg||"#bbb";
+				}
 				hexes[id].path.setAttribute('fill',colour);
 				hexes[id].label.setAttribute('fill',OI.Colour(colour).contrast);
 
@@ -205,7 +213,10 @@
 				rtn = bits[b].match(/toLocaleString\(([^\)]*)\)/);
 				if(p1 && rtn){
 					if(typeof p1==="string") p1 = parseFloat(p1);
-					p1 = p1.toLocaleString(rtn[1]||{});
+					if(typeof p1==="number") p1 = p1.toLocaleString(rtn[1]||{});
+					else p1 = "";
+				}else{
+					p1 = "";
 				}
 
 				// strftime("%Y-%m-%d")
