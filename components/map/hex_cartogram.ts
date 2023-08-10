@@ -139,8 +139,7 @@ export default function (input: { config: HexmapOptions }) {
 		);
 
 		// In case it was a CSV file loaded
-		if(copyconfig.data.rows) copyconfig.data = input.config.data.rows;
-
+		if(copyconfig.data.rows) copyconfig.data = copyconfig.data.rows;
 	}
 
 	// If there is no data specified we will build it from the hexes
@@ -429,23 +428,6 @@ export default function (input: { config: HexmapOptions }) {
 					>${labelText}</text>
 			</g>`;
 	};
-
-	// Make the legend here
-	let legendDiv = '';
-	if(legend){
-		let position = legend.position||"bottom right";
-		position = position.replace(/(^| )/g,function(m,p1){ return p1+'leaflet-'; });
-		legendDiv = '<div class="'+position+'">';
-		var l = '<div class="oi-legend leaflet-control">';
-		if(typeof legend.title==="string") l += '<h3>'+legend.title+'</h3>';
-		if(legend.items){
-			for(var i = 0; i < legend.items.length; i++){
-				l += '<div class="legend-item"><i style="background:'+fillColour(legend.items[i].value)+'" title="'+legend.items[i].value+'"></i> ' + legend.items[i].label + '</div>';
-			}
-		}
-		l += '</div>';
-		legendDiv += l+'</div>';
-	}
 
 	var holder = new VisualisationHolder(input.config);
 	holder.addDependencies(['/js/map.js','/css/maps.css','/js/tooltip.js']);
