@@ -22,6 +22,16 @@
 		cs = OI.ColourScale(opt.colours.scale);
 		key = opt.value;
 
+		if(!opt.data && opt.fields && opt.compresseddata){
+			opt.data = {};
+			for(id in opt.compresseddata){
+				opt.data[id] = {};
+				for(i = 0; i < opt.fields.length; i++){
+					opt.data[id][opt.fields[i]] = opt.compresseddata[id][i];
+				}
+			}
+		}
+
 		uid = p.querySelector('svg.oi-map-inner').getAttribute('id');
 		as = p.querySelectorAll('.data-layer .hex');
 
@@ -180,12 +190,14 @@
 				if(p1 && rtn && rtn.length == 2){
 					if(typeof p1==="string") p1 = parseFloat(p1);
 					if(typeof p1==="number") p1 = p1.toFixed(rtn[1]);
+					bits[b] = "";
 				}
 
 				// slice(a,b)
 				rtn = bits[b].match(/slice\(([0-9]+)\,([0-9]+)\)/);
 				if(p1 && rtn && rtn.length == 3){
 					if(typeof p1==="string") p1 = p1.slice(parseInt(rtn[1]),parseInt(rtn[2]));
+					bits[b] = "";
 				}
 
 				// multiply(n)
@@ -193,6 +205,7 @@
 				if(p1 && rtn && rtn.length == 2){
 					if(typeof p1==="string") p1 = parseFloat(p1);
 					p1 = p1 * parseFloat(rtn[1]);
+					bits[b] = "";
 				}
 
 				// multiply(100 / Total)
@@ -207,6 +220,7 @@
 
 					if(typeof p1==="string") p1 = parseFloat(p1);
 					p1 = p1 * parseFloat(rtn[1]);
+					bits[b] = "";
 				}
 
 				// toLocaleString()
@@ -215,6 +229,7 @@
 					if(typeof p1==="string") p1 = parseFloat(p1);
 					if(typeof p1==="number") p1 = p1.toLocaleString(rtn[1]||{});
 					else p1 = "";
+					bits[b] = "";
 				}
 
 				// strftime("%Y-%m-%d")
@@ -228,6 +243,7 @@
 						}
 					}
 					p1 = strftime(rtn[1]||"%Y-%m-%d",new Date(p1));
+					bits[b] = "";
 				}
 
 				// colourScale(scale,min,max)
@@ -245,11 +261,15 @@
 					}
 					cs = OI.ColourScale(scale);
 					p1 = cs((parseFloat(p1)-min)/(max-min));
+					bits[b] = "";
 				}
 
 				// contrastColour()
 				rtn = bits[b].match(/contrastColour\(\)/);
-				if(p1 && rtn) p1 = contrastColour(p1);
+				if(p1 && rtn){
+					p1 = contrastColour(p1);
+					bits[b] = "";
+				}
 
 				// Use string if empty
 				if(!p1){

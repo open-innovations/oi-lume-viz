@@ -465,7 +465,21 @@ export default function (input: { config: HexmapOptions }) {
 	}
 	if(tools.slider){
 		holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
-		html += '<script>(function(root){ OI.SliderMap({"width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'","scale":"'+getColourScale(scale)+'"},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"data":'+JSON.stringify(hexes)+'}); })(window || this);</script>';
+		// Compress the data to save bandwidth
+		let temphexes = {};
+		let fields = [];
+		let i = 0;
+		for(let hex in hexes){
+			if(i == 0){
+				for(let f in hexes[hex]) fields.push(f);
+			}
+			temphexes[hex] = [];
+			for(let f = 0; f < fields.length; f++){
+				temphexes[hex].push(hexes[hex][fields[f]]);
+			}
+			i++;
+		}
+		html += '<script>(function(root){ OI.SliderMap({"width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'","scale":"'+getColourScale(scale)+'"},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
 	}
 
 	html += '</div>';
