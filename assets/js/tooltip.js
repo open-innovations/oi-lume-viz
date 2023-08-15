@@ -59,7 +59,9 @@
 		attr.type = typ;
 
 		this.show = function(){
-			var tip,j,title,fill,selected,bb,bbo,bbox,off,pad,box,arr,shift, wide;
+			var tip,j,title,fill,selected,bb,bbo,bbox,off,pad,box,arr,shift,wide;
+
+			if(attr._parent.selected && attr._parent.selected!=this) return this;
 
 			wide = document.body.getBoundingClientRect().width;
 
@@ -79,13 +81,6 @@
 			// If the fill is "currentColor" we compute what that is
 			if(fill == "currentColor") fill = window.getComputedStyle(pt)['color'];
 			if(fill == "transparent" && pt.getAttribute('data-fill')) fill = pt.getAttribute('data-fill');
-
-			// Remove current selections
-			selected = svg.querySelectorAll('.selected');
-			for(j = 0; j < selected.length; j++) selected[j].classList.remove('selected');
-
-			// Add the "selected" class to the element
-			pt.classList.add('selected');
 
 			// Get the contents now (in case they've been updated)
 			title = (tt ? tt.innerHTML : "").replace(/[\n\r]/g,'<br />');
@@ -153,6 +148,23 @@
 			return this;
 		};
 
+		this.toggleSelected = function(){
+			selected = svg.querySelectorAll('.selected');
+			for(var j = 0; j < selected.length; j++){
+				if(!selected[j].parentNode.classList.contains('outline')) selected[j].classList.remove('selected');
+			}
+			if(this == attr._parent.selected){
+				attr._parent.clear();
+				attr._parent.selected = null;
+			}else{
+				attr._parent.selected = this;
+				pt.classList.add('selected');
+				this.show();
+			}
+		};
+
+		this.clear = function(){ attr._parent.clear(); };
+
 		if(!svg){
 			console.error('No SVG container for:',pt);
 			return this;
@@ -163,9 +175,10 @@
 		}
 
 		pt.setAttribute('tabindex',0);
+		addEv('click',pt,{'this':this},this.toggleSelected);
 		addEv('focus',pt,{'this':this},this.show);
 		addEv('mouseover',(attr['hover-element']||pt),{'this':this},this.show);
-		addEv('mouseleave',holder,{'this':this,'s':''},attr._parent.clear);
+		addEv('mouseleave',holder,{'this':this},this.clear);
 
 		return this;
 	}
@@ -176,9 +189,11 @@
 		var tip;
 
 		this.clear = function(){
-			if(tip && tip.parentNode) tip.parentNode.removeChild(tip);
-			tip = null;
-			this.active = null;
+			if(!this.selected){
+				if(tip && tip.parentNode) tip.parentNode.removeChild(tip);
+				tip = null;
+				this.active = null;
+			}
 			return this;
 		};
 
