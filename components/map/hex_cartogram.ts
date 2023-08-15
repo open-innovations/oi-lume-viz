@@ -103,30 +103,6 @@ export default function (input: { config: HexmapOptions }) {
 	let min = input.config.min;
 	let max = input.config.max;
 
-	// Handle hexjson / data as string references
-	// Resolve hexjson if this is a string
-	let hexjson = clone(input.config.hexjson);
-	if (typeof hexjson === 'string') {
-		// Convert references into actual objects
-		hexjson = thingOrNameOfThing<TableData<string | number>>(
-			hexjson,
-			input,
-		);
-	}
-
-
-	// Capture the layout and hexes from the hexjson
-	const layout = hexjson.layout;
-	const hexes = clone(hexjson.hexes);
-
-	// Calculate hexCadence - the narrowest dimension of the hex
-	const hexCadence = hexScale * 75;
-	// The margin is a multiple of the hexSize
-	const margin = marginScale * hexCadence;
-
-	// Generate a UUID to identify the hexes
-	const uuid = crypto.randomUUID().substr(0,8);
-
 	// Resolve data if this is a string
 	let data;
 	let copyconfig = clone(input.config);
@@ -142,6 +118,33 @@ export default function (input: { config: HexmapOptions }) {
 		if(copyconfig.data.rows) copyconfig.data = copyconfig.data.rows;
 	}
 
+
+	// Handle hexjson / data as string references
+	// Resolve hexjson if this is a string
+	if (typeof copyconfig.hexjson === 'string') {
+		// Convert references into actual objects
+		copyconfig.hexjson = thingOrNameOfThing<TableData<string | number>>(
+			copyconfig.hexjson,
+			input,
+		);
+	}
+
+	let hexjson = clone(copyconfig.hexjson);
+
+
+	// Capture the layout and hexes from the hexjson
+	const layout = hexjson.layout;
+	const hexes = clone(hexjson.hexes);
+
+	// Calculate hexCadence - the narrowest dimension of the hex
+	const hexCadence = hexScale * 75;
+	// The margin is a multiple of the hexSize
+	const margin = marginScale * hexCadence;
+
+	// Generate a UUID to identify the hexes
+	const uuid = crypto.randomUUID().substr(0,8);
+
+
 	// If there is no data specified we will build it from the hexes
 	if(!copyconfig.data){
 		copyconfig.data = [];
@@ -152,6 +155,14 @@ export default function (input: { config: HexmapOptions }) {
 			copyconfig.data.push(hexdata);
 		}
 		if(!matchKey) matchKey = '_id';
+	}else{
+		// Merge data from hexes into data
+		for(let d = 0; d < copyconfig.data.length; d++){
+			let f = copyconfig.data[d][matchKey];
+			if(hexes[f]){
+				copyconfig.data[d] = { ...copyconfig.data[d], ...hexes[f] };
+			}
+		}
 	}
 
 	// Create any defined columns
@@ -202,7 +213,7 @@ export default function (input: { config: HexmapOptions }) {
 			hexes[key] = { ...record, ...hexes[key] };
 		});
 	}
-	
+
 	// Add IDs to hexes
 	for(var key in hexes){
 		hexes[key]["_id"] = key;
@@ -459,7 +470,7 @@ export default function (input: { config: HexmapOptions }) {
 		holder.addDependencies(['/js/map-filter.js']);
 		var filterdata = {};
 		for(var id in hexes){
-			filterdata[id] = (tools.filter.label && tools.filter.label in hexes[id] ? hexes[id][tools.filter.label] : '');
+			filterdata[id] = (tools.filter.label && tools.filter.label in hexes[id] ? hexes[id][tools.filter.label] : tools.filter.label);
 		}
 		html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
 	}

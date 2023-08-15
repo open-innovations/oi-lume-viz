@@ -89,7 +89,7 @@
 					r = a.getAttribute('data');
 					inp.value = "";
 					var path = hexes[r].querySelector('path');
-					if(path) trigger(path,'mouseover');
+					if(path) trigger(path,'click');
 					// Remove the search results
 					results.innerHTML = "";
 					_obj.highlight();
