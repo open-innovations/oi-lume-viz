@@ -18,7 +18,7 @@
 
 	function SliderMap(p,opt){
 
-		var el,a,as,hexes = {},range,label,id,areas,cs,key,i,uid;
+		var el,a,as,hexes = {},range,label,id,areas,cs,key,i,uid,previousvalue;
 		cs = OI.ColourScale(opt.colours.scale);
 		key = opt.value;
 
@@ -79,7 +79,7 @@
 			range.setAttribute('max',opt.columns.length-1);
 			range.setAttribute('value',idx);
 			inner.append(range);
-			range.addEventListener('change',function(e){ _obj.updateMap(e.target.value); });
+			range.addEventListener('input',function(e){ _obj.updateMap(e.target.value); });
 		}
 		if(!label){
 			label = document.createElement('label');
@@ -88,6 +88,9 @@
 			inner.append(label);
 		}
 		this.updateMap = function(i){
+			// Check if the value has changed. If not, stop.
+			if(i==previousvalue) return this;
+			previousvalue = i;
 			key = opt.columns[i];
 			label.innerHTML = key;
 			if(!opt.key) console.error('No key');
@@ -123,6 +126,7 @@
 				hexes[id].title.innerHTML = applyReplacementFilters(opt.tooltip,hexes[id].data);
 			}
 			if(OI.Tooltips) OI.Tooltips.update();
+			return this;
 		};
 		return this;
 	}
