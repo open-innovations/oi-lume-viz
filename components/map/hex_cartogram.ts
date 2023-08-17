@@ -4,6 +4,7 @@ import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
+import { parseColourString } from "../../lib/colour/parse-colour-string.ts";
 import { getColourScale } from "../../lib/colour/colour-scale.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
@@ -53,7 +54,7 @@ type ColourScaleDefinition = string |
 	((numeric: number) => string);
 
 type HexmapOptions = {
-	bgColour: string;
+	bgColour?: string;
 	scale: ColourScaleDefinition;
 	min: number;
 	max: number;
@@ -79,6 +80,10 @@ type HexmapOptions = {
  * @param options HexmapOptions object
  */
 export default function (input: { config: HexmapOptions }) {
+
+	if(!input || !input.config){
+		throw new TypeError('No options provided for hex cartogram');
+	}
 
 	// Take a copy of parameters as constants, with defaults.
 	// NB these are not cloned at this stage, as this loses information about functions passed in
@@ -118,7 +123,6 @@ export default function (input: { config: HexmapOptions }) {
 		if(copyconfig.data.rows) copyconfig.data = copyconfig.data.rows;
 	}
 
-
 	// Handle hexjson / data as string references
 	// Resolve hexjson if this is a string
 	if (typeof copyconfig.hexjson === 'string') {
@@ -130,7 +134,6 @@ export default function (input: { config: HexmapOptions }) {
 	}
 
 	let hexjson = clone(copyconfig.hexjson);
-
 
 	// Capture the layout and hexes from the hexjson
 	const layout = hexjson.layout;
@@ -245,18 +248,18 @@ export default function (input: { config: HexmapOptions }) {
 	}
 
 	const fillColour = (input: number | string) => {
-	let colour = undefined;
-	if (typeof input === "string") colour = input;
-	else if (typeof input === "number"){
-		if(min != Infinity && max != -Infinity){
-			let c = (input - min) / (max - min);
-			if(!isNaN(c)) colour = cs(c);
+		let colour = undefined;
+		if (typeof input === "string") colour = input;
+		else if (typeof input === "number"){
+			if(min != Infinity && max != -Infinity){
+				let c = (input - min) / (max - min);
+				if(!isNaN(c)) colour = cs(c);
+			}
+		}else{
+			// How did we get here???
+			throw new TypeError("Invalid type provided to fillColour function");
 		}
-	}else{
-		// How did we get here???
-		throw new TypeError("Invalid type provided to fillColour function");
-	}
-	return colour;
+		return colour;
 	};
 
 	// Function to calculate if a given row should be shifted to the right
@@ -418,7 +421,8 @@ export default function (input: { config: HexmapOptions }) {
 		}
 		// TODO(@giles) Work out what the heck is going on!
 		let fill = fillColour(colourValue as never);
-		if(isNaN(config[value])) fill = defaultbg;
+		// Make sure it is a valid colour at this point - defaults to background colour
+		fill = Colour(fill);
 
 		// TODO(@gilesdring) this only supports pointy-top hexes at the moment
 		return `<g
@@ -430,9 +434,9 @@ export default function (input: { config: HexmapOptions }) {
 					role="listitem"
 					aria-label="${labelProp} value ${valuecol}"
 				>
-				<path fill="${fill}" d="${hexPath}"><title>${tooltipText}</title></path>
+				<path fill="${fill.hex}" d="${hexPath}"><title>${tooltipText}</title></path>
 				<text
-				fill="${(Colour(fill)).contrast}"
+				fill="${fill.contast}"
 				text-anchor="middle"
 					dominant-baseline="middle"
 					aria-hidden="true"
