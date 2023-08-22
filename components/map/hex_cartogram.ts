@@ -419,8 +419,8 @@ export default function (input: { config: HexmapOptions }) {
 			default:
 				throw new TypeError("Unsupported layout");
 		}
-		// TODO(@giles) Work out what the heck is going on!
-		let fill = fillColour(colourValue as never);
+		let fill = (isNaN(config[colourValueProp || value])) ? defaultbg : fillColour(colourValue as never);
+		
 		// Make sure it is a valid colour at this point - defaults to background colour
 		fill = Colour(fill);
 
