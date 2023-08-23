@@ -185,6 +185,7 @@
 					if(typeof v==="object") p1 = "";
 				}
 			}
+			if(typeof p1=="number" && isNaN(p1)) return "";
 
 			// Process each filter in turn
 			for(b = 1; b < bits.length; b++){
