@@ -253,6 +253,7 @@ export default function (input: { config: HexmapOptions }) {
 		else if (typeof input === "number"){
 			if(min != Infinity && max != -Infinity){
 				let c = (input - min) / (max - min);
+				if(c < 0) c = 0;
 				if(!isNaN(c)) colour = cs(c);
 			}
 		}else{
@@ -419,7 +420,18 @@ export default function (input: { config: HexmapOptions }) {
 			default:
 				throw new TypeError("Unsupported layout");
 		}
-		let fill = (isNaN(config[colourValueProp || value])) ? defaultbg : fillColour(colourValue as never);
+		let fill;
+		if(typeof config[colourValueProp || value]==="undefined"){
+			fill = defaultbg;
+		}else if(typeof config[colourValueProp || value]==="string"){
+			fill = fillColour(colourValue as never);
+		}else if(typeof config[colourValueProp || value]==="number"){
+			if(isNaN(config[colourValueProp || value])) fill = defaultbg;
+			else fill = fillColour(colourValue as never);
+		}
+		if(fill.indexOf('NaN')>0){
+			console.log(colourValueProp,value,config[colourValueProp || value],typeof config[colourValueProp || value],fill);
+		}
 		
 		// Make sure it is a valid colour at this point - defaults to background colour
 		fill = Colour(fill);
