@@ -339,6 +339,8 @@ export default function (input: { config: HexmapOptions }) {
 				if (shiftedRowsInTheRightColumn.length === 0) {
 					width = -0.5;
 				}
+			}else{
+				x = -0.25;
 			}
 		}
 
