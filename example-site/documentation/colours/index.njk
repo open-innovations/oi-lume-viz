@@ -109,8 +109,10 @@ customseries:
 		<h2>Customising colours{{ comp.anchor({ ref: "customise" }) | safe }}</h2>
 
 		<h3>Setting named colours{{ comp.anchor({ ref: "customise-named" }) | safe }}</h3>
-		<p>By default we provide existing <a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">CSS colours</a> but there may be times when you'd like to define your own custom named colours (or change the values of existing named colours) for use in visualisations. Update <code>_config.[js|ts]</code> to include the new named colours as part of the config to the plugin:</p>
+		<p>By default we provide existing <a href="https://www.tutorialrepublic.com/css-reference/css-color-names.php">CSS colours</a> but there may be times when you'd like to define your own custom named colours (or change the values of existing named colours) for use in visualisations. You can set these site-wide or specific to a visualisation.</p>
 
+		<h4>Site-wide named colours</h4>
+		<p>If you want to have named colours that you can re-use across many visualisations, you can set site-wide defaults. Update <code>_config.[js|ts]</code> to include the new named colours as part of the config to the plugin e.g.:</p>
 		<pre><code class="hljs language-json">site.use(oiComponents({
   ...
   "colour": {
@@ -120,6 +122,14 @@ customseries:
   },
   ...
 }));</code></pre>
+
+		<h4>Visualisation-specific named colours</h4>
+		<p>It may be better to keep your named colours specific to a particular visualisation. In that case you can add a <code>colours</code> property to your visualisation config. e.g.:</p>
+		<pre><code class="hljs language-yaml">config:
+  ...
+  colours:
+{% for name in customnames %}    {{ name }}: "{{ name | parseColour() }}",
+{% endfor %}  ...</code></pre>
 
 		<p>The new named colours can then be used in the same way as pre-defined colour names. For instance, we can include them in this page:{% for name in customnames %} <code style="background: {{ name | parseColour() }};color: {{ name | contrastColour() }}">{{ name }}</code>{% endfor %}. Note that, in this example, as well as creating some new colours we've also over-ridden several existing CSS colour names with new values.</p>
 
