@@ -1,14 +1,14 @@
 import { recursiveLookup } from '../../../lib/util.js';
 import { svgEl, newEl, setAttr } from '../../../lib/util/dom.ts';
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
-import { Colour, ColourScale } from "../../../lib/colour/colours.ts";
+import { Colour, ColourScale, Colours } from "../../../lib/colour/colours.ts";
 import { VisualisationHolder } from '../../../lib/holder.js';
 import { getBackgroundColour } from "../../../lib/colour/colour.ts";
 import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
 import { getTileLayer } from '../../../lib/tiles/layers.ts';
 import { getIcons } from '../../../lib/icon/icons.ts';
 import { d3, d3geo } from "../../../lib/external/d3.ts";
-import { replaceNamedColours, parseColourString } from '../../../lib/colour/parse-colour-string.ts';
+import { parseColourString } from '../../../lib/colour/parse-colour-string.ts';
 
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
@@ -37,7 +37,10 @@ export function ZoomableMap(opts){
 		'layers': []
 	};
 	mergeDeep(config,opts);
-	
+
+	// Define some colours
+	const namedColours = Colours(config.colours);
+
 	cs = ColourScale(config.scale);
 
 	for(l = 0; l < config.layers.length; l++){
@@ -75,14 +78,8 @@ export function ZoomableMap(opts){
 					// Find the colour by passing the fractional value within the range
 					if(typeof v==="number") config.layers[l].data[i].colour = cs((v - config.layers[l].min)/(config.layers[l].max - config.layers[l].min));
 					else if(typeof v==="string"){
-						config.layers[l].data[i].colour = replaceNamedColours(v);
-						// Test to see if the colour we now have parses
-						try {
-							col = parseColourString(config.layers[l].data[i].colour)
-						} catch (error) {
-							// If it doesn't parse, we'll set it to the default background colour
-							config.layers[l].data[i].colour = defaultbg;
-						}
+						if(namedColours.get(v)) config.layers[l].data[i].colour = namedColours.get(v);
+						else config.layers[l].data[i].colour = defaultbg;
 					}
 				}
 				// Set a default colour if we don't have one
@@ -242,6 +239,9 @@ export function SVGMap(opts){
 	};
 	mergeDeep(config,opts);
 
+	// Define some colours
+	const namedColours = Colours(config.colours);
+
 	let geo = config.geojson.data;
 	let cs = ColourScale(config.scale);
 	let layerlist = [];
@@ -303,10 +303,14 @@ export function SVGMap(opts){
 						// Add a colour-scale colour to each row based on the "value" column
 						if(typeof val==="number"){
 							row.colour = cs((val-v.min)/(v.max-v.min));
+						}else{
+							if(namedColours.get(v.value)) row.colour = namedColours.get(v.value);
 						}
 					}
 
-					if(typeof row.colour === "string") row.colour = replaceNamedColours(row.colour);
+					if(typeof row.colour === "string"){
+						if(namedColours.get(row.colour)) row.colour = namedColours.get(row.colour);
+					}
 
 					// Set a default colour if we don't have one
 					if(row.colour === undefined) row.colour = defaultbg;

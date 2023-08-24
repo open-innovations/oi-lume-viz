@@ -28,7 +28,7 @@
 
 import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { contrastColour } from '../../lib/colour/contrast.ts';
-import { replaceNamedColours } from '../../lib/colour/parse-colour-string.ts';
+import { Colours } from '../../lib/colour/colours.ts';
 import { ColourScale } from '../../lib/colour/colour-scale.ts';
 import { clone } from "../../lib/util/clone.ts";
 import { document } from '../../lib/document.ts';
@@ -73,6 +73,9 @@ export default function (input: {
 }): string {
 
 	const config = clone(input.config);
+
+	// Define some colours
+	const namedColours = Colours(config.colours);
 
 	// Convert references into actual objects
 	config.data = thingOrNameOfThing<RankingChartData<string | number>>(
@@ -282,15 +285,19 @@ export default function (input: {
 		// Get colour
 		bg = defaultbg;
 		if(config.colour){
-			if(typeof series[s].data[config.colour]==="undefined") console.warn('No "value" column exists for "'+series[s].title+'".',series[s].data,config.colour);
-			else bg = series[s].data[config.colour];
+			if(config.colour in series[s].data){
+				if(typeof series[s].data[config.colour]==="undefined") console.warn('No "value" column exists for "'+series[s].title+'".',series[s].data,config.colour);
+				else bg = series[s].data[config.colour];
+			}else{
+				if(namedColours.get(config.colour)) bg = config.colour;
+			}
 			if(!isNaN(parseFloat(bg))) bg = parseFloat(bg);
 		}else{
 			// Default to the first rank value
 			if(typeof series[s].rank==="number") bg = series[s].rank;
 		}
 
-		if(typeof bg==="string") bg = replaceNamedColours(bg);
+		if(typeof bg==="string") bg = namedColours.get(bg);
 		if(typeof bg==="number") bg = cs((bg - min)/(max - min));
 
 		// Build path and circles

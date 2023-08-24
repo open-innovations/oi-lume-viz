@@ -2,13 +2,14 @@ import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
 import { mergeDeep } from './util.js';
-import { replaceNamedColours, getNamedColours, getNamedColour } from '../../../lib/colour/parse-colour-string.ts';
+import { Colours } from '../../../lib/colour/colours.ts';
 
 // ORIGINAL FUNCTION BELOW
 export function ScatterChart(config,csv){
 
 	const basefs = getFontSize();
-	const colours = getNamedColours();
+	// Define some colours
+	const namedColours = Colours(config.colours);
 
 	var opt = {
 		'type': 'scatter-chart',
@@ -30,7 +31,7 @@ export function ScatterChart(config,csv){
 			// Build the series
 			for(s = 0; s < this.opt.series.length; s++){
 
-				colour = this.opt.series[s].colour||colours[this.opt.series[s].colour]||colours[this.opt.series[s].title]||null;
+				colour = namedColours.get(this.opt.series[s].colour)||namedColours.get(this.opt.series[s].title)||null;
 
 				// Over-write some series options
 				mergeDeep(this.opt.series[s],{
@@ -55,7 +56,7 @@ export function ScatterChart(config,csv){
 						label = this.opt.series[s].title+"\n"+labx+': '+(laby);
 						if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
 						colouri = colour;
-						if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = replaceNamedColours(csv.columns[this.opt.series[s].colour][i]);
+						if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
 						datum = {'x':x,'y':y,'title':label,'colour':colouri};
 						datum.data = {'series':this.opt.series[s].title};
 						data.push(datum);

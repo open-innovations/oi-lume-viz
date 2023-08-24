@@ -52,9 +52,29 @@ examples:
           E08000036: { n: Wakefield, q: 0, r: -1 }
           E06000014: { n: York, q: 0, r: 1 }
       label: "{{ n | slice(0,3) }}"
+  - title: "Hexes with the same colour"
+    description: |
+      A very simple hex cartogram where we define a custom colour named `test` and then use that for the `value`.
+    config:
+      colours:
+        test: "#999000"
+      hexjson:
+        layout: odd-r
+        hexes:
+          E08000016: { n: Barnsley, q: 0, r: -2 }
+          E08000032: { n: Bradford, q: -1, r: 0 }
+          E08000033: { n: Calderdale, q: -2, r: -1 }
+          E07000163: { n: Craven, q: -2, r: 1 }
+          E07000165: { n: Harrogate, q: -1, r: 1 }
+          E08000034: { n: Kirklees, q: -1, r: -1 }
+          E08000035: { n: Leeds, q: 0, r: 0 }
+          E07000169: { n: Selby, q: 1, r: 0 }
+          E08000036: { n: Wakefield, q: 0, r: -1 }
+          E06000014: { n: York, q: 0, r: 1 }
+      value: test
   - title: "Hexes with defined colours"
     description: |
-      A very simple hex cartogram. The colour of each hex is given by the `value` key.
+      A very simple hex cartogram. The colour of each hex is given by setting the `value` key to the `colour` property.
     config:
       hexjson:
         layout: odd-r

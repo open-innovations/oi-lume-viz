@@ -2,7 +2,7 @@ import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
 import { VisualisationHolder } from '../../lib/holder.js';
-import { Colour, ColourScale } from "../../lib/colour/colours.ts";
+import { Colour, ColourScale,Colours } from "../../lib/colour/colours.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
 import { getFontFamily, getFontWeight, getFontSize } from '../../lib/font/fonts.ts';
@@ -114,6 +114,8 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	let bin = 0;
 	let nbins = bins.length;
 	let defaultmark = {'marker':'square'};
+	// Define some colours
+	const namedColours = Colours(config.colours);
 
 	for(let s = 0; s < config.series.length; s++){
 		if(!config.series[s].points) config.series[s].points = clone(defaultmark);
@@ -131,7 +133,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		// For this series, create the bins
 		for(let i = 0; i < v; i++){
 			icon = config.series[s].icon||config.icon;
-			bins[bin] = {'series':s,'icon':icon,'colour':config.series[s].colour||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||((config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value]),'data':true,'point':clone(config.series[s].points)};
+			bins[bin] = {'series':s,'icon':icon,'colour':namedColours.get(config.series[s].colour)||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||((config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value]),'data':true,'point':clone(config.series[s].points)};
 			bin++;
 		}
 
@@ -197,7 +199,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		let startSeries = (b==0 || (b > 0 && bins[b].series!=bins[b-1].series));
 		let endSeries = (b == bins.length-1 || (b > 0 && b < bins.length-1 && bins[b+1].series!=bins[b].series));
 
-		mark.setAttr({'fill':(bins[b].colour||defaultbg)}); // Update the point
+		mark.setAttr({'fill':(namedColours.get(bins[b].colour)||defaultbg)}); // Update the point
 		mark.setPosition(x,y);
 
 		if(startSeries){
@@ -210,7 +212,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		svg += mark.el.outerHTML;
 
 		if(endSeries){
-			svg += '<path class="marker marker-group" data-series="'+s+'" d="'+grid.getBoundary(w/cols)+'" fill="transparent" data-fill="'+(bins[b].colour||defaultbg)+'">';
+			svg += '<path class="marker marker-group" data-series="'+s+'" d="'+grid.getBoundary(w/cols)+'" fill="transparent" data-fill="'+(namedColours.get(bins[b]).colour||defaultbg)+'">';
 			svg += (bins[b].tooltip ? '<title>'+bins[b].tooltip+'</title>' : '');
 			svg += '</path>';
 		}

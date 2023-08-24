@@ -117,6 +117,10 @@
 				}else{
 					colour = opt.defaultbg||"#bbb";
 				}
+
+				// Check if it is a named colour
+				if(hexes[id].data[key] in opt.colours.named) colour = opt.colours.named[hexes[id].data[key]];
+
 				hexes[id].path.setAttribute('fill',colour);
 				hexes[id].label.setAttribute('fill',OI.Colour(colour).contrast);
 
@@ -272,7 +276,7 @@
 				// contrastColour()
 				rtn = bits[b].match(/contrastColour\(\)/);
 				if(p1 && rtn){
-					p1 = contrastColour(p1);
+					p1 = OI.Colour(p1).contrast;
 					bits[b] = "";
 				}
 

@@ -2,7 +2,7 @@ import { mergeDeep } from './util.js';
 import { textLength, getFontFamily, getFontWeight } from '../../../lib/font/fonts.ts';
 import { Chart } from './chart.js';
 import { Series } from './series.js';
-import { replaceNamedColours, getNamedColours, getNamedColour } from '../../../lib/colour/parse-colour-string.ts';
+import { Colours } from '../../../lib/colour/colours.ts';
 
 const basefs = 17;
 const fontFamily = getFontFamily();
@@ -11,7 +11,8 @@ const fontWeight = getFontWeight();
 // ORIGINAL FUNCTION BELOW
 export function StackedBarChart(config,csv){
 
-	const colours = getNamedColours();
+	// Define some colours
+	const namedColours = Colours(config.colours);
 
 	var opt = {
 		'type': 'stacked-bar-chart',
@@ -38,7 +39,7 @@ export function StackedBarChart(config,csv){
 			for(s = 0; s < this.opt.series.length; s++){
 				data[s] = [];
 
-				colour = this.opt.series[s].colour||colours[this.opt.series[s].colour]||colours[this.opt.series[s].title]||null;
+				colour = namedColours.get(this.opt.series[s].colour)||namedColours.get(this.opt.series[s].title)||null;
 
 				mergeDeep(this.opt.series[s],{
 					'line':{'show':false,'color':colour},
@@ -79,7 +80,7 @@ export function StackedBarChart(config,csv){
 
 					colouri = colour;
 					if(this.opt.series[s].colour) colouri = this.opt.series[s].colour;
-					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = replaceNamedColours(csv.columns[this.opt.series[s].colour][i]);
+					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
 
 					// The final x-value is the current starting value plus the current value
 					datum = {'x':(typeof x==="null" ? null : x+xo),'xstart':xo,'y':categoryoffset,'title':label,'colour':colouri};

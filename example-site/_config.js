@@ -77,9 +77,6 @@ site.use(basePath());
 
 site.remoteFile('index.md', path.resolve('README.md'));
 
-// Map test data to local site
-site.remoteFile('samples/chart/bar/_data/examples.yml', './test/data/bar-chart.yml', 'samples/chart/line/_data/examples.yml',);
-
 // Add filters
 site.filter('yaml', (value, options = {}) => { let str = yamlStringify(value, options); str = str.replace(/(\s)\'y\': /g,function(m,p1){ return p1+"y: ";}); return str; });
 site.filter('match', (value, regex) => { const re = new RegExp(regex); return value.match(re); });

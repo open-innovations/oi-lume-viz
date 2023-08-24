@@ -1,15 +1,15 @@
 import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
-import { replaceNamedColours, getNamedColours, getNamedColour } from '../../../lib/colour/parse-colour-string.ts';
+import { Colours } from '../../../lib/colour/colours.ts';
 import { mergeDeep } from './util.js';
-
 
 // ORIGINAL FUNCTION BELOW
 export function BarChart(config,csv){
 
 	const basefs = getFontSize();
-	const colours = getNamedColours();
+	// Define some colours
+	const namedColours = Colours(config.colours);
 
 	var opt = {
 		'type': 'bar-chart',
@@ -32,7 +32,7 @@ export function BarChart(config,csv){
 			var data,datum,label,i,s,categoryoffset,seriesoffset,colour,colouri;
 			for(s = 0; s < this.opt.series.length; s++){
 
-				colour = this.opt.series[s].colour||colours[this.opt.series[s].colour]||colours[this.opt.series[s].title]||null;
+				colour = namedColours.get(this.opt.series[s].colour)||namedColours.get(this.opt.series[s].title)||null;
 
 				mergeDeep(this.opt.series[s],{
 					'line':{'show':false,'color':colour},
@@ -62,7 +62,7 @@ export function BarChart(config,csv){
 					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
 
 					colouri = colour;
-					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = replaceNamedColours(csv.columns[this.opt.series[s].colour][i]);
+					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
 
 					datum = {
 						'x':(isNaN(csv.columns[this.opt.series[s].value][i]) ? null : csv.columns[this.opt.series[s].value][i]),

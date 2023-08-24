@@ -1,6 +1,6 @@
 import { addVirtualColumns, thingOrNameOfThing } from "../lib/helpers.ts";
 import { contrastColour } from '../lib/colour/contrast.ts';
-import { replaceNamedColours } from '../lib/colour/parse-colour-string.ts';
+import { Colours } from '../lib/colour/colours.ts';
 import { ColourScale } from '../lib/colour/colour-scale.ts';
 import { clone } from "../lib/util/clone.ts";
 import { VisualisationHolder } from '../lib/holder.js';
@@ -28,6 +28,8 @@ export default function (input: {
 
 	const config = clone(input.config);
 
+	// Define some colours
+	const namedColours = Colours(config.colours);
 
 	// Convert references into actual objects
 	config.data = thingOrNameOfThing<TableData<string | number>>(
@@ -118,7 +120,7 @@ export default function (input: {
 				if(n>0) cellprops += ' rowspan="'+(n+1)+'"';
 				let colour = "";
 				let sty = "";
-				if(options.columns[col].colour) colour = replaceNamedColours(options.columns[col].colour);
+				if(options.columns[col].colour) colour = namedColours.get(options.columns[col].colour);
 				if(options.columns[col].scale){
 					let v = cells[row][col].value;
 					if(typeof v==="string") v = parseFloat(v);

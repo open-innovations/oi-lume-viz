@@ -3,8 +3,7 @@ import { applyReplacementFilters } from "../../lib/util.js";
 import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
-import { Colour, ColourScale } from "../../lib/colour/colours.ts";
-import { parseColourString } from "../../lib/colour/parse-colour-string.ts";
+import { Colour, ColourScale, Colours } from "../../lib/colour/colours.ts";
 import { getColourScale } from "../../lib/colour/colour-scale.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
@@ -132,6 +131,9 @@ export default function (input: { config: HexmapOptions }) {
 			input,
 		);
 	}
+
+	// Define some colours
+	const namedColours = Colours(copyconfig.colours);
 
 	let hexjson = clone(copyconfig.hexjson);
 
@@ -421,18 +423,27 @@ export default function (input: { config: HexmapOptions }) {
 				throw new TypeError("Unsupported layout");
 		}
 		let fill;
-		if(typeof config[colourValueProp || value]==="undefined"){
-			fill = defaultbg;
-		}else if(typeof config[colourValueProp || value]==="string"){
-			fill = fillColour(colourValue as never);
-		}else if(typeof config[colourValueProp || value]==="number"){
-			if(isNaN(config[colourValueProp || value])) fill = defaultbg;
-			else fill = fillColour(colourValue as never);
+
+		// If the value property is a named colour, use that
+		if(namedColours.get(colourValueProp)) fill = namedColours.get(colourValueProp);
+		else if(namedColours.get(value)) fill = namedColours.get(value);
+		else if(namedColours.get(colourValue)) fill = namedColours.get(colourValue); 
+		else{
+			// If the value is undefined we use the default background colour
+			if(typeof config[colourValueProp || value]==="undefined"){
+				fill = defaultbg;
+			}else if(typeof config[colourValueProp || value]==="string"){
+				fill = fillColour(colourValue as never);
+			}else if(typeof config[colourValueProp || value]==="number"){
+				if(isNaN(config[colourValueProp || value])) fill = defaultbg;
+				else fill = fillColour(colourValue as never);
+			}
+			if(fill.indexOf('NaN')>0){
+				console.log(colourValueProp,value,config[colourValueProp || value],typeof config[colourValueProp || value],fill);
+			}
 		}
-		if(fill.indexOf('NaN')>0){
-			console.log(colourValueProp,value,config[colourValueProp || value],typeof config[colourValueProp || value],fill);
-		}
-		
+
+
 		// Make sure it is a valid colour at this point - defaults to background colour
 		fill = Colour(fill);
 
@@ -506,7 +517,7 @@ export default function (input: { config: HexmapOptions }) {
 			}
 			i++;
 		}
-		html += '<script>(function(root){ OI.SliderMap({"width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'","scale":"'+getColourScale(scale)+'"},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
+		html += '<script>(function(root){ OI.SliderMap({"width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'",'+(scale ? '"scale":"'+getColourScale(scale)+'"' : '')+',"named":'+JSON.stringify(namedColours.getCustom())+'},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
 	}
 
 	html += '</div>';

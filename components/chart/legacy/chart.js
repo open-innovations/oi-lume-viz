@@ -1,5 +1,5 @@
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
-import { replaceNamedColours } from '../../../lib/colour/parse-colour-string.ts';
+import { Colours } from '../../../lib/colour/colours.ts';
 import { Axis } from './axis.js';
 import { Series } from './series.js';
 import { KeyItem } from './keyitem.js';
@@ -17,6 +17,8 @@ export function Chart(config,csv){
 	var fontFamily = getFontFamily();
 	var fontWeight = getFontWeight();
 	var fontSize = getFontSize();
+	// Define some colours
+	const namedColours = Colours(config.colours);
 
 	var _obj = this;
 
@@ -96,7 +98,7 @@ export function Chart(config,csv){
 		for(var s = 0; s < this.opt.series.length; s++){
 			this.opt.series[s].id = id;
 			this.opt.series[s].lbl = lbl;
-			if(this.opt.series[s].colour) this.opt.series[s].colour = replaceNamedColours(this.opt.series[s].colour);
+			if(this.opt.series[s].colour) this.opt.series[s].colour = namedColours.get(this.opt.series[s].colour);
 		}
 
 		// Use a custom function to build the data series
@@ -115,8 +117,8 @@ export function Chart(config,csv){
 		// Build the series
 		for(s = 0; s < this.opt.series.length; s++){
 			mergeDeep(this.opt.series[s],{
-				'line':{'show':true,'color': replaceNamedColours(this.opt.series[s].colour||colours[this.opt.series[s].title]||'')},
-				'points':{'size':(this.opt.series[s].points && typeof this.opt.series[s].points.size==="number" ? this.opt.series[s].points.size : 1), 'color': replaceNamedColours(this.opt.series[s].colour||colours[this.opt.series[s].title]||'')}
+				'line':{'show':true,'color': namedColours.get(this.opt.series[s].colour||this.opt.series[s].title)},
+				'points':{'size':(this.opt.series[s].points && typeof this.opt.series[s].points.size==="number" ? this.opt.series[s].points.size : 1), 'color': namedColours.get(this.opt.series[s].colour||this.opt.series[s].title)}
 			});
 			data = [];
 			if(typeof this.opt.series[s].x==="undefined" || typeof this.opt.series[s].y==="undefined"){
@@ -229,7 +231,7 @@ export function Chart(config,csv){
 				if(!config.legend.items[s]){
 					config.legend.items[s] = {};
 				}
-				config.legend.items[s].colour = replaceNamedColours(keyitem.colour);
+				config.legend.items[s].colour = namedColours.get(keyitem.colour);
 				config.legend.items[s].label = keyitem.label;
 
 				if(this.opt.type == "scatter-chart" || this.opt.type == "line-chart"){
