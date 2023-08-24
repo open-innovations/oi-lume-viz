@@ -476,6 +476,7 @@ export default function (input: { config: HexmapOptions }) {
 	var html = `<div class="oi-map-holder"><div class="oi-map-inner"><svg
 			id="hexes-${uuid}"
 			class="oi-map-inner"
+			overflow="visible"
 			viewBox="
 				${-margin - qWidth / 2} ${-margin - hexSide}
 				${widthSVG + qWidth + 2 * margin} ${heightSVG + 2 * hexSide + 2 * margin}
