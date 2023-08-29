@@ -225,6 +225,7 @@
 
 		function getColour(v){
 			var v2 = 100 * (v - min) / (max - min);
+			if(v2 < 0) v2 = 0;
 			var cfinal = {};
 			if (v == max) {
 				cfinal = {
