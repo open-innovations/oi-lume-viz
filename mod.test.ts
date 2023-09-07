@@ -1,5 +1,5 @@
 import Site from "lume/core/site.ts";
-import { dirname } from "std/path/mod.ts";
+import { dirname } from "./deps.ts";
 import { afterEach, beforeEach, describe, it } from "std/testing/bdd.ts";
 import {
   assertSpyCallArg,

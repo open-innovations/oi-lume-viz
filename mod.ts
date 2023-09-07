@@ -1,5 +1,5 @@
 import Site from "lume/core/site.ts";
-import { dirname } from "std/path/mod.ts";
+import { dirname } from './deps.ts';
 import { assets, components } from "./config.ts";
 import { setAssetPrefix } from "./lib/util/paths.ts";
 import { keys } from "https://deno.land/x/nunjucks@3.2.3-2/src/lib.js";
