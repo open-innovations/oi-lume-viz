@@ -195,8 +195,16 @@ export function Series(s,props,data,extra){
 
 			// Update bar position
 			if(pts[i].bar){
-				p1 = opt.getXY(Math.max(data[i].xstart||0,extra.axis.x.min),data[i].y + extra.barsize/2);
-				p2 = opt.getXY(data[i].x,data[i].y - extra.barsize/2);
+				var sx,ex;
+				if(opt.bars.stacked || (!opt.bars.stacked && data[i].x >= 0)){
+					sx = Math.max(data[i].xstart||0,extra.axis.x.min);
+					ex = data[i].x;
+				}else{
+					sx = Math.max(data[i].x||0,extra.axis.x.min);
+					ex = 0;
+				}
+				p1 = opt.getXY(sx,data[i].y + extra.barsize/2);
+				p2 = opt.getXY(ex,data[i].y - extra.barsize/2);
 				setAttr(pts[i].bar,{'x':p1.x.toFixed(3),'y':p1.y.toFixed(3),'width':Math.max(0.5,Math.abs(p2.x-p1.x)).toFixed(3),'height':Math.abs(p2.y-p1.y).toFixed(3)});
 			}
 

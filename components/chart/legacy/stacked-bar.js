@@ -44,7 +44,7 @@ export function StackedBarChart(config,csv){
 				mergeDeep(this.opt.series[s],{
 					'line':{'show':false,'color':colour},
 					'points':{'show':false,'size':4, 'color': colour},
-					'bars':{'show':true,'color':colour},
+					'bars':{'show':true,'color':colour,'stacked':true},
 					'errorbars':{'stroke':colour,'stroke-width':2}
 				});
 				// Duplicate errors if only one error value given
