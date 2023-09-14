@@ -70,9 +70,14 @@
 			return this;
 		};
 		
-		this.setTiles = function(props){
-			if(!tiles) tiles = L.tileLayer(props.url, props).addTo(map);
-			else tiles.setUrl(props.url);
+		this.setTiles = function(idx,props,zIndex){
+			if(typeof zIndex==="number"){
+				var pane = 'tiles-'+idx;
+				map.createPane('tiles-'+idx);
+				props.pane = pane;
+				map.getPane(pane).style.zIndex = zIndex;
+			}
+			L.tileLayer(props.url, props).addTo(map);
 			return this;
 		};
 
@@ -80,16 +85,17 @@
 	}
 	function Layer(props){
 		if(!props) props = {};
+		if(!props.options) props.options = {};
 		this.props = props;
 
 		// Set some functions for GeoJSON layers
 		function style(feature){
 			var d = getData(feature.properties[props.geo.key]);
 			return {
-				weight: 0.5,
-				opacity: 0.5,
+				weight: (typeof props.options.weight==="number" ? props.options.weight : 0.5),
+				opacity: (typeof props.options.opacity==="number" ? props.options.opacity : 0.5),
 				color: "#ffffff",
-				fillOpacity: 1,
+				fillOpacity: (typeof props.options.fillOpacity==="number" ? props.options.fillOpacity : 1),
 				fillColor: d.colour||"transparent"
 			};
 		};

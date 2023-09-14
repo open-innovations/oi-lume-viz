@@ -45,10 +45,10 @@ export function buildLayers(input){
 		if(typeof config.scale==="string") l.scale = config.scale;
 		if(typeof config.tooltip==="string") l.tooltip = config.tooltip;
 		if(typeof config.value==="string") l.value = config.value;
+		if(typeof config.options==="object") l.options = config.options;
 		if(config.geojson) l.geojson = clone(config.geojson);
 		l.data = clone(config.data);
-		lyrs.push(l);
-
+		lyrs.push(clone(l));
 
 		// Add any graticule layer
 		if(config.graticule){
@@ -161,14 +161,24 @@ export function Layer(attr,map,i){
 	}
 	this.id = attr.id;
 
-	this.data = attr.data||[];
-	this.geojson = attr.geojson||{};
-	
+	if(typeof attr.data==="string"){
+		this._urldata = attr.data;
+		this.data = null;
+	}else{
+		this.data = attr.data||{};
+	}
+	if(typeof attr.geojson==="string"){
+		this._url = attr.geojson;
+		this.geojson = null;
+	}else{
+		this.geojson = attr.geojson||{};
+	};
+
 	this.attr = (attr || {});
 	this.options = (this.attr.options || {});
-	if(!this.options.fillOpacity) this.options.fillOpacity = 1;
-	if(!this.options.opacity) this.options.opacity = 1;
-	if(!this.options.color) this.options.color = '#000000';
+	if(typeof this.options.fillOpacity!=="number") this.options.fillOpacity = 1;
+	if(typeof this.options.opacity!=="number") this.options.opacity = 1;
+	if(typeof this.options.color!=="string") this.options.color = '#000000';
 	if(typeof this.options.useforboundscalc==="undefined") this.options.useforboundscalc = true;
 
 	var g = svgEl('g');
@@ -195,12 +205,11 @@ export function Layer(attr,map,i){
 		w = map.w;
 		h = map.h;
 
-//console.log('update',this,attr);
-		if(this.geojson && this.geojson && this.geojson.features){
+		if(this.geojson && this.geojson.data && this.geojson.data.features){
 
-			for(f = 0; f < this.geojson.features.length; f++){
-				if(this.geojson.features[f]){
-					feature = this.geojson.features[f];
+			for(f = 0; f < this.geojson.data.features.length; f++){
+				if(this.geojson.data.features[f]){
+					feature = this.geojson.data.features[f];
 					c = feature.geometry.coordinates;
 					g2 = svgEl('g');
 
@@ -300,10 +309,15 @@ export function Layer(attr,map,i){
 
 								// Add title to the SVG
 								if(feature.properties.tooltip){
-									var t = svgEl('title');
-									t.innerHTML = feature.properties.tooltip;
-									p.querySelector(':first-child').appendChild(t);
-									p.classList.add('marker');
+									if(typeof feature.properties.tooltip==="string"){
+										var t = svgEl('title');
+										t.innerHTML = feature.properties.tooltip;
+										p.querySelector(':first-child').appendChild(t);
+										p.classList.add('marker');
+									}else{
+										console.log('Bad tooltip',feature.properties.tooltip);
+										throw "Bad tooltip";
+									}
 								}
 							}else{
 								console.error(feature);
@@ -348,16 +362,16 @@ export function Layer(attr,map,i){
 				}
 			}
 		}else{
-			console.warn('No data features',this.geojson);
+			console.warn('No GeoJSON data features',this.geojson);
 		}
 		return this;
 	};
 
 	this.load = function(){
 		if(!this.geojson){
-			console.error('No data structure given',this);
+			console.error('No GeoJSON data structure given',this);
 		}else{
-			if(typeof attr.process==="function") attr.process.call(this,this.geojson||{},map);
+			if(typeof attr.process==="function") attr.process.call(this,this.geojson.data||{},map);
 			// Final callback
 			if(typeof attr.callback==="function") attr.callback.call(map);
 		}

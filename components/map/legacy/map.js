@@ -9,6 +9,7 @@ import { getTileLayer } from '../../../lib/tiles/layers.ts';
 import { getIcons } from '../../../lib/icon/icons.ts';
 import { d3, d3geo } from "../../../lib/external/d3.ts";
 import { parseColourString } from '../../../lib/colour/parse-colour-string.ts';
+import { Layer } from './layers.ts';
 
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
@@ -91,7 +92,7 @@ export function ZoomableMap(opts){
 
 
 	this.getHTML = function(){
-		var html,i,l,props;
+		var html,i,l,props,zIndex;
 
 		html = [];
 		html.push('(function(root){\n');
@@ -110,29 +111,41 @@ export function ZoomableMap(opts){
 		}
 		
 		// If there is no background layer or tile layer we add some by default
-		if(needsTiles) html.push('	map.setTiles(' + JSON.stringify(getTileLayer(config.tileLayer)) + ');\n');
+		if(needsTiles) html.push('	map.setTiles(-1,' + JSON.stringify(getTileLayer(config.tileLayer)) + ');\n');
+
+		var datalayerindex = -1;
 
 		for(l = 0; l < config.layers.length; l++){
-	
+
+			if(!config.layers[l].options) config.layers[l].options = {};
+			if(typeof config.layers[l].options.fillOpacity!=="number") config.layers[l].options.fillOpacity = 1;
+
 			if(config.layers[l].type=="tile"){
 
-				html.push('	map.setTiles(' + JSON.stringify(getTileLayer(config.layers[l].props)) + ');\n');
+				zIndex = undefined;
+				if(datalayerindex >= 0 && l > datalayerindex){
+					zIndex = 650 - ((config.layers.length-1-l)/(config.layers.length-1-datalayerindex))*(650-400);
+				}
+				html.push('	map.setTiles(' + l + ', ' + JSON.stringify(getTileLayer(config.layers[l].props)) + ', ' + (zIndex) + ');\n');
 
 			}else if(config.layers[l].type=="background"){
 
 				var colour = Colour(config.layers[l].colour||"#fafaf8");
 				html.push('	map.addLayer({\n');
-				html.push('		layer: L.geoJSON(' + JSON.stringify(config.layers[l].geojson.data) +',{"style":{"color":"'+colour.hex+'","weight":0,"fillOpacity":1}})\n');
+				html.push('		layer: L.geoJSON(' + JSON.stringify(config.layers[l].geojson.data) +',{"style":{"color":"'+colour.hex+'","weight":0,"fillOpacity":'+config.layers[l].options.fillOpacity+'}})\n');
 				html.push('	});\n');
 
 			}else if(config.layers[l].type=="data"){
 
 				if(config.layers[l].data && config.layers[l].geojson){
 
+					datalayerindex = l;
+
 					html.push('	map.addLayer({\n');
 					html.push('		"key": "' + (config.layers[l].key||"") + '",\n');
 					html.push('		"toolkey": "' + (config.layers[l].tooltip||"") + '",\n');
 					html.push('		"defaultmarker": ' + JSON.stringify(icons["default"]) + ',\n');
+					html.push('		"options": ' + JSON.stringify(config.layers[l].options) + ',\n');
 					html.push('		"data": ' + JSON.stringify(config.layers[l].data) + ',\n');
 					if(config.layers[l].geojson){
 						html.push('		"geo": {\n');
@@ -141,7 +154,6 @@ export function ZoomableMap(opts){
 						html.push('		}\n');
 					}
 					html.push('	});\n');
-
 				}
 
 			}else if(config.layers[l].type=="markers"){
@@ -256,7 +268,7 @@ export function SVGMap(opts){
 				'class': 'background',
 				'data': config.layers[l].data,
 				'geojson': config.layers[l].geojson,
-				'options': { 'color': Colour(config.layers[l].colour||"#fafaf8").hex }
+				'options': mergeDeep({ 'color': Colour(config.layers[l].colour||"#fafaf8").hex },config.layers[l].options||{})
 			});
 			
 		}else if(config.layers[l].type=="data"){
@@ -285,7 +297,7 @@ export function SVGMap(opts){
 				'class': 'data-layer',
 				'data': config.layers[l].data,
 				'geojson': config.layers[l].geojson,
-				'options': { 'color': '#b2b2b2' },
+				'options': mergeDeep({ 'color': '#b2b2b2' },config.layers[l].options||{}),
 				'values': { 'key': config.layers[l].key, 'geokey': config.geojson.key, 'value': config.layers[l].value, 'label':config.layers[l].tooltip, 'min':min, 'max': max, 'data': config.layers[l].data, 'colour': 'red' },
 				'style': function(feature,el,type){
 					var v,code,i,title,row,val;
@@ -329,7 +341,7 @@ export function SVGMap(opts){
 								el.appendChild(title);
 							}
 						}
-						el.setAttribute('fill-opacity',(type == "line" ? 0 : 1));
+						el.setAttribute('fill-opacity',(type == "line" ? 0 : (typeof this.options.fillOpacity==="number" ? this.options.fillOpacity : 1)));
 						el.setAttribute('fill',row.colour);
 						el.setAttribute('stroke',(type == "line" ? row.colour : 'white'));
 						el.setAttribute('stroke-width',2);
@@ -353,7 +365,7 @@ export function SVGMap(opts){
 				'id': 'grid',
 				'class': 'graticule',
 				'geojson': { 'data': { 'type':'FeatureCollection', 'features': [ {"type": "Feature", "properties": {}, "geometry": grid() }] }},
-				'options': { 'color': '#000000' }
+				'options': mergeDeep({ 'color': '#000000' },config.layers[l].options||{})
 			});
 
 		}else if(config.layers[l].type=="labels"){
@@ -361,7 +373,7 @@ export function SVGMap(opts){
 			layerlist.push({
 				'id': 'labels',
 				'class': 'labels',
-				'options': { 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},
+				'options': mergeDeep({ 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},config.layers[l].options||{}),
 				'type': 'text',
 				'values': {'data':clone(places||[]),'places':config.layers[l].labels},
 				'process': function(d,map){
@@ -415,7 +427,7 @@ export function SVGMap(opts){
 			layerlist.push({
 				'id': 'markers',
 				'class': 'markers',
-				'options': { 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},
+				'options': mergeDeep({ 'fill': '#4c5862', 'stroke': 'white', 'stroke-width': '0.7%', 'stroke-linejoin': 'round'	},config.layers[l].options||{}),
 				'type': 'text',
 				'values': {'markers':config.layers[l].markers||[]},
 				'process': function(d,map){
@@ -610,232 +622,6 @@ function BasicMap(config,attr){
 	};
 
 	if(attr.layers) this.addLayers(attr.layers,attr.complete);
-
-	return this;
-}
-
-function Layer(attr,map,i){
-	if(!attr.id){
-		console.error('Layer does not have an ID set');
-		return {};
-	}
-	this.id = attr.id;
-
-	if(typeof attr.data==="string"){
-		this._urldata = attr.data;
-		this.data = null;
-	}else{
-		this.data = attr.data||{};
-	}
-	if(typeof attr.geojson==="string"){
-		this._url = attr.geojson;
-		this.geojson = null;
-	}else{
-		this.geojson = attr.geojson||{};
-	}
-	this.attr = (attr || {});
-	this.options = (this.attr.options || {});
-	if(!this.options.fillOpacity) this.options.fillOpacity = 1;
-	if(!this.options.opacity) this.options.opacity = 1;
-	if(!this.options.color) this.options.color = '#000000';
-	if(typeof this.options.useforboundscalc==="undefined") this.options.useforboundscalc = true;
-
-	var g = svgEl('g');
-	var gs;
-	setAttr(g,{'class':this.class||attr.class||this.id});
-
-	if(map && map.svg){
-		if(typeof i==="number"){
-			gs = map.svg.querySelectorAll('g');
-			gs[i].insertAdjacentElement('beforebegin', g);
-		}else{
-			map.svg.appendChild(g);
-		}
-	}
-
-	this.clear = function(){ g.innerHTML = ''; return this; };
-
-	// Function to draw it on the map
-	this.update = function(){
-		// Clear existing layer
-		this.clear();
-		// Find the map bounds and work out the scale
-		var f,feature,w,h,g2,p,c,d,xy,tspan,scale,cls;
-		w = map.w;
-		h = map.h;
-
-		if(this.geojson && this.geojson.data && this.geojson.data.features){
-
-			for(f = 0; f < this.geojson.data.features.length; f++){
-				if(this.geojson.data.features[f]){
-					feature = this.geojson.data.features[f];
-					c = feature.geometry.coordinates;
-					g2 = svgEl('g');
-
-					if(feature.geometry.type == "MultiPolygon" || feature.geometry.type == "Polygon"){
-						cls = "area";
-						p = svgEl('path');
-						setAttr(p,{
-							'stroke': this.options.color||this.options.stroke,
-							'stroke-opacity':this.options.opacity,
-							'stroke-width': this.options['stroke-width']
-						});
-						d = map.projection.toPath(feature);
-						setAttr(p,{
-							'd':d,
-							'fill': this.options.color||this.options.fill,
-							'fill-opacity': this.options.fillOpacity,
-							'vector-effect':'non-scaling-stroke',
-							'stroke': this.options.stroke||this.options.color,
-							'stroke-width': this.options['stroke-width']||(this.id=="background" ? '0' : '0.4%'),
-							'stroke-opacity': this.options['stroke-opacity']||1
-						});
-						if(typeof attr.style==="function") attr.style.call(this,feature,p,cls);
-					}else if(feature.geometry.type == "MultiLineString" || feature.geometry.type == "LineString"){
-						cls = "line";
-						p = svgEl('path');
-						setAttr(p,{
-							'stroke': this.options.color||this.options.stroke,
-							'stroke-opacity':this.options.opacity,
-							'stroke-width': this.options['stroke-width']
-						});
-						d = map.projection.toPath(feature);
-						setAttr(p,{
-							'd':d,
-							'fill':'transparent',
-							'vector-effect':'non-scaling-stroke'
-						});
-						if(typeof attr.style==="function") attr.style.call(this,feature,p,cls);
-					}else if(feature.geometry.type == "Point"){
-						cls = "point";
-						xy = map.projection.latlon2xy(c[1],c[0],map.zoom);
-
-						var opt = {};
-
-						// If there is no icon and no name label, create a default icon
-						if(!feature.properties.icon && !feature.name) feature.properties.icon = "default";
-
-						if(feature.properties.icon){
-							var icon = {'size':[40,40]};
-
-							if(typeof feature.properties.icon==="string"){
-								if(!icons[feature.properties.icon]){
-									throw("No icon known with name \""+feature.properties.icon+"\"");
-								}
-								icon = mergeDeep(icon,icons[feature.properties.icon]);
-							}else{
-								icon = mergeDeep(icon,feature.properties.icon);
-							}
-
-							if(!icon.svg){
-								throw("No SVG provided for icon");
-							}
-							// Set default anchor position
-							if(!icon.anchor) icon.anchor = [icon.size[0]/2,0];
-							var txt = icon.svg;
-							var style = {'icon':icon,'color':'black'};
-							if(feature.properties.colour) style.color = feature.properties.colour;
-
-							mergeDeep(style,feature.properties);
-
-							if(txt){
-								// We want to get the contents of the SVG and the attributes
-								txt = txt.replace(/<svg([^>]*)>/,function(m,attrs){
-									attrs.replace(/([^\s]+)\=[\"\']([^\"\']+)[\"\']/g,function(m,key,value){
-										opt[key] = value;
-										return "";
-									});
-									return "";
-								}).replace(/<\/svg>/,"");
-
-								// Clean up tags to make sure we have explicit closing tags
-								txt = txt.replace(/<([^\s]+)\s([^\>]+)\s*\/\s*>/g,function(m,p1,p2){ return "<"+p1+" "+p2+"></"+p1+">"; });
-
-								scale = 1;
-
-								p = svgEl('svg');
-								p.setAttribute('vector-effect','non-scaling-stroke');
-								p.innerHTML = txt;
-								mergeDeep(opt,{
-									'viewBox': '0 0 16 16',
-									// Shift the x/y values to adjust for iconAnchor and iconSize
-									'x': (xy.x + (-(icon.size[0] - icon.anchor[0])*scale)).toFixed(2),
-									'y': (xy.y + (-(icon.size[1] - icon.anchor[1])*scale)).toFixed(2)
-								});
-								setAttr(p,opt);
-								p.setAttribute('width',icon.size[0]*scale);
-								p.setAttribute('height',icon.size[1]*scale);
-
-								// Add title to the SVG
-								if(feature.properties.tooltip){
-									if(typeof feature.properties.tooltip==="string"){
-										var t = svgEl('title');
-										t.innerHTML = feature.properties.tooltip;
-										p.querySelector(':first-child').appendChild(t);
-										p.classList.add('marker');
-									}else{
-										console.log('Bad tooltip',feature.properties.tooltip);
-										throw "Bad tooltip";
-									}
-								}
-							}else{
-								console.error(feature);
-								throw('Bad icon');
-							}
-							if(p){
-								if(typeof attr.style==="function") attr.style.call(this,feature,p,cls);
-								p.setAttribute('style','color:'+(style.color)+';');
-							}
-
-						}else{
-							cls = "text";
-							p = svgEl('text');
-							tspan = svgEl('tspan');
-							tspan.innerHTML = feature.name;
-							p.appendChild(tspan);
-							mergeDeep(opt,{
-								'fill': feature.style.colour||this.options.fill||this.options.color,
-								'fill-opacity': this.options.fillOpacity,
-								'font-weight': feature.style['font-weight']||this.options['font-weight']||fontWeight,
-								'stroke': feature.style.border||this.options.stroke||this.options.color,
-								'stroke-width': this.options['stroke-width']||'0.4%',
-								'stroke-linejoin': this.options['stroke-linejoin'],
-								'text-anchor': feature.style['text-anchor']||this.options.textAnchor||'middle',
-								'font-family': feature.style['font-family']||fontFamily,
-								'font-size': (feature.style['font-size'] ? feature.style['font-size'] : 1),
-								'paint-order': 'stroke',
-								'x': xy.x.toFixed(2),
-								'y': xy.y.toFixed(2)
-							});
-							setAttr(p,opt);
-
-							if(p && typeof attr.style==="function") attr.style.call(this,feature,p,cls);
-						}
-					}
-					
-					g2.classList.add(cls);
-					if(p){
-						g2.appendChild(p);
-						g.appendChild(g2);
-					}
-				}
-			}
-		}else{
-			console.warn('No GeoJSON data features',this.geojson);
-		}
-		return this;
-	};
-
-	this.load = function(){
-		if(!this.geojson){
-			console.error('No GeoJSON data structure given',this);
-		}else{
-			if(typeof attr.process==="function") attr.process.call(this,this.geojson.data||{},map);
-			//this.update();
-			// Final callback
-			if(typeof attr.callback==="function") attr.callback.call(map);
-		}
-	};
 
 	return this;
 }
