@@ -117,6 +117,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	// Define some colours
 	const namedColours = Colours(config.colours);
 
+	// Add default points
 	for(let s = 0; s < config.series.length; s++){
 		if(!config.series[s].points) config.series[s].points = clone(defaultmark);
 	}
@@ -124,24 +125,34 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	// Loop over series and create the bins
 	for(let s = 0; s < config.series.length; s++){
 
-		let v = config.data[0][config.series[s].value];
-		if(typeof v !== "number") throw new TypeError('Data for row '+s+' with value "'+config.series[s].value+'" is not a number.');
+		if(config.series[s].value && config.series[s].value in config.data[0]){
+			let v = config.data[0][config.series[s].value];
+			if(typeof v !== "number") throw new TypeError('Data for row '+s+' with value "'+config.series[s].value+'" is not a number.');
 
-		// Find out how many bins to show
-		v = Math[config.rounding].call(this, nbins * config.data[0][config.series[s].value] / config.total);
+			// Find out how many bins to show
+			v = Math[config.rounding].call(this, nbins * config.data[0][config.series[s].value] / config.total);
 
-		// For this series, create the bins
-		for(let i = 0; i < v; i++){
-			icon = config.series[s].icon||config.icon;
-			bins[bin] = {'series':s,'icon':icon,'colour':namedColours.get(config.series[s].colour)||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||((config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value]),'data':true,'point':clone(config.series[s].points)};
-			bin++;
+			// For this series, create the bins
+			for(let i = 0; i < v; i++){
+				icon = config.series[s].icon||config.icon;
+				bins[bin] = {'series':s,'icon':icon,'colour':namedColours.get(config.series[s].colour)||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||((config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value]),'data':true,'point':clone(config.series[s].points)};
+				bin++;
+			}
 		}
 
 	}
 
+	let defaultbin = {'series':-1,'icon':icon,'colour':defaultbg,'tooltip':'','data':false,'point':clone(defaultmark)};
+	let lst = config.series.length-1;
+	if(config.series.length > 0 && !config.series[lst].value){
+		if(config.series[lst].colour) defaultbin.colour = namedColours.get(config.series[lst].colour);
+		if(config.series[lst].tooltip) defaultbin.tooltip = config.data[0][config.series[lst].tooltip];
+		if(config.series[lst].points) defaultbin.point = clone(config.series[lst].points);
+	}
+	
 
 	// Fill up the rest of the bins
-	for(let i = bin; i < bins.length; i++) bins[i] = {'series':-1,'icon':icon,'colour':defaultbg,'tooltip':'','data':false,'point':clone(defaultmark)};
+	for(let i = bin; i < bins.length; i++) bins[i] = clone(defaultbin);
 
 	let w = config.width || 1080;
 	let h = config.height || (w*size[1]/size[0]);
@@ -212,7 +223,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		svg += mark.el.outerHTML;
 
 		if(endSeries){
-			svg += '<path class="marker marker-group" data-series="'+s+'" d="'+grid.getBoundary(w/cols)+'" fill="transparent" data-fill="'+(namedColours.get(bins[b]).colour||defaultbg)+'">';
+			svg += '<path class="marker marker-group" data-series="'+s+'" d="'+grid.getBoundary(w/cols)+'" fill="transparent" data-fill="'+(namedColours.get(bins[b].colour)||defaultbg)+'">';
 			svg += (bins[b].tooltip ? '<title>'+bins[b].tooltip+'</title>' : '');
 			svg += '</path>';
 		}
@@ -231,6 +242,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		for(let s = 0; s < config.series.length; s++){
 
 			config.series[s].points.color = config.series[s].colour||defaultbg;
+
 			let keyitem = new KeyItem({
 				'type':'waffle',
 				'title':config.series[s].title||config.series[s].value,
@@ -238,7 +250,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 				's':s,
 				'fontSize': fontSize,
 				'itemWidth': 1,
-				'points':config.series[s].points,
+				'points':config.series[s].points||defaultmark,
 				'line':config.series[s].line||{}
 			});
 			if(!config.legend.items[s]) config.legend.items[s] = {};
