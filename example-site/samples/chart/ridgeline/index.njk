@@ -1,0 +1,322 @@
+---
+title: Ridgeline chart
+description: |
+  Multiple series shown as a ridgeline chart/Joyplot.
+order: 21
+showcase: 0
+component: chart.ridgeline
+examples:
+  - title: "Basic"
+    description: |
+      Let's start with a dataset that contains the distribution of average daily temperature, by month, for Leeds (data from <a href="https://www.wunderground.com/history/monthly/gb/leeds/EGNM/date/2023-8">Weather Underground</a>). We create multiple `series` that each have a `title`, an `x` column reference and a `y` column reference. These will be coloured using the site-wide default series colours. The series will be displayed with the first at the top and last at the bottom.
+    config:
+      data: test.data.leeds-weather
+      series:
+        - title: Sep 2022
+          x: Average temperature (C)
+          y: "2022-09"
+        - title: Oct 2022
+          x: Average temperature (C)
+          y: "2022-10"
+        - title: Nov 2022
+          x: Average temperature (C)
+          y: "2022-11"
+        - title: Dec 2022
+          x: Average temperature (C)
+          y: "2022-12"
+        - title: Jan 2023
+          x: Average temperature (C)
+          y: "2023-01"
+        - title: Feb 2023
+          x: Average temperature (C)
+          y: "2023-02"
+        - title: Mar 2023
+          x: Average temperature (C)
+          y: "2023-03"
+        - title: Apr 2023
+          x: Average temperature (C)
+          y: "2023-04"
+        - title: May 2023
+          x: Average temperature (C)
+          y: "2023-05"
+        - title: Jun 2023
+          x: Average temperature (C)
+          y: "2023-06"
+        - title: Jul 2023
+          x: Average temperature (C)
+          y: "2023-07"
+        - title: Aug 2023
+          x: Average temperature (C)
+          y: "2023-08"
+  - title: "Set the colour of each series"
+    description: |
+      For each `series` we can set its `colour`.
+    config:
+      data: test.data.leeds-weather
+      series:
+        - title: Sep 2022
+          x: Average temperature (C)
+          y: "2022-09"
+          colour: "#005776"
+        - title: Oct 2022
+          x: Average temperature (C)
+          y: "2022-10"
+          colour: "#005776"
+        - title: Nov 2022
+          x: Average temperature (C)
+          y: "2022-11"
+          colour: "#005776"
+        - title: Dec 2022
+          x: Average temperature (C)
+          y: "2022-12"
+          colour: "#005776"
+        - title: Jan 2023
+          x: Average temperature (C)
+          y: "2023-01"
+          colour: "#005776"
+        - title: Feb 2023
+          x: Average temperature (C)
+          y: "2023-02"
+          colour: "#005776"
+        - title: Mar 2023
+          x: Average temperature (C)
+          y: "2023-03"
+          colour: "#005776"
+        - title: Apr 2023
+          x: Average temperature (C)
+          y: "2023-04"
+          colour: "#005776"
+        - title: May 2023
+          x: Average temperature (C)
+          y: "2023-05"
+          colour: "#005776"
+        - title: Jun 2023
+          x: Average temperature (C)
+          y: "2023-06"
+          colour: "#005776"
+        - title: Jul 2023
+          x: Average temperature (C)
+          y: "2023-07"
+          colour: "#005776"
+        - title: Aug 2023
+          x: Average temperature (C)
+          y: "2023-08"
+          colour: "#005776"
+  - title: "Set the fill of each series"
+    description: |
+      By default, the `fill` of each series is set to `#ffffff` and the `fillOpacity` is set to `0.8`. But you can over-ride those on a per-series basis.
+    config:
+      data: test.data.leeds-weather
+      series:
+        - title: Sep 2022
+          x: Average temperature (C)
+          y: "2022-09"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Oct 2022
+          x: Average temperature (C)
+          y: "2022-10"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Nov 2022
+          x: Average temperature (C)
+          y: "2022-11"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Dec 2022
+          x: Average temperature (C)
+          y: "2022-12"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Jan 2023
+          x: Average temperature (C)
+          y: "2023-01"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Feb 2023
+          x: Average temperature (C)
+          y: "2023-02"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Mar 2023
+          x: Average temperature (C)
+          y: "2023-03"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Apr 2023
+          x: Average temperature (C)
+          y: "2023-04"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: May 2023
+          x: Average temperature (C)
+          y: "2023-05"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Jun 2023
+          x: Average temperature (C)
+          y: "2023-06"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Jul 2023
+          x: Average temperature (C)
+          y: "2023-07"
+          fill: "#000000"
+          fillOpacity: 0.25
+        - title: Aug 2023
+          x: Average temperature (C)
+          y: "2023-08"
+          fill: "#000000"
+          fillOpacity: 0.25
+  - title: "Add tick marks and axis titles"
+    description: |
+      Sometimes it can be useful to add tick marks to the x-axis and axis titles.
+    config:
+      data: test.data.leeds-weather
+      axis:
+        x:
+          title:
+            label: "Average temperature (°C)"
+          tick:
+            spacing: 5
+        y:
+          title:
+            label: "Months"
+      series:
+        - title: Sep 2022
+          x: Average temperature (C)
+          y: "2022-09"
+        - title: Oct 2022
+          x: Average temperature (C)
+          y: "2022-10"
+        - title: Nov 2022
+          x: Average temperature (C)
+          y: "2022-11"
+        - title: Dec 2022
+          x: Average temperature (C)
+          y: "2022-12"
+        - title: Jan 2023
+          x: Average temperature (C)
+          y: "2023-01"
+        - title: Feb 2023
+          x: Average temperature (C)
+          y: "2023-02"
+        - title: Mar 2023
+          x: Average temperature (C)
+          y: "2023-03"
+        - title: Apr 2023
+          x: Average temperature (C)
+          y: "2023-04"
+        - title: May 2023
+          x: Average temperature (C)
+          y: "2023-05"
+        - title: Jun 2023
+          x: Average temperature (C)
+          y: "2023-06"
+        - title: Jul 2023
+          x: Average temperature (C)
+          y: "2023-07"
+        - title: Aug 2023
+          x: Average temperature (C)
+          y: "2023-08"
+  - title: "Scale the series"
+    description: |
+      By default, the maximum vertical extent of the data will be `2` times the spacing of the series. We can change that by setting `ridgeline → height`. A larger value will make the ridges taller and make the series closer together. A value closer to `0` will make the ridges shallower and the series further apart.
+    config:
+      data: test.data.leeds-weather
+      ridgeline:
+        height: 4
+      axis:
+        x:
+          title:
+            label: "Average temperature (°C)"
+          tick:
+            spacing: 5
+        y:
+          title:
+            label: "Months"
+      series:
+        - title: Sep 2022
+          x: Average temperature (C)
+          y: "2022-09"
+        - title: Oct 2022
+          x: Average temperature (C)
+          y: "2022-10"
+        - title: Nov 2022
+          x: Average temperature (C)
+          y: "2022-11"
+        - title: Dec 2022
+          x: Average temperature (C)
+          y: "2022-12"
+        - title: Jan 2023
+          x: Average temperature (C)
+          y: "2023-01"
+        - title: Feb 2023
+          x: Average temperature (C)
+          y: "2023-02"
+        - title: Mar 2023
+          x: Average temperature (C)
+          y: "2023-03"
+        - title: Apr 2023
+          x: Average temperature (C)
+          y: "2023-04"
+        - title: May 2023
+          x: Average temperature (C)
+          y: "2023-05"
+        - title: Jun 2023
+          x: Average temperature (C)
+          y: "2023-06"
+        - title: Jul 2023
+          x: Average temperature (C)
+          y: "2023-07"
+        - title: Aug 2023
+          x: Average temperature (C)
+          y: "2023-08"
+  - title: "Add curvature to the lines"
+    description: |
+      By default the data are joined by straight lines. You can apply a curvature (`0` = none, `1` = maximum) to all the lines by setting `ridgeline → curvature`.
+    config:
+      data: test.data.leeds-weather
+      ridgeline:
+        curvature: 0.75
+      series:
+        - title: Sep 2022
+          x: Average temperature (C)
+          y: "2022-09"
+        - title: Oct 2022
+          x: Average temperature (C)
+          y: "2022-10"
+        - title: Nov 2022
+          x: Average temperature (C)
+          y: "2022-11"
+        - title: Dec 2022
+          x: Average temperature (C)
+          y: "2022-12"
+        - title: Jan 2023
+          x: Average temperature (C)
+          y: "2023-01"
+        - title: Feb 2023
+          x: Average temperature (C)
+          y: "2023-02"
+        - title: Mar 2023
+          x: Average temperature (C)
+          y: "2023-03"
+        - title: Apr 2023
+          x: Average temperature (C)
+          y: "2023-04"
+        - title: May 2023
+          x: Average temperature (C)
+          y: "2023-05"
+        - title: Jun 2023
+          x: Average temperature (C)
+          y: "2023-06"
+        - title: Jul 2023
+          x: Average temperature (C)
+          y: "2023-07"
+        - title: Aug 2023
+          x: Average temperature (C)
+          y: "2023-08"
+
+---
+
+This type of chart is sometimes known as a Joyplot after a version, showing pulses from the pulsar CP 1919 in the Cambridge Encyclopaedia of Astronomy, was featured on the cover of Joy Division's <a href="https://en.wikipedia.org/wiki/Unknown_Pleasures"><em>Unknown Pleasures</em></a> album. They work well when there is a clear pattern to observe but they can also hide data where overlaps take place.

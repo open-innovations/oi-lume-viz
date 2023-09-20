@@ -67,9 +67,9 @@ export function Series(s,props,data,extra){
 			setAttr(line.el,{'d':'M0 0 L 100,100'});
 			add(line.el,this.el); // Add it to the element
 			// Create an animation for the line
-			line.animate = new Animate(line.el,{'duration':opt.duration});
+			line.animate = new Animate(line.el,{'duration':opt.duration,'curvature':(opt.line && opt.line.curvature ? opt.line.curvature : 0)});
 		}
-		setAttr(line.el,{'style':(opt.line.show ? 'display:block':'display:none'),'stroke':opt.line.color,'stroke-width':this.getStyle('line','stroke-width'),'stroke-linecap':this.getStyle('line','stroke-linecap'),'stroke-linejoin':this.getStyle('line','stroke-linejoin'),'stroke-dasharray':this.getStyle('line','stroke-dasharray'),'fill':this.getStyle('line','fill'),'vector-effect':'non-scaling-stroke'});
+		setAttr(line.el,{'style':(opt.line.show ? 'display:block':'display:none'),'stroke':opt.line.color,'stroke-width':this.getStyle('line','stroke-width'),'stroke-linecap':this.getStyle('line','stroke-linecap'),'stroke-linejoin':this.getStyle('line','stroke-linejoin'),'stroke-dasharray':this.getStyle('line','stroke-dasharray'),'fill':this.getStyle('line','fill'),'fill-opacity':this.getStyle('line','fill-opacity'),'vector-effect':'non-scaling-stroke'});
 
 		for(i = pts.length; i < data.length; i++){
 
@@ -118,7 +118,6 @@ export function Series(s,props,data,extra){
 			// Do we show the points
 			if(opt.points.show){
 
-//if(opt.points.size > 1) console.log('series size = ',opt.points.size);
 				pts[i].mark = new Marker(opt.points);
 				pts[i].mark.setAnimation({'duration':opt.duration});
 				pts[i].mark.setAttr(datum);

@@ -1,9 +1,11 @@
 import { applyReplacementFilters } from "../../lib/util.js";
 import type { LineChartOptions } from "./line.ts";
+import type { RidgeLineChartOptions } from "./ridgeline.ts";
 import type { ScatterChartOptions } from "./scatter.ts";
 import type { BarChartOptions } from "./bar.ts";
 import type { AxisOptions, TickArray } from "./types.ts";
 import { LineChart } from "./legacy/line.js";
+import { RidgeLineChart } from "./legacy/ridgeline.js";
 import { ScatterChart } from "./legacy/scatter.js";
 import { BarChart } from "./legacy/bar.js";
 import { StackedBarChart } from "./legacy/stacked-bar.js";
@@ -35,7 +37,7 @@ export function resolveData(
 }
 
 export function updateAxis (
-  config: Partial<BarChartOptions|LineChartOptions|ScatterChartOptions>,
+  config: Partial<BarChartOptions|LineChartOptions|RidgeLineChartOptions|ScatterChartOptions>,
 ) {
 
 	let ncategories = 0;
@@ -93,7 +95,8 @@ export function updateAxis (
 				}else{
 					config.axis[ax].min = range.min;
 					config.axis[ax].max = range.max;
-					if (config.axis[ax].ticks === undefined) {
+					// Only create a default tick if none have been defined and this isn't a ridgeline plot
+					if (config.axis[ax].ticks === undefined && config.type!=="ridgeline") {
 						config.axis[ax].ticks = [{'value':range.min,'label':'','grid':true}];
 					}
 				}
@@ -117,7 +120,7 @@ export function updateAxis (
 }
 
 export function calculateRange(
-  config: Partial<BarChartOptions|LineChartOptions|ScatterChartOptions>,
+  config: Partial<BarChartOptions|LineChartOptions|RidgeLineChartOptions|ScatterChartOptions>,
   tickSpacing: number | undefined = undefined,
 ) {
 
@@ -207,6 +210,22 @@ export function renderLineChart(config: LineChartOptions) {
 	const csv = explodeObjectArray(config.data as Record<string, unknown>[]);
 
 	const chart = new LineChart(config, csv);
+
+	return chart.getSVG();
+}
+
+// Simple wrapper around existing legacy
+export function renderRidgeLineChart(config: RidgeLineChartOptions) {
+
+	// Pass in the type so we can do special things in updateAxis()
+	config.type = "ridgeline";
+
+	// Auto set range for x axis
+	config = updateAxis(config);
+
+	const csv = explodeObjectArray(config.data as Record<string, unknown>[]);
+
+	const chart = new RidgeLineChart(config, csv);
 
 	return chart.getSVG();
 }

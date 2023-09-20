@@ -24,6 +24,7 @@ export const components = [
   'chart/bar.ts',
   'chart/calendar.ts',
   'chart/line.ts',
+  'chart/ridgeline.ts',
   'chart/ranking.ts',
   'chart/scatter.ts',
   'chart/waffle.ts',

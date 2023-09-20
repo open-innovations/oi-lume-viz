@@ -12,8 +12,12 @@ export function Animate(e,attr){
 	if(!this.duration) this.duration = "0.3s";
 	this.duration = parseFloat(this.duration);
 	this.set = function(props){
-		var n,i,a2,b2,a,b;
+		var n,i,j,a2,b2,a,b,dx,c;
 		e.querySelectorAll('animate').forEach(function(ev){ ev.parentNode.removeChild(ev); });
+
+		c = 0;
+		if(typeof opt.curvature==="number" && opt.curvature > 0) c = Math.min(1,opt.curvature);
+
 		for(n in props){
 			if(n){
 				a = props[n].from||"";
@@ -24,13 +28,55 @@ export function Animate(e,attr){
 				if(tag=="path"){
 					a2 = "";
 					b2 = "";
-					for(i = 0; i < a.length; i++) a2 += (i>0 ? 'L':'M')+roundTo(a[i].x, 2)+','+roundTo(a[i].y, 2);
-					for(i = 0; i < b.length; i++) b2 += (i>0 ? 'L':'M')+roundTo(b[i].x, 2)+','+roundTo(b[i].y, 2);
-					if(a.length > 0 && a.length < b.length){
-						for(i = 0; i < b.length-a.length; i++) a2 += 'L'+roundTo(a[a.length-1].x, 2)+','+roundTo(a[a.length-1].y, 2);
-					}
-					if(b.length > 0 && b.length < a.length){
-						for(i = 0; i < a.length-b.length; i++) b2 += 'L'+roundTo(b[b.length-1].x, 2)+','+roundTo(b[b.length-1].y, 2);
+					if(c > 0){
+						// Would join points with curves
+						for(i = 0; i < a.length; i++){
+							if(i==0){
+								a2 += 'M'+roundTo(a[i].x, 2)+','+roundTo(a[i].y, 2);
+							}else{
+								dx = (a[i].x - a[i-1].x)/2;
+								// Create a cubic bezier curve from the last point to the current point
+								a2 += (i==1 ? 'C'+roundTo(a[i-1].x + c*dx, 2)+','+roundTo(a[i-1].y, 2) : 'S');
+								a2 += ' '+roundTo(a[i].x - c*dx, 2)+','+roundTo(a[i].y, 2);
+								a2 += ' '+roundTo(a[i].x, 2)+','+roundTo(a[i].y, 2);
+							}
+						}
+						if(a.length > 0 && a.length < b.length){
+							j = a.length-1;
+							for(i = 0; i < b.length-a.length; i++){
+								a2 += (i==1 ? 'C'+roundTo(a[j-1].x + c*dx, 2)+','+roundTo(a[j-1].y, 2) : 'S');
+								a2 += ' '+roundTo(a[j].x - c*dx, 2)+','+roundTo(a[j].y, 2);
+								a2 += ' '+roundTo(a[j].x, 2)+','+roundTo(a[j].y, 2);
+							}
+						}
+						for(i = 0; i < b.length; i++){
+							if(i==0){
+								b2 += 'M'+roundTo(b[i].x, 2)+','+roundTo(b[i].y, 2);
+							}else{
+								dx = (b[i].x - b[i-1].x)/2;
+								// Create a cubic bezier curve from the last point to the current point
+								b2 += (i==1 ? 'C'+roundTo(b[i-1].x + c*dx, 2)+','+roundTo(b[i-1].y, 2) : 'S');
+								b2 += ' '+roundTo(b[i].x - c*dx, 2)+','+roundTo(b[i].y, 2);
+								b2 += ' '+roundTo(b[i].x, 2)+','+roundTo(b[i].y, 2);
+							}
+						}
+						if(b.length > 0 && b.length < a.length){
+							j = b.length-1;
+							for(i = 0; i < a.length-b.length; i++){
+								b2 += (i==1 ? 'C'+roundTo(b[j-1].x + c*dx, 2)+','+roundTo(b[j-1].y, 2) : 'S');
+								b2 += ' '+roundTo(b[j].x - c*dx, 2)+','+roundTo(b[j].y, 2);
+								b2 += ' '+roundTo(b[j].x, 2)+','+roundTo(b[j].y, 2);
+							}
+						}
+					}else{
+						for(i = 0; i < a.length; i++) a2 += (i>0 ? 'L':'M')+roundTo(a[i].x, 2)+','+roundTo(a[i].y, 2);
+						for(i = 0; i < b.length; i++) b2 += (i>0 ? 'L':'M')+roundTo(b[i].x, 2)+','+roundTo(b[i].y, 2);
+						if(a.length > 0 && a.length < b.length){
+							for(i = 0; i < b.length-a.length; i++) a2 += 'L'+roundTo(a[a.length-1].x, 2)+','+roundTo(a[a.length-1].y, 2);
+						}
+						if(b.length > 0 && b.length < a.length){
+							for(i = 0; i < a.length-b.length; i++) b2 += 'L'+roundTo(b[b.length-1].x, 2)+','+roundTo(b[b.length-1].y, 2);
+						}
 					}
 					if(!a2) a2 = null;
 				}else{
