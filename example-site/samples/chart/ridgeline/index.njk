@@ -104,7 +104,7 @@ examples:
           colour: "#005776"
   - title: "Set the fill of each series"
     description: |
-      By default, the `fill` of each series is set to `#ffffff` and the `fillOpacity` is set to `0.8`. But you can over-ride those on a per-series basis.
+      By default, the `fill` of each series is set to `#ffffff` and the `fillOpacity` is set to `0.8`. But you can over-ride those on a per-series basis. Note that the fill is made by joining up the two ends of the series so if they don't have the same value, or you have lower values in the series, you may get unexpected results.
     config:
       data: test.data.leeds-weather
       series:
