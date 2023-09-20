@@ -47,9 +47,13 @@ Creates a calendar chart to quickly see weekly or seasonal changes in data. See 
 
 Creates a line chart. See [line chart samples](/samples/chart/line).
 
+### `chart.line`
+
+Creates a ridgeline chart. See [ridgeline chart samples](/samples/chart/ridgeline).
+
 ### `chart.ranking`
 
-<img src="img/ranking.svg" class="icon-inline" />A chart which shows how the rank of something varies. See [ranking chart samples](/samples/chart/ranking).
+A chart which shows how the rank of something varies. See [ranking chart samples](/samples/chart/ranking).
 
 ### `chart.scatter`
 
