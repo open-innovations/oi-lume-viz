@@ -53,13 +53,10 @@
 
 - title: Custom tooltips
   description: |
-    If a `tooltip` property is provided, and the value is the name of a column in the data, a custom tooltip will be used. The tooltip column can also be one of any <a href="../../../documentation/virtual-columns/">virtual columns</a> you may have defined.
+    If a `tooltip` property is provided, a custom tooltip will be used. The tooltip can either refer to a specific column/<a href="../../../documentation/virtual-columns/">virtual column</a> in the data, or be a <a href="/documentation/templates/">string template</a>.
   config:
     data: test.data.hierarchy.rows
-    columns:
-      - name: Tooltip
-        template: "{{ level_1 }}\n{{ level_2 }}\n{{ name }}: {{ value | toLocaleString() }}"
-    tooltip: "Tooltip"
+    tooltip: "{{ level_1 }}\n{{ level_2 }}\n{{ name }}: {{ value | toLocaleString() }}"
     colour: colour_index
     scale: Viridis
 

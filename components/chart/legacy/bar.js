@@ -1,6 +1,7 @@
 import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
+import { applyReplacementFilters } from '../../../lib/util.js';
 import { Colours } from '../../../lib/colour/colours.ts';
 import { mergeDeep } from './util.js';
 
@@ -59,10 +60,20 @@ export function BarChart(config,csv){
 						}
 					}
 
-					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
-
 					colouri = colour;
 					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
+
+					if(this.opt.series[s].tooltip){
+						if(this.opt.series[s].tooltip in csv.columns){
+							label = csv.columns[this.opt.series[s].tooltip][i];
+						}else{
+							let options = JSON.parse(JSON.stringify(csv.rows[i]));
+							options._colour = colouri;
+							options._title = this.opt.series[s].title;
+							label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+						}
+					}
+
 
 					datum = {
 						'x':(isNaN(csv.columns[this.opt.series[s].value][i]) ? null : csv.columns[this.opt.series[s].value][i]),
@@ -97,38 +108,46 @@ export function BarChart(config,csv){
 			return this;
 		},
 		'updatePadding': function(){
-			var i,l,pad,len,ax,lines,align;
+			var i,l,pad,len,ax,lines,align,titlesize,extent,lbl,tick;
 			// Work out padding
 			pad = {'l':0,'t':0,'b':0,'r':0};
 			for(ax in this.opt.axis){
 
-				// Work out x-axis padding
+				// The extent (in the perpendicular dimension) of the axis title
+				titlesize = 0;
+				if(this.opt.axis[ax].title && this.opt.axis[ax].title.label!=""){
+					titlesize += this.opt['font-size']*2;	// A line height of 2em
+				}
+				// Work out axis padding
 				for(l in this.opt.axis[ax].labels){
-					len = 0;
-					if(typeof this.opt.axis[ax].labels[l].label==="number") this.opt.axis[ax].labels[l].label = ""+this.opt.axis[ax].labels[l].label;
-					if(typeof this.opt.axis[ax].labels[l].label!=="string"){
-						console.log(this.opt.axis[ax].labels[l].label);
-						throw "Label "+l+" on axis "+ax+" is not a string.";
-					}
+
+					// The extent of the axis furniture - start from the size of the title
+					extent = titlesize;
+
+					// Replace string-based newlines
+					lbl = (this.opt.axis[ax].labels[l].label||"").replace(/\\n/g,'\n');
+
 					// Split the label by any new line characters
-					lines = this.opt.axis[ax].labels[l].label.split(/\n/g);
-					if(ax=="x"){
-						// Length is based on the 
-						len = (this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + (this.opt['font-size']*lines.length) + this.opt.axis[ax].tick.size + (this.opt.axis[ax].labels[l].offset||this.opt.axis[ax].padding||0);
-					}else{
-						// Work out the longest line
-						for(i = 0; i < lines.length; i++){
-							// Roughly calculate the length in pixels
-							len = Math.max(len,(this.opt.axis[ax].title && this.opt.axis[ax].title.label!="" ? this.opt['font-size']*1.5 : 0) + textLength(lines[i],this.opt['font-size'],this.opt['font-weight'],this.opt['font-family']) + this.opt.axis[ax].tick.size + this.opt.axis[ax].padding);
-						}
-					}
+					lines = lbl.split(/\n/g);
+
+					// Get alignment (or use defaults)
 					align = this.opt.axis[ax].labels[l].align||(ax=="x" ? "bottom":"left");
+
+					tick = 0;
+					if(typeof this.opt.axis[ax].tick.size==="number") tick = this.opt.axis[ax].tick.size;
+					if(typeof this.opt.axis[ax].labels[l].tickSize==="number") tick = this.opt.axis[ax].labels[l].tickSize;
+					extent += tick;
+					extent += (this.opt.axis[ax].labels[l].offset||(lbl ? this.opt.axis[ax].padding : 0)||0);
+
 					if(ax=="x"){
-						if(align=="bottom") pad.b = Math.max(pad.b,len);
-						else pad.t = Math.max(pad.t,len);
+						extent += lines.length * this.opt['font-size'];
+						if(align=="bottom") pad.b = Math.max(pad.b,extent);
+						else pad.t = Math.max(pad.t,extent);
 					}else{
-						if(align=="left") pad.l = Math.max(pad.l,len);
-						else pad.r = Math.max(pad.r,len);
+						// Length is based on the label length
+						extent += Math.ceil(textLength(lines[0],this.opt['font-size'],this.opt.axis[ax]['font-weight'],this.opt.axis[ax]['font-family']));
+						if(align=="left") pad.l = Math.max(pad.l,extent);
+						else pad.r = Math.max(pad.r,extent);
 					}
 				}
 			}

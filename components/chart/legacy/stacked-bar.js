@@ -1,5 +1,6 @@
 import { mergeDeep } from './util.js';
 import { textLength, getFontFamily, getFontWeight } from '../../../lib/font/fonts.ts';
+import { applyReplacementFilters } from '../../../lib/util.js';
 import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { Colours } from '../../../lib/colour/colours.ts';
@@ -75,12 +76,23 @@ export function StackedBarChart(config,csv){
 							}
 						}
 					}
-					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
-					x = (isNaN(csv.columns[this.opt.series[s].value][i]) ? 0 : csv.columns[this.opt.series[s].value][i]);
 
 					colouri = colour;
 					if(this.opt.series[s].colour) colouri = this.opt.series[s].colour;
 					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
+
+					if(this.opt.series[s].tooltip){
+						if(this.opt.series[s].tooltip in csv.columns){
+							label = csv.columns[this.opt.series[s].tooltip][i];
+						}else{
+							let options = JSON.parse(JSON.stringify(csv.rows[i]));
+							options._colour = colouri;
+							options._title = this.opt.series[s].title;
+							label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+						}
+					}
+
+					x = (isNaN(csv.columns[this.opt.series[s].value][i]) ? 0 : csv.columns[this.opt.series[s].value][i]);
 
 					// The final x-value is the current starting value plus the current value
 					datum = {'x':(typeof x==="null" ? null : x+xo),'xstart':xo,'y':categoryoffset,'title':label,'colour':colouri};

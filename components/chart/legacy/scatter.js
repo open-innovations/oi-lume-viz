@@ -1,6 +1,7 @@
 import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
+import { applyReplacementFilters } from '../../../lib/util.js';
 import { mergeDeep } from './util.js';
 import { Colours } from '../../../lib/colour/colours.ts';
 
@@ -54,9 +55,22 @@ export function ScatterChart(config,csv){
 					if(typeof y==="string") y = i;
 					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
 						label = this.opt.series[s].title+"\n"+labx+': '+(laby);
-						if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
 						colouri = colour;
 						if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
+
+						//if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
+						if(this.opt.series[s].tooltip){
+							if(this.opt.series[s].tooltip in csv.columns){
+								label = csv.columns[this.opt.series[s].tooltip][i];
+							}else{
+								let options = JSON.parse(JSON.stringify(csv.rows[i]));
+								options._colour = colouri;
+								options._title = this.opt.series[s].title;
+								label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+							}
+						}
+
+
 						datum = {'x':x,'y':y,'title':label,'colour':colouri};
 						datum.data = {'series':this.opt.series[s].title};
 						data.push(datum);

@@ -100,18 +100,15 @@ examples:
       width: 300
   - title: "Add tooltips"
     description: |
-      In this example we will build a custom `tooltip` to the `series` created using <a href="/documentation/virtual-columns/">virtual columns</a>.
+      In this example we will build a custom `tooltip` for the `series`. This can either refer to a column/<a href="/documentation/virtual-columns/">virtual column</a> in the data or be a <a href="/documentation/templates/">string template</a>.
     config:
       data:
         - Total vaccinated aged 75+: 3725152
           Percentage of people aged 75+: 67.9
-      columns:
-        - name: Tooltip
-          template: "Aged 75+\nPeople: {{ Total vaccinated aged 75+ | toLocaleString() }} ({{ Percentage of people aged 75+ }}%)"
       series:
         - value: "Percentage of people aged 75+"
           colour: "#019c91"
-          tooltip: Tooltip
+          tooltip: "Aged 75+\nPeople: {{ Total vaccinated aged 75+ | toLocaleString() }} ({{ Percentage of people aged 75+ }}%)"
       width: 300
   - title: "Add legend"
     description: |

@@ -1,5 +1,6 @@
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { Colours } from '../../../lib/colour/colours.ts';
+import { applyReplacementFilters } from '../../../lib/util.js';
 import { Axis } from './axis.js';
 import { Series } from './series.js';
 import { KeyItem } from './keyitem.js';
@@ -139,7 +140,18 @@ export function Chart(config,csv){
 				if(typeof y==="string") y = i;
 				if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
 					label = this.opt.series[s].title+"\n"+labx+': '+(laby);
-					if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
+					if(this.opt.series[s].tooltip){
+						if(this.opt.series[s].tooltip in csv.columns){
+							label = csv.columns[this.opt.series[s].tooltip][i];
+						}else{
+							let options = JSON.parse(JSON.stringify(csv.rows[i]));
+							options._x = x;
+							options._y = y;
+							options._colour = namedColours.get(this.opt.series[s].colour||this.opt.series[s].title);
+							options._title = this.opt.series[s].title;
+							label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+						}
+					}
 					datum = {'x':x,'y':y,'title':label};
 					datum.data = {'series':this.opt.series[s].title};
 					data.push(datum);

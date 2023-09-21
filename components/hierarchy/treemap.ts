@@ -5,6 +5,7 @@ import { getAssetPath } from "../../lib/util/paths.ts";
 import { TableData, UsefulFunction } from "./lib/hierarchy-visualisation.ts";
 import { TreeMap, TreeMapOptions } from "./lib/tree-map.ts";
 import { addVirtualColumns } from "../../lib/helpers.ts";
+import { applyReplacementFilters } from '../../lib/util.js';
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import { getFontSize, getFontWeight, getFontFamily } from "../../lib/font/fonts.ts";
 import { VisualisationHolder } from '../../lib/holder.js';
@@ -128,10 +129,15 @@ export default function (options: { config: TreemapComponentOptions }) {
   config.data = addVirtualColumns(config);
 
   if (tooltip) {
-    config.description = function (d) {
-      if (d.data.original[0][tooltip] !== undefined) return d.data.original[0][tooltip];
-      return d.name;
-    };
+	config.description = function (d) {
+		if(tooltip in d.data.original[0]){
+			return d.data.original[0][tooltip];
+		}else{
+			let options = JSON.parse(JSON.stringify(d.data.original[0]));
+			return applyReplacementFilters(tooltip,options);
+		}
+		return d.name;
+	};
   } else {
     config.description = thingOrNameOfThing<UsefulFunction>(
       config.description,

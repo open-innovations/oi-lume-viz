@@ -3,7 +3,7 @@ title: Ridgeline chart
 description: |
   Multiple series shown as a ridgeline chart/Joyplot.
 order: 21
-showcase: 0
+showcase: 1
 component: chart.ridgeline
 examples:
   - title: "Basic"
@@ -219,6 +219,72 @@ examples:
         - title: Aug 2023
           x: Average temperature (C)
           y: "2023-08"
+  - title: "Add custom tooltips"
+    description: |
+      As in other visualisations, you can set a `tooltip` per series that refers to a column (or virtual column) in the data. However, you can also pass a <a href="/documentation/templates/">string template</a> which can refer to that series' `x`, `y`, `colour` and `title` values using the shorthand `{{ _x }}`, `{{ _y }}`, `{{ _title }}` and `{{ _colour }}`. 
+    config:
+      data: test.data.leeds-weather
+      series:
+        - title: Sep 2022
+          x: Average temperature (C)
+          y: "2022-09"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Oct 2022
+          x: Average temperature (C)
+          y: "2022-10"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Nov 2022
+          x: Average temperature (C)
+          y: "2022-11"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Dec 2022
+          x: Average temperature (C)
+          y: "2022-12"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Jan 2023
+          x: Average temperature (C)
+          y: "2023-01"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Feb 2023
+          x: Average temperature (C)
+          y: "2023-02"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Mar 2023
+          x: Average temperature (C)
+          y: "2023-03"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Apr 2023
+          x: Average temperature (C)
+          y: "2023-04"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: May 2023
+          x: Average temperature (C)
+          y: "2023-05"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Jun 2023
+          x: Average temperature (C)
+          y: "2023-06"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Jul 2023
+          x: Average temperature (C)
+          y: "2023-07"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
+        - title: Aug 2023
+          x: Average temperature (C)
+          y: "2023-08"
+          colour: "#005776"
+          tooltip: "<strong>{{ _title }}</strong>\n{{ _y }} day(s) averaged {{ _x }}°C"
   - title: "Scale the series"
     description: |
       By default, the maximum vertical extent of the data will be `2` times the spacing of the series. We can change that by setting `ridgeline → height`. A larger value will make the ridges taller and make the series closer together. A value closer to `0` will make the ridges shallower and the series further apart.

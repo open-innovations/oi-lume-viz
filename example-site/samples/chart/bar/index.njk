@@ -71,7 +71,7 @@ examples:
           value: series1
   - title: "Two series - customised tooltips"
     description: |
-      Add two series to a horizontal bar chart. Each series gets its own colour. Javascript is used to make the legend interactive (hovering over a series will highlight that series).
+      Add two series to a horizontal bar chart. Each series gets its own colour. Javascript is used to make the legend interactive (hovering over a series will highlight that series). We can set a `tooltip` for each series which can either refer to a specific column/<a href="/documentation/virtual-columns/">virtual column</a> in the data or be a <a href="/documentation/templates/">string template</a>.
     config:
       data:
         - "Ethnic group": Ethnic Group A
@@ -106,18 +106,13 @@ examples:
           grid:
             stroke-width: 0.5
       category: "Ethnic group"  # Category names come from 
-      columns:
-        - name: "Aspect 1 Label"
-          template: "Aspect 1<br />{{ Ethnic group}}: {{ Aspect 1 (%) }}%"
-        - name: "Aspect 2 Label"
-          template: "Aspect 2<br />{{ Ethnic group}}: {{ Aspect 2 (%) }}%"
       series:
         - title: "Aspect 1"
           value: "Aspect 1 (%)"
-          tooltip: "Aspect 1 Label"
+          tooltip: "Aspect 1<br />{{ Ethnic group}}: {{ Aspect 1 (%) }}%"
         - title: "Aspect 2"
           value: "Aspect 2 (%)"
-          tooltip: "Aspect 2 Label"
+          tooltip: "Aspect 2<br />{{ Ethnic group}}: {{ Aspect 2 (%) }}%"
   - title: "Multi series - customised colours"
     description: |
       Add spacing between series' bars as a fraction of the bar width. Explicitly set the colours of each series (as either a hex colour, an RGB colour or a named CSS colour).
@@ -162,26 +157,19 @@ examples:
             stroke-width: 0.5
       gap: 0.2
       category: "Reason"  # Category names come from 
-      columns:
-        - name: "School Label"
-          template: "{{ Reason }}<br />School: {{ School }}%"
-        - name: "College Label"
-          template: "{{ Reason }}<br />College: {{ College }}%"
-        - name: "University Label"
-          template: "{{ Reason }}<br />University: {{ University }}%"
       series:
         - title: "School"
           value: "School"
           colour: "#E52E36"
-          tooltip: "School Label"
+          tooltip: "{{ Reason }}<br />School: {{ School }}%"
         - title: "College"
           value: "College"
           colour: "#F7AB3D"
-          tooltip: "College Label"
+          tooltip: "{{ Reason }}<br />College: {{ College }}%"
         - title: "University"
           value: "University"
           colour: "#69C2C9"
-          tooltip: "University Label"
+          tooltip: "{{ Reason }}<br />University: {{ University }}%"
   
   
   - title: "Stacked bar chart - auto scaling"
@@ -329,9 +317,6 @@ examples:
           grid:
             stroke-width: 0.5
       category: "Year"  # Category labels come from 
-      columns:
-        - name: "25+ tooltip"
-          template: "25+\n{{ Year }}: {{ 25+_percent | toFixed(1) }}% ({{ 25+ }})\n"
       series:
         - title: "Under 19"
           value: u19
@@ -341,7 +326,7 @@ examples:
           colour: "#7D2248"
         - title: "25+"
           value: 25+
-          tooltip: "25+ tooltip"
+          tooltip: "25+\n{{ Year }}: {{ 25+_percent | toFixed(1) }}% ({{ 25+ }})\n"
           colour: "#4A783C"
   
   - title: Data object

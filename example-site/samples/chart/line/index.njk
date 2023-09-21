@@ -39,7 +39,7 @@ examples:
           colour: "#e52e36"
   - title: "Explicitly defined grid"
     description: |
-      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tick → size</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by creating virtual <code>columns</code> (each column has a <code>name</code> and <code>template</code>). We also create an interactive legend.
+      This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tick → size</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by providing a column/<a href="/documentation/virtual-columns/">virtual column</a> in the data or a <a href="/documentation/templates/">string template</a>. We also create an interactive legend.
     config:
       data: test.data.unemploymentByAge
       legend:
@@ -130,36 +130,27 @@ examples:
               label: ''
           tick:
             size: 5
-      columns:
-        - name: "16-17 Label"
-          template: "16-17<br />{{ Date }}: {{ 16-17→rate (%)1 | toFixed(1) }}%"
-        - name: "18-24 Label"
-          template: "18-24<br />{{ Date }}: {{ 18-24→rate (%)1 | toFixed(1) }}%"
-        - name: "25-49 Label"
-          template: "25-49<br />{{ Date }}: {{ 25-49→rate (%)1 | toFixed(1) }}%"
-        - name: "50 over Label"
-          template: "50 and over<br />{{ Date }}: {{ 50 and over→rate (%)1 | toFixed(1) }}%"
       series:
         - title: 16-17
           x: Year
           y: "16-17→rate (%)1"
           colour: "#e52e36"
-          tooltip: "16-17 Label"
+          tooltip: "16-17<br />{{ Date }}: {{ 16-17→rate (%)1 | toFixed(1) }}%"
         - title: 18-24
           x: Year
           y: "18-24→rate (%)1"
           colour: "#f7ab3d"
-          tooltip: "18-24 Label"
+          tooltip: "18-24<br />{{ Date }}: {{ 18-24→rate (%)1 | toFixed(1) }}%"
         - title: 25-49
           x: Year
           y: "25-49→rate (%)1"
           colour: "#c7b200"
-          tooltip: "25-49 Label"
+          tooltip: "25-49<br />{{ Date }}: {{ 25-49→rate (%)1 | toFixed(1) }}%"
         - title: 50-64
           x: Year
           y: "50 and over→rate (%)1"
           colour: "#005776"
-          tooltip: "50 over Label"
+          tooltip: "50 and over<br />{{ Date }}: {{ 50 and over→rate (%)1 | toFixed(1) }}%"
   - title: "Category-based data"
     description: This example uses category-based data. Default [colours](../../../documentation/colours/) are used as no `colour` is given for each series.
     config:

@@ -1,5 +1,6 @@
 import { Chart } from './chart.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
+import { applyReplacementFilters } from '../../../lib/util.js';
 import { mergeDeep } from './util.js';
 import { Colours } from '../../../lib/colour/colours.ts';
 import { Series } from './series.js';
@@ -32,7 +33,7 @@ export function RidgeLineChart(config,csv){
 		'axis':{'x':{'padding':5,'tick':{'size':0.5},'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tick':{'size':0.5},'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}}},
 		'duration': '0.3s',
 		'buildSeries': function(){
-			let s,i,labx,laby,x,y,label,datum,data;
+			let s,i,labx,laby,x,y,label,datum,data,options;
 						
 			// Build the series
 			for(s = 0; s < this.opt.series.length; s++){
@@ -55,7 +56,18 @@ export function RidgeLineChart(config,csv){
 					if(typeof y==="string") y = i;
 					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
 						label = this.opt.series[s].title+"\n"+labx+': '+(laby);
-						if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
+						if(this.opt.series[s].tooltip){
+							if(this.opt.series[s].tooltip in csv.columns){
+								label = csv.columns[this.opt.series[s].tooltip][i];
+							}else{
+								options = JSON.parse(JSON.stringify(csv.rows[i]));
+								options._x = x;
+								options._y = y;
+								options._colour = namedColours.get(this.opt.series[s].colour||this.opt.series[s].title);
+								options._title = this.opt.series[s].title;
+								label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+							}
+						}
 						datum = {'x':x,'y':(this.opt.series.length-1-s)+(ysize*(y-ymin)/yrange),'title':label};
 						datum.data = {'series':this.opt.series[s].title};
 						data.push(datum);

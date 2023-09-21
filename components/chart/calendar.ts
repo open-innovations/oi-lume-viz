@@ -1,4 +1,5 @@
 import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
+import { applyReplacementFilters } from '../../lib/util.js';
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
 import { VisualisationHolder } from '../../lib/holder.js';
@@ -137,8 +138,6 @@ function CalendarChart(input: {
 	let x = 0;
 	let y = 0;
 
-	//if(!input.tooltip) input.tooltip = input.value;
-
 	var props = {
 		'days': days,
 		'min': min,
@@ -236,9 +235,19 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 		
 		let tooltip = '';
 		if(dat){
-			if(dat[input.tooltip]) tooltip = dat[input.tooltip];
-			else tooltip = (dat[input.key]||"");
+			// If there is data for this day we build a custom tooltip
+			if(input.tooltip){
+				if(input.tooltip in dat){
+					tooltip = dat[input.tooltip];
+				}else{
+					let options = JSON.parse(JSON.stringify(dat));
+					tooltip = applyReplacementFilters(input.tooltip,options);
+				}
+			}else{
+				tooltip = (dat[input.key]||"");
+			}
 		}else{
+			// No data for this day so just show date
 			tooltip = iso;
 		}
 

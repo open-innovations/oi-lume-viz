@@ -2,6 +2,7 @@ import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
 import { VisualisationHolder } from '../../lib/holder.js';
+import { applyReplacementFilters } from '../../lib/util.js';
 import { Colour, ColourScale,Colours } from "../../lib/colour/colours.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import type { AxisOptions, SeriesOptions } from "./types.ts";
@@ -135,7 +136,16 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 			// For this series, create the bins
 			for(let i = 0; i < v; i++){
 				icon = config.series[s].icon||config.icon;
-				bins[bin] = {'series':s,'icon':icon,'colour':namedColours.get(config.series[s].colour)||defaultbg,'tooltip':config.data[0][config.series[s].tooltip]||((config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value]),'data':true,'point':clone(config.series[s].points)};
+				let tooltip = (config.series[s].title||config.series[s].value)+":\n"+config.data[0][config.series[s].value];
+				if(config.series[s].tooltip){
+					if(config.series[s].tooltip in config.data[0]){
+						tooltip = config.data[0][config.series[s].tooltip];
+					}else{
+						let options = JSON.parse(JSON.stringify(config.data[0]));
+						tooltip = applyReplacementFilters(config.series[s].tooltip,options);
+					}
+				}
+				bins[bin] = {'series':s,'icon':icon,'colour':namedColours.get(config.series[s].colour)||defaultbg,'tooltip':tooltip,'data':true,'point':clone(config.series[s].points)};
 				bin++;
 			}
 		}
@@ -146,7 +156,16 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	let lst = config.series.length-1;
 	if(config.series.length > 0 && !config.series[lst].value){
 		if(config.series[lst].colour) defaultbin.colour = namedColours.get(config.series[lst].colour);
-		if(config.series[lst].tooltip) defaultbin.tooltip = config.data[0][config.series[lst].tooltip];
+		if(config.series[lst].tooltip){
+			let tooltip = "";
+			if(config.series[lst].tooltip in config.data[0]){
+				tooltip = config.data[0][config.series[lst].tooltip];
+			}else{
+				let options = JSON.parse(JSON.stringify(config.data[0]));
+				tooltip = applyReplacementFilters(config.series[s].tooltip,options);
+			}
+			defaultbin.tooltip = tooltip;
+		}
 		if(config.series[lst].points) defaultbin.point = clone(config.series[lst].points);
 	}
 	
