@@ -482,7 +482,7 @@ export default function (input: { config: HexmapOptions }) {
 				${widthSVG + qWidth + 2 * margin} ${heightSVG + 2 * hexSide + 2 * margin}
 			"
 			preserveAspectRatio="xMidYMin meet"
-			style="width:${width ? `${width}px`:"100%"};max-width:100%;margin:auto;${bgColour ? `background: ${bgColour}` : ""}"
+			style="width:${width ? `${width}px`:"100%"};max-width:100%;max-height:100%;margin:auto;${bgColour ? `background: ${bgColour}` : ""}"
 			xmlns="http://www.w3.org/2000/svg"
 			xmlns:xlink="http://www.w3.org/1999/xlink"
 		data-type="hex-map"
