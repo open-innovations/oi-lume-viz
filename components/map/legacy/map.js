@@ -481,7 +481,7 @@ function BasicMap(config,attr){
 	setAttr(this.container,{'style':'overflow:hidden'});
 
 	this.attr = attr;
-	this.projection = new Projection(config.projection||null,(config.width || attr.w),(config.height || attr.h));
+	this.projection = new Projection(config.projection||null,(config.width || attr.w),(config.height || attr.h),(config.padding || 0));
 	this.w = this.projection.w;
 	this.h = this.projection.h;
 
@@ -626,7 +626,7 @@ function BasicMap(config,attr){
 	return this;
 }
 
-function Projection(p,w,h){
+function Projection(p,w,h,defaultpadding){
 
 	if(!p) p = {};
 	if(typeof p.name!=="string") p.name = "none";
@@ -639,6 +639,13 @@ function Projection(p,w,h){
 
 	wide = w;
 	tall = h;
+
+	// Make sure defaultpadding is formatted in the form: [top, right, bottom, left] padding
+	if(typeof defaultpadding==="number" && defaultpadding > 0) defaultpadding = [defaultpadding];
+	if(typeof defaultpadding==="object"){
+		if(defaultpadding.length==1) defaultpadding = [defaultpadding[0],defaultpadding[0],defaultpadding[0],defaultpadding[0]];
+		if(defaultpadding.length==2) defaultpadding = [defaultpadding[0],defaultpadding[1],defaultpadding[0],defaultpadding[1]];
+	}
 
 	if(p.name=="aitoff"){
 
@@ -720,20 +727,31 @@ function Projection(p,w,h){
 		geojson = new GeoJSON(geojson);
 		if(geojson.getData().features.length == 0) geojson.addFeature({ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [ [ [ -180.0, -90 ], [ -180.0, 90 ], [ 180, 90 ], [ -180, 90 ]]]} });
 
+		var p = [0,0,0,0];
+		if(typeof defaultpadding==="object") p = defaultpadding;
+
+		// Fit the projection to the bounds
 		if(typeof w==="number" && typeof h==="number"){
-			proj.fitExtent([[0,0],[this.w,this.h]],geojson.getData());
+			proj.fitExtent([[0, 0],[this.w, this.h]],geojson.getData());
 		}else if(typeof w!=="number" && typeof h==="number"){
-			proj.fitExtent([[0,0],[this.w,h]],geojson.getData());
+			proj.fitExtent([[0, 0],[this.w, h]],geojson.getData());
 		}else if(typeof w==="number" && typeof h!=="number"){
-			proj.fitExtent([[0,0],[w,this.h]],geojson.getData());
+			proj.fitExtent([[0, 0],[w, this.h]],geojson.getData());
 		}else{
 			proj.fitWidth(this.w,geojson.getData());
 		}
 
 		this.metrics.bounds = this.getBounds(geojson);
+
+		// Update bounds with padding
+		this.metrics.bounds[0][1] -= p[0];	// top
+		this.metrics.bounds[1][0] += p[1];	// right
+		this.metrics.bounds[1][1] += p[2];	// bottom
+		this.metrics.bounds[0][0] -= p[3];	// left
+
 		this.metrics.width = this.metrics.bounds[1][0] - this.metrics.bounds[0][0];
 		this.metrics.height = this.metrics.bounds[1][1] - this.metrics.bounds[0][1];
-		this.metrics.viewBox = Math.round(this.metrics.bounds[0][0]) + " " + Math.round(this.metrics.bounds[0][1]) + " " + Math.round(this.metrics.bounds[1][0]) + " " + Math.round(this.metrics.bounds[1][1]);
+		this.metrics.viewBox = Math.round(this.metrics.bounds[0][0]) + " " + Math.round(this.metrics.bounds[0][1]) + " " + Math.round(this.metrics.width) + " " + Math.round(this.metrics.height);
 		this.metrics.aspectRatio = Math.round(Math.max(this.w,this.metrics.width))+' / '+Math.round(this.metrics.height);
 
 		// Clip GeoJSON to the bounds to avoid lots of unseen polygons
