@@ -233,6 +233,8 @@ examples:
       tooltip: "{{ LAD21NM }}<br />Aged 15 and under: {{ Aged 15 years and under | toLocaleString() }}"
   - title: "Filter hexes"
     description: |
+      <div class="warning centred padded padded-bottom">Note that this feature is a progressive enhancement and will only function if Javascript is enabled.</div>
+      
       We can add an interactive `filter` to our hex map. We can set `tools → filter → label` to the `name` of a column in the data - this defines the text used in the filter drop-down list. We can set the maximum number of results to show in the filter drop down using `tools → filter → max`.
     config:
       hexjson:
@@ -273,6 +275,8 @@ examples:
         Data: <a href="https://www.westyorks-ca.gov.uk/media/8790/lcr-housing-delivery-monitoring-report-2020-21-4.pdf">West Yorkshire Combined Authority</a>
   - title: "Add an interactive slider"
     description: |
+      <div class="warning centred padded padded-bottom">Note that this feature is a progressive enhancement and will only function if Javascript is enabled.</div>
+      
       Sometimes you may have multi-epoch data. If you want the person viewing the page to be able to see these different epochs on the same cartogram, you can add an interactive `slider`. To define which columns to use we pass an ordered array to `tools → slider → columns`. In this example we have numeric data for the years 2016 to 2021 so we will set it to `[2016,2017,2018,2019,2020,2021]`.
       
       In the previous example we used `2021` in the `tooltip` to reference the column that the `value` was taken from. But now the active column depends on the slider position. We need to refer to the current `value` differently; use the special replacement `{{ _value }}` to access the active data column.
