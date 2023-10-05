@@ -229,7 +229,7 @@ export function ZoomableMap(opts){
 
 		html.push('})(window || this);\n');
 
-		var holder = new VisualisationHolder(config);
+		var holder = new VisualisationHolder(config,{'name':'map'});
 		holder.addDependencies(['/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/tooltip.js','/js/zoomable.js']);
 		holder.addClasses(['oi-map','oi-zoomable-map']);
 		return holder.wrap('<div class="leaflet"></div><script>'+html.join('')+'</script>');
@@ -498,7 +498,7 @@ function BasicMap(config,attr){
 
 	this.getHTML = function(){
 
-		var holder = new VisualisationHolder(config);
+		var holder = new VisualisationHolder(config,{'name':'map'});
 		holder.addDependencies(attr.dependencies||['/css/legend.css','/css/maps.css','/js/tooltip.js']);
 		holder.addClasses('oi-map');
 		holder.addClasses(attr.classes);

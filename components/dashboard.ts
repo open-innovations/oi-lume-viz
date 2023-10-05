@@ -2,6 +2,7 @@ import { dashboard, DashboardOptions } from "../lib/dashboard.ts";
 import { getBackgroundColour, Colour } from "../lib/colour/colour.ts";
 import { addVirtualColumns, thingOrNameOfThing } from "../lib/helpers.ts";
 import { clone } from "../lib/util/clone.ts";
+import { VisualisationHolder } from '../lib/holder.js';
 
 const defaultbg = getBackgroundColour();
 const defaultbgcontrast = Colour(defaultbg).contrast;
@@ -41,5 +42,7 @@ export default function (input: {
 	config.data = addVirtualColumns(config);
 
 	const html = dashboard(config);
-	return html;
+
+	var holder = new VisualisationHolder(config,{'name':'dashboard'});
+	return holder.wrap(html);
 }

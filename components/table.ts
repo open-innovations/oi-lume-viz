@@ -142,7 +142,7 @@ export default function (input: {
 
 	const table = html.join('');
 
-	var holder = new VisualisationHolder(options);
+	var holder = new VisualisationHolder(options,{'name':'table'});
 	if(sortable) holder.addDependencies(['/js/table-sort.js']);
 	holder.addClasses(['oi-table']);
 	return holder.wrap(table);

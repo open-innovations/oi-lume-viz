@@ -70,7 +70,7 @@ export default function (input: {
   // Call the line render function
   const chart = renderRidgeLineChart(options);
 
-  var holder = new VisualisationHolder(options);
+  var holder = new VisualisationHolder(options,{'name':'ridgeline chart'});
   holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
   holder.addClasses(['oi-chart','oi-chart-ridgeline']);
   return holder.wrap(chart);

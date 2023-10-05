@@ -350,7 +350,7 @@ export default function (input: {
 		series[s].titleEl.innerHTML = ttl;
 	}
 
-	var holder = new VisualisationHolder(config);
+	var holder = new VisualisationHolder(config,{'name':'ranking chart'});
 	holder.addDependencies(['/js/chart-ranking.js','/css/charts.css']);
 	holder.addClasses(['oi-chart','oi-chart-ranking']);
 	return holder.wrap(svg.outerHTML);

@@ -469,7 +469,7 @@ export default function (input: { config: HexmapOptions }) {
 			</g>`;
 	};
 
-	var holder = new VisualisationHolder(input.config);
+	var holder = new VisualisationHolder(input.config,{'name':'hex cartogram'});
 	holder.addDependencies(['/js/map.js','/css/maps.css','/js/tooltip.js']);
 	holder.addClasses('oi-map oi-map-hex');
 

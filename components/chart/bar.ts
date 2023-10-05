@@ -108,7 +108,7 @@ export default function (input: {
   // Call the bar render function
   const chart = renderBarChart(options);
 
-  var holder = new VisualisationHolder(options);
+  var holder = new VisualisationHolder(options,{'name':'bar chart'});
   holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
   holder.addClasses(['oi-chart','oi-chart-bar']);
   return holder.wrap(chart);

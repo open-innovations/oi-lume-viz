@@ -70,7 +70,7 @@ export default function (input: {
   // Call the line render function
   const chart = renderLineChart(options);
 
-  var holder = new VisualisationHolder(options);
+  var holder = new VisualisationHolder(options,{'name':'line chart'});
   holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
   holder.addClasses(['oi-chart','oi-chart-line']);
   return holder.wrap(chart);

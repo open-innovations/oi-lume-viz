@@ -280,7 +280,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 		}
 	}
 
-	var holder = new VisualisationHolder(config);
+	var holder = new VisualisationHolder(config,{'name':'waffle chart'});
 	holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
 	holder.addClasses(['oi-chart','oi-waffle-chart']);
 
