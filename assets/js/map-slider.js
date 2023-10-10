@@ -94,7 +94,7 @@
 			key = opt.columns[i];
 			label.innerHTML = key;
 			if(!opt.key) console.error('No key');
-			var min,max,v,id,colour;
+			var min,max,v,id,colour,tt;
 			// Find range of data
 			if(opt.min) min = opt.min;
 			else{
@@ -114,8 +114,10 @@
 				if(typeof hexes[id].data[key]==="number"){
 					v = (hexes[id].data[key]-min)/(max-min);
 					colour = cs(v);
+					tt = opt.tooltip;
 				}else{
 					colour = opt.defaultbg||"#bbb";
+					tt = "{{ n }}";
 				}
 
 				// Check if it is a named colour
@@ -127,7 +129,7 @@
 				hexes[id].data._value = key;
 
 				// Update tooltip
-				hexes[id].title.innerHTML = applyReplacementFilters(opt.tooltip,hexes[id].data);
+				hexes[id].title.innerHTML = applyReplacementFilters(tt,hexes[id].data);
 			}
 			if(OI.Tooltips) OI.Tooltips.update();
 			return this;
