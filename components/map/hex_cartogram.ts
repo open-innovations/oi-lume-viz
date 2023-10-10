@@ -405,7 +405,7 @@ export default function (input: { config: HexmapOptions }) {
 		
 		const labelProp = <string> config[titleProp];
 		let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
-		let tooltipText = tooltipProcessor(config, <string> (typeof tooltip==="function" ? tooltip(labelProp, valuecol) : tooltip));
+		let tooltipText = tooltipProcessor(config, <string> (typeof tooltip==="function" ? tooltip(labelProp, valuecol) : (config[value]===undefined ? "{{ n }}" : tooltip)));
 
 		const colourValue =
 			<number | string> config[colourValueProp || value] || valuecol;
