@@ -1,5 +1,5 @@
 /*
-	Open Innovations Tooltip v0.2
+	Open Innovations Tooltip v0.3
 	Helper function to add tooltips. A suitable candidate must:
 	  - be in an SVG
 	  - have a <title> child
@@ -9,7 +9,7 @@
 (function(root){
 
 	var styles = document.createElement('style');
-	styles.innerHTML = '.tooltip {z-index:10000;color:black;margin-top:-0.75em;filter:drop-shadow(0px 1px 1px rgba(0,0,0,0.7));text-align:left;}.tooltip .inner { padding: 1em; }';
+	styles.innerHTML = '.tooltip {z-index:10000;color:black;filter:drop-shadow(0px 1px 1px rgba(0,0,0,0.7));text-align:left;}.tooltip .inner { padding: 1em; }';
 	document.head.prepend(styles)
 
 	if(!root.OI) root.OI = {};
@@ -139,8 +139,27 @@
 			shift = 0;
 			if(bbox.left < pad) shift = (pad-bbox.left);
 			else if(bbox.right > wide-pad) shift = -(bbox.right-wide+pad);
-			tip.style.transform = 'translate3d('+(shift == 0 ? '-50%' : 'calc(-50% + ' + shift + 'px)')+',calc(-100% - '+off+'px),0)';
-			arr.style.transform = 'translate3d(calc(-50% - ' + shift + 'px),0,0)';
+			if(bbox.top > pad){
+				// Tooltip is comfortably on the screen
+				tip.style.top = (bb.top + bb.height/2 - bbo.top).toFixed(2)+'px';
+				tip.style.transform = 'translate3d('+(shift == 0 ? '-50%' : 'calc(-50% + ' + shift + 'px)')+',calc(-100% - '+off+'px - 0.75em),0)';
+				arr.style.transform = 'translate3d(calc(-50% - ' + shift + 'px),0,0)';
+				arr.style.top = 'calc(100% - 1px)';
+				arr.style['border-top'] = '0.5em solid '+fill;
+				arr.style['border-right'] = '0.5em solid transparent';
+				arr.style['border-bottom'] = '';
+				arr.style['border-left'] = '0.5em solid transparent';
+			}else{
+				// Tooltip is off the top of the screen
+				tip.style.top = (bb.top + bb.height/2 - bbo.top).toFixed(2)+'px';
+				tip.style.transform = 'translate3d('+(shift == 0 ? '-50%' : 'calc(-50% + ' + shift + 'px)')+',calc('+(off)+'px + 0.75em),0)';
+				arr.style.transform = 'translate3d(calc(-50% - ' + shift + 'px),-100%,0)';
+				arr.style.top = '1px';
+				arr.style['border-top'] = '';
+				arr.style['border-right'] = '0.5em solid transparent';
+				arr.style['border-bottom'] = '0.5em solid '+fill;
+				arr.style['border-left'] = '0.5em solid transparent';
+			}
 
 			if(typeof attr.show==="function") attr.show.call(this,pt,attr);
 			attr._parent.active = this;
@@ -200,7 +219,7 @@
 		this.create = function(){
 			if(!tip){
 				tip = document.createElement('div');
-				tip.innerHTML = '<div class="inner" style="background: #b2b2b2;position:relative;"></div><div class="arrow" style="position: absolute; width: 0; height: 0; border: 0.5em solid transparent; border-bottom: 0; left: 50%; top: calc(100% - 1px); transform: translate3d(-50%,0,0); border-color: transparent; border-top-color: #aaaaaa;"></div>';
+				tip.innerHTML = '<div class="inner" style="background: #b2b2b2;position:relative;"></div><div class="arrow" style="position:absolute;width:0;height:0;border:0.5em solid transparent;border-bottom:0;left:50%;top:calc(100% - 1px);transform:translate3d(-50%,0,0);border-color:transparent;border-top-color:#aaaaaa;"></div>';
 				addClasses(tip,['tooltip']);
 			}
 			return tip;
