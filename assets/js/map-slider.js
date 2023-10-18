@@ -115,6 +115,8 @@
 					v = (hexes[id].data[key]-min)/(max-min);
 					colour = cs(v);
 					tt = opt.tooltip;
+				}else if(typeof hexes[id].data[key]==="string"){
+					tt = opt.tooltip;
 				}else{
 					colour = opt.defaultbg||"#bbb";
 					tt = "{{ n }}";
@@ -124,7 +126,7 @@
 				if(hexes[id].data[key] in opt.colours.named) colour = opt.colours.named[hexes[id].data[key]];
 
 				hexes[id].path.setAttribute('fill',colour);
-				hexes[id].label.setAttribute('fill',OI.Colour(colour).contrast);
+				if(hexes[id].label) hexes[id].label.setAttribute('fill',OI.Colour(colour).contrast);
 
 				hexes[id].data._value = key;
 

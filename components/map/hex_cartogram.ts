@@ -450,23 +450,11 @@ export default function (input: { config: HexmapOptions }) {
 		fill = Colour(fill);
 
 		// TODO(@gilesdring) this only supports pointy-top hexes at the moment
-		return `<g
-					id="${uuid}-hex-${hexId}"
-					class="hex"
-					transform="translate(${roundNumber(x)} ${roundNumber(y)})"
-			data-value="${valuecol}"
-			data-id="${config._id}"
-					role="listitem"
-					aria-label="${labelProp} value ${valuecol}"
-				>
-				<path fill="${fill.hex}" d="${hexPath}"><title>${tooltipText}</title></path>
-				<text
-				fill="${fill.contast}"
-				text-anchor="middle"
-					dominant-baseline="middle"
-					aria-hidden="true"
-					>${labelText}</text>
-			</g>`;
+		var html = `<g id="${uuid}-hex-${hexId}" class="hex" transform="translate(${roundNumber(x)} ${roundNumber(y)})" data-value="${valuecol}" data-id="${config._id}" role="listitem" aria-label="${labelProp} value ${valuecol}">`;
+		html += `<path fill="${fill.hex}" d="${hexPath}"><title>${tooltipText}</title></path>`;
+		if(labelText) html += `<text fill="${fill.contast}" text-anchor="middle" dominant-baseline="middle" aria-hidden="true">${labelText}</text>`;
+		html += `</g>`;
+		return html;
 	};
 
 	var holder = new VisualisationHolder(input.config,{'name':'hex cartogram'});
