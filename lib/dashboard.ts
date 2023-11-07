@@ -65,7 +65,7 @@ export function dashboard(config: DashboardOptions){
     throw `Invalid value: No property named "${value}" in the data`;
   
   // Set asset path based on module config
-  const html = ['<div class="oi-viz oi-dashboard" data-dependencies="' + getAssetPath('/js/dashboard.js') + '"'+(width ? ' style="--auto-dashboard-min-size:'+width+';"' : '')+'>'];
+  const html = ['<div class="oi-dashboard-inner"'+(width ? ' style="--auto-dashboard-min-size:'+width+';"' : '')+'>'];
 
   // Loop over the user-specified panels
   for(let p = 0 ; p < panels.length; p++){
