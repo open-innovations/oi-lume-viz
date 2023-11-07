@@ -93,17 +93,18 @@ export default function (input: {
 		}
 	}
 
+	if("order" in options && options.order == "reverse") cells = cells.reverse();
+
 	let sty = '';
 	if(options.width) sty += 'width:'+options.width+';';
 
 	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+(sortable ? ' class="table-sort table-arrows"':'')+'><tr>'];
 	for(let col = 0; col < options.columns.length; col++){
-		html.push('<th'+(sortable && !options.columns[col].sortable ? ' class="disable-sort"':'')+'>'+(options.columns[col].name||"")+'</th>');
+		html.push('<th'+(sortable && !options.columns[col].sortable ? ' class="disable-sort"':'')+''+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].name||"")+'</th>');
 	}
 	html.push('</tr>');
 	
 	let cs = {};
-
 	for(let row = 0; row < cells.length; row++){
 		html.push('<tr>');
 		for(let col = 0; col < cells[row].length; col++){
