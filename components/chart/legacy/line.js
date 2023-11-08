@@ -25,7 +25,7 @@ export function LineChart(config,csv){
 		'axis':{'x':{'padding':5,'tick':{'size':0.5},'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tick':{'size':0.5},'labels':{}}},
 		'duration': '0.3s',
 		'updatePadding': function(){
-			var l,pad,ax,lines,align,titlesize,extent,lbl,tick;
+			var l,pad,ax,lines,align,titlesize,extent,lbl,tick,added;
 			// Work out padding
 			pad = {'l':0,'t':0,'b':0,'r':0};
 			for(ax in this.opt.axis){
@@ -34,6 +34,8 @@ export function LineChart(config,csv){
 				if(this.opt.axis[ax].title && this.opt.axis[ax].title.label!=""){
 					titlesize += this.opt['font-size']*2;	// A line height of 2em
 				}
+
+				added = 0;
 				// Work out axis padding
 				for(l in this.opt.axis[ax].labels){
 
@@ -65,6 +67,12 @@ export function LineChart(config,csv){
 						if(align=="left") pad.l = Math.max(pad.l,extent);
 						else pad.r = Math.max(pad.r,extent);
 					}
+					added++;
+				}
+				// If no labels have been added, make sure to add the titlesize as padding for the axis
+				if(added==0){
+					if(ax=="x") pad.b += titlesize;
+					if(ax=="y") pad.l += titlesize;
 				}
 			}
 			this.opt.left = this.opt.padding.left + pad.l;

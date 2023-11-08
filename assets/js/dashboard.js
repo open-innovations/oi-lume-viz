@@ -2,8 +2,10 @@
 	Open Innovations Dashboard Interactivity v0.2
 	Adds "animation" to numbers in ".oi-dashboard" elements of the form:
 	<div class="oi-dashboard">
-		<div class="panel">
-			<span class="bignum" data="37" data-prefix="£" data-postfix="p">£37p</span>
+		<div class="oi-dashboard-inner">
+			<div class="panel">
+				<span class="bignum" data="37" data-prefix="£" data-postfix="p">£37p</span>
+			</div>
 		</div>
 	</div>
 */
@@ -126,7 +128,6 @@
 			post = el.getAttribute('data-postfix')||'';
 			prec = el.getAttribute("data-precision") ? parseFloat(el.getAttribute("data-precision")) : "";
 			if(typeof duration!=="number") duration = 500;
-			console.log(val,prec);
 			function frame(){
 				var now,f;
 				now = new Date();
