@@ -39,8 +39,8 @@ export function Chart(config,csv){
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},
 		'axis':{
-			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight,'font-size':fontSize},
-			'y':{'padding':10,'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight}
+			'x':{'padding':10,'labels':{},'grid':{'show':true,'stroke':'#B2B2B2'},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight,'font-size':fontSize},
+			'y':{'padding':10,'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight}
 		},
 		'duration': '0.3s'
 	};
@@ -188,7 +188,7 @@ export function Chart(config,csv){
 		for(ax in this.axes) this.axes[ax].setProperties(this.opt.axis[ax]||{}).addTo(svg);
 		return this;
 	};
-	
+
 	this.buildAxes = function(){
 		// Build axis labels
 		var dat = this.opt.data;

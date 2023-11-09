@@ -41,9 +41,11 @@ export function LineChart(config,csv){
 
 					// The extent of the axis furniture - start from the size of the title
 					extent = titlesize;
+					
+					if(typeof this.opt.axis[ax].labels[l].label!=="string") this.opt.axis[ax].labels[l].label = "";
 
 					// Replace string-based newlines
-					lbl = (typeof this.opt.axis[ax].labels[l].label==="string" ? this.opt.axis[ax].labels[l].label : "").replace(/\\n/g,'\n');
+					lbl = (this.opt.axis[ax].labels[l].label).replace(/\\n/g,'\n');
 
 					// Split the label by any new line characters
 					lines = lbl.split(/\n/g);
