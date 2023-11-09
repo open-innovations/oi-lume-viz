@@ -268,9 +268,9 @@ export function generateTicks(config: AxisOptions, data): TickArray[] {
 			tick = {
 				'value':parseFloat(v),
 				'label':label,
-				'font-weight': "normal"
+				'font-weight': "normal",
+				...(config.tick.options||{})
 			}
-			if(config.tick.options) tick.options = config.tick.options;
 			ticks.push(tick);
 		}
 	}
