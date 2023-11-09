@@ -39,8 +39,8 @@ export function Chart(config,csv){
 			'text':{'text-anchor':'start','dominant-baseline':'hanging','font-weight':'bold','fill':'#000000','stroke-width':0}
 		},
 		'axis':{
-			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight,'font-size':fontSize},
-			'y':{'padding':10,'labels':{},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight}
+			'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight,'font-size':fontSize},
+			'y':{'padding':10,'getXY':function(x,y){ return _obj.getXY(x,y); },'font-family':fontFamily,'font-weight':fontWeight}
 		},
 		'duration': '0.3s'
 	};
@@ -189,77 +189,19 @@ export function Chart(config,csv){
 		return this;
 	};
 	
-	function defaultSpacing(mn,mx,n){
-
-		var dv,log10_dv,base,frac,options,distance,imin,tmin,i;
-
-		// Start off by finding the exact spacing
-		dv = (mx-mn)/(n);
-
-		// In any given order of magnitude interval, we allow the spacing to be
-		// 1, 2, 5, or 10 (since all divide 10 evenly). We start off by finding the
-		// log of the spacing value, then splitting this into the integer and
-		// fractional part (note that for negative values, we consider the base to
-		// be the next value 'down' where down is more negative, so -3.6 would be
-		// split into -4 and 0.4).
-		log10_dv = Math.log10(dv);
-		base = Math.floor(log10_dv);
-		frac = log10_dv - base;
-
-		// We now want to check whether frac falls closest to 1, 2, 5, or 10 (in log
-		// space). There are more efficient ways of doing this but this is just for clarity.
-		options = [1,2,5,10];
-		distance = new Array(options.length);
-		imin = -1;
-		tmin = 1e100;
-		for(i = 0; i < options.length; i++){
-			distance[i] = Math.abs(frac - Math.log10(options[i]));
-			if(distance[i] < tmin){
-				tmin = distance[i];
-				imin = i;
-			}
-		}
-
-		// Now determine the actual spacing
-		return (Math.pow(10,base))*(options[imin]);
-	}
-	
 	this.buildAxes = function(){
-		// Axes
-		// Build x-axis labels
+		// Build axis labels
+		var dat = this.opt.data;
 		for(ax in this.opt.axis){
-			if(this.opt.axis[ax] && this.opt.axis[ax].ticks){
-				// Auto-generate ticks if it is defined but has no length (because it is a dict)
-				if(typeof this.opt.axis[ax].ticks.length=="undefined"){
-					var lbl,i;
-					var step = (typeof this.opt.axis[ax].ticks.step==="number" ? this.opt.axis[ax].ticks.step : (typeof this.opt.axis[ax].ticks.n==="number" && this.opt.axis[ax].ticks.n > 0 ? Math.round((this.opt.axis[ax].max-this.opt.axis[ax].min)/this.opt.axis[ax].ticks.n) : defaultSpacing(this.opt.axis[ax].min,this.opt.axis[ax].max,5)));
-					this.opt.axis[ax].labels = {};
-					if(this.opt.axis[ax].ticks.align=="start" || !this.opt.axis[ax].ticks.align){
-						for(i = this.opt.axis[ax].min; i <= Math.min(this.opt.axis[ax].max,this.opt.data.length-1); i += step){
-							lbl = {
-								'label':(this.opt.axis[ax].ticks.label in this.opt.data[i] ? this.opt.data[i][this.opt.axis[ax].ticks.label] : '').replace(/\\n/g,"\n"),
-								...(this.opt.axis[ax].ticks.options||{})
-							};
-							this.opt.axis[ax].labels[(this.opt.axis[ax].ticks.column in this.opt.data[i] ? this.opt.data[i][this.opt.axis[ax].ticks.column] : i)] = lbl;
-						}				
-					}else if(this.opt.axis[ax].ticks.align=="end"){
-						for(i = Math.min(this.opt.axis[ax].max,this.opt.data.length-1); i >= this.opt.axis[ax].min; i -= step){
-							lbl = {
-								'label':(this.opt.axis[ax].ticks.label in this.opt.data[i] ? this.opt.data[i][this.opt.axis[ax].ticks.label] : '').replace(/\\n/g,"\n"),
-								...(this.opt.axis[ax].ticks.options||{})
-							};
-							this.opt.axis[ax].labels[(this.opt.axis[ax].ticks.column in this.opt.data[i] ? this.opt.data[i][this.opt.axis[ax].ticks.column] : i)] = lbl;
-						}
-					}
-				}else{
-					for(i = 0; i < this.opt.axis[ax].ticks.length; i++) this.opt.axis[ax].labels[this.opt.axis[ax].ticks[i].value] = this.opt.axis[ax].ticks[i];
+			if(this.opt.axis[ax]){
+				if(!this.opt.axis[ax].ticks){
+					console.log('no ticks',ax);
+					throw new TypeError('no ticks');
 				}
+				this.opt.axis[ax].labels = {};
+				for(i = 0; i < this.opt.axis[ax].ticks.length; i++) this.opt.axis[ax].labels[this.opt.axis[ax].ticks[i].value] = this.opt.axis[ax].ticks[i];
 			}
 		}
-		// Build y-axis labels
-//		if(this.opt.axis.y && this.opt.axis.y.ticks){
-//			for(i = 0; i < this.opt.axis.y.ticks.length; i++) this.opt.axis.y.labels[this.opt.axis.y.ticks[i].value] = this.opt.axis.y.ticks[i];
-//		}
 		return this;
 	};
 	this.addSeries = function(){

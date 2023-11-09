@@ -87,7 +87,7 @@ export function Axis(ax,from,to,attr){
 	// Update the axis
 	this.update = function(){
 		var t,x,y,pos,len,align,talign,baseline,xsign,ysign,lines,l,d;
-		if(!opt.labels) opt.labels = [];
+		if(!opt.labels) opt.labels = {};
 		this.title.innerHTML = opt.title.label||"";
 		x = (ax=="x" ? (opt.left + (opt.width-opt.right-opt.left)/2) : fs);
 		y = (ax=="y" ? (opt.top + (opt.height-opt.top-opt.bottom)/2):(opt.height-fs/2));

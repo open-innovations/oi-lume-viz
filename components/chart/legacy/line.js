@@ -43,7 +43,7 @@ export function LineChart(config,csv){
 					extent = titlesize;
 
 					// Replace string-based newlines
-					lbl = (this.opt.axis[ax].labels[l].label||"").replace(/\\n/g,'\n');
+					lbl = (typeof this.opt.axis[ax].labels[l].label==="string" ? this.opt.axis[ax].labels[l].label : "").replace(/\\n/g,'\n');
 
 					// Split the label by any new line characters
 					lines = lbl.split(/\n/g);
