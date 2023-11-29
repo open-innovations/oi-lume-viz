@@ -1,6 +1,6 @@
 /* OI chart styles */
 .oi-chart { position: relative; }
 .oi-chart .legend .legend-item { }
-.oi-legend-inner .oi-legend-item.oi-series-lock, .oi-legend-inner .oi-legend-item:hover { background: rgba(255,255,255,0.8); outline: 1px solid #999; }
+.oi-legend-inner .oi-legend-item.oi-series-on { background: rgba(255,255,255,0.8); outline: 1px solid #999; }
 /* OI ranking chart component */
 .oi-chart-ranking { position: relative; }

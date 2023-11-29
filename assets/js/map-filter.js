@@ -1,5 +1,5 @@
 /*
-	Open Innovations map filtering v0.1
+	Open Innovations map filtering v0.2
 */
 (function(root){
 
@@ -34,7 +34,7 @@
 			areas[a].data.title = (as[a].querySelector('title').innerHTML||"");
 			areas[a].data.label = (data && data[areas[a].id] ? data[areas[a].id] : areas[a].data.title);//.replace(/<br.*/,""));
 			areas[a].colour = areas[a].el.querySelector('path').getAttribute('fill');
-			areas[a].textcolour = (OI.Colour ? OI.Colour(areas[a].colour).contrast : areas[a].el.querySelector('text').getAttribute('fill'));
+			areas[a].textcolour = (OI.Colour ? OI.Colour(areas[a].colour).contrast : (areas[a].el.querySelector('text')||areas[a].el.querySelector('path')).getAttribute('fill'));
 			hexes[areas[a].id] = as[a];
 		}
 		el = p.querySelector('.oi-filter');

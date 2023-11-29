@@ -485,7 +485,7 @@ export default function (input: { config: HexmapOptions }) {
 
 	if(!tools) tools = {};
 	if(tools.filter){
-		holder.addDependencies(['/js/map-filter.js']);
+		holder.addDependencies(['/js/map-filter.js','/js/colours.js']);
 		var filterdata = {};
 		for(var id in hexes){
 			filterdata[id] = (tools.filter.label && tools.filter.label in hexes[id] ? hexes[id][tools.filter.label] : tools.filter.label);
