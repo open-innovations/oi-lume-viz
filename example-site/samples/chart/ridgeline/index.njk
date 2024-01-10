@@ -383,6 +383,705 @@ examples:
           x: Average temperature (C)
           y: "2023-08"
 
+
+  - title: "Big example"
+    description: |
+      Here is an example [inspired by a BBC News article](https://www.bbc.co.uk/news/science-environment-67861954) that uses [world daily surface air temperature](https://climatereanalyzer.org/clim/t2_daily/?dm_id=world) (ECMWF Reanalysis v5 from C3S) binned by the temperature difference with the 1991-2020 average. We define a `gradient` with a `name` (`BuRd`) and a series of colour `stops`; the gradient is used as the `fill` value for each series. We set the `line → stroke-width` for each line to make them thinner.
+    config:
+      data: test.data.era5_world_t2_year
+      width: 600
+      height: 800
+      ridgeline:
+        height: 10
+        curvature: 0.5
+      axis:
+        x:
+          title:
+            label: Temperature difference from the 1991-2020 average (°C)
+          tick:
+            spacing: 0.5
+          min: -1.5
+          max: 1.5
+        y:
+          title:
+            label: "Number of days each year"
+      gradient:
+        - name: "BuRd"
+          stops: "#053061 0%, #2166ac 10%, #4393c3 20%, #92c5de 30%, #d1e5f0 40%, #f7f7f7 50%, #fddbc7 60%, #f4a582 70%, #d6604d 80%, #b2182b 90%, #67001f 100%"
+      series:
+        - title: 1940
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1940
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1940</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1941
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1941</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1942
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1942</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1943
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1943</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1944
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1944</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1945
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1945
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1945</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1946
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1946</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1947
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1947</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1948
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1948</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1949
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1949</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1950
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1950
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1950</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1951
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1951</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1952
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1952</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1953
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1953</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1954
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1954</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1955
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1955
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1955</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1956
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1956</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1957
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1957</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1958
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1958</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1959
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1959</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1960
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1960
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1960</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1961
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1961</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1962
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1962</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1963
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1963</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1964
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1964</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1965
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1965
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1965</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1966
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1966</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1967
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1967</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1968
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1968</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1969
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1969</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1970
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1970
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1970</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1971
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1971</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1972
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1972</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1973
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1973</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1974
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1974</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1975
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1975
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1975</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1976
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1976</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1977
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1977</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1978
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1978</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1979
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1979</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1980
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1980
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1980</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1981
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1981</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1982
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1982</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1983
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1983</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1984
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1984</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1985
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1985
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1985</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1986
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1986</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1987
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1987</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1988
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1988</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1989
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1989</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1990
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1990
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1990</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1991
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1991</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1992
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1992</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1993
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1993</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1994
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1994</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 1995
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1995
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1995</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1996
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1996</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1997
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1997</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1998
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1998</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 1999
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>1999</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 2000
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2000
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2000</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2001
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2001</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2002
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2002</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2003
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2003</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2004
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2004</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 2005
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2005
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2005</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2006
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2006</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2007
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2007</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2008
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2008</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2009
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2009</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 2010
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2010
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2010</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2011
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2011</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2012
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2012</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2013
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2013</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2014
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2014</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 2015
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2015
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2015</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2016
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2016</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2017
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2017</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2018
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2018</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2019
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2019</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: 2020
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2020
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2020</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2021
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2021</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2022
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2022</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+        - title: ""
+          x: Temperature difference from 1991-2020 avg (°C)
+          y: 2023
+          colour: black
+          fill: "url(#BuRd)"
+          tooltip: "<strong>2023</strong>\n{{ _x }}°C: {{ _y }} days"
+          line:
+            stroke-width: 1
+
 ---
 
 This type of chart is sometimes known as a Joyplot after a version, showing pulses from the pulsar CP 1919 in the Cambridge Encyclopaedia of Astronomy, was featured on the cover of Joy Division's <a href="https://en.wikipedia.org/wiki/Unknown_Pleasures"><em>Unknown Pleasures</em></a> album. They work well when there is a clear pattern to observe but they can also hide data where overlaps take place.
