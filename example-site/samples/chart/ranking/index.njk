@@ -98,6 +98,25 @@ examples:
             label: 10
           - value: 1
             label: 1
+  - title: "Limit to the top x entries"
+    description: |
+      It may be that we have a long list of entries and we only want to show the top few. We can limit the visualisation using e.g. `top: 10` to get the top 10. We will assign colours based on the `Ranks→2020` column in the data so we'll also set the `max` value to `10`. To help make things clearer, we'll also add rank `circles` and make the `stroke-width` narrower.
+    config:
+      data: test.data.heatmap
+      key: Country
+      colour: Ranks→2020
+      max: 10
+      scale: Viridis
+      circles: 0.9
+      columns:
+        - name: 2018
+          template: '{{ Ranks→2018 }}'
+        - name: 2019
+          template: '{{ Ranks→2019 }}'
+        - name: 2020
+          template: '{{ Ranks→2020 }}'
+      top: 10
+      stroke-width: 0.2
   - title: "A more complex example"
     description: |
       This uses a dataset of [private sector long term empty properties by ward in Leeds](https://datamillnorth.org/dataset/private-sector-long-term-empty-properties-by-ward) taken from Data Mill North. The CSV file contains the percentage of empty properties in each ward by month. We find the rank for each `key` (e.g. `Ward`) in each of the `columns`. As we want larger percentages to give lower ranks, we set `reverse` to `true`. We `colour` the lines by the ranking of the `2019` column in the data by referring to `2019_rank`.

@@ -53,7 +53,8 @@ type RankingChartOptions = {
 	min?: number,
 	max?: number,
 	curvature?: number,
-	circles?: number
+	circles?: number,
+	top?: number
 };
 
 
@@ -98,7 +99,8 @@ export default function (input: {
 		'curvature': 1,
 		'circles': 0,
 		'stroke-width': 0.5,
-		'reverse':false
+		'reverse':false,
+		'top': config.data.length
 	};
 
 
@@ -108,13 +110,16 @@ export default function (input: {
 		...config,
 	} as RankingChartOptions;
 
+	// Make sure the `top: x` doesn't exceed the data length
+	options.top = Math.min(options.top,config.data.length);
+
 	// Limit curvature to range
 	options.curvature = Math.max(0,Math.min(1,options.curvature));
 
 	// Error checking
 	checkOptions(options);
 
-	let svgopt,clip,rect,svg,seriesgroup,dy,y,yv,x,xv,h,w,pad,xoff,xlbl,dx,ttl,lbl,g,v,i,ok,data,path,oldx,oldy,oldrank,rank,orderby,bg,talign,circle,radius,txt;
+	let svgopt,clip,rect,svg,seriesgroup,dy,y,yv,x,xv,h,w,pad,xoff,xlbl,dx,ttl,lbl,g,v,i,ok,data,path,oldx,oldy,oldidx,rank,orderby,bg,talign,circle,radius,txt,idx;
 	const ns = 'http://www.w3.org/2000/svg';
 	// Create a random ID number
 	const id = Math.round(Math.random()*1e8);
@@ -132,9 +137,10 @@ export default function (input: {
 	}
 
 	for(let row = 0; row < options.data.length; row++){
-		let s = { "row": row, "title": "", "data": clone(options.data[row]), "rank": new Array(options.columns.length) };
+		let s = { "row": row, "title": "", "data": clone(options.data[row]), "rank": new Array(options.columns.length), "order": new Array(options.columns.length) };
 		if(typeof options.data[row][options.key]==="undefined") throw 'No column "'+options.key+'" in data.';
 		s.title = options.data[row][options.key];
+		s.include = false;
 
 		// Construct columns for this series
 		ok = true;
@@ -165,6 +171,11 @@ export default function (input: {
 		let ranks = arr.map(function(v){ return sorted.indexOf(v)+1 });
 		for(let s = 0; s < series.length; s++){
 			series[s].rank[col] = ranks[series[s].row];
+			series[s].order[col] = ranks[series[s].row]-1;
+
+			// Do we include the series?
+			if(ranks[series[s].row] <= options.top) series[s].include = true; 
+
 			series[s].data[options.columns[col].name+"_rank"] = series[s].rank[col];
 			let v = null;
 			if(config.colour){
@@ -179,6 +190,7 @@ export default function (input: {
 			}
 		}
 	}
+
 
 	if(typeof options.height!=="number") options.height = Math.ceil(yoff*(series.length+1));
 
@@ -195,6 +207,11 @@ export default function (input: {
 		add(rect,clip);
 		seriesgroup = svgEl('g');
 		seriesgroup.classList.add('data');
+	}
+
+	// Remove those series that aren't included
+	for(let s = series.length-1; s >= 0; s--){
+		if(!series[s].include) series.splice(s,1);
 	}
 
 	// Create the SVG elements for each series
@@ -239,10 +256,34 @@ export default function (input: {
 	});
 
 
+
+	let positions = new Array(series[0].rank.length);
+	let gap = 1;
+	var extra = 0;
+
+	for(let i = 0; i < series[0].rank.length; i++){
+		let arr = new Array(series.length);
+		for(let s = 0; s < series.length; s++){
+			arr[s] = series[s].rank[i];
+		}
+
+		let arrsort = arr.sort();
+		positions[i] = {'count':0};
+		for(let a = 0; a < arrsort.length; a++){
+			if(arrsort[a] > options.top){
+				positions[i][arrsort[a]] = positions[i].count + options.top + gap;
+				positions[i].count++;
+				extra = Math.max(extra,positions[i].count);
+			}else{
+				positions[i][arrsort[a]] = arr[a]-1;
+			}
+		}
+	}
+
 	// Calculate some dimensions
 	w = options.width;
 	h = options.height - yoff;
-	dy = h / series.length;
+	dy = h / (options.top + (extra > 0 ? extra+gap:0));
 	radius = dy*options.circles*0.5;
 
 	// Shrink the font if the y-spacing is too small
@@ -279,6 +320,8 @@ export default function (input: {
 
 	let cs = (options.scale ? ColourScale(options.scale) : ColourScale(defaultbg+" 0%, "+defaultbg+" 100%"));
 
+	oldidx = -1;
+
 	// Update label positions and font size
 	for(let s = 0; s < series.length; s++){
 
@@ -304,24 +347,32 @@ export default function (input: {
 		v = 0;
 
 		rank = series[s].rank[0];
+		idx = positions[0][rank];
+
+		// If this label has the same index as the previous one we add one
+		if(idx == oldidx) idx++;
 		oldx = xoff;
-		oldrank = rank;
+
 		// There's a possibility that the first column gives the same ranking to multiple series. 
 		// To avoid labels sitting on top of each other, we shall force the initial ranking to 
 		// match the series index rather than its rank.
-		y = getY(s);
+		y = getY(idx);
 		oldy = y;
 
 		// Update label position to match first column rank
 		setAttr(series[s].label,{'x':xlbl.toFixed(2),'y':y.toFixed(2),'font-size':(fs).toFixed(2)+'px'});
 
 
+		oldidx = idx;
+
 		// Make path for this series
 		path = "";
 		ttl = series[s].title+':';
 		for(i = 0; i < series[s].rank.length; i++){
 			rank = series[s].rank[i];
-			yv = getY(rank-1);
+			idx = series[s].rank[i]-1;
+			idx = positions[i][rank];
+			yv = getY(idx);
 			xv = xoff + (i)*dx;
 
 			if(i == 0) path += 'M'+xv.toFixed(2)+','+yv.toFixed(2);
@@ -340,7 +391,6 @@ export default function (input: {
 			
 			oldy = yv;
 			oldx = xv;
-			oldrank = rank;
 			
 			ttl += '<br />'+(i == 0 ? ' ':'; ')+config.columns[i].name+': '+getNumberWithOrdinal(rank);
 		}
@@ -348,6 +398,14 @@ export default function (input: {
 
 		// Update series title
 		series[s].titleEl.innerHTML = ttl;
+	}
+
+	// Add the divider
+	if(extra > 0){
+		let divider = svgEl('path');
+		divider.classList.add('divider');
+		setAttr(divider,{'d':'M 0,'+getY(options.top - 1 + gap)+'h '+w,'stroke':'black','stroke-width':2});
+		svg.appendChild(divider);
 	}
 
 	var holder = new VisualisationHolder(config,{'name':'ranking chart'});
