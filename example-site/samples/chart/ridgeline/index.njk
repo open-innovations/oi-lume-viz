@@ -386,7 +386,7 @@ examples:
 
   - title: "Big example"
     description: |
-      Here is an example [inspired by a BBC News article](https://www.bbc.co.uk/news/science-environment-67861954) that uses [world daily surface air temperature](https://climatereanalyzer.org/clim/t2_daily/?dm_id=world) (ECMWF Reanalysis v5 from C3S) binned by the temperature difference with the 1991-2020 average. We define a `gradient` with a `name` (`BuRd`) and a series of colour `stops`; the gradient is used as the `fill` value for each series. We set the `line → stroke-width` for each line to make them thinner.
+      Here is an example [inspired by a BBC News article](https://www.bbc.co.uk/news/science-environment-67861954) that uses [world daily surface air temperature](https://climatereanalyzer.org/clim/t2_daily/?dm_id=world) (ECMWF Reanalysis v5 from C3S). The original data is provided with average global temperature per day per year. For each day the temperature difference for that day compared with the 1991-2020 average is found and added to 0.1&deg;C wide bins to get the data for the plot. We define a `gradient` with a `name` (`BuRd`) and a series of colour `stops`; the gradient is used as the `fill` value for each series. We set the `line → stroke-width` for each line to make them thinner.
     config:
       data: test.data.era5_world_t2_year
       width: 600
