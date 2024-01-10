@@ -1,5 +1,6 @@
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { Colours } from '../../../lib/colour/colours.ts';
+import { extractColours } from '../../../lib/colour/extract-colours.ts';
 import { applyReplacementFilters } from '../../../lib/util.js';
 import { Axis } from './axis.js';
 import { Series } from './series.js';
@@ -75,12 +76,33 @@ export function Chart(config,csv){
 			setAttr(svg,svgopt);
 			defs = svgEl('defs');
 			add(defs,svg);
+
+			// Create a clipPath
 			clip = svgEl("clipPath");
 			setAttr(clip,{'id':'clip-'+id});
 			//add(clip,svg); // Clip to graph area
 			rect = svgEl("rect");
 			setAttr(rect,{'x':0,'y':0,'width':this.w,'height':this.h});
 			add(rect,clip);
+
+			// Create any linear gradients
+			if(this.opt.gradient){
+				for(let g = 0; g < this.opt.gradient.length; g++){
+					if(this.opt.gradient[g].name.length > 1){
+						let grad = svgEl('linearGradient');
+						grad.setAttribute('id',this.opt.gradient[g].name);
+						let stops = extractColours(this.opt.gradient[g].stops);
+						for(let s = 0; s < stops.length; s++){
+							let stop = svgEl('stop');
+							setAttr(stop,{'offset':stops[s].v+'%','stop-color':stops[s].c.hex});
+							add(stop,grad);
+						}
+						add(grad,defs);
+					}
+				}
+			}
+
+
 			seriesgroup = svgEl('g');
 			seriesgroup.classList.add('data-layer');
 		}

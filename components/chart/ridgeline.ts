@@ -14,6 +14,7 @@ export interface RidgeLineChartOptions {
   data: Record<string, unknown>[] | string;
   /** Name of a common x-axis category - over-rided by 'x' set in an individual series  */
   category?: string;
+  gradient?: Partial<GradientOptions>[];
   /** Configuration of each of the series (mandatory) */
   series: Partial<SeriesOptions>[];
   /** Configuration of the axes */

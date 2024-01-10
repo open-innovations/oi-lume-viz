@@ -40,6 +40,12 @@ export interface AxisOptions {
   "font-weight": FontWeightOptions;
 }
 
+export interface GradientOptions {
+  /** A name for the gradient that is unique */
+  name: string;
+  value: string;
+}
+
 export interface _InternalSeriesControlStructure extends SeriesOptions {
   x: string;
   y: string;
