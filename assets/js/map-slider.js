@@ -165,14 +165,14 @@
 		}
 
 		// Replace any dummy "_value" with the value of that
-		if(value.match(/\{\{ _value \}\}/)){
-			value = value.replace(/\{\{ _value \}\}/g,function(m,p1){
-				return options['_value'];
+		if(value.match(/\{\{ *_value *\}\}/)){
+			value = value.replace(/\{\{ *_value *\}\}/g,function(m,p1){
+				return options['_value']||"";
 			});
 		}
 
 		// For each {{ value }} we will parse it to see if we recognise it
-		value = value.replace(/\{\{ *([^\}]+) *\}\}/g,function(m,p1){
+		value = value.replace(/\{\{ *([^\}]*) *\}\}/g,function(m,p1){
 
 			// Remove a trailing space
 			p1 = p1.replace(/ $/g,"");
@@ -193,7 +193,7 @@
 					if(typeof v==="object") p1 = "";
 				}
 			}
-			if(typeof p1=="number" && isNaN(p1)) return "";
+			if(typeof p1=="number" && isNaN(p1)) p1 = "";
 
 			// Process each filter in turn
 			for(b = 1; b < bits.length; b++){
@@ -285,7 +285,7 @@
 				}
 
 				// Use string if empty
-				if(!p1){
+				if((typeof p1==="string" && !p1) || typeof p1==="null"){
 					rtn = bits[b].match(/^\"([^\"]*)\"$/);
 					if(rtn) p1 = rtn[1];
 				}
