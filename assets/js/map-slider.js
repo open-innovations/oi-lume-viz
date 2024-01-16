@@ -158,7 +158,7 @@
 
 	function applyReplacementFilters(value,options){
 
-		var v,bits,rtn,b,scale,min,max,cs;
+		var v,bits,rtn,b,scale,min,max,cs,tmp;
 
 		if(typeof value!=="string"){
 			console.error('applyReplacementFilters argument should be a string',value);
@@ -239,9 +239,9 @@
 				// toLocaleString()
 				rtn = bits[b].match(/toLocaleString\(([^\)]*)\)/);
 				if(p1 && rtn){
-					if(typeof p1==="string") p1 = parseFloat(p1);
-					if(typeof p1==="number") p1 = p1.toLocaleString(rtn[1]||{});
-					else p1 = "";
+					tmp = p1
+					if(typeof tmp==="string") tmp = parseFloat(tmp);
+					if(typeof tmp==="number" && !isNaN(tmp)) p1 = tmp.toLocaleString(rtn[1]||{});
 					bits[b] = "";
 				}
 
