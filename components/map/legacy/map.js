@@ -451,7 +451,6 @@ export function SVGMap(opts){
 		
 	}
 
-
 	var map = new BasicMap(config,{
 		'background': 'transparent',
 		'classes': 'oi-map-svg',
@@ -503,7 +502,29 @@ function BasicMap(config,attr){
 		holder.addClasses('oi-map');
 		holder.addClasses(attr.classes);
 
-		return holder.wrap('<div class="oi-map-holder"><div class="oi-map-inner">'+this.svg.outerHTML+'</div></div>');
+		var html = this.svg.outerHTML;
+		var l,filterdata,i,datum,id,filter;
+
+		if(config.tools && config.tools.filter){
+			holder.addDependencies(['/js/map-filter.js','/js/colours.js']);
+
+			filter = config.tools.filter;
+			filterdata = {};
+			for(l = 0; l < config.layers.length; l++){
+				if(config.layers[l].type=="data"){
+					for(i = 0; i < config.layers[l].data.length; i++){
+						datum = config.layers[l].data[i];
+						if(config.key in datum){
+							id = datum[config.key];
+							filterdata[id] = (filter.label && filter.label in datum ? datum[filter.label] : filter.label);
+						}
+					}
+				}
+			}
+			
+			html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
+		}
+		return holder.wrap('<div class="oi-map-holder"><div class="oi-map-inner">'+html+'</div></div>');
 	};
 
 	this.insertLayer = function(l,i){

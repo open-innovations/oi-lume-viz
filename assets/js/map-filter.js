@@ -1,5 +1,5 @@
 /*
-	Open Innovations map filtering v0.2
+	Open Innovations map filtering v0.2.1
 */
 (function(root){
 
@@ -24,13 +24,14 @@
 		if(!opt) opt = {};
 		if(!opt.max) opt.max = 8;
 
-		as = p.querySelectorAll('.data-layer .hex');
+		as = p.querySelectorAll('.data-layer .hex, .data-layer .area');
+		if(as.length == 0) return this;
 		areas = new Array(as.length);
 		// Convert node list into an array with pre-parsed properties
 		for(a = 0; a < as.length; a++){
 			areas[a] = {'el':as[a],'data':{}};
 			areas[a].id = as[a].getAttribute('data-id');
-			areas[a].data.value = as[a].getAttribute('data-value');
+			areas[a].data.value = as[a].getAttribute('data-value')||"";
 			areas[a].data.title = (as[a].querySelector('title').innerHTML||"");
 			areas[a].data.label = (data && data[areas[a].id] ? data[areas[a].id] : areas[a].data.title);//.replace(/<br.*/,""));
 			areas[a].colour = areas[a].el.querySelector('path').getAttribute('fill');
@@ -88,8 +89,10 @@
 					e.stopPropagation();
 					r = a.getAttribute('data');
 					inp.value = "";
-					var path = hexes[r].querySelector('path');
-					if(path) trigger(path,'click');
+					if(r in hexes){
+						var path = hexes[r].querySelector('path');
+						if(path) trigger(path,'click');
+					}
 					// Remove the search results
 					results.innerHTML = "";
 					_obj.highlight();

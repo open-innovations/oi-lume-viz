@@ -201,7 +201,7 @@ export function Layer(attr,map,i){
 		// Clear existing layer
 		this.clear();
 		// Find the map bounds and work out the scale
-		var f,feature,w,h,g2,p,c,d,xy,tspan,scale,cls;
+		var f,feature,w,h,g2,p,c,d,xy,tspan,scale,cls,key;
 		w = map.w;
 		h = map.h;
 
@@ -212,7 +212,10 @@ export function Layer(attr,map,i){
 					feature = this.geojson.data.features[f];
 					c = feature.geometry.coordinates;
 					g2 = svgEl('g');
-
+					if("key" in this.geojson){
+						key = this.geojson.key;
+						if(key && key in feature.properties && typeof feature.properties[key]==="string") g2.setAttribute('data-id',feature.properties[key]);
+					}
 					if(feature.geometry.type == "MultiPolygon" || feature.geometry.type == "Polygon"){
 						cls = "area";
 						p = svgEl('path');

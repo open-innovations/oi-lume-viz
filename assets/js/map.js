@@ -25,7 +25,7 @@
 			typ = "svg-map";
 			pt = [svg.querySelector(':first-child')];
 		}else{
-			svg = el.querySelector('svg');
+			svg = el.querySelector(':scope > svg');
 			typ = svg.getAttribute('data-type');
 			pt = svg.querySelectorAll('.data-layer path');
 		}
