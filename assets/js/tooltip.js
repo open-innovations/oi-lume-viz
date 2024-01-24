@@ -58,6 +58,9 @@
 		typ = svg.getAttribute('data-type');
 		attr.type = typ;
 
+		// Change the cursor
+		pt.style.cursor = "pointer";
+
 		this.show = function(){
 			var tip,j,title,fill,selected,bb,bbo,bbox,off,pad,box,arr,shift,wide;
 

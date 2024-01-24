@@ -18,7 +18,7 @@
 
 	function FilterMap(p,opt,data){
 
-		var el,areas,a,as,btn,inp,results,hexes = {};
+		var el,areas,a,as,btn,inp,results,title,firstlabel = "",hexes = {};
 		var id = "filter-" + Math.random().toString(16).slice(2);
 
 		if(!opt) opt = {};
@@ -27,23 +27,26 @@
 		as = p.querySelectorAll('.data-layer .hex, .data-layer .area');
 		if(as.length == 0) return this;
 		areas = new Array(as.length);
+
 		// Convert node list into an array with pre-parsed properties
 		for(a = 0; a < as.length; a++){
 			areas[a] = {'el':as[a],'data':{}};
 			areas[a].id = as[a].getAttribute('data-id');
 			areas[a].data.value = as[a].getAttribute('data-value')||"";
-			areas[a].data.title = (as[a].querySelector('title').innerHTML||"");
+			title = as[a].querySelector('title');
+			areas[a].data.title = (title ? title.innerHTML||title.innerText : "")||"";
 			areas[a].data.label = (data && data[areas[a].id] ? data[areas[a].id] : areas[a].data.title);//.replace(/<br.*/,""));
 			areas[a].colour = areas[a].el.querySelector('path').getAttribute('fill');
 			areas[a].textcolour = (OI.Colour ? OI.Colour(areas[a].colour).contrast : (areas[a].el.querySelector('text')||areas[a].el.querySelector('path')).getAttribute('fill'));
 			hexes[areas[a].id] = as[a];
 		}
 		el = p.querySelector('.oi-filter');
+		firstlabel = Object.values(data)[0];
 
 		if(!el){
 			el = document.createElement('div');
 			el.classList.add('oi-filter');
-			el.innerHTML = '<label for="oi-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-'+id+'" id="oi-'+id+'" value="" placeholder="e.g. '+areas[0].data.label+'"><ul class="oi-filter-results"></ul>';
+			el.innerHTML = '<label for="oi-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-'+id+'" id="oi-'+id+'" value="" placeholder="e.g. '+firstlabel+'"><ul class="oi-filter-results"></ul>';
 			p.prepend(el);
 		}
 		btn = el.querySelector('.oi-filter-button');
