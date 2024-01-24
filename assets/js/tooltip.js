@@ -182,6 +182,11 @@
 			}
 		};
 
+		this.toggle = function(){
+			if(this==attr._parent.active) this.clear();
+			else this.show();
+		};
+
 		this.clear = function(){ attr._parent.clear(); };
 
 		if(!svg){
@@ -194,10 +199,12 @@
 		}
 
 		pt.setAttribute('tabindex',0);
+		var _obj = this;
 		addEv('click',pt,{'this':this},this.toggleSelected);
 		addEv('focus',pt,{'this':this},this.show);
 		addEv('mouseover',(attr['hover-element']||pt),{'this':this},this.show);
 		addEv('mouseleave',holder,{'this':this},this.clear);
+		addEv('touchstart',pt,{'this':this},function(e,attr){ e.preventDefault(); _obj.toggle(); });
 
 		return this;
 	}
