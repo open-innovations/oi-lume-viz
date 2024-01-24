@@ -173,6 +173,8 @@ examples:
   
   
   - title: "Stacked bar chart - auto scaling"
+    description: |
+      Rather than side-by-side bars, sometimes we need to stack bars. As stacked-bar charts don't do a good job of allowing you to compare any series other than the first, we use Javascript to make the legend interactive; hovering over a series will shift this series to the left of the chart to make comparison across categories easier.
     config:
       colours:
         test: "#999000"
@@ -217,7 +219,7 @@ examples:
   
   - title: "Stacked bar chart - defined scaling"
     description: |
-      Rather than side-by-side bars, sometimes we need to stack bars. Stacked-bar charts don't do a good job of allowing you to compare any series other than the first so we use Javascript to make the legend interactive; hovering over a series will shift this series to the left of the chart to make comparison across categories easier.
+      As for the previous example but we'll explicitly define the <code>axis &rarr; x</code>.
     config:
       data:
         - Year: 2018
