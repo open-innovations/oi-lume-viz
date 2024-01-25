@@ -1,5 +1,5 @@
 /*
-	Open Innovations Tooltip v0.3
+	Open Innovations Tooltip v0.4
 	Helper function to add tooltips. A suitable candidate must:
 	  - be in an SVG
 	  - have a <title> child
@@ -61,10 +61,12 @@
 		// Change the cursor
 		pt.style.cursor = "pointer";
 
+		this.el = function(){ return pt; };
 		this.show = function(){
-			var tip,j,title,fill,selected,bb,bbo,bbox,off,pad,box,arr,shift,wide;
+			var tip,j,title,fill,locked,bb,bbo,bbox,off,pad,box,arr,shift,wide;
 
-			if(attr._parent.selected && attr._parent.selected!=this) return this;
+			// It is locked but not to this tooltip
+			if(attr._parent.locked && attr._parent.locked!=this) return this;
 
 			wide = document.body.getBoundingClientRect().width;
 
@@ -112,13 +114,14 @@
 			arr.style['border-top-color'] = fill;
 
 			// If the colour is similar to black we need to change the tooltip filter
-			if(contrastRatio(colour2RGB(fill),[0,0,0]) < 2){
+			if(fill && contrastRatio(colour2RGB(fill),[0,0,0]) < 2){
 				box.style.border = "1px solid rgba(255,255,255,0.3)";
 				box.style.borderBottom = "0";
 			}else{
 				box.style.border = "0px";
 			}
-			tip.style.color = root.OI.contrastColour ? root.OI.contrastColour(fill) : "black";
+
+			tip.style.color = (fill && root.OI.contrastColour ? root.OI.contrastColour(fill) : "black");
 			
 			// Remove wrapping if the tip is wider than the page minus the padding
 			box.style.whiteSpace = (tip.offsetWidth > wide - 2*pad) ? 'none' : 'nowrap';
@@ -169,26 +172,39 @@
 
 			return this;
 		};
-
-		this.toggleSelected = function(){
-			selected = svg.querySelectorAll('.selected');
-			for(var j = 0; j < selected.length; j++){
-				if(!selected[j].parentNode.classList.contains('outline')) selected[j].classList.remove('selected');
-			}
-			if(this == attr._parent.selected){
-				attr._parent.clear();
-				attr._parent.selected = null;
-			}else{
-				attr._parent.selected = this;
-				pt.classList.add('selected');
-				this.show();
-			}
-		};
-
+		
 		this.toggle = function(){
+			// Always reset any existingly selected items and turn off sticky
 			if(this==attr._parent.active) this.clear();
 			else this.show();
+			return this;
 		};
+		
+		this.toggleLock = function(){
+			return attr._parent.locked ? this.unlock() : this.lock();
+		};
+
+		this.lock = function(){
+			// Unlock if necessary
+			if(attr._parent.locked) this.unlock();
+			// Set this as locked
+			attr._parent.locked = this;
+			// Add a class
+			pt.classList.add('selected');
+			svg.classList.add('locked');
+			return this;
+		};
+
+
+		this.unlock = function(){
+			attr._parent.locked = null;
+			var els = svg.querySelectorAll('.selected');
+			for(var j = 0; j < els.length; j++){
+				els[j].classList.remove('selected');
+			}
+			svg.classList.remove('locked');
+			return this;
+		}
 
 		this.clear = function(){ attr._parent.clear(); };
 
@@ -202,13 +218,12 @@
 		}
 
 		pt.setAttribute('tabindex',0);
-		var _obj = this;
-		addEv('click',pt,{'this':this},this.toggleSelected);
-		addEv('focus',pt,{'this':this},this.show);
-		addEv('mouseover',(attr['hover-element']||pt),{'this':this},this.show);
+		addEv('click',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].toggleLock().toggle(); });
+		addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].show(); });
+		addEv('mouseover',(attr['hover-element']||pt),{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].show(); });
 		addEv('mouseleave',holder,{'this':this},this.clear);
-		addEv('touchstart',pt,{'this':this},function(e,attr){ e.preventDefault(); _obj.toggle(); });
-
+		addEv('touchstart',pt,{'this':this},function(e){ e.data['this'].toggle(); });
+		
 		return this;
 	}
 
@@ -218,7 +233,7 @@
 		var tip;
 
 		this.clear = function(){
-			if(!this.selected){
+			if(!this.locked){
 				if(tip && tip.parentNode) tip.parentNode.removeChild(tip);
 				tip = null;
 				this.active = null;
@@ -244,6 +259,20 @@
 
 		this.update = function(){
 			if(this.active) this.active.show();
+		};
+
+		this.activate = function(el){
+			console.log('activate',el,tips);
+			var t,match;
+			for(t = 0; t < tips.length; t++){
+				console.log('check',t,tips[t],el);
+				if(tips[t].el() == el){
+					match = tips[t];
+					break;
+				}
+			}
+			console.log('match',match);
+			if(match) match.lock().show();
 		};
 
 		return this;

@@ -94,7 +94,7 @@
 					inp.value = "";
 					if(r in hexes){
 						var path = hexes[r].querySelector('path');
-						if(path) trigger(path,'click');
+						if(path) root.OI.Tooltips.activate(path);
 					}
 					// Remove the search results
 					results.innerHTML = "";
@@ -131,17 +131,6 @@
 		});
 	}
 
-	function trigger(el, eventType) {
-		if (typeof eventType === 'string' && typeof el[eventType] === 'function') {
-			el[eventType]();
-		} else {
-			const event =
-				typeof eventType === 'string'
-					? new Event(eventType, {bubbles: true})
-					: eventType;
-			el.dispatchEvent(event);
-		}
-	}
 	root.OI.FilterMap = function(opt,data){
 		var p = document.currentScript.parentNode;
 		return new FilterMap(p,opt,data);
