@@ -1,5 +1,5 @@
 /*
-	Open Innovations Tooltip v0.4
+	Open Innovations Tooltip v0.4.1
 	Helper function to add tooltips. A suitable candidate must:
 	  - be in an SVG
 	  - have a <title> child
@@ -86,6 +86,8 @@
 			// If the fill is "currentColor" we compute what that is
 			if(fill == "currentColor") fill = window.getComputedStyle(pt)['color'];
 			if(fill == "transparent" && pt.getAttribute('data-fill')) fill = pt.getAttribute('data-fill');
+			// If the fill is empty try computing the fill
+			if(!fill) fill = window.getComputedStyle(pt)['fill'];
 
 			// Get the contents now (in case they've been updated)
 			title = (tt ? tt.innerHTML : "").replace(/[\n\r]/g,'<br />');
@@ -108,7 +110,7 @@
 			if(typ=="calendar-chart") off = (bb.height/2);
 			if(typ=="waffle-chart") off = (bb.height/2);
 
-			tip.setAttribute('style','position:absolute;left:'+(bb.left + bb.width/2 - bbo.left).toFixed(2)+'px;top:'+(bb.top + bb.height/2 - bbo.top).toFixed(2)+'px;display:'+(title ? 'block':'none')+';z-index:1000;transform:translate3d(-50%,calc(-100% - '+off+'px),0);transition:all 0s;');
+			tip.setAttribute('style','position:absolute;left:'+(bb.left + bb.width/2 - bbo.left).toFixed(2)+'px;top:'+(bb.top + bb.height/2 - bbo.top).toFixed(2)+'px;display:'+(title ? 'block':'none')+';transform:translate3d(-50%,calc(-100% - '+off+'px),0);transition:all 0s;');
 			box.style.background = fill;
 			box.style.transform = 'none';
 			arr.style['border-top-color'] = fill;
