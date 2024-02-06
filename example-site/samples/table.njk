@@ -239,5 +239,27 @@ examples:
           scale: Heat_r
           min: 0
           sortable: true
+options: |
+  <ul>
+  <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
+  <li>
+  	<code>columns</code> - An ordered array of columns to use to build the table. You could also create a <a href="/documentation/virtual-columns/">virtual column</a> here. Each is of the form:
+  	<ul>
+  	<li><code>name</code> - (required) The title of the column in the data.</li>
+  	<li><code>align</code> - Set the text alignment of the column e.g. <code>left</code>, <code>center</code>, or <code>right</code></li>
+  	<li><code><a href="../../samples/table/#example-2" aria-title="Set if rows should be merged in a table">mergerows</a></code> - (boolean) if this column contains neighbouring rows with the same value, these will be merged into one cell.</li>
+  	<li><code><a href="../../samples/table/#example-7" aria-title="Set if a table column is sortable">sortable</a></code> - (boolean) if this column will be made sortable by the viewer. Note that it isn't possible to make a column sortable if <code>mergerows</code> has been used on any column.</li>
+  	<li><code><a href="../../samples/table/#example-3" aria-title="Set the column colour in a table">colour</code> - A hex colour to use for the background colour of the cells in this column.</li>
+  	<li><code>template</code> - A <a href="../virtual-columns/">virtual column</a> can be created from other columns in the data.</li>
+  	<li><code><a href="samples/table/#example-5" aria-title="Set a table column's background using a scale">scale</a></code> - A <a href="../colours/#scales">colour scale</a> to use to set a cell's background colour based on the cell value.</li>
+  	<li><code>min</code> - Used with <code>scale</code> and <code>max</code> to define the colour scale. If not included, the minimum value of the column will be used.</li>
+  	<li><code>max</code> - Used with <code>scale</code> and <code>min</code> to define the colour scale. If not included, the maximum value of the column will be used.</li>
+  	</ul>
+  </li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - An optional minimum width (e.g. <code>100%</code>) for the table.</li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
+  
 ---
 

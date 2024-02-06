@@ -100,7 +100,7 @@ examples:
             label: 1
   - title: "Limit to the top x entries"
     description: |
-      It may be that we have a long list of entries and we only want to show the top few. We can limit the visualisation using e.g. `top: 10` to get the top 10. We will assign colours based on the `Ranks→2020` column in the data so we'll also set the `max` value to `10`. To help make things clearer, we'll also add rank `circles` and make the `stroke-width` narrower.
+      It may be that we have a long list of entries and we only want to show the top few. We can limit the visualisation using e.g. `top: 10` to get the top 10. But note that because things can move in and out of the top 10 the chart will also show those as a compressed group underneath. We will assign colours based on the `Ranks→2020` column in the data so we'll also set the `max` value to `10`. To help make things clearer, we'll also add rank `circles` and make the `stroke-width` narrower.
     config:
       data: test.data.heatmap
       key: Country
@@ -150,5 +150,28 @@ examples:
           template: "{{ Jan-18 % }}"
         - name: "2019"
           template: "{{ Jan-19 % }}"
-
+options: |
+  <ul>
+  <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
+  <li>
+  	<code>columns</code> - An ordered array of columns to use to build the ranking chart. Each must have a <code>name</code> but these can also be <a href="/documentation/virtual-columns/">virtual columns</a>. This allows you to use fewer columns than exist in the data.
+  </li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - Set a specific width for the visualisation.</li>
+  <li><code>height</code> - Set a specific height for the visualisation.</li>
+  <li><code>key</code> - The title of the column that contains the things to be ranked.</li>
+  <li><code>circles</code> - Add rank values on the lines by setting this in the range <code>0-1</code>. The default is <code>0</code>.</li>
+  <li><code>curvature</code> - This sets the amount of curvature (between 0 and 1) for the line. The default is <code>1</code>.</li>
+  <li><code>stroke-width</code> - This can be in the range 0 and 1. The default is 0.5.</li>
+  <li><code>font-size</code> - Sets the size of the font to use.</li>
+  <li><code><a href="/samples/chart/ranking/#example-3" aria-title="Set the colour of the lines">colour</a></code> - The title of the column to use to set the colour of each line. The value can either be a hex colour value or use a colour <code>scale</code>.</li>
+  <li><code><a href="/samples/chart/ranking/#example-4" aria-title="Set the colour scale of a line">scale</a></code> - A <a href="../colours/#scales">colour scale</a> to use to set a line's stroke colour.</li>
+  <li><code>min</code> - Used with <code>scale</code> and <code>max</code> to define the colour scale.</li>
+  <li><code>max</code> - Used with <code>scale</code> and <code>min</code> to define the colour scale.</li>
+  <li><code>legend</code> - Define the legend</li>
+  <li><code>top</code> - Limit the visualisation to the top <em>x</em>. Note that because things can move in and out of the top 10 the chart will also show those as a compressed group underneath.</li>
+  <li><code>tooltip</code> - This is to add tooltips to days. Either provide the name of an existing/virtual column in the data or construct one using <a href="/documentation/templates/">string templates</a>.</li>
+  <li><code>reverse</code> - (boolean) Reverse the order of the lines.</li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
 ---

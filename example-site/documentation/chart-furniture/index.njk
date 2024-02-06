@@ -1,0 +1,65 @@
+---
+layout: layout/base.njk
+title: Chart furniture
+---
+
+
+<h1>Chart furniture</h1>
+<p>Several of our chart visualisations have similar chart furniture such as <a href="#attribution">attribution</a>, <a href="#axes">axes</a> and <a href="#legends">legends</a>.
+
+<h2 id="attribution">Attribution</h2>
+<p>Adding an <code>attribution</code> value to any of our visualisation types will add a credit line beneath. This will have the class <code>oi-attribution</code>.</p>
+
+<h2 id="axes">Axes</h2>
+<p>Our charts may have horizontal (x) or vertical (y) axes each with its own properties. Note that some properties may not be relevant depending on the chart type.</p>
+<ul>
+<li><code>axis</code> - An ordered array of series. Each one is of the form:
+	<ul>
+	<li><code>x</code>/<code>y</code> - Properties for the horizontal/vertical axis:
+		<ul>
+		<li><code>title</code> - Properties of the title:
+			<ul>
+			<li><code>label</code> - The text of the title to show.</li>
+			</ul>
+		</li>
+		<li><code>min</code> - The minimum value for the axis</li>
+		<li><code>max</code> - The maximum value for the axis</li>
+		<li><code>grid</code> - The properties of the grid:
+			<ul>
+			<li><code>show</code> - (boolean) Do we show the grid lines on this axis?</li>
+			<li><code>stroke-dasharray</code> - Define a <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray">stroke-dasharray</a> for the stroke e.g. "6 2".</li>
+			<li><code>stroke-width</code> - Define a width for the stroke.</li>
+			</ul>
+		</li>
+		<li><code>tick</code> - Properties of the tick marks
+			<ul>
+			<li><code>spacing</code> - The spacing (in data) between individual ticks.</li>
+			<li><code>size</code> - The length of the tick marks.</li>
+			</ul>
+		</li>
+		<li><code>ticks</code> - Define an array of tick marks:
+			<ul>
+			<li><code>value</code> - The value of the tick.</li>
+			<li><code>label</code> - (string) The displayed value of the tick label.</li>
+			<li><code>grid</code> - (boolean) Do we show the grid line for this tick mark?</li>
+			<li><code>tickSize</code> - (number) The length of the tick mark.</li>
+			</ul>
+		</li>
+		</ul>
+	</li>
+	</ul>
+</li>
+</ul>
+
+<h2 id="legends">Legends</h2>
+<p>Legends are useful for showing colour scales or specific values.</p>
+
+
+<ul>
+<li><code>legend</code> - Properties that define a chart legend:
+	<ul>
+	<li><code>show</code> - (boolean) Do we show the legend (default false).</li>
+	<li><code>position</code> - (top/top left/top right/bottom left/bottom right/bottom) Where the legend is placed. If you want to make sure that the legend doesn't overlap the visualisation, you could use <code>top</code> or <code>bottom</code> to place it above or below.</li>
+	</ul>
+</li>
+</ul>

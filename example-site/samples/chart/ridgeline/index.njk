@@ -2,7 +2,7 @@
 title: Ridgeline chart
 description: |
   Multiple series shown as a ridgeline chart/Joyplot.
-order: 21
+order: 22
 showcase: 4
 component: chart.ridgeline
 examples:
@@ -1081,6 +1081,48 @@ examples:
           tooltip: "<strong>2023</strong>\n{{ _x }}°C: {{ _y }} days"
           line:
             stroke-width: 1
+options: |
+  <ul>
+  <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
+  <li>
+  	<code>columns</code> - An ordered array of columns to use to build the ranking chart. Each must have a <code>name</code> but these can also be <a href="/documentation/virtual-columns/">virtual columns</a>. This allows you to use fewer columns than exist in the data.
+  </li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - Set a specific width for the visualisation.</li>
+  <li><code>height</code> - Set a specific height for the visualisation.</li>
+  <li><code>axis</code> - Define the <code>x</code> (horizontal) <a href="/documentation/chart-furniture/#axes">axis</a>.</li>
+  <li><code>legend</code> - Define the <a href="/documentation/chart-furniture/#legends">legend</a>.</li>
+  <li><code>series</code> - An ordered array of series. Each one is of the form:
+    <ul>
+    <li><code>title</code> - The display name of the series.</li>
+    <li><code>x</code> - The title of the column to use for the horizontal axis value.</li>
+    <li><code>y</code> - The title of the column to use for the vertical axis value.</li>
+    <li><code>colour</code> - The hex code to use to colour this series.</li>
+    <li><code>tooltip</code> - Either a string, template string, or the column heading to use to build a tooltip.</li>
+    <li><code>fill</code> - The hex code to use as a fill colour. Could also reference a <code>gradient</code> using e.g. <code>url(#gradientName)</code>.</li>
+    <li><code>fillOpacity</code> - (0-1) The value to use for the opacity of the fill. Default <code>0.8</code>.</li>
+    <li><code>line</code> - Properties of the series line:
+    	<ul>
+    	<li><code>stroke-width</code> - The stroke-width.</li>
+    	</ul>
+    </li>
+    </ul>
+  </li>
+  <li><code>gradient</code> - Define some gradients:
+  	<ul>
+  	<li><code>name</code> - The name of the gradient that we will use elsewhere.</li>
+  	<li><code>stops</code> - A list of colour stops e.g. <code>#053061 0%, #2166ac 10%, #4393c3 20%, #92c5de 30%, #d1e5f0 40%, #f7f7f7 50%, #fddbc7 60%, #f4a582 70%, #d6604d 80%, #b2182b 90%, #67001f 100%</code>.</li>
+  	<li><code>stroke-linecap.</code> - The <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap">stroke-linecap</a></li>
+  	</ul>
+  </li>
+  <li><code>ridgeline</code> - Properties of the ridgeline:
+  	<ul>
+  	<li><code>height</code> - The maximum vertical extent of the data as a multiple of the series spacing. A value closer to 0 will make shallower ridges. Default is <code>2</code>.</li>
+  	<li><code>curvature</code> - You can apply a curvature (0 = none, 1 = maximum) to all the lines. Default is 0.</li>
+  	</ul>
+  </li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
 
 ---
 

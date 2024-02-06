@@ -1,8 +1,8 @@
 ---
 title: Scatter chart
 description: |
-  Multiple series shown as a scatter plot.
-order: 22
+  Multiple series shown as a scatter plot. Similar to a line chart.
+order: 21
 showcase: 4
 component: chart.scatter
 examples:
@@ -302,5 +302,35 @@ examples:
             marker: triangle
             rotate: 180
             size: 32
+options: |
+  <ul>
+  <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
+  <li>
+  	<code>columns</code> - An ordered array of columns to use to build the ranking chart. Each must have a <code>name</code> but these can also be <a href="/documentation/virtual-columns/">virtual columns</a>. This allows you to use fewer columns than exist in the data.
+  </li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - Set a specific width for the visualisation.</li>
+  <li><code>height</code> - Set a specific height for the visualisation.</li>
+  <li><code>axis</code> - Define the <code>x</code> (horizontal) <a href="/documentation/chart-furniture/#axes">axis</a>.</li>
+  <li><code>legend</code> - Define the <a href="/documentation/chart-furniture/#legends">legend</a>.</li>
+  <li><code>series</code> - An ordered array of series. Each one is of the form:
+  	<ul>
+  	<li><code>title</code> - The display name of the series.</li>
+  	<li><code>x</code> - The title of the column to use for the horizontal axis value.</li>
+  	<li><code>y</code> - The title of the column to use for the vertical axis value.</li>
+  	<li><code>colour</code> - The hex code to use to colour this series.</li>
+  	<li><code>tooltip</code> - Either a string, template string, or the column heading to use to build a tooltip.</li>
+  	<li><code>points</code> - Properties of the points:
+  		<ul>
+  		<li><code>size</code> - The size of the point.</li>
+  		<li><code>marker</code> - One of <code>circle</code>, <code>triangle</code>, <code>square</code>, <code>diamond</code>, <code>pentagon</code>, <code>hexagon</code>, <code>octagon</code>, <code>line</code>, or <code>cross</code>.</li>
+  		<li><code>rotate</code> - How much to rotate the marker around its centre by, in degrees.</li>
+  		</ul>
+  	</li>
+  	</ul>
+  </li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
+
 ---
 

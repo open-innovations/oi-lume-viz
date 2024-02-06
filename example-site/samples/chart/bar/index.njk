@@ -351,7 +351,32 @@ examples:
         y:
           grid:
             stroke-width: 0.5
-  
+options: |
+  <ul>
+  <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
+  <li>
+  	<code>columns</code> - An ordered array of columns to use to build the ranking chart. Each must have a <code>name</code> but these can also be <a href="/documentation/virtual-columns/">virtual columns</a>. This allows you to use fewer columns than exist in the data.
+  </li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - Set a specific width for the visualisation.</li>
+  <li><code>height</code> - Set a specific height for the visualisation.</li>
+  <li><code>axis</code> - Define the <code>x</code> (horizontal) <a href="/documentation/chart-furniture/#axes">axis</a>.</li>
+  <li><code>legend</code> - Define the <a href="/documentation/chart-furniture/#legends">legend</a>.</li>
+  <li><code>category</code> - The title of the column that contains the categories (vertical groups).</li>
+  <li><code>series</code> - An ordered array of series. Each one is of the form:
+  	<ul>
+  	<li><code>title</code> - The display name of the series.</li>
+  	<li><code>value</code> - The title of the column to use for the value of the bar.</li>
+  	<li><code>colour</code> - The hex code to use to colour this series.</li>
+  	<li><code>tooltip</code> - Either a string, template string, or the column heading to use to build a tooltip.</li>
+  	</ul>
+  </li>
+  <li><code>gap</code> - Add spacing between the bars as a fraction of the bar width. The default is 0.</li>
+  <li><code>stacked</code> - (boolean) This lets us stack the series within each category. The default is false.</li>
+  <li><code>percent</code> - (boolean) Used with <code>stacked</code> to build 100% width stacked bar charts. This creates virtual columns in your data with the same name as the original columns but with <code>_percent</code> appended. Note that the normalised columns will be created <em>before</em> any virtual columns that you have created. The default is false.</li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
+
 ---
 
 Our bar chart component currently renders horizontal bar charts. By limiting to horizontal bars it reduces some of the issues of label sizes and allows us to expand the chart vertically - it would be harder to expand horizontally without shrinking the size of the bars/labels. Javascript adds tooltips and can make legend items interactive. Hovering over a series in a legend will fade the other series and shift the highlighted series to the left to allow easier comparison.

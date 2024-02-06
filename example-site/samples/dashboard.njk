@@ -185,6 +185,36 @@ examples:
           scale: Viridis
           min: 10
           max: 120
+options: |
+  <ul>
+  <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes.</li>
+  <li><code>columns</code> - As with many of the visualisation types you can optionally add <a href="/documentation/virtual-columns/">virtual columns</a>.</li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - An optional minimum width (e.g. <code>400px</code>) for each panel. Panels may then be arranged by however many columns will fit in the page width.</li>
+  <li><code>title</code> - The title of the column that will be used to get a title of the panel.</li>
+  <li><code>value</code> - The title of the column that will be used to get the value of the panel.</li>
+  <li><code><a href="../../samples/dashboard/#example-2" aria-title="Set the footnote of dashboard panels">note</a></code> - The title of the column that will be used to get a footnote for the panel.</li>
+  <li>
+  	<code>units</code> - A structure to define <code>prefix</code> and <code>prefix</code> columns.
+  	<ul>
+  	<li><code>prefix</code> - The column to use for any text that would go _before_ the <code>value</code> e.g. to add a currency sign before the <code>value</code>.</li>
+  	<li><code>postfix</code> - The column to use for any text that would go _after_ the <code>value</code> e.g. to add, say, "kWh" to a <code>value</code>.</li>
+  	</ul>
+  </li>
+  <li>
+  	<code>panels</code> - An array of which panels will be displayed. They are in orderand each is of the form:
+  	<ul>
+  	<li><code>name</code> - (required) References a specific <code>title</code> value.</li>
+  	<li><code>precision</code> - The level of precision to use for the number e.g. <code>0.1</code> would round the value to the nearest 0.1.</li>
+  	<li><code><a href="../../samples/dashboard/#example-3" aria-title="Set the colour of a dashboard panel">colour</a></code> - The hex colour to use for the panel.</li>
+  	<li><code>class</code> - A CSS class to add to the panel (may be useful for consistent styling).</li>
+  	<li><code><a href="../../samples/dashboard/#example-4" aria-title="Set the colour scale of a dashbaord panel">scale</a></code> - A <a href="../colours/#scales">colour scale</a> to use to set the panel's background colour based on the <code>value</code>.</li>
+  	<li><code>min</code> - Used with <code>scale</code> and <code>max</code> to define the colour scale.</li>
+  	<li><code>max</code> - Used with <code>scale</code> and <code>min</code> to define the colour scale.</li>
+  	</ul>
+  </li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
 
 ---
 

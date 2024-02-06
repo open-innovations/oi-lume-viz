@@ -1,0 +1,19 @@
+---
+layout: layout/base.njk
+title: Visualisation configuration
+---
+
+<h1>Visualisation configuration</h1>
+<p>This page aims to be an overview of the configuration options available for each visualisation type.</p>
+
+
+{% for sample in search.pages('sample order>0', 'order') | data %}
+  <h2><a href="{{ sample.url }}">{{ sample.title }}</a></h2>
+  {% if sample.description %}
+  {{ sample.description }}
+  {% endif %}
+  {% if sample.options %}
+  {{ sample.options | safe }}
+  {% endif %}
+{% endfor %}
+

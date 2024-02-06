@@ -291,4 +291,35 @@ examples:
       legend:
         show: true
         position: top
+options: |
+  <ul>
+  <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
+  <li>
+  	<code>columns</code> - An ordered array of columns to use to build the ranking chart. Each must have a <code>name</code> but these can also be <a href="/documentation/virtual-columns/">virtual columns</a>. This allows you to use fewer columns than exist in the data.
+  </li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - Set a specific width for the visualisation.</li>
+  <li><code>height</code> - Set a specific height for the visualisation.</li>
+  <li><code>series</code> - An ordered array of series. Each one is of the form:
+  	<ul>
+  	<li><code>value</code> - The title of the column to use for the value.</li>
+  	<li><code>colour</code> - The hex code to use to colour this series.</li>
+  	<li><code>tooltip</code> - Either a string, template string, or the column heading to use to build a tooltip.</li>
+  	<li><code>points</code> - Properties of the points:
+  		<ul>
+  		<li><code>size</code> - The size of the point.</li>
+  		<li><code>marker</code> - One of <code>circle</code>, <code>triangle</code>, <code>square</code>, <code>diamond</code>, <code>pentagon</code>, <code>hexagon</code>, <code>octagon</code>, <code>line</code>, or <code>cross</code>. Alternatively you could set a sub-property <code>svg</code> that is an SVG image as a string.</li>
+  		<li><code>rotate</code> - How much to rotate the marker around its centre by, in degrees.</li>
+  		</ul>
+  	</li>
+  	</ul>
+  </li>
+  <li><code>total</code> - The name of the column that contains a total value. If not provided it will be guessed from the sum of the series values.</li>
+  <li><code>padding</code> - Set the padding between cells of the waffle.</li>
+  <li><code>size</code> - Set the grid size of the waffle. The default is <code>10</code> which gives a 10x10 waffle. You can also specify an array with two values e.g. <code>[20,5]</code> to set waffle grid horizontally and vertically</li>
+  <li><code>rounding</code> - By default the values are rounded using <code>Math.round()</code> but we can choose to use <code>Math.floor()</code> by setting <code>rounding</code> to <code>floor</code> (you could also use <code>ceil</code>).</li>
+  <li><code>direction</code> - By default, the <code>direction</code> is set to <code>l2r</code> which means that values fill in from the left. If we set <code>direction</code> to <code>r2l</code> it will fill values from the right.</li>
+  <li><code>gravity</code> - By default, the <code>gravity</code> is set to <code>bottom</code> which means that values start at the bottom and build upwards. We can also set <code>gravity</code> to <code>top</code>, <code>left</code> or <code>right</code>.</li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
 ---

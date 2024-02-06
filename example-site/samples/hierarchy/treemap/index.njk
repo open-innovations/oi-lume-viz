@@ -5,6 +5,20 @@ description: |
 order: 10
 component: hierarchy.treemap
 showcase: 6
+options: |
+  <ul>
+  <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
+  <li><code>columns</code> - As with many of the visualisation types you can optionally add <a href="/documentation/virtual-columns/">virtual columns</a>.</li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>value</code> - The title of the column that will be used to get the value of the panel.</li>
+  <li><code>grouping</code> - An array of column headings by which to group the data. For instance, if you <a href="../../samples/hierarchy/treemap/#example-3">set the grouping to `level_1`</a>, any rows in `level_1` will be grouped together. You can also use this to define a <a href="/samples/hierarchy/treemap/#example-4">multi-level treemap</a>.</li>
+  <li><code><a href="/samples/hierarchy/treemap/#example-6" aria-title="Set the colour of treemap">colour</a></code> - The title of the column to use to set the colour of the treemap cells.</li>
+  <li><code>scale</code> - A <a href="../colours/#scales">colour scale</a> to use to colour the cells based on the value.</li>
+  <li><code>min</code> - Used with <code>scale</code> and <code>max</code> to define the colour scale.</li>
+  <li><code>max</code> - Used with <code>scale</code> and <code>min</code> to define the colour scale.</li>
+  <li><code>tooltip</code> - This is to add tooltips to cells. Either provide the name of an existing/virtual column in the data or construct one using <a href="/documentation/templates/">string templates</a>.</li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
 ---
 
 Our treemap component renders <a href="https://en.wikipedia.org/wiki/Treemapping">hierarchical treemaps</a>.

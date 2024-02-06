@@ -179,8 +179,6 @@ examples:
         * `font-size` - manually set the font size (if omitted it will be scaled to the population where known)
         * `font-weight` - manually set the font weight (e.g. to "bold")
         * `font-family` - manually set the font family
-
-      Be aware that place labels sit above the interactive layer so may block some interactivity.
     config:
       data:
         - { code: "E08000016", name: "Barnsley" }
@@ -899,6 +897,124 @@ examples:
             colour: "#67E767"
           - label: "South West"
             colour: "#178CFF"
+options: |
+  <ul>
+  <li><code>data</code> - (optional) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If used you will need to match this to the GeoJSON properties using <code>key</code>.</li>
+  <li><code>geojson</code> - (required):
+    <ul>
+    <li><code>key</code> - The GeoJSON property to use to match with the <code>data</code>.</li>
+    <li><code>data</code> - Either a reference to a GeoJSON file in the Lume site or inline GeoJSON.</li>
+    </ul>
+  </li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - An optional minimum width (e.g. <code>400px</code>) for each panel. Panels may then be arranged by however many columns will fit in the page width.</li>
+  <li><code>projection</code> - Set the map projection:
+    <ul>
+    <li><code>name</code> - One of <code>aitoff</code>, <code>equirectangular</code>, <code>gall-peters</code>, <code>orthographic</code> (for orthographic you can also set the <code>lat</code>/<code>lon</code> for the projection centre), <code>web-mercator</code> (default), or <code>osgb</code>.</li>
+    </ul>
+  </li>
+  <li><code>bounds</code> - Set a longitude/latitude bounds of the map:
+    <ul>
+    <li><code>lat</code> - The latitude bounds:
+      <ul>
+      <li><code>min</code> - The minimum latitude</li>
+      <li><code>max</code> - The maximum latitude</li>
+      </ul>
+    </li>
+    <li><code>lon</code> - The longitude bounds:
+      <ul>
+      <li><code>min</code> - The minimum longitude</li>
+      <li><code>max</code> - The maximum longitude</li>
+      </ul>
+    </li>
+    </ul>
+  </li>
+  <li><code>layers</code> - An <a href="/samples/map/svg/#example-12">array of map layers</a> in the order they will be layered. Each layer has a property <code>type</code> which can be one of:
+    <ul>
+    <li><code>background</code> - Set a GeoJSON background:
+      <ul>
+      <li><code>geojson</code> - Either a reference to a GeoJSON file in the Lume site or inline GeoJSON</li>
+      <li><code>colour</code> - The colour for the background polygons.</li>
+      </ul>
+    </li>
+    <li><code>data</code> - Add the data layer to the map:
+      <ul>
+      <li><code>key</code> - The title of the column to use to match IDs with the GeoJSON.</li>
+      <li><code>value</code> - The title of the column that will be used to get the colour of a polygon. If the value is a number you should also set the <code>scale</code>.</li>
+      <li><code>tooltip</code> - Either a string, template string, or the column heading to use to build a tooltip.</li>
+      <li><code>scale</code> - A <a href="../colours/#scales">colour scale</a> to use to colour the polygons based on the value.</li>
+      <li><code>min</code> - Used with <code>scale</code> and <code>max</code> to define the colour scale.</li>
+      <li><code>max</code> - Used with <code>scale</code> and <code>min</code> to define the colour scale.</li>
+      </ul>
+    </li>
+    <li><code>graticule</code> - Add a graticule:
+      <ul>
+      <li><code>step</code> - An array defining the latitude and longitude spacing of the graticule in degrees.</li>
+      </ul>
+    </li>
+    <li><code>labels</code> - Add a place label layer:
+      <ul>
+        <li><code>places</code> - An array of place markers that sit above the interactive layer. A place can be defined with the following properties:
+        <ul>
+        <li><code>name</code> - the label to use for the place label</li>
+        <li><code>latitude</code> - set the latitude of the label (can be omitted if it is a UK place we know about)</li>
+        <li><code>longitude</code> - set the longitude of the label (can be omitted if it is a UK place we know about)</li>
+        <li><code>text-anchor</code> - set to either <code>start</code>, <code>middle</code>, or <code>end</code> to anchor the text</li>
+        <li><code>colour</code> - the colour of the label (default is black)</li>
+        <li><code>border</code> - the colour of the label border (default is white)</li>
+        <li><code>font-size</code> - manually set the font size (if omitted it will be scaled to the population where known)</li>
+        <li><code>font-weight</code> - manually set the font weight (e.g. to "bold")</li>
+        <li><code>font-family</code> - manually set the font family</li>
+        </ul>
+        </li>
+      </ul>
+    </li>
+    <li><code>markers</code> - An array of markers
+      <ul>
+        <li><code>markers</code> - A marker can be defined with the following properties:
+        <ul>
+        <li><code>icon</code> - Can be either be a string (one of <code>default</code>, <code>geo</code>, <code>geo-alt</code>, <code>asterisk</code>, <code>pin</code>, <code>balloon</code>, <code>balloon-heart</code>, <code>chat-square</code>) or an object with the form:
+          <ul>
+          <li><code>svg</code> - The SVG string to use</li>
+          <li><code>size</code> - e.g. <code>[40,40]</code></li>
+          <li><code>anchor</code> - e.g. <code>[20,0]</code></li>
+          </ul>
+        </li>
+        <li><code>latitude</code> - set the latitude of the marker</li>
+        <li><code>longitude</code> - set the longitude of the marker</li>
+        <li><code>colour</code> - the colour of the label (default is black)</li>
+        <li><code>tooltip</code> - the content of an optional tooltip</li>
+        </ul>
+        </li>
+      </ul>
+    </li>
+    </ul>
+  </li>
+  <li><code>padding</code> - Set the padding between the data layer and the map edges. The value is given in the pixel scale of the generated map (which may not be the same as the pixels the map takes up on screen).</li>
+  <li><code>legend</code> - Define the <a href="/documentation/chart-furniture/#legends">legend</a>.</li>
+  <li><code>options</code> - Set some options:
+    <ul>
+    <li><code>fillOpacity</code> - The fill-opacity of the polygons</li>
+    </ul>
+  </li>
+  <li><code>tools</code> - Add some useful interactive tools:
+    <ul>
+    <li><code>filter</code> - A search tool to filter hexes:
+      <ul>
+        <li><code>label</code> - The title of the column to use as the displayed name for a hex in the search results.</li>
+        <li><code>max</code> - The maximum number of results to show.</li>
+      </ul>
+    </li>
+    <li><code>slider</code> - A slider tool that will change the colouring of the hexes:
+      <ul>
+        <li><code>columns</code> - An array of column titles to use to change the colouring of the hexes.</li>
+      </ul>
+    </li>
+    </ul>
+  </li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
+
 ---
 
 

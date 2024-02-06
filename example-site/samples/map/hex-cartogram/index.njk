@@ -363,4 +363,36 @@ examples:
       tools:
         filter:
           label: "filterLabel"
+options: |
+  <ul>
+  <li><code>data</code> - (optional) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If used you will need to match this to the HexJSON IDs using <code>matchKey</code>.</li>
+  <li><code>hexjson</code> - (required) Either a reference to a HexJSON file in the Lume site or inline HexJSON.</li>
+  <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
+  <li><code>width</code> - An optional minimum width (e.g. <code>400px</code>) for each panel. Panels may then be arranged by however many columns will fit in the page width.</li>
+  <li><code>label</code> - The title of the column that will be used to get a label for the hexagon. Leave empty if you don't want labels on the hexes.</li>
+  <li><code>value</code> - The title of the column that will be used to get the value of the panel. Alternatively it could be a named colour.</li>
+  <li><code>matchKey</code> - The title of the column in the data that contains unique keys that match those used in the HexJSON.</li>
+  <li><code>scale</code> - A <a href="../colours/#scales">colour scale</a> to use to colour the hexes based on the value.</li>
+  <li><code>min</code> - Used with <code>scale</code> and <code>max</code> to define the colour scale.</li>
+  <li><code>max</code> - Used with <code>scale</code> and <code>min</code> to define the colour scale.</li>
+  <li><code>legend</code> - Define the <a href="/documentation/chart-furniture/#legends">legend</a>.</li>
+  <li><code>tooltip</code> - Either a string, template string, or the column heading to use to build a tooltip.</li>
+  <li><code>tools</code> - Add some useful interactive tools:
+    <ul>
+    <li><code>filter</code> - A search tool to filter hexes:
+      <ul>
+        <li><code>label</code> - The title of the column to use as the displayed name for a hex in the search results.</li>
+        <li><code>max</code> - The maximum number of results to show.</li>
+      </ul>
+    </li>
+    <li><code>slider</code> - A slider tool that will change the colouring of the hexes:
+      <ul>
+        <li><code>columns</code> - An array of column titles to use to change the colouring of the hexes.</li>
+      </ul>
+    </li>
+    </ul>
+  </li>
+  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  </ul>
+
 ---

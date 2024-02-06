@@ -24,6 +24,8 @@
 
 .oi-map-hex .oi-map-inner { text-align:center; }
 
+.oi-map .labels text { pointer-events: none; }
+
 .oi-map-svg svg { width: 100%; }
 .oi-map-svg path:focus, .oi-map-svg .marker:focus { outline: none; }
 .oi-map-svg .line .selected { stroke-width: 0.4%; }
