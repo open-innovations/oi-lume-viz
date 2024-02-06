@@ -31,7 +31,7 @@ tileLayers:
 		<p>The default tile layer is <code>CartoDB.Positron</code>. You can change it to one of
 		{% for layer in tileLayers %}{% if loop.index0 > 0 %}, {% endif %}<code>{{ layer }}</code>{% endfor %}
 		by updating <code>_config.[js|ts]</code> with e.g.:</p>
-		<pre><code class="hljs language-json">site.use(oiComponents({
+		<pre><code class="hljs language-json">site.use(oiLumeViz({
 	...
 	"map": {
 		"tileLayer": "CartoDB.DarkMatter"
@@ -41,7 +41,7 @@ tileLayers:
 
 		<h2>Setting new tile layers{{ comp.anchor({ ref: "customise-tileLayers" }) | safe }}</h3>
 		<p>If you would like to set your default tile layer to something else, you can add it to the tile layers list by updating <code>_config.[js|ts]</code> e.g.:</p>
-		<pre><code class="hljs language-json">site.use(oiComponents({
+		<pre><code class="hljs language-json">site.use(oiLumeViz({
 	...
 	"map": {
 		"tileLayers": {

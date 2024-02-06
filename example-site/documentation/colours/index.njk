@@ -113,7 +113,7 @@ customseries:
 
 		<h4>Site-wide named colours</h4>
 		<p>If you want to have named colours that you can re-use across many visualisations, you can set site-wide defaults. Update <code>_config.[js|ts]</code> to include the new named colours as part of the config to the plugin e.g.:</p>
-		<pre><code class="hljs language-json">site.use(oiComponents({
+		<pre><code class="hljs language-json">site.use(oiLumeViz({
   ...
   "colour": {
     "names": {
@@ -137,7 +137,7 @@ customseries:
 		<h3>Setting series colours{{ comp.anchor({ ref: "customise-series" }) | safe }}</h3>
 		<p>We provide a <a href="#series-colours">default set of colour-blind-safe series colours</a> but you may wish to set your own defaults. Update <code>_config.[js|ts]</code> to include an array of colours as part of the config to the plugin:</p>
 
-		<pre><code class="hljs language-json">site.use(oiComponents({
+		<pre><code class="hljs language-json">site.use(oiLumeViz({
   ...
   "colour": {
     "series": [ {% for colour in customseries %}"{{ colour | parseColour() }}", {% endfor %}],
@@ -150,7 +150,7 @@ customseries:
 
 		<p>It may be that the built-in colour scales don't meet your needs. You can add your own custom colour scales by updating <code>_config.[js|ts]</code> to include the new scales as part of the config to the plugin. For example, here we will create a new colour scale named <code>example</code>:</p>
 
-		<pre><code class="hljs language-json">site.use(oiComponents({
+		<pre><code class="hljs language-json">site.use(oiLumeViz({
   ...
   "colour": {
     "scales": {
