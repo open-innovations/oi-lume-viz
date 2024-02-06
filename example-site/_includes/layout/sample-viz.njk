@@ -11,7 +11,7 @@ layout: layout/base.njk
 	{{ options | safe }}
 {% endif %}
 {% if examples | length > 1 %}
-<h2>Examples</h2>
+<h2 id="examples">Examples</h2>
 <ol>
 {% for example in examples %}
 	<li><a href="#example-{{ loop.index }}">{% if example.title %}{{ example.title }}{% else %}Example {{ loop.index }}{% endif %}</a></li>

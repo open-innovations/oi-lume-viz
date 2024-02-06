@@ -22,7 +22,7 @@ title: Samples
 		{% if page.examples %}
 			{% comp 'oi.' + page.component, { config: page.examples[page.showcase or 0].config } %}{% endcomp %}
 		{% endif %}
-		<p style="margin-top:1em;"><a href="{{ page.url }}">{{ page.title }} examples...</a></p>
+		<p style="margin-top:1em;"><a href="{{ page.url }}#examples">{{ page.title }} examples...</a></p>
 	</div>
   {% endfor %}
 </div>
