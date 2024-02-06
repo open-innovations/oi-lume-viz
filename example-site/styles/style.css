@@ -177,3 +177,6 @@ input[type="range"].oi-slider-control:focus::-webkit-slider-thumb { outline: 4px
 input[type="range"].oi-slider-control::-moz-range-track { background-color: #d3d3d3; border-radius: 0.5rem; height: 0.5rem; }
 input[type="range"].oi-slider-control::-moz-range-thumb { background-color: #888888; border: none; border-radius: 1em; height: 1.5em; width: 1.5em; }
 input[type="range"].oi-slider-control:focus::-moz-range-thumb{ outline: 4px solid #000000; }
+
+.grid.tabs .tab { background-color: #d3d3d3; color: black; }
+.grid.tabs .tab[aria-selected=true] { background-color: #efefef; color: black; }

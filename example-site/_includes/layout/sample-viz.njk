@@ -3,13 +3,14 @@ layout: layout/base.njk
 ---
 
 <h1>{{ title }}</h1>
-<p><code>Component: {{ component }}</code></p>
 {% if description %}<p>{{ description | md | safe }}</p>{% endif %}
 
-{% if options %}
-	<h2 id="options">Options</h2>
-	{{ options | safe }}
-{% endif %}
+<h2>Usage</h2>
+<p>To use this component in a Nunjucks template you would add the following (assumes you've loaded OI Lume Viz into <code>componentNamespace: 'oi'</code>):</p>
+<pre><code class="hljs language-yaml">{% raw %}{% comp 'oi.{% endraw %}{{component}}{% raw %}', { "config": config } %}{% endcomp %}{% endraw %}</code></pre>
+<p>where <code>config</code> is replaced by an object that contains some or all of these variables:</p>
+{{ options | safe }}
+
 {% if examples | length > 1 %}
 <h2 id="examples">Examples</h2>
 <ol>
@@ -33,9 +34,18 @@ layout: layout/base.njk
 		{% if example.config %}
 		{% comp 'oi.' + component, { "config": example.config } %}{% endcomp %}
 
-		<p>This example was made with config:</p>
+		<p>This example was made with <code>config</code>:</p>
 
-		<pre><code class="hljs language-yaml">{{ example.config | yaml }}</code></pre>
+		<div class="panes tabbed" data-dependencies="/js/tabbed.js">
+			<div class="pane">
+				<span class="tab-title">YAML</span>
+				<pre><code class="hljs language-yaml">{{ example.config | yaml }}</code></pre>
+			</div>
+			<div class="pane">
+				<span class="tab-title">JSON</span>
+				<pre><code class="hljs language-js">{{ example.config | json }}</code></pre>
+			</div>
+		</div>
 		{% endif %}
 	</section>
 {% endfor %}
