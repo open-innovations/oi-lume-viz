@@ -79,7 +79,7 @@ site.remoteFile('index.md', path.resolve('README.md'));
 
 // Add filters
 site.filter('yaml', (value, options = {}) => { let str = yamlStringify(value, options); str = str.replace(/(\s)\'y\': /g,function(m,p1){ return p1+"y: ";}); return str; });
-site.filter('json', (value, options = {}) => { return JSON.stringify(value,null,'\t'); });
+site.filter('json', (value, options = {}) => { return JSON.stringify(value,null,'\t').replace(/\[\n\t+\{/g,"[{").replace(/\}\n\t+\]/g,"}]").replace(/\}\,\n\t+\{/g,"},{"); });
 site.filter('match', (value, regex) => { const re = new RegExp(regex); return value.match(re); });
 site.filter('parseColour', (value, options = {}) => { let cs = Colour(value); return cs.hex||value; });
 site.filter('colourScaleGradient', (value, options = {}) => { return getColourScale(value)||""; });
