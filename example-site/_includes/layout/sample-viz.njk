@@ -5,6 +5,8 @@ layout: layout/base.njk
 <h1>{{ title }}</h1>
 {% if description %}<p>{{ description | md | safe }}</p>{% endif %}
 
+{{ content | safe }}
+
 <h2>Usage</h2>
 <p>To use this component in a Nunjucks template you would add the following (assumes you've loaded OI Lume Viz into <code>componentNamespace: 'oi'</code>):</p>
 <pre><code class="hljs language-yaml">{% raw %}{% comp 'oi.{% endraw %}{{component}}{% raw %}', { "config": config } %}{% endcomp %}{% endraw %}</code></pre>
@@ -20,7 +22,6 @@ layout: layout/base.njk
 </ol>
 {% endif %}
 
-{{ content | safe }}
 
 
 {% for example in examples %}
