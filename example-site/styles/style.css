@@ -178,5 +178,5 @@ input[type="range"].oi-slider-control::-moz-range-track { background-color: #d3d
 input[type="range"].oi-slider-control::-moz-range-thumb { background-color: #888888; border: none; border-radius: 1em; height: 1.5em; width: 1.5em; }
 input[type="range"].oi-slider-control:focus::-moz-range-thumb{ outline: 4px solid #000000; }
 
-.grid.tabs .tab { background-color: #d3d3d3; color: black; }
+.grid.tabs .tab { background-color: #d3d3d3; color: black; font-family: Poppins; }
 .grid.tabs .tab[aria-selected=true] { background-color: #efefef; color: black; }
