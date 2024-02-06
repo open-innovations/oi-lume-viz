@@ -156,10 +156,6 @@ footer .address { margin-top: 1em; }
 footer a { color: inherit; }
 footer hr.about { margin: 32px 0; border: 0; border-top:1px solid #444; }
 
-@media only screen and (max-width: 1080px) {
-	.grid { grid-template-columns: 100%; }
-	.grid-list { grid-template-columns: repeat(2,1fr); grid-gap: 0.25em; }
-}
 
 .oi-table table th { font-weight: bold; }
 .oi-table table td, .oi-table table th { border: 1px solid black; padding: 0 0.25em; line-height: 1.5em; }
@@ -178,5 +174,12 @@ input[type="range"].oi-slider-control::-moz-range-track { background-color: #d3d
 input[type="range"].oi-slider-control::-moz-range-thumb { background-color: #888888; border: none; border-radius: 1em; height: 1.5em; width: 1.5em; }
 input[type="range"].oi-slider-control:focus::-moz-range-thumb{ outline: 4px solid #000000; }
 
-.grid.tabs .tab { background-color: #d3d3d3; color: black; font-family: Poppins; }
-.grid.tabs .tab[aria-selected=true] { background-color: #efefef; color: black; }
+.grid.tabs { grid-gap: 0.25em; }
+.grid.tabs .tab { background-color: #cccccc; color: black; font-family: Poppins; box-shadow: inset 0 -0.25em 0.25em -0.25em rgba(0,0,0,0.2); }
+.grid.tabs .tab[aria-selected=true] { background-color: #efefef; color: black; box-shadow: none; }
+
+
+@media only screen and (max-width: 1080px) {
+	.grid:not(.tabs) { grid-template-columns: 100%; }
+	.grid-list { grid-template-columns: repeat(2,1fr); grid-gap: 0.25em; }
+}
