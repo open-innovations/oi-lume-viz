@@ -57,11 +57,12 @@ function reverseColourScale(scale){
 	for(b = 0; b < bits.length; b++){
 		bit = bits[b].split(/\s/);
 		colours.push(bit[0]);
-		positions.push(bit[1]);
+		positions.push(parseFloat(bit[1]));
 	}
 	colours.reverse();
+	positions.reverse();
 	scale = '';
-	for(b = 0; b < colours.length; b++) scale += (b == 0 ? "" : ", ")+colours[b]+" "+positions[b];
+	for(b = 0; b < colours.length; b++) scale += (b == 0 ? "" : ", ")+colours[b]+" "+(100-positions[b]).toFixed(2).replace(/\.0+/,"")+"%";
 	return scale;
 }
 
