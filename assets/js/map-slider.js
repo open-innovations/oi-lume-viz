@@ -18,9 +18,19 @@
 
 	function SliderMap(p,opt){
 
-		var el,a,as,hexes = {},range,label,id,areas,cs,key,i,uid,previousvalue;
+		var viz,pel,pos,el,a,as,hexes = {},range,label,id,areas,cs,key,i,uid,previousvalue;
+		viz = p.closest('.oi-viz');
+
 		cs = OI.ColourScale(opt.colours.scale);
 		key = opt.value;
+
+		pos = [];
+		if(!opt.position) opt.position = "bottom";
+		if(opt.position.match("top")) pos.push(".oi-top");
+		if(opt.position.match("left")) pos.push(".oi-left");
+		if(opt.position.match("right")) pos.push(".oi-right");
+		if(opt.position.match("bottom")) pos.push(".oi-bottom");
+		pel = viz.querySelector(pos.join(" "))||p;
 
 		if(!opt.data && opt.fields && opt.compresseddata){
 			opt.data = {};
@@ -67,7 +77,7 @@
 			inner = document.createElement('div');
 			inner.classList.add('oi-slider-inner');
 			el.append(inner);
-			p.append(el);
+			(opt.position=="top" ? pel.prepend(el) : pel.append(el));
 		}
 		if(!range){
 			range = document.createElement('input');
@@ -299,7 +309,9 @@
 	}
 	root.OI.SliderMap = function(opt){
 		var p = document.currentScript.parentNode;
-		return new SliderMap(p,opt);
+		OI.ready(function(){
+			return new SliderMap(p,opt);
+		});
 	};
 
 })(window || this);

@@ -264,16 +264,13 @@
 		};
 
 		this.activate = function(el){
-			console.log('activate',el,tips);
 			var t,match;
 			for(t = 0; t < tips.length; t++){
-				console.log('check',t,tips[t],el);
 				if(tips[t].el() == el){
 					match = tips[t];
 					break;
 				}
 			}
-			console.log('match',match);
 			if(match) match.lock().show();
 		};
 

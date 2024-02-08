@@ -1,12 +1,8 @@
-/* OI map components */
+/* OI legend components */
 .oi-legend { z-index: 1000; }
 .oi-legend-inner { color: #555; }
 .oi-legend-inner .oi-legend-icon { display: inline-block; height: 1.25em; aspect-ratio: 1 / 1; margin-right: 0.25em; opacity: 1; float: left; }
 .oi-legend-inner .oi-legend-item { line-height: 1.25em; display: inline-block; padding: 0.25em; }
 .oi-legend-inner .oi-legend-item svg.oi-legend-icon { display: table-cell; vertical-align: middle; float: none; }
-.oi-legend-top { top: 0; text-align: center; }
-.oi-legend-right { right: 0; }
-.oi-legend-bottom { bottom: 0; text-align: center; }
-.oi-legend-left { left: 0; }
-.oi-legend-left, .oi-legend-right { margin-top: 0; margin-bottom: 0; position: absolute; text-align: left; }
-.oi-legend-left .oi-legend-item, .oi-legend-right .oi-legend-item { padding: 0; margin-right: 0; line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
+.oi-left .oi-legend-item, .oi-right .oi-legend-item { padding: 0; margin-right: 0; line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
+.oi-zoomable-map .oi-legend { margin: 0.5em; }

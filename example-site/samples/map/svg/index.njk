@@ -722,6 +722,20 @@ examples:
       scale: Viridis
       value: geojson.properties.POP_EST
       min: 0
+      max: 200000000
+      legend:
+        position: top left
+        items:
+          - value: 200000000
+            label: ">200m"
+          - value: 150000000
+            label: "150m"
+          - value: 100000000
+            label: "100m"
+          - value: 50000000
+            label: "50m"
+          - value: 0
+            label: "0"
       columns:
         - name: Tooltip
           template: "{{ geojson.properties.NAME_LONG }} / {{ code }}\nPopulation ({{ geojson.properties.POP_YEAR }}): {{ geojson.properties.POP_EST | toLocaleString() }}"

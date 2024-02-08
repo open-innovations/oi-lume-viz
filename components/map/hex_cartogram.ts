@@ -485,6 +485,7 @@ export default function (input: { config: HexmapOptions }) {
 
 	if(!tools) tools = {};
 	if(tools.filter){
+		if(!tools.filter.position) tools.filter.position = "top left";
 		holder.addDependencies(['/js/map-filter.js','/js/colours.js']);
 		var filterdata = {};
 		for(var id in hexes){
@@ -508,7 +509,7 @@ export default function (input: { config: HexmapOptions }) {
 			}
 			i++;
 		}
-		html += '<script>(function(root){ OI.SliderMap({"width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'",'+(scale ? '"scale":"'+getColourScale(scale)+'"' : '')+',"named":'+JSON.stringify(namedColours.getCustom())+'},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
+		html += '<script>(function(root){ OI.SliderMap({"position":"'+(tools.slider.position || 'bottom')+'","width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'",'+(scale ? '"scale":"'+getColourScale(scale)+'"' : '')+',"named":'+JSON.stringify(namedColours.getCustom())+'},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
 	}
 
 	html += '</div>';

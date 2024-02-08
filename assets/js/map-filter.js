@@ -13,12 +13,22 @@
 	}
 
 	var styles = document.createElement('style');
-	styles.innerHTML = ':root {--filter-padding: 0.25em;}.oi-filter {position: absolute; top: 0;left:0;z-index:1010;}.oi-filter label {position:absolute;display:block;}.oi-filter .oi-filter-button{cursor:pointer;padding:var(--filter-padding);text-align:center;line-height:0em;margin:0;width:calc(2em + var(--filter-padding)*2);height:calc(2em + var(--filter-padding)*2);background:black;color:white;}.oi-filter input {display:none;line-height:2em;font-size:1em;border:solid var(--filter-padding) black;line-height:2em;padding:0 0 0 calc(2em + var(--filter-padding)*2);}.oi-filter.searching input{display:inline-block;}.oi-filter-results{display:none;list-style:none;margin:0;}.oi-filter.searching .oi-filter-results{display:block;}.oi-filter-results li > *{padding:0.5em 1em;background:#dfdfdf;text-decoration:none;display:block;}.oi-filter-results li > *:visited{color:inherit;}.oi-viz .data-layer > *{transition: opacity 0.2s ease-in;}.oi-viz .data-layer .not-selected{opacity: 0.1;}.oi-filter-results button {width:100%;margin:0;text-align:left;}';
+	styles.innerHTML = ':root {--filter-padding: 0.25em;}.oi-filter {position: relative; z-index:1010; min-height:2.5em;} .oi-filter label {position:absolute;display:block;z-index: 1013;}.oi-filter .oi-filter-button{cursor:pointer;padding:var(--filter-padding);text-align:center;line-height:0em;margin:0;width:calc(2em + var(--filter-padding)*2);height:calc(2em + var(--filter-padding)*2);background:black;color:white;}.oi-filter input {display:none;line-height:2em;font-size:1em;border:solid var(--filter-padding) black;line-height:2em;padding:0 0 0 calc(2em + var(--filter-padding)*2);position:relative;z-index: 1012;}.oi-filter.searching input{display:inline-block;}.oi-filter-results{display:none;position:absolute;z-index: 1010;min-width:100%;list-style:none;margin:0;}.oi-filter.searching .oi-filter-results{display:block;}.oi-filter-results li > *{padding:0.5em 1em;background:#dfdfdf;text-decoration:none;display:block;}.oi-filter-results li > *:visited{color:inherit;}.oi-viz .data-layer > *{transition: opacity 0.2s ease-in;}.oi-viz .data-layer .not-selected{opacity: 0.1;}.oi-filter-results button {width:100%;margin:0;text-align:left;}';
 	document.head.prepend(styles);
 
 	function FilterMap(p,opt,data){
 
-		var el,areas,a,as,btn,inp,results,title,firstlabel = "",hexes = {};
+		var viz,el,areas,a,as,btn,inp,results,title,firstlabel = "",hexes = {};
+		viz = p.closest('.oi-viz');
+
+		var pos = [];
+		if(!opt.position) opt.position = "top left";
+		if(opt.position.match("top")) pos.push(".oi-top");
+		if(opt.position.match("left")) pos.push(".oi-left");
+		if(opt.position.match("right")) pos.push(".oi-right");
+		if(opt.position.match("bottom")) pos.push(".oi-bottom");
+		var pel = viz.querySelector(pos.join(" "))||p;
+
 		var id = "filter-" + Math.random().toString(16).slice(2);
 
 		if(!opt) opt = {};
@@ -47,7 +57,7 @@
 			el = document.createElement('div');
 			el.classList.add('oi-filter');
 			el.innerHTML = '<label for="oi-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-'+id+'" id="oi-'+id+'" value="" placeholder="e.g. '+firstlabel+'"><ul class="oi-filter-results"></ul>';
-			p.prepend(el);
+			(opt.position.match("top") ? pel.prepend(el) : pel.append(el));
 		}
 		btn = el.querySelector('.oi-filter-button');
 		inp = el.querySelector('input');
