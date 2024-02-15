@@ -415,11 +415,11 @@ export default function (input: { config: HexmapOptions }) {
 		switch (layout) {
 			case "odd-r":
 			case "even-r":
-				hexPath = "M "+roundNumber(hexCadence / 2)+","+roundNumber(-hexSide / 2)+" v "+roundNumber(hexSide)+" l "+roundNumber(-hexCadence / 2)+","+roundNumber(hexSide / 2)+" l "+roundNumber(-hexCadence / 2)+","+roundNumber(-hexSide / 2)+" v "+roundNumber(-hexSide)+" l "+roundNumber(hexCadence / 2)+","+roundNumber(-hexSide / 2)+" Z";
+				hexPath = "M"+roundNumber(hexCadence / 2)+","+roundNumber(-hexSide / 2)+"v"+roundNumber(hexSide)+"l"+roundNumber(-hexCadence / 2)+","+roundNumber(hexSide / 2)+"l"+roundNumber(-hexCadence / 2)+","+roundNumber(-hexSide / 2)+"v"+roundNumber(-hexSide)+"l"+roundNumber(hexCadence / 2)+","+roundNumber(-hexSide / 2)+"Z";
 				break;
 			case "odd-q":
 			case "even-q":
-				hexPath = "M "+roundNumber(-hexSide / 2)+","+roundNumber(-hexCadence / 2)+" h "+roundNumber(hexSide)+" l "+roundNumber(hexSide / 2)+","+roundNumber(hexCadence / 2)+" l "+roundNumber(-hexSide / 2)+","+roundNumber(hexCadence / 2)+" h "+roundNumber(-hexSide)+" l "+roundNumber(-hexSide / 2)+","+roundNumber(-hexCadence / 2)+" Z";
+				hexPath = "M"+roundNumber(-hexSide / 2)+","+roundNumber(-hexCadence / 2)+"h"+roundNumber(hexSide)+"l"+roundNumber(hexSide / 2)+","+roundNumber(hexCadence / 2)+"l"+roundNumber(-hexSide / 2)+","+roundNumber(hexCadence / 2)+"h"+roundNumber(-hexSide)+"l"+roundNumber(-hexSide / 2)+","+roundNumber(-hexCadence / 2)+"Z";
 				break;
 			default:
 				throw new TypeError("Unsupported layout");

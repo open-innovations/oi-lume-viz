@@ -387,12 +387,12 @@ export default function (input: {
 			
 			if(options.circles){
 				circle = svgEl('circle');
-				setAttr(circle,{'cx':xv.toFixed(2),'cy':yv.toFixed(2),'r':radius,'fill':bg});
+				setAttr(circle,{'cx':xv.toFixed(2),'cy':yv.toFixed(2),'r':radius.toFixed(2),'fill':bg});
 				series[s].g.appendChild(circle);
 
 				txt = svgEl('text');
 				txt.innerText = rank;
-				setAttr(txt,{'fill':contrastColour(bg),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius)+'px','font-family':options['font-family']});
+				setAttr(txt,{'fill':contrastColour(bg),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius).toFixed(1)+'px','font-family':options['font-family']});
 				series[s].g.appendChild(txt);
 			}
 			
