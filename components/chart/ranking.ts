@@ -137,7 +137,7 @@ export default function (input: {
 	}
 
 	for(let row = 0; row < options.data.length; row++){
-		let s = { "row": row, "title": "", "data": clone(options.data[row]), "rank": new Array(options.columns.length), "order": new Array(options.columns.length) };
+		let s = { "row": row, "title": "", "rank": new Array(options.columns.length), "order": new Array(options.columns.length) };
 		if(typeof options.data[row][options.key]==="undefined") throw 'No column "'+options.key+'" in data.';
 		s.title = options.data[row][options.key];
 		s.include = false;
@@ -147,13 +147,24 @@ export default function (input: {
 		for(let col = 0; col < options.columns.length; col++){
 			// Get the value for this column
 			v = options.data[row][options.columns[col].name];
+
 			if(typeof v==="string") v = parseFloat(v);
+			if(isNaN(v) && typeof options.columns[col].fillna==="number"){
+				v = options.columns[col].fillna;
+			}
 			// If the value is a number we use it
 			if(typeof v!=="number" || isNaN(v)){
 				// A bad number means we will ignore this series
 				ok = false;
+				if(config.debug) console.warn('Ranking chart: row '+row+' ('+s.title+') has a non-numeric value in '+options.columns[col].name+': "'+options.data[row][options.columns[col].name]+'" ('+(typeof options.data[row][options.columns[col].name])+').');
+			}else{
+				// Update the parsed and empty-filled value
+				options.data[row][options.columns[col].name] = v;
 			}
 		}
+		// Store the data now that we've updated potential NaNs
+		s.data = clone(options.data[row]);
+
 		if(ok) series.push(s);
 	}
 
@@ -163,18 +174,18 @@ export default function (input: {
 		for(let s = 0; s < series.length; s++){
 			let row = series[s].row;
 			v = options.data[row][options.columns[col].name];
-			if(typeof v==="string") v = parseFloat(v);
 			if(typeof v!=="number" || isNaN(v)) v = null;
 			arr.push(v);
 		}
-		let sorted = arr.slice().sort(function(a,b){return a-b})
+		let sorted = arr.slice().sort(function(a,b){ return (options.reverse ? b-a : a-b); });
 		let ranks = arr.map(function(v){ return sorted.indexOf(v)+1 });
+
 		for(let s = 0; s < series.length; s++){
 			series[s].rank[col] = ranks[series[s].row];
 			series[s].order[col] = ranks[series[s].row]-1;
 
 			// Do we include the series?
-			if(ranks[series[s].row] <= options.top) series[s].include = true; 
+			if(typeof options.top!=="number" || ranks[series[s].row] <= options.top) series[s].include = true; 
 
 			series[s].data[options.columns[col].name+"_rank"] = series[s].rank[col];
 			let v = null;
@@ -246,17 +257,14 @@ export default function (input: {
 	config.max = max;
 
 	// There's no guarantee that the order of the rows in the CSV matches the first ranking column
-	// Sort the array
+	// Sort the array by the rank and, if the rank is the same, by title
 	series = series.sort(function(a, b){
 		let av = a.rank[0];
 		if(!isNaN(parseInt(av))) av = parseInt(av);
 		let bv = b.rank[0];
 		if(!isNaN(parseInt(bv))) bv = parseInt(bv);
-		return av > bv ? 1 : -1;
+		return (av-bv)||(a.title > b.title);
 	});
-
-
-
 	let positions = new Array(series[0].rank.length);
 	let gap = 1;
 	var extra = 0;
@@ -313,14 +321,13 @@ export default function (input: {
 	}
 
 	function getY(v){
-		// Re-order the index as necessary
-		let v2 = (options.reverse ? series.length-v-1 : v);
-		return yoff + ( (v2+1)*dy - dy/2 );
+		return yoff + ( (v+1)*dy - dy/2 );
 	}
 
 	let cs = (options.scale ? ColourScale(options.scale) : ColourScale(defaultbg+" 0%, "+defaultbg+" 100%"));
 
 	oldidx = -1;
+	let inc = 0;
 
 	// Update label positions and font size
 	for(let s = 0; s < series.length; s++){
@@ -349,8 +356,8 @@ export default function (input: {
 		rank = series[s].rank[0];
 		idx = positions[0][rank];
 
-		// If this label has the same index as the previous one we add one
-		if(idx == oldidx) idx++;
+		// If this label has the same index (or lower) as the previous one we add one
+		if(idx <= oldidx) idx = oldidx+1;
 		oldx = xoff;
 
 		// There's a possibility that the first column gives the same ranking to multiple series. 
