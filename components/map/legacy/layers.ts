@@ -36,23 +36,24 @@ export function buildLayers(input){
 			l.type = "background";
 			lyrs.push(l);
 		}
-
-		// Add the data layer
-		l = {'type':'data'};
-		if(typeof config.key==="string") l.key = config.key;
-		if(typeof config.min=="number") l.min = config.min;
-		if(typeof config.max=="number") l.max = config.max;
-		if(typeof config.scale==="string") l.scale = config.scale;
-		if(typeof config.tooltip==="string") l.tooltip = config.tooltip;
-		if(typeof config.value==="string") l.value = config.value;
-		if(typeof config.options==="object") l.options = config.options;
-		if(config.geojson) l.geojson = clone(config.geojson);
-		l.data = clone(config.data);
-		lyrs.push(clone(l));
+		if(config.data){
+			// Add the data layer
+			l = {'type':'data'};
+			if(typeof config.key==="string") l.key = config.key;
+			if(typeof config.min=="number") l.min = config.min;
+			if(typeof config.max=="number") l.max = config.max;
+			if(typeof config.scale==="string") l.scale = config.scale;
+			if(typeof config.tooltip==="string") l.tooltip = config.tooltip;
+			if(typeof config.value==="string") l.value = config.value;
+			if(typeof config.options==="object") l.options = config.options;
+			if(config.geojson) l.geojson = clone(config.geojson);
+			if(config.data) l.data = clone(config.data);
+			lyrs.push(clone(l));
+		}
 
 		// Add any graticule layer
 		if(config.graticule){
-			l = config.graticule;
+			l = clone(config.graticule);
 			l.type = "graticule";
 			lyrs.push(l);
 		}
@@ -72,6 +73,8 @@ export function buildLayers(input){
 
 	// Load any "data" attributes
 	for(let l = 0; l < config.layers.length; l++){
+
+		if(!("type" in config.layers[l]) || typeof config.layers[l].type!=="string") config.layers[l].type = "background";
 
 		if(config.layers[l].places){
 			config.layers[l].labels = config.layers[l].places;
@@ -98,6 +101,9 @@ export function buildLayers(input){
 			if(typeof config.layers[l].data==="undefined" && config.data){
 				config.layers[l].data = clone(config.data);
 			}
+			if(typeof config.layers[l].geojson==="undefined" && config.geojson){
+				config.layers[l].geojson = clone(config.geoson);
+			}
 		}
 
 		// If the data is a string we need to try loading it
@@ -119,12 +125,23 @@ export function buildLayers(input){
 
 		// GeoJSON should now be an object of the form { data: <string|object>, key?: <string> }
 		if(typeof config.layers[l].geojson==="object"){
+
+
 			// We need to update the GeoJSON in case we need to call on values
 			if(typeof config.layers[l].geojson.data==="string"){
 				config.layers[l].geojson.data = thingOrNameOfThing<TableData<string | number>>(
 					config.layers[l].geojson.data,
 					input,
 				);
+			}
+
+			if(!("data" in config.layers[l].geojson)){
+				if("type" in config.layers[l].geojson && config.layers[l].geojson.type === "FeatureCollection"){
+					config.layers[l].geojson = {'data':config.layers[l].geojson };
+				}else{
+					console.error(l,config.layers[l]);
+					throw new Error("No data in GeoJSON object. Should be of the form: { data: data, key: 'key' }");
+				}
 			}
 			// If the GeoJSON object doesn't contain a type: FeatureCollection we stop
 			if(!config.layers[l].geojson.data.type || config.layers[l].geojson.data.type !== "FeatureCollection"){

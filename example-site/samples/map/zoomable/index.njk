@@ -28,6 +28,7 @@ examples:
         data: geojson.leeds_city_region
       key: code
       tooltip: name
+      mapAttribution: "OI"
   - title: Colour a map - defined colours
     description: |
       This example is mostly the same as the previous one but we've added a `colour` attribute to each item in `data` and we set `value` to that name so that each area gets a specific colour.
@@ -49,6 +50,7 @@ examples:
       key: code
       tooltip: name
       value: colour
+      mapAttribution: "OI"
   - title: Colour a map - using a defined scale
     description: |
       In this example we'll use a numeric column (`Aged 15 years and under`) in the data to set the `value` to use along with `scale` to colour each area. The `scale` can be given as a known string (e.g. "Viridis") or a CSS-style gradient (e.g. "#ffe837 0%, #7d7d77 50%, #042450 100%"). The `min` and `max` for the `scale` will be calculated from the data unless provided.
@@ -71,6 +73,7 @@ examples:
       value: Aged 15 years and under
       scale: Viridis
       tooltip: LAD21NM
+      mapAttribution: "OI"
   - title: Set the opacity of the data layer
     description: |
       In this example we will set the `fillOpacity` of the data layer to `0.5` (the default value is 1).
@@ -95,6 +98,7 @@ examples:
       options:
         fillOpacity: 0.5
       tooltip: LAD21NM
+      mapAttribution: "OI"
   - title: Add a legend
     description: |
       Sometimes you need a `legend` with defined levels. To make this we first manually set `min` and `max` (otherwise they are calculated from the data and won't necessarily match our levels). We `position` (e.g. "top right") and add `items` to the legend. Each item has a `value` and `label`.
@@ -135,6 +139,7 @@ examples:
               label: 40k
             - value: 0
               label: '0'
+      mapAttribution: "OI"
   - title: Custom tooltips
     description: |
       We will create a virtual column with the `name` "Tooltip label" to define the `tooltip` text. Virtual columns must have a `name` and `template` which can include existing columns from the data e.g. "{{ LAD21NM }}: {{ Aged 15 years and under }}" would use the `LAD21CD` and `Aged 15 years and under` values from the data. Replacement values (e.g. "{{ Aged 15 years and under }}") can use the following filters:
@@ -164,6 +169,7 @@ examples:
       key: LAD21CD
       tooltip: Tooltip label
       value: colour
+      mapAttribution: "OI"
   - title: Place labels
     description: |
       We can add `places` to a layer above the interactive map. A place can be defined with the following properties:
@@ -218,6 +224,7 @@ examples:
             latitude: 53.68331
             longitude: -1.49768
           - name: York
+      mapAttribution: "OI"
   - title: Map markers
     description: |
       We can add `markers` to a layer above the interactive map. A marker can be defined with the following properties:
@@ -290,9 +297,10 @@ examples:
           longitude: -1.0808
         - latitude: 53.9617
           longitude: -2.0201
+      mapAttribution: "OI"
   - title: Use a different background tile set
     description: |
-      This example is similar to an earlier one but we set the `tileLayer` to `CartoDB.DarkMatter`. The built-in options include: <code>CartoDB.Positron</code>, <code>CartoDB.PositronOnlyLabels</code>, <code>CartoDB.DarkMatter</code>, <code>CartoDB.DarkMatterNoLabels</code>, <code>CartoDB.DarkMatterOnlyLabels</code>, <code>CartoDB.Voyager</code>, <code>CartoDB.VoyagerNoLabels</code>, <code>CartoDB.VoyagerOnlyLabels</code>, <code>ESRI.WorldImagery</code>, <code>OpenStreetMap.Mapnik</code>, <code>Stadia.OSMBright</code> but you can also define <a href="/documentation/maps/">your own site-wide tileLayer defaults</a>.
+      This example is similar to an earlier one but we set the `tileLayer` to `CartoDB.DarkMatter`. The built-in options include: <code>CartoDB.Positron</code>, <code>CartoDB.PositronNoLabels</code>, <code>CartoDB.PositronOnlyLabels</code>, <code>CartoDB.DarkMatter</code>, <code>CartoDB.DarkMatterNoLabels</code>, <code>CartoDB.DarkMatterOnlyLabels</code>, <code>CartoDB.Voyager</code>, <code>CartoDB.VoyagerNoLabels</code>, <code>CartoDB.VoyagerOnlyLabels</code>, <code>ESRI.WorldImagery</code>, <code>OpenStreetMap.Mapnik</code>, <code>Stadia.OSMBright</code> but you can also define <a href="/documentation/maps/">your own site-wide tileLayer defaults</a>.
     config:
       data:
         - { code: "E08000016", name: "Barnsley", colour: "#E6007C" }
@@ -312,6 +320,7 @@ examples:
       tooltip: name
       value: colour
       tileLayer: "CartoDB.DarkMatter"
+      mapAttribution: "OI"
   - title: Add a background
     description: |
       A non-interactive `background` can be added as a layer behind the interactive map. It should contain GeoJSON `data`. It can have its `colour` set. We can also adjust the map `bounds` if we'd like the view to cover an area smaller/larger than the bounds of the data. Note that the exact bounding of map will also depend on the aspect ratio that the map ends up on the end-user's display.
@@ -344,6 +353,7 @@ examples:
         lon:
           min: -3
           max: -0.3
+      mapAttribution: "OI"
   - title: Add tile layers on top of the data layer
     description: |
       There may be times when you want to add a tile layer on top of the data layer e.g. if you want to add a tile-based label layer. To do this you should explictly set the order of your layers so that the label tile layer comes after the data layer.
@@ -379,6 +389,7 @@ examples:
         lon:
           min: -3
           max: -0.3
+      mapAttribution: "OI"
   - title: Out of this world example
     description: |
       Let's journey to Mars. This example is inspired by <a href="https://mastodon.social/@65dBnoise/109849270626537378">maps by 65dBnoise</a> and shows locations in Kim Stanley Robinson's "Mars Trilogy".
@@ -482,6 +493,7 @@ examples:
           tooltip: "Peter's airport"
           latitude: -52
           longitude: 110
+      mapAttribution: "OI"
 options: |
   <ul>
   <li><code>data</code> - (optional) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If used you will need to match this to the GeoJSON properties using <code>key</code>.</li>
@@ -573,6 +585,7 @@ options: |
   </li>
   <li><code>padding</code> - Set the padding between the data layer and the map edges. The value is given in the pixel scale of the generated map (which may not be the same as the pixels the map takes up on screen).</li>
   <li><code>legend</code> - Define the <a href="/documentation/chart-furniture/#legends">legend</a>.</li>
+  <li><code>mapAttribution</code> - Add some text before the tileset credit.</li>
   <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
   </ul>
 ---

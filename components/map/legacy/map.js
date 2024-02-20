@@ -21,6 +21,21 @@ var places = [{"Name":"London","Latitude":51.50853,"Longitude":-0.12574,"Populat
 
 function clone(a){ return JSON.parse(JSON.stringify(a)); }
 
+function updateBounds(config){
+	if(config.bounds){
+		// If "bounds" have been sent as a GeoJSON object we'll find the bounds of it
+		if("type" in config.bounds && config.bounds.type === "FeatureCollection"){
+			let b = d3.geoBounds(config.bounds);
+			config.bounds = {'lat':{'min':b[0][1],'max':b[1][1]},'lon':{'min':b[0][0],'max':b[1][0]}};
+		}
+		// If it doesn't look like a valid object, quit
+		if(!("lat" in config.bounds) || !("lon" in config.bounds)){
+			console.error(config);
+			throw new Error("No valid bounds in config. Should be in the form: { lat: { min:, max: }, lon: { min: , max: } }");
+		}
+	}
+	return config;
+}
 
 // This component uses "/assets/leaflet/leaflet.js" and "/assets/leaflet/leaflet.css" to make things interactive in the browser.
 // It will only get included in pages that need it by using the "data-dependencies" attribute.
@@ -43,6 +58,8 @@ export function ZoomableMap(opts){
 	const namedColours = Colours(config.colours);
 
 	cs = ColourScale(config.scale);
+
+	config = updateBounds(config);
 
 	for(l = 0; l < config.layers.length; l++){
 
@@ -92,12 +109,15 @@ export function ZoomableMap(opts){
 
 
 	this.getHTML = function(){
-		var html,i,l,props,zIndex;
+		var html,i,l,props,zIndex,attrib;
+
+		attrib = "";
+		if(typeof config.mapAttribution==="string") attrib = config.mapAttribution||"";
 
 		html = [];
 		html.push('(function(root){\n');
 		html.push('	var p = document.currentScript.parentNode;\n');
-		html.push('	var map = new OI.ZoomableMap(p.querySelector(".leaflet"),{"attribution":'+JSON.stringify(config.attribution||'<a href="https://open-innovations.org/">Open Innovations</a>')+'});\n');
+		html.push('	var map = new OI.ZoomableMap(p.querySelector(".leaflet"),{"attribution":'+(attrib ? JSON.stringify(attrib) : '""')+'});\n');
 
 		if(config.bounds){
 			// Create the bounds object required by Leaflet
@@ -131,8 +151,10 @@ export function ZoomableMap(opts){
 			}else if(config.layers[l].type=="background"){
 
 				var colour = Colour(config.layers[l].colour||"#fafaf8");
+				var sty = clone(config.layers[l].options);
+				sty.color = colour.hex;
 				html.push('	map.addLayer({\n');
-				html.push('		layer: L.geoJSON(' + JSON.stringify(config.layers[l].geojson.data) +',{"style":{"color":"'+colour.hex+'","weight":0,"fillOpacity":'+config.layers[l].options.fillOpacity+'}})\n');
+				html.push('		layer: L.geoJSON(' + JSON.stringify(config.layers[l].geojson.data) +',{"style":'+JSON.stringify(sty)+'})\n');
 				html.push('	});\n');
 
 			}else if(config.layers[l].type=="data"){
@@ -254,10 +276,12 @@ export function SVGMap(opts){
 	// Define some colours
 	const namedColours = Colours(config.colours);
 
-	let geo = config.geojson.data;
 	let cs = ColourScale(config.scale);
 	let layerlist = [];
 	let min,max,v,i,l;
+
+	// If "bounds" have been sent as a GeoJSON object we'll find the bounds of it
+	config = updateBounds(config);
 
 	for(l = 0; l < config.layers.length; l++){
 
@@ -298,7 +322,7 @@ export function SVGMap(opts){
 				'data': config.layers[l].data,
 				'geojson': config.layers[l].geojson,
 				'options': mergeDeep({ 'color': '#b2b2b2' },config.layers[l].options||{}),
-				'values': { 'key': config.layers[l].key, 'geokey': config.geojson.key, 'value': config.layers[l].value, 'label':config.layers[l].tooltip, 'min':min, 'max': max, 'data': config.layers[l].data, 'colour': 'red' },
+				'values': { 'key': config.layers[l].key, 'geokey': config.layers[l].geojson.key||"", 'value': config.layers[l].value, 'label':config.layers[l].tooltip, 'min':min, 'max': max, 'data': config.layers[l].data, 'colour': 'red' },
 				'style': function(feature,el,type){
 					var v,code,i,title,row,val;
 					v = this.attr.values;
