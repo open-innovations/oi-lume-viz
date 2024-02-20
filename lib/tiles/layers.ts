@@ -11,49 +11,55 @@ export type TileLayerOptions = {
 let TileLayerDefinitions: Record<string, TileLayerOptions> = {
 	"CartoDB.Positron":{
 		"url":"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"subdomains": 'abcd',
+		"maxZoom": 20
+	},
+	"CartoDB.PositronNoLabels":{
+		"url": "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		"subdomains": 'abcd',
 		"maxZoom": 20
 	},
 	"CartoDB.PositronOnlyLabels":{
 		"url": "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		"subdomains": 'abcd',
 		"maxZoom": 20
 	},
 	"CartoDB.DarkMatter":{
 		"url": "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		"subdomains": 'abcd',
 		"maxZoom": 20
 	},
 	"CartoDB.DarkMatterNoLabels":{
 		"url": "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		"subdomains": 'abcd',
 		"maxZoom": 20
 	},
 	"CartoDB.DarkMatterOnlyLabels":{
 		"url": "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		"subdomains": 'abcd',
 		"maxZoom": 20
 	},
 	"CartoDB.Voyager":{
 		"url": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		"subdomains": 'abcd',
 		"maxZoom": 20
 	},
 	"CartoDB.VoyagerNoLabels":{
 		"url": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		"subdomains": 'abcd',
 		"maxZoom": 20
 	},
 	"CartoDB.VoyagerOnlyLabels":{
 		"url": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png",
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		"subdomains": 'abcd',
 		"maxZoom": 20
 	},
@@ -64,12 +70,12 @@ let TileLayerDefinitions: Record<string, TileLayerOptions> = {
 	"OpenStreetMap.Mapnik":{
 		"url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
 		"maxZoom": 19,
-		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		"attribution": '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors'
 	},
 	"Stadia.OSMBright":{
 		"url": "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png",
 		"maxZoom": 20,
-		"attribution": '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+		"attribution": '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OSM</a> contributors'
 	}
 };
 
