@@ -47,6 +47,7 @@ examples:
       data: test.data.heatmap
       key: Country
       colour: Colour
+      circles: 0.9
       columns:
         - name: 2018
           template: '{{ Ranks→2018 }}'
@@ -117,6 +118,27 @@ examples:
           template: '{{ Ranks→2020 }}'
       top: 10
       stroke-width: 0.2
+  - title: "Limit to the bottom x entries"
+    description: |
+      It may be that we have a long list of entries and we only want to show the bottom few. We make use of `top: 10` but set `reverse: true` to change the direction on which the rank is calculated. As things can move in and out of the bottom group, the chart will also show those as a compressed group underneath. We will assign colours based on the `Ranks→2020` column in the data so we'll also set the `max` value to `10`. To help make things clearer, we'll also add rank `circles` and make the `stroke-width` narrower.
+    config:
+      data: test.data.heatmap
+      key: Country
+      colour: Ranks→2020
+      scale: Viridis
+      circles: 0.9
+      debug: true
+      columns:
+        - name: 2018
+          template: '{{ Ranks→2018 }}'
+        - name: 2019
+          template: '{{ Ranks→2019 }}'
+        - name: 2020
+          template: '{{ Ranks→2020 }}'
+      reverse: true
+      max: 10
+      top: 10
+      stroke-width: 0.2
   - title: "A more complex example"
     description: |
       This uses a dataset of [private sector long term empty properties by ward in Leeds](https://datamillnorth.org/dataset/private-sector-long-term-empty-properties-by-ward) taken from Data Mill North. The CSV file contains the percentage of empty properties in each ward by month. We find the rank for each `key` (e.g. `Ward`) in each of the `columns`. As we want larger percentages to give lower ranks, we set `reverse` to `true`. We `colour` the lines by the ranking of the `2019` column in the data by referring to `2019_rank`.
@@ -153,7 +175,7 @@ examples:
 options: |
   <ul>
   <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
-  <li><code>columns</code> - An ordered array of columns to use to build the ranking chart. Each must have a <code>name</code> but these can also be <a href="/documentation/virtual-columns/">virtual columns</a>. This allows you to use fewer columns than exist in the data. There can also be an optional <code>fillna</code> (number) which will replace null or NaN values in this column.</li>
+  <li><code>columns</code> - An ordered array of columns to use to build the ranking chart. Each must have a <code>name</code> but these can also be <a href="/documentation/virtual-columns/">virtual columns</a>. This allows you to use fewer columns than exist in the data. There can also be an optional <code>fillna</code> which will be used in the tooltip in place of null or NaN values.</li>
   <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
   <li><code>width</code> - Set a specific width for the visualisation.</li>
   <li><code>height</code> - Set a specific height for the visualisation.</li>

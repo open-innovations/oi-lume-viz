@@ -100,7 +100,8 @@ export default function (input: {
 		'circles': 0,
 		'stroke-width': 0.5,
 		'reverse':false,
-		'top': config.data.length
+		'top': config.data.length,
+		'gap': 1
 	};
 
 
@@ -119,7 +120,6 @@ export default function (input: {
 	// Error checking
 	checkOptions(options);
 
-	let svgopt,clip,rect,svg,seriesgroup,dy,y,yv,x,xv,h,w,pad,xoff,xlbl,dx,ttl,lbl,g,v,i,ok,data,path,oldx,oldy,oldidx,rank,orderby,bg,talign,circle,radius,txt,idx;
 	const ns = 'http://www.w3.org/2000/svg';
 	// Create a random ID number
 	const id = Math.round(Math.random()*1e8);
@@ -127,106 +127,234 @@ export default function (input: {
 	let fs = options['font-size'];
 	let yoff = options['font-size']*1.2;
 
+	let data = clone(config.data);
+
 	// Create an array of series
 	let series = [];
-	let min = Infinity,max = -Infinity;
+	let datamin = Infinity,datamax = -Infinity;
+	let min,max;
+	let pos,group,row,col,hasvalue,cname,v,v2,arr,oldrank,name,i,c,s,rank,clip,rect,seriesgroup,w,h,dy,radius,pad,xoff,xlbl,dx,lbl,svgopt,talign,g,ttl,oldidx,path,bg,y,oldy,oldx,idx,yv,xv,circle,txt;
+	let gap = options.gap;
+
+
+	if(!(options.key in data[0])){
+		console.error('data',data);
+		throw 'No column "'+options.key+'" in data.';
+	}
+
+	let columns = [],sorted;
+	// For each column work out the ordered values
+	for(col = 0; col < options.columns.length; col++){
+		arr = [];
+		cname = options.columns[col].name;
+		for(row = 0; row < data.length; row++){
+			v = data[row][cname];
+			v2 = parseFloat(v);
+			if(v2+'' == v) v = v2;
+			if(typeof v==="number") arr.push({'value':v,'row':row,'name':data[row][options.key]});
+			v = null;
+			v = (options.colour && options.colour in data[row]) ? data[row][options.colour] : data[row][cname];
+			if(typeof v==="string") v = parseFloat(v);
+			if(!isNaN(v) && v!=null){
+				datamin = Math.min(datamin,v);
+				datamax = Math.max(datamax,v);
+			}
+
+		}
+		sorted = arr.sort(function(a,b){
+			let diff = a.value-b.value;
+			if(diff==0) return a.name > b.name;
+			return (options.reverse ? -diff : diff);
+		});
+		// Work out the ranks
+		oldrank = 0;
+		for(i = 0; i < sorted.length; i++){
+			if(i==0){
+				sorted[i].rank = 1;
+			}else{
+				if(sorted[i].value == sorted[i-1].value){
+					sorted[i].rank = oldrank;
+				}else{
+					sorted[i].rank = i+1;
+					oldrank = sorted[i].rank;
+				}
+			}
+		}
+		columns[col] = sorted;
+	}
+
+	// Set the top x value if not set
+	if(!options.top || typeof options.top!=="number") options.top = data.length;
 	
-	if(config.columns.length==0){
-		console.warn("No columns have been given");
-		return "";
-	}
-
-	for(let row = 0; row < options.data.length; row++){
-		let s = { "row": row, "title": "", "rank": new Array(options.columns.length), "order": new Array(options.columns.length) };
-		if(typeof options.data[row][options.key]==="undefined") throw 'No column "'+options.key+'" in data.';
-		s.title = options.data[row][options.key];
-		s.include = false;
-
-		// Construct columns for this series
-		ok = true;
-		for(let col = 0; col < options.columns.length; col++){
-			// Get the value for this column
-			v = options.data[row][options.columns[col].name];
-
-			if(typeof v==="string") v = parseFloat(v);
-			if(isNaN(v) && typeof options.columns[col].fillna==="number"){
-				v = options.columns[col].fillna;
-			}
-			// If the value is a number we use it
-			if(typeof v!=="number" || isNaN(v)){
-				// A bad number means we will ignore this series
-				ok = false;
-				if(config.debug) console.warn('Ranking chart: row '+row+' ('+s.title+') has a non-numeric value in '+options.columns[col].name+': "'+options.data[row][options.columns[col].name]+'" ('+(typeof options.data[row][options.columns[col].name])+').');
-			}else{
-				// Update the parsed and empty-filled value
-				options.data[row][options.columns[col].name] = v;
-			}
-		}
-		// Store the data now that we've updated potential NaNs
-		s.data = clone(options.data[row]);
-
-		if(ok) series.push(s);
-	}
-
-	// Loop over each column and find the rank within it
-	for(let col = 0; col < options.columns.length; col++){
-		let arr = [];
-		for(let s = 0; s < series.length; s++){
-			let row = series[s].row;
-			v = options.data[row][options.columns[col].name];
-			if(typeof v!=="number" || isNaN(v)) v = null;
-			arr.push(v);
-		}
-		let sorted = arr.slice().sort(function(a,b){ return (options.reverse ? b-a : a-b); });
-		let ranks = arr.map(function(v){ return sorted.indexOf(v)+1 });
-
-		for(let s = 0; s < series.length; s++){
-			series[s].rank[col] = ranks[series[s].row];
-			series[s].order[col] = ranks[series[s].row]-1;
-
-			// Do we include the series?
-			if(typeof options.top!=="number" || ranks[series[s].row] <= options.top) series[s].include = true; 
-
-			series[s].data[options.columns[col].name+"_rank"] = series[s].rank[col];
-			let v = null;
-			if(config.colour){
-				v = series[s].data[config.colour];
-			}else{
-				v = series[s].data[options.columns[col].name];
-			}
-			if(typeof v==="string") v = parseFloat(v);
-			if(!isNaN(v)){
-				min = Math.min(min,v);
-				max = Math.max(max,v);
+	// Loop over all columns and find the series that are in the top x
+	var topx = {};
+	for(col = 0; col < columns.length; col++){
+		for(i = 0; i < columns[col].length; i++){
+			if(columns[col][i].rank <= options.top){
+				topx[columns[col][i].name] = true;
 			}
 		}
 	}
+	// Get a sorted list of series names that are included in the top x
+	var names = Object.keys(topx).sort();
+	var topn = names.length;
+	
+	// Build an ordered series by looping over the first column and checking if it is in our top x
+	series = [];
+	let serieslookup = {};
+	let added = {};
+	let endrank = 0;
+	for(c = 0; c < columns[0].length; c++){
+		name = columns[0][c].name;
+		if(topx[name]){
+			series.push({'title':name});
+			serieslookup[name] = series.length-1;
+			added[name] = true;
+			endrank = Math.max(columns[0][c].rank,endrank);
+		}
+	}
+	// Need to add on any missing series (ordered by name)
+	for(i = 0; i < names.length; i++){
+		if(!added[names[i]]){
+			series.push({'title':names[i]});
+			serieslookup[names[i]] = series.length-1;
+		}
+	}
 
+	// Loop over the series and build their columns
+	for(s = 0; s < series.length; s++){
+		series[s].rank = new Array(columns.length);
+		series[s].position = new Array(columns.length);
+	}
 
-	if(typeof options.height!=="number") options.height = Math.ceil(yoff*(series.length+1));
+	// Loop over each column
+	for(col = 0; col < columns.length; col++){
+		pos = 0;
+		oldrank = 0;
+		group = 1;
+		// Loop over the rows (these are ordered within this column)
+		for(i = 0; i < columns[col].length; i++){
+			// If the name is in our lookup
+			name = columns[col][i].name;
+			if(name in serieslookup){
+				// Get the series index
+				s = serieslookup[name];
+				rank = columns[col][i].rank;
+				// Keep the column rank in the data array
+				series[s].rank[col] = rank;
+				if(typeof rank!=="number"){
+					series[s].position[col] = options.top + gap + pos;
+					pos++;
+				}else{
+					if(rank <= options.top){
+						series[s].position[col] = rank;
+					}else{
+						if(rank > oldrank){
+							// If the ranking is higher than the previous ranking
+							// we add on however many were grouped then reset the 
+							// group. This makes sure lines start next to labels
+							pos += group;
+							group = 1;
+						}else{
+							// If the rank is the same we add one to the group
+							group++;
+						}
+						series[s].position[col] = options.top + gap + pos;
+					}
+				}
+				// Keep a reference to the original data row
+				series[s].row = columns[col][i].row;
+				// Get a copy of the original data
+				series[s].data = data[series[s].row];
+				oldrank = rank;
+			}
+		}
+	}
+	if(options.top > series.length) options.top = series.length;
+	let endtop = options.top;
+	// Check if we have multiple items ranked equal to options.top
+	for(let s = endtop; s < series.length; s++){
+		if(series[s].rank[0]==options.top){
+			endtop++;
+		}
+	}
+
+	if(typeof options.height!=="number") options.height = Math.ceil(yoff*(series.length + 1 + gap));
 
 	// Create SVG container
-	if(!svg){
-		svg = svgEl('svg');
-		svgopt = {'xmlns':ns,'version':'1.1','viewBox':'0 0 '+options.width+' '+options.height,'overflow':'visible','style':'max-width:100%;','preserveAspectRatio':'none','data-type':options.type};
-		setAttr(svg,svgopt);
-		clip = svgEl("clipPath");
-		setAttr(clip,{'id':'clip-'+id});
-		//add(clip,svg); // Clip to graph area
-		rect = svgEl("rect");
-		setAttr(rect,{'x':0,'y':0,'width':options.width,'height':options.height});
-		add(rect,clip);
-		seriesgroup = svgEl('g');
-		seriesgroup.classList.add('data');
-	}
+	var svg = svgEl('svg');
+	svgopt = {'xmlns':ns,'version':'1.1','viewBox':'0 0 '+options.width+' '+options.height,'overflow':'visible','style':'max-width:100%;','preserveAspectRatio':'none'};
+	setAttr(svg,svgopt);
+	clip = svgEl("clipPath");
+	setAttr(clip,{'id':'clip-'+id});
+	rect = svgEl("rect");
+	setAttr(rect,{'x':0,'y':0,'width':options.width,'height':options.height});
+	add(rect,clip);
+	seriesgroup = svgEl('g');
+	seriesgroup.classList.add('data');
 
-	// Remove those series that aren't included
-	for(let s = series.length-1; s >= 0; s--){
-		if(!series[s].include) series.splice(s,1);
-	}
+	// Set to the user-supplied values if they are numeric
+	if(typeof config.min=="number") min = config.min;
+	else min = datamin;
+	if(typeof config.max=="number") max = config.max;
+	else max = datamax;
 
-	// Create the SVG elements for each series
+	// Update the config so that the legend knows what the min/max are
+	config.min = min;
+	config.max = max;
+
+	// Calculate how many extra series we have to include
+	let extra = topn - options.top;
+
+	// Calculate some dimensions
+	w = options.width;
+	h = options.height - yoff;
+	dy = h / (endtop + (extra > 0 ? extra + gap : 0));
+	radius = dy*options.circles*0.5;
+
+
+	// Shrink the font if the y-spacing is too small
+	fs = Math.min(dy,fs);
+
+
+	// Set the label padding (both sides)
+	pad = 5;
+
+
+	xoff = 0;
 	for(let s = 0; s < series.length; s++){
+		xoff = Math.max(xoff,textLength(series[s].title,fs,"normal",options['font-family'].split(/,/)[0].replace(/\"/g,"")));
+	}
+
+	xlbl = xoff + pad;
+	xoff = xlbl + pad + radius;
+
+	dx = (w - xoff - radius)/(options.columns.length-1);
+
+	// Make some column headers
+	for(i = 0; i < options.columns.length; i++){
+		lbl = svgEl('text');
+		lbl.innerHTML = options.columns[i].name+'';
+		talign = 'middle';
+		if(i==0) talign = 'start';
+		if(i==options.columns.length-1) talign = 'end';
+		setAttr(lbl,{'x':(xoff + i*dx + (i==0 ? -radius : (i==options.columns.length-1 ? +radius : 0))).toFixed(2),'y': (fs*0.2).toFixed(2),'font-size':(fs).toFixed(2)+'px','dominant-baseline':'hanging','text-anchor':talign,'font-family':options['font-family']});
+		svg.appendChild(lbl);
+	}
+
+	function getY(v){
+		return yoff + ( (v+1)*dy - dy/2 );
+	}
+
+	let cs = (options.scale ? ColourScale(options.scale) : ColourScale(defaultbg+" 0%, "+defaultbg+" 100%"));
+
+	oldidx = -1;
+	let position,ranktxt,visible;
+
+	// Update label positions, font size and build lines
+	for(let s = 0; s < series.length; s++){
+
+		// Create the SVG elements for each series
 		g = svgEl('g');
 		g.classList.add('series');
 		series[s].g = g;
@@ -247,173 +375,108 @@ export default function (input: {
 		setAttr(path,{'stroke-width':4,'stroke':defaultbg,'fill':'transparent'});
 		g.appendChild(path);
 		series[s].path = path;
-	}
 
-	// Set to the user-supplied values if they are numeric
-	if(typeof options.min=="number") min = options.min;
-	if(typeof options.max=="number") max = options.max;
-
-	config.min = min;
-	config.max = max;
-
-	// There's no guarantee that the order of the rows in the CSV matches the first ranking column
-	// Sort the array by the rank and, if the rank is the same, by title
-	series = series.sort(function(a, b){
-		let av = a.rank[0];
-		if(!isNaN(parseInt(av))) av = parseInt(av);
-		let bv = b.rank[0];
-		if(!isNaN(parseInt(bv))) bv = parseInt(bv);
-		return (av-bv)||(a.title > b.title);
-	});
-	let positions = new Array(series[0].rank.length);
-	let gap = 1;
-	var extra = 0;
-
-	for(let i = 0; i < series[0].rank.length; i++){
-		let arr = new Array(series.length);
-		for(let s = 0; s < series.length; s++){
-			arr[s] = series[s].rank[i];
-		}
-
-		let arrsort = arr.sort();
-		positions[i] = {'count':0};
-		for(let a = 0; a < arrsort.length; a++){
-			if(arrsort[a] > options.top){
-				positions[i][arrsort[a]] = positions[i].count + options.top + gap;
-				positions[i].count++;
-				extra = Math.max(extra,positions[i].count);
-			}else{
-				positions[i][arrsort[a]] = arr[a]-1;
-			}
-		}
-	}
-
-	// Calculate some dimensions
-	w = options.width;
-	h = options.height - yoff;
-	dy = h / (options.top + (extra > 0 ? extra+gap:0));
-	radius = dy*options.circles*0.5;
-
-	// Shrink the font if the y-spacing is too small
-	fs = Math.min(dy,fs);
-
-	// Set the label padding (both sides)
-	pad = 5;
-
-	xoff = 0;
-	for(let s = 0; s < series.length; s++){
-		xoff = Math.max(xoff,textLength(series[s].title,fs,"normal",options['font-family'].split(/,/)[0].replace(/\"/g,"")));
-	}
-	xlbl = xoff + pad;
-	xoff = xlbl + pad + radius;
-
-	dx = (w - xoff - radius)/(config.columns.length-1);
-
-	// Let's make some column headers
-	for(i = 0; i < config.columns.length; i++){
-		lbl = svgEl('text');
-		lbl.innerHTML = config.columns[i].name+'';
-		talign = 'middle';
-		if(i==0) talign = 'start';
-		if(i==config.columns.length-1) talign = 'end';
-		setAttr(lbl,{'x':(xoff + i*dx + (i==0 ? -radius : (i==config.columns.length-1 ? +radius : 0))).toFixed(2),'y': (fs*0.2).toFixed(2),'font-size':(fs).toFixed(2)+'px','dominant-baseline':'hanging','text-anchor':talign,'font-family':options['font-family']});
-		svg.appendChild(lbl);
-	}
-
-	function getY(v){
-		return yoff + ( (v+1)*dy - dy/2 );
-	}
-
-	let cs = (options.scale ? ColourScale(options.scale) : ColourScale(defaultbg+" 0%, "+defaultbg+" 100%"));
-
-	oldidx = -1;
-	let inc = 0;
-
-	// Update label positions and font size
-	for(let s = 0; s < series.length; s++){
 
 		// Get colour
 		bg = defaultbg;
-		if(config.colour){
-			if(config.colour in series[s].data){
-				if(typeof series[s].data[config.colour]==="undefined") console.warn('No "value" column exists for "'+series[s].title+'".',series[s].data,config.colour);
-				else bg = series[s].data[config.colour];
+		if("colour" in options){
+			if(options.colour in series[s].data){
+				if(typeof series[s].data[options.colour]==="undefined") console.warn('No "value" column exists for "'+series[s].title+'".',series[s].data,options.colour);
+				else bg = series[s].data[options.colour];
 			}else{
-				if(namedColours.get(config.colour)) bg = config.colour;
+				if(namedColours.get(options.colour)) bg = options.colour;
 			}
 			if(!isNaN(parseFloat(bg))) bg = parseFloat(bg);
 		}else{
 			// Default to the first rank value
-			if(typeof series[s].rank==="number") bg = series[s].rank;
+			if(typeof series[s].rank[0]==="number") bg = series[s].rank[0];
+			else bg = defaultbg;
 		}
-
 		if(typeof bg==="string") bg = namedColours.get(bg);
-		if(typeof bg==="number") bg = cs((bg - min)/(max - min));
+		if(typeof bg==="number"){
+			// If the chart is reversed we find the opposite value
+			v = Math.max(min,Math.min(max,(config.reverse) ? (datamax - bg + datamin) : bg));
+			bg = cs((v - min)/(max - min));
+		}
+		if(bg==null) bg = defaultbg;
 
 		// Build path and circles
 		v = 0;
 
-		rank = series[s].rank[0];
-		idx = positions[0][rank];
+		// If the index is less than the end of the top section we use it otherwise add the gap
+		position = (s < endtop ? s : s + gap);
 
-		// If this label has the same index (or lower) as the previous one we add one
-		if(idx <= oldidx) idx = oldidx+1;
-		oldx = xoff;
-
-		// There's a possibility that the first column gives the same ranking to multiple series. 
-		// To avoid labels sitting on top of each other, we shall force the initial ranking to 
-		// match the series index rather than its rank.
-		y = getY(idx);
+		// Get the vertical pixel position
+		y = getY(position);
 		oldy = y;
 
 		// Update label position to match first column rank
 		setAttr(series[s].label,{'x':xlbl.toFixed(2),'y':y.toFixed(2),'font-size':(fs).toFixed(2)+'px'});
 
-
-		oldidx = idx;
+		oldx = xoff;
 
 		// Make path for this series
 		path = "";
 		ttl = series[s].title+':';
+		oldrank = 0;
+
 		for(i = 0; i < series[s].rank.length; i++){
 			rank = series[s].rank[i];
-			idx = series[s].rank[i]-1;
-			idx = positions[i][rank];
-			yv = getY(idx);
-			xv = xoff + (i)*dx;
-
-			if(i == 0) path += 'M'+xv.toFixed(2)+','+yv.toFixed(2);
-			else path += 'C'+(oldx+(dx/2)*options.curvature).toFixed(2)+','+oldy.toFixed(2)+','+(xv-(dx/2)*options.curvature).toFixed(2)+','+yv.toFixed(2)+','+(xv).toFixed(2)+','+yv.toFixed(2);
+			ranktxt = rank||"";
+			if(typeof series[s].position[i]==="number"){
+				idx = (series[s].position[i] - 1)
+			}else{
+				if(i==0) idx = position;
+				else idx = series.length;
+			}
+			// Add on the offset due to equal options.top place
+			if(idx > options.top) idx += (endtop-options.top);
 			
-			if(options.circles){
+			yv = getY(idx);
+			xv = xoff + i*dx;
+
+
+			// Need to be clever about building the path
+			// If there was a previous rank then we can draw a curve, otherwise 
+			
+			if(i == 0) path += 'M'+xv.toFixed(2)+','+yv.toFixed(2);
+			else{
+				if(typeof rank!=="number" || typeof oldrank!=="number") path += 'M'+xv.toFixed(2)+','+yv.toFixed(2);
+				else path += 'C'+(oldx+(dx/2)*options.curvature).toFixed(2)+','+oldy.toFixed(2)+','+(xv-(dx/2)*options.curvature).toFixed(2)+','+yv.toFixed(2)+','+(xv).toFixed(2)+','+yv.toFixed(2);
+			}
+
+			// Only show circles if the rank is a number
+			if(options.circles && typeof rank==="number"){
 				circle = svgEl('circle');
 				setAttr(circle,{'cx':xv.toFixed(2),'cy':yv.toFixed(2),'r':radius.toFixed(2),'fill':bg});
 				series[s].g.appendChild(circle);
-
 				txt = svgEl('text');
-				txt.innerText = rank;
-				setAttr(txt,{'fill':contrastColour(bg),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius).toFixed(1)+'px','font-family':options['font-family']});
+				txt.innerText = ranktxt;
+				setAttr(txt,{'fill':contrastColour(bg||"black"),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius).toFixed(1)+'px','font-family':options['font-family']});
 				series[s].g.appendChild(txt);
+
 			}
-			
 			oldy = yv;
 			oldx = xv;
-			
-			ttl += '<br />'+(i == 0 ? ' ':'; ')+config.columns[i].name+': '+getNumberWithOrdinal(rank);
+			ttl += '<br />'+(i == 0 ? ' ':'; ')+options.columns[i].name+': '+(typeof rank==="number" ? getNumberWithOrdinal(rank) : (typeof options.columns[i].fillna!==undefined ? options.columns[i].fillna : '?'));
+			oldrank = rank;
 		}
+		
 		setAttr(series[s].path,{'d':path,'stroke':bg,'stroke-width':(dy*options['stroke-width']).toFixed(2)});
 
 		// Update series title
 		series[s].titleEl.innerHTML = ttl;
+		
 	}
 
 	// Add the divider
 	if(extra > 0){
 		let divider = svgEl('path');
 		divider.classList.add('divider');
-		setAttr(divider,{'d':'M 0,'+getY(options.top - 1 + gap)+'h '+w,'stroke':'black','stroke-width':2});
+		setAttr(divider,{'d':'M 0,'+getY(endtop - 1 + gap).toFixed(2)+'h '+w,'stroke':'black','stroke-width':2});
 		svg.appendChild(divider);
 	}
+
 
 	var holder = new VisualisationHolder(config,{'name':'ranking chart'});
 	holder.addDependencies(['/js/chart-ranking.js','/css/charts.css']);
@@ -427,15 +490,6 @@ function getNumberWithOrdinal(n) {
 	return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-
-// Sort the data
-function sortBy(arr,i,reverse){
-	yaxis = i;
-	return arr.sort(function (a, b) {
-		if(reverse) return a[i] > b[i] ? 1 : -1;
-		else return a[i] < b[i] ? 1 : -1;
-	});
-}
 function qs(el,t){ return el.querySelector(t); }
 function add(el,to){ return to.appendChild(el); }
 function svgEl(t){ return document.createElement(t); }

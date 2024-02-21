@@ -39,7 +39,7 @@ export function thingOrNameOfThing<T = unknown>(thingOrName: string | T, context
 export function addVirtualColumns (
   config: unknown
 ) {
-	let c,r,v,f,p;
+	let c,r,v,f;
 	if(config.columns && typeof config.columns.length!=="number"){
 		console.log('Columns:',config.columns);
 		throw new TypeError('The columns should be an array.');
