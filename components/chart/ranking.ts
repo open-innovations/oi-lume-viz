@@ -54,7 +54,9 @@ type RankingChartOptions = {
 	max?: number,
 	curvature?: number,
 	circles?: number,
-	top?: number
+	top?: number,
+	gap?: number,
+	divider?: object
 };
 
 
@@ -101,7 +103,11 @@ export default function (input: {
 		'stroke-width': 0.5,
 		'reverse':false,
 		'top': config.data.length,
-		'gap': 1
+		'gap': 1,
+		'divider': {
+			'stroke': defaultbg,
+			'stroke-width': 2
+		}
 	};
 
 
@@ -452,7 +458,7 @@ export default function (input: {
 				series[s].g.appendChild(circle);
 				txt = svgEl('text');
 				txt.innerText = ranktxt;
-				setAttr(txt,{'fill':contrastColour(bg||"black"),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius).toFixed(1)+'px','font-family':options['font-family']});
+				setAttr(txt,{'fill':contrastColour(bg||"#000000"),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius).toFixed(1)+'px','font-family':options['font-family']});
 				series[s].g.appendChild(txt);
 
 			}
@@ -472,11 +478,12 @@ export default function (input: {
 	// Add the divider
 	if(extra > 0){
 		let divider = svgEl('path');
-		divider.classList.add('divider');
-		setAttr(divider,{'d':'M 0,'+getY(endtop - 1 + gap).toFixed(2)+'h '+w,'stroke':'black','stroke-width':2});
+		divider.classList.add('oi-divider');
+		let attr = clone(options.divider);
+		attr.d = 'M 0,'+getY(endtop - 1 + gap).toFixed(2)+'h '+w;
+		setAttr(divider,attr);
 		svg.appendChild(divider);
 	}
-
 
 	var holder = new VisualisationHolder(config,{'name':'ranking chart'});
 	holder.addDependencies(['/js/chart-ranking.js','/css/charts.css']);
