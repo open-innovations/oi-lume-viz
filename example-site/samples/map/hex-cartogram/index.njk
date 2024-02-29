@@ -319,6 +319,64 @@ examples:
       tooltip: "Median Private Sector Rents<br />{{ LAD21NM }} ({{ _value }}): <strong>&pound;{{ {{ _value }} | toLocaleString() }}</strong>"
       attribution: |
         Data: <a href="https://www.westyorks-ca.gov.uk/media/8790/lcr-housing-delivery-monitoring-report-2020-21-4.pdf">West Yorkshire Combined Authority</a>
+  - title: "Draw boundaries"
+    description: |
+      We can add styled `boundaries` to our hex map if our <a href="https://open-innovations.org/projects/hexmaps/hexjson">HexJSON</a> contains <code>boundaries</code>. To style the boundaries we build a dictionary `boundaries` where each dictionary item is either the properties to apply to that boundary or the name of another boundary (so we can re-use the same properties multiple times). If there are no properties for a particular style it won't be drawn.
+    config:
+      hexjson:
+        layout: odd-r
+        hexes:
+          E08000016: { n: Barnsley, colour: "#E6007C", q: 0, r: -2 }
+          E08000032: { n: Bradford, colour: "#FF6700", q: -1, r: 0 }
+          E08000033: { n: Calderdale, colour: "#0DBC37", q: -2, r: -1 }
+          E07000163: { n: Craven, colour: "#178CFF", q: -2, r: 1 }
+          E07000165: { n: Harrogate, colour: "#2f529f", q: -1, r: 1 }
+          E08000034: { n: Kirklees, colour: "#722EA5", q: -1, r: -1 }
+          E08000035: { n: Leeds, colour: "#F9BC26", q: 0, r: 0 }
+          E07000169: { n: Selby, colour: "#1DD3A7", q: 1, r: 0 }
+          E08000036: { n: Wakefield, colour: "#EF3AAB", q: 0, r: -1 }
+          E06000014: { n: York, colour: "#F92626", q: 0, r: 1 }
+        boundaries:
+          westyorks:
+            edges:
+              - { q: -1, r: 0, e: 6 }
+              - { q: -1, r: 0, e: 1 }
+              - { q: 0, r: 0, e: 6 }
+              - { q: 0, r: 0, e: 1 }
+              - { q: 0, r: 0, e: 2 }
+              - { q: 0, r: -1, e: 1 }
+              - { q: 0, r: -1, e: 4 }
+              - { q: -1, r: -1, e: 3 }
+      data:
+        - { code: "E08000016", "LAD21NM":"Barnsley","2016":433,"2017":450,"2018":520,"2019":450,"2020":475,"2021":475 }
+        - { code: "E08000032", "LAD21NM":"Bradford","2016":475,"2017":495,"2018":495,"2019":500,"2020":500,"2021":525 }
+        - { code: "E08000033", "LAD21NM":"Calderdale","2016":475,"2017":495,"2018":495,"2019":495,"2020":495,"2021":500 }
+        - { code: "E07000163", "LAD21NM":"Craven","2016":550,"2017":560,"2018":550,"2019":575,"2020":575,"2021":580 }
+        - { code: "E07000165", "LAD21NM":"Harrogate","2016":700,"2017":720,"2018":725,"2019":725,"2020":745,"2021":750 }
+        - { code: "E08000034", "LAD21NM":"Kirklees","2016":475,"2017":495,"2018":495,"2019":500,"2020":500,"2021":525 }
+        - { code: "E08000035", "LAD21NM":"Leeds","2016":600,"2017":650,"2018":671,"2019":675,"2020":725,"2021":700 }
+        - { code: "E07000169", "LAD21NM":"Selby","2016":550,"2017":550,"2018":550,"2019":570,"2020":595,"2021":595 }
+        - { code: "E08000036", "LAD21NM":"Wakefield","2016":500,"2017":520,"2018":525,"2019":525,"2020":550,"2021":550 }
+        - { code: "E06000014", "LAD21NM":"York","2016":700,"2017":745,"2018":795,"2019":775,"2020":750,"2021":780 }
+      columns:
+        - name: "filterLabel"
+          template: "{{ LAD21NM }} ({{ code }})"
+      value: 2021
+      scale: Viridis
+      matchKey: code
+      tools:
+        filter:
+          label: "filterLabel"
+      tooltip: "Median Private Sector Rents<br />{{ LAD21NM }} (2021): <strong>&pound;{{ 2021 | toLocaleString() }}</strong>"
+      boundaries:
+        county:
+          stroke: "white"
+          stroke-width: 3
+          stroke-dasharray: "10 8"
+          stroke-linecap: "round"
+        westyorks: county
+      attribution: |
+        Data: <a href="https://www.westyorks-ca.gov.uk/media/8790/lcr-housing-delivery-monitoring-report-2020-21-4.pdf">West Yorkshire Combined Authority</a>
   - title: "Big example"
     description: |
       This is a large map showing local authorities coloured by region with a layout loaded from an external source. We provide a key with a title and an entry for each region. Each individual hex <code>label</code> is explicitly set to be an empty string.
@@ -363,6 +421,14 @@ examples:
       tools:
         filter:
           label: "filterLabel"
+      boundaries:
+        country:
+          stroke: "white"
+          stroke-width: 3
+          stroke-dasharray: "7 5.65"
+          stroke-linecap: "round"
+        sc-en: "country"
+        wa-en: "country"
 options: |
   <ul>
   <li><code>data</code> - (optional) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If used you will need to match this to the HexJSON IDs using <code>matchKey</code>.</li>

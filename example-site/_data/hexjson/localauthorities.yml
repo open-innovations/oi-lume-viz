@@ -374,3 +374,29 @@ hexes:
   W06000021: {n: Monmouthshire, lad19nmw: Sir Fynwy, q: -1, r: 8, region: W92000004, RGNNM: "Wales", colour: "#0DBC37"}
   W06000022: {n: Newport, lad19nmw: Casnewydd, q: -1, r: 5, region: W92000004, RGNNM: "Wales", colour: "#0DBC37"}
   W06000023: {n: Powys, lad19nmw: Powys, q: -1, r: 9, region: W92000004, RGNNM: "Wales", colour: "#0DBC37"}
+boundaries:
+  sc-en:
+    edges:
+      - {q: 4, r: 21, e: 3}
+      - {q: 4, r: 20, e: 2}
+      - {q: 4, r: 20, e: 3}
+  wa-en:
+    edges:
+      - {q: 0, r: 11, e: 1}
+      - {q: 0, r: 11, e: 2}
+      - {q: 1, r: 10, e: 1}
+      - {q: 1, r: 10, e: 2}
+      - {q: 1, r: 10, e: 3}
+      - {q: 0, r: 9, e: 2}
+      - {q: 0, r: 9, e: 3}
+      - {q: 0, r: 9, e: 4}
+      - {q: -1, r: 9, e: 3}
+      - {q: -1, r: 8, e: 2}
+      - {q: -1, r: 8, e: 3}
+      - {q: -2, r: 7, e: 2}
+      - {q: -2, r: 7, e: 3}
+      - {q: -2, r: 6, e: 2}
+      - {q: -2, r: 5, e: 1}
+      - {q: -1, r: 5, e: 6}
+      - {q: -1, r: 5, e: 1}
+      - {q: -1, r: 5, e: 2}

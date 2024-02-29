@@ -16,7 +16,7 @@
 	}
 
 	function InteractiveSVGMap(el){
-		var svg,pt,p,_obj,typ;
+		var svg,pt,p,_obj,typ,overlay;
 
 		if(el.tagName.toLowerCase()=="svg"){
 			// Used for markers
@@ -29,6 +29,12 @@
 			typ = svg.getAttribute('data-type');
 			pt = svg.querySelectorAll('.data-layer path');
 		}
+		overlay = svg.querySelector('.overlay');
+		if(!overlay){
+			overlay = document.createElementNS('http://www.w3.org/2000/svg','g');
+			overlay.classList.add('overlay');
+			svg.appendChild(overlay);
+		}
 
 		this.addOutline = function(e){
 			// Create an outline version of the hex that sits on top
@@ -40,12 +46,12 @@
 			outline.removeAttribute('id');
 			outline.classList.add('outline');
 			outline.querySelector('path').removeAttribute('tabindex');
-			e.parentNode.appendChild(outline);
+			overlay.appendChild(outline);
 			return this;
 		};
 		this.removeOutline = function(){
 			e = svg.querySelector('.data-layer');
-			if(e && e.parentNode.querySelector('.outline')) e.parentNode.querySelector('.outline').remove();
+			if(e && overlay.querySelector('.outline')) overlay.querySelector('.outline').remove();
 			return this;
 		};
 		_obj = this;

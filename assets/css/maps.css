@@ -20,7 +20,8 @@
 .leaflet-bottom { bottom: 0; }
 .leaflet-left { left: 0; }
 
-.oi-map .data-layer > .outline > * { stroke: black; stroke-width: 4px; stroke-opacity: 1; outline: none; }
+.oi-map .overlay > .outline > * { stroke: black; stroke-width: 4px; stroke-opacity: 1; outline: none; }
+.oi-map .boundaries > * { pointer-events: none; }
 
 .oi-map-hex .oi-map-inner { text-align:center; }
 

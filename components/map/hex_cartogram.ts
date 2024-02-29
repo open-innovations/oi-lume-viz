@@ -11,9 +11,14 @@ import { VisualisationHolder } from '../../lib/holder.js';
 
 const defaultbg = getBackgroundColour();
 
-function roundNumber(v){
-	if(typeof v==="number") return parseFloat(v.toFixed(3));
+function roundNumber(v,prec){
+	if(typeof prec!=="number") prec = 3;
+	if(typeof v==="number") return parseFloat(v.toFixed(prec));
 	else return v;
+}
+function roundTo(v,prec){
+	if(typeof v==="number") v = v.toFixed(prec);
+	return v.replace(/\.([0-9]+)0+$/,function(m,p1){ return "."+p1; }).replace(/\.0+$/,"");
 }
 
 function addTspan(str: string) {
@@ -121,7 +126,6 @@ export default function (input: { config: HexmapOptions }) {
 		// In case it was a CSV file loaded
 		if(copyconfig.data.rows) copyconfig.data = copyconfig.data.rows;
 	}
-
 	// Handle hexjson / data as string references
 	// Resolve hexjson if this is a string
 	if (typeof copyconfig.hexjson === 'string') {
@@ -395,6 +399,73 @@ export default function (input: { config: HexmapOptions }) {
 		const y = heightSVG - (r - dimensions.top + qOffset(q) + shim.y) * rHeight;
 		return { x, y };
 	}
+	function getEdge(h: HexDefinition){
+		let hexPath,cs,ss,p,edges,positive,e;
+		// Work out sizes
+		switch (layout) {
+			case "odd-r":
+			case "even-r":
+				cs = hexCadence / 2;
+				ss = hexSide / 2;
+				break;
+			case "odd-q":
+			case "even-q":
+				cs = hexSide / 2;
+				ss = hexCadence / 2;
+				break;
+			default:
+				throw new TypeError("Unsupported layout");
+		}
+
+		// Is the edge a positive number?
+		positive = (h.e >= 0);
+
+		// Get the positive version of the edge number
+		e = Math.abs(h.e);
+
+		if(typeof h.q==="number" && typeof h.r==="number" && typeof e==="number" && e >= 1 && e <= 6){
+			// Move to centre of first hexagon
+			const { x, y } = getCentre(h);
+			switch (layout) {
+				case "odd-r":
+				case "even-r":
+					// Pointy-topped hex edges
+					edges = [
+						[x,(y-2*ss),cs,ss],
+						[(x+cs),(y-ss),0,(2*ss)],
+						[(x+cs),(y+ss),-cs,ss],
+						[x,(y+2*ss),-cs,-ss],
+						[(x-cs),(y+ss),0,(-2*ss)],
+						[(x-cs),(y-ss),cs,-ss]
+					];
+					break;
+				case "odd-q":
+				case "even-q":
+					// Flat-topped hex edges
+					edges = [
+						[(x-ss),(y-cs),(2*ss),0],
+						[(x+ss),y-cs,ss,cs],
+						[(x+2*ss),y,-ss,cs],
+						[(x+ss),(y+cs),(-2*ss),0],
+						[(x-ss),y+cs,-ss,-cs],
+						[(x-2*ss),y,ss,-cs]
+					];
+					break;
+			}
+			e = edges[e-1];
+			e[4] = e[0]+e[2];
+			e[5] = e[1]+e[3];
+			if(!positive) e = [e[4],e[5],-e[2],-e[3],e[0],e[1]];
+			// Round numbers to avoid floating point uncertainty
+			e[0] = roundTo(e[0],2);
+			e[1] = roundTo(e[1],2);
+			e[4] = roundTo(e[4],2);
+			e[5] = roundTo(e[5],2);
+			return e;
+		}
+
+		return null;
+	};
 
 	const hexCounter = counter();
 
@@ -456,6 +527,47 @@ export default function (input: { config: HexmapOptions }) {
 		html += `</g>`;
 		return html;
 	};
+	
+	let lines = "";
+
+	if(copyconfig.boundaries){
+		let n,n2,s,d,prevedge,edge,join,p;
+		let boundarystyles = copyconfig.boundaries;
+		// Loop over boundarystyles and build any
+		for(n in boundarystyles){
+			n2 = boundarystyles[n];
+			if(typeof n2==="string" && n2 in boundarystyles) boundarystyles[n] = boundarystyles[n2];
+		}
+		
+		let boundaries = hexjson.boundaries;
+		for(n in boundaries){
+			if(n in boundarystyles){
+				d = "";
+				prevedge = null;
+				// Do we have edges?
+				if(boundaries[n].edges){
+					for(s = 0; s < boundaries[n].edges.length; s++){
+						edge = getEdge(boundaries[n].edges[s]);
+						if(edge){
+							join = (prevedge && (edge[0]==prevedge[4] && edge[1]==prevedge[5])) ? 'L' : 'M';
+							d += join+roundTo(edge[0],2)+' '+roundTo(edge[1],2)+'l'+roundTo(edge[2],2)+' '+roundTo(edge[3],2);
+							prevedge = edge;
+						}
+					}
+				}
+				if(d){
+					lines += '<path data-name="'+n+'" d="'+d+'" fill="transparent" vector-effect="non-scaling-stroke"';
+					for(p in boundarystyles[n]){
+						if(p in boundarystyles[n]){
+							lines += ' '+p+'="'+boundarystyles[n][p]+'"';
+						}
+					}
+					lines += '></path>';
+				}
+			}
+		}
+	}
+
 
 	var holder = new VisualisationHolder(input.config,{'name':'hex cartogram'});
 	holder.addDependencies(['/js/map.js','/css/maps.css','/js/tooltip.js']);
@@ -473,16 +585,18 @@ export default function (input: { config: HexmapOptions }) {
 			style="width:${width ? `${width}px`:"100%"};max-width:100%;max-height:100%;margin:auto;${bgColour ? `background: ${bgColour}` : ""}"
 			xmlns="http://www.w3.org/2000/svg"
 			xmlns:xlink="http://www.w3.org/1999/xlink"
-		data-type="hex-map"
-		vector-effect="non-scaling-stroke"
-			aria-labelledby="title-${uuid}"
-		>
+			data-type="hex-map"
+			vector-effect="non-scaling-stroke"
+			aria-labelledby="title-${uuid}">
 			<title id="title-${uuid}">${title}.</title>`;
 	html += '<g class="data-layer" role="list">';
 	html += Object.values(hexes).map(drawHex).join("");
-	html += '</g></svg>';
+	html += '</g>';
+	if(lines){
+		html += '<g class="boundaries">'+lines+'</g>';
+	}
+	html += '</svg>';
 	html += '</div>';
-
 	if(!tools) tools = {};
 	if(tools.filter){
 		if(!tools.filter.position) tools.filter.position = "top left";
