@@ -52,18 +52,17 @@
 			if(l.dist < Infinity){
 				if(selected < 0){
 					if(l.i >= 0) focusLine(l.i);
-					else resetLines();				
+					else resetLines();
 				}
 			}
 		});
 		// Listen for click on main canvas
 		svg.addEventListener('click',function(e){
-			if(selected < 0){
-				var l = nearestLine(e);
-				if(l.i >= 0) selectLine(l.i);
-			}else{
-				// Turn off the line
-				selectLine(selected);
+			var l = nearestLine(e);
+			if(l.dist < Infinity){
+				if(selected < 0){
+					if(l.i >= 0) selectLine(l.i);
+				}else selectLine(selected);	// Turn off the line
 			}
 		});
 
