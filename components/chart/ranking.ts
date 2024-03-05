@@ -283,14 +283,13 @@ export default function (input: {
 		}
 	}
 	if(options.top > series.length) options.top = series.length;
-	let endtop = options.top;
 	// Check if we have multiple items ranked equal to options.top
+	let endtop = 0;
 	for(let s = endtop; s < series.length; s++){
-		if(series[s].rank[0]==options.top){
+		if(series[s].rank[0]<=options.top){
 			endtop++;
 		}
 	}
-
 	if(typeof options.height!=="number") options.height = Math.ceil(yoff*(series.length + 1 + gap));
 
 	// Create SVG container
