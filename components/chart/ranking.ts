@@ -139,7 +139,7 @@ export default function (input: {
 	let series = [];
 	let datamin = Infinity,datamax = -Infinity;
 	let min,max;
-	let pos,group,row,col,hasvalue,cname,v,v2,arr,oldrank,name,i,c,s,rank,clip,rect,seriesgroup,w,h,dy,radius,pad,xoff,xlbl,dx,lbl,svgopt,talign,g,ttl,oldidx,path,bg,y,oldy,oldx,idx,yv,xv,circle,txt;
+	let pos,group,row,col,hasvalue,cname,v,v2,arr,oldrank,name,i,c,s,rank,clip,rect,seriesgroup,w,h,dy,radius,pad,xoff,xlbl,dx,lbl,svgopt,talign,g,ttl,oldidx,path,bg,y,oldy,oldx,idx,yv,xv,circle,txt,joint;
 	let gap = options.gap;
 
 
@@ -177,6 +177,7 @@ export default function (input: {
 		for(i = 0; i < sorted.length; i++){
 			if(i==0){
 				sorted[i].rank = 1;
+				oldrank = 1;
 			}else{
 				if(sorted[i].value == sorted[i-1].value){
 					sorted[i].rank = oldrank;
@@ -230,6 +231,7 @@ export default function (input: {
 	// Loop over the series and build their columns
 	for(s = 0; s < series.length; s++){
 		series[s].rank = new Array(columns.length);
+		series[s].joint = new Array(columns.length);
 		series[s].position = new Array(columns.length);
 	}
 
@@ -248,6 +250,10 @@ export default function (input: {
 				rank = columns[col][i].rank;
 				// Keep the column rank in the data array
 				series[s].rank[col] = rank;
+				joint = false;
+				if(i > 0 && columns[col][i].rank==columns[col][i-1].rank) joint = true;
+				if(i < columns[col].length-1 && columns[col][i].rank==columns[col][i+1].rank) joint = true;
+				series[s].joint[col] = joint;
 				if(typeof rank!=="number"){
 					series[s].position[col] = options.top + gap + pos;
 					pos++;
@@ -359,7 +365,6 @@ export default function (input: {
 
 	// Update label positions, font size and build lines
 	for(let s = 0; s < series.length; s++){
-
 		// Create the SVG elements for each series
 		g = svgEl('g');
 		g.classList.add('series');
@@ -464,7 +469,7 @@ export default function (input: {
 			}
 			oldy = yv;
 			oldx = xv;
-			ttl += '<br />'+(i == 0 ? ' ':'; ')+options.columns[i].name+': '+(typeof rank==="number" ? getNumberWithOrdinal(rank) : (typeof options.columns[i].fillna!==undefined ? options.columns[i].fillna : '?'));
+			ttl += '<br />'+(i == 0 ? ' ':'; ')+options.columns[i].name+': '+(series[s].joint[i] ? "joint ":"")+(typeof rank==="number" ? getNumberWithOrdinal(rank) : (typeof options.columns[i].fillna!==undefined ? options.columns[i].fillna : '?'));
 			oldrank = rank;
 		}
 		

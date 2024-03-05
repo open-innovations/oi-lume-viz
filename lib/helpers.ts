@@ -39,7 +39,7 @@ export function thingOrNameOfThing<T = unknown>(thingOrName: string | T, context
 export function addVirtualColumns (
   config: unknown
 ) {
-	let c,r,v,f;
+	let c,r,v,v2,f;
 	if(config.columns && typeof config.columns.length!=="number"){
 		console.log('Columns:',config.columns);
 		throw new TypeError('The columns should be an array.');
@@ -61,6 +61,11 @@ export function addVirtualColumns (
 			for(c = 0; c < config.columns.length; c++){
 				if(config.columns[c].template && config.columns[c].name){
 					v = applyReplacementFilters(config.columns[c].template,config.data[r]);
+					// Convert to a float?
+					if(typeof v==="string"){
+						v2 = parseFloat(v);
+						if(v == v2+"") v = v2;
+					}
 					config.data[r][config.columns[c].name] = v;
 				}
 			}
