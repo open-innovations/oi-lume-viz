@@ -118,7 +118,7 @@ export default function (input: {
 	} as RankingChartOptions;
 
 	// Make sure the `top: x` doesn't exceed the data length
-	options.top = Math.min(options.top,config.data.length);
+	if(typeof options.top==="number") options.top = Math.min(options.top,config.data.length);
 
 	// Limit curvature to range
 	options.curvature = Math.max(0,Math.min(1,options.curvature));
@@ -320,7 +320,9 @@ export default function (input: {
 	// Calculate some dimensions
 	w = options.width;
 	h = options.height - yoff;
-	dy = h / (endtop + (extra > 0 ? extra + gap : 0));
+	var ny = (options.top==data.length) ? data.length+1 : endtop;
+	dy = h / (ny + (extra > 0 ? extra + gap : 0));
+
 	radius = dy*options.circles*0.5;
 
 
