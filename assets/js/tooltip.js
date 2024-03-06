@@ -219,12 +219,14 @@
 			return this;
 		}
 
-		pt.setAttribute('tabindex',0);
-		addEv('click',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].toggleLock().toggle(); });
-		addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].show(); });
-		addEv('mouseover',(attr['hover-element']||pt),{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].show(); });
-		addEv('mouseleave',holder,{'this':this},this.clear);
-		addEv('touchstart',pt,{'this':this},function(e){ e.data['this'].toggle(); });
+		if(!attr.notab){
+			pt.setAttribute('tabindex',0);
+			addEv('click',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].toggleLock().toggle(); });
+			addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].show(); });
+			addEv('mouseover',(attr['hover-element']||pt),{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].show(); });
+			addEv('mouseleave',holder,{'this':this},this.clear);
+			addEv('touchstart',pt,{'this':this},function(e){ e.data['this'].toggle(); });
+		}
 		
 		return this;
 	}

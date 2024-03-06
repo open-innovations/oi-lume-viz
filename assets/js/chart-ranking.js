@@ -186,7 +186,7 @@
 			this.ranks[i] = {
 				'el': ranks[i],
 				'text': tooltip,
-				'tooltip': OI.Tooltips.add(ranks[i])
+				'tooltip': OI.Tooltips.add(ranks[i],{'notab':true})
 			};
 		}
 		this.getDistanceFromPoint = function(o){
