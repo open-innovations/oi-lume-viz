@@ -23,28 +23,34 @@
 	
 	function InteractiveRankingChart(el){
 
+		var bb,i,vb,svg,near,xmin;
 		var series = el.querySelectorAll('g.series');
 		var selected = -1;
 		var locked = false;
 		var seriespoints = [];
-		var svg = el.querySelector('svg');
-		var vb = svg.getAttribute('viewBox').split(" ");
-		for(var i = 0;i < vb.length; i++) vb[i] = parseFloat(vb[i]);
+		svg = el.querySelector('svg');
+		vb = svg.getAttribute('viewBox').split(" ");
+		for(i = 0;i < vb.length; i++) vb[i] = parseFloat(vb[i]);
 		vb = {'x':vb[0],'y':vb[1],'w':vb[2],'h':vb[3]};
-		var bb = getAbsoluteBBox(svg);
-		var xmin = parseFloat(series[0].querySelector('text').getAttribute('x'));
-		var near = 20;
+		xmin = parseFloat(series[0].querySelector('text').getAttribute('x'));
+		near = 20;
 
 		function nearestLine(e){
-			var d,dist,idx,p,pt,s,bbox,match;
+			var x,y,d,dist,idx,p,pt,s,bbox;
 			idx = -1;
 			dist = Infinity;
+			// Just getting it initially isn't reliable given page layout shifts
+			bb = getAbsoluteBBox(svg);
 			if(e.layerX >= xmin){
-				p = {'x':vb.w*(e.clientX+window.scrollX - bb.left)/bb.width,'y':vb.h*(e.clientY+window.scrollY - bb.top)/bb.height};
-				pt = {'x':e.clientX + window.scrollX,'y':e.clientY + window.scrollY};
+				x = e.clientX + window.scrollX - bb.left;
+				y = e.clientY + window.scrollY - bb.top;
+				// Get the position within the SVG coordinate system - to compare against path segments
+				p = {'x':vb.w*(x)/bb.width,'y':vb.h*(y)/bb.height};
+				// The position relative to the document - as a quick check based on bounding box
+				pt = {'x':x + bb.left,'y':y + bb.top};
 				for(s = 0; s < seriespoints.length; s++){
 					if(seriespoints[s]){
-						bbox = seriespoints[s].bbox;
+						bbox = getAbsoluteBBox(seriespoints[s].path);
 						if(pt.y > bbox.top - near && pt.y < bbox.bottom + near){
 							d = seriespoints[s].getDistanceFromPoint(p);
 							if(d < dist){
@@ -68,6 +74,7 @@
 				}
 			}
 		});
+
 		// Listen for click on main canvas
 		svg.addEventListener('click',function(e){
 			var l = nearestLine(e);
@@ -78,8 +85,13 @@
 			}
 		});
 
+		// When the mouse leaves the SVG
+		svg.addEventListener('mouseleave',function(e){ resetLines(); });
+
 		function enableSeries(i,el){
 			el.setAttribute('tabindex',0);
+			seriespoints[i] = new SeriesLine(el);
+			// Detect events for this specific series
 			el.addEventListener('keydown',function(e){ if(e.keyCode==13){ selectLine(i); } });
 			el.addEventListener('focus',function(e){ focusLine(i); });
 			el.addEventListener('blur',function(e){ resetLines(); });
@@ -88,7 +100,6 @@
 			lbl.addEventListener('click',function(e){ selectLine(i); });
 			lbl.addEventListener('mouseover',function(e){ focusLine(i); });
 			lbl.addEventListener('mouseleave',function(e){ resetLines(); });
-			seriespoints[i] = new SeriesLine(el);
 		}
 		function selectLine(i){
 			if(selected==i){
@@ -120,8 +131,8 @@
 
 		return this;
 	}
-	function sqr(x) { return x * x }
-	function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y) }
+	function sqr(x) { return x * x; }
+	function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y); }
 	function distToSegmentSquared(p, v, w) {
 		var l2 = dist2(v, w);
 		if (l2 == 0) return dist2(p, v);
@@ -131,15 +142,14 @@
 					y: v.y + t * (w.y - v.y) });
 	}
 	function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
-
 	function SeriesLine(series){
-		var len,i,path,bit,svg,pt;
+		var len,i,path,bit,svg;
 		path = series.querySelector('path');
 		svg = series.parentNode;
 		len = path.getTotalLength();
 		var segments = 30;
 		this.points = [];
-		this.bbox = getAbsoluteBBox(path);
+		this.path = path;
 		this.series = series;
 		for(i = 0; i <= segments; i++){
 			bit = path.getPointAtLength(i*len/segments);
@@ -147,7 +157,11 @@
 		}
 		this.getDistanceFromPoint = function(o){
 			var d = Infinity;
-			for(var i = 0; i < this.points.length-1; i++) d = Math.min(d,distToSegment(o,this.points[i],this.points[i+1]));
+			var dist;
+			for(var i = 0; i < this.points.length-1; i++){
+				dist = distToSegment(o,this.points[i],this.points[i+1]);
+				d = Math.min(d,dist);
+			}
 			return d;
 		};
 
