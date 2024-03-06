@@ -164,6 +164,7 @@
 		svg = series.parentNode;
 		len = path.getTotalLength();
 		ranks = series.querySelectorAll('.marker');
+		// On live sites the content can sometimes be escaped - tidy that up here
 		tooltip = series.querySelector('title').innerHTML.replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">");
 		var segments = 30;
 		this.points = [];
