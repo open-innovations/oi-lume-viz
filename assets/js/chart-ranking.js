@@ -178,7 +178,7 @@
 			// Add the tooltip text
 			txt = document.createElementNS('http://www.w3.org/2000/svg','text');
 			console.log(tooltip);
-			txt.innerHTML = tooltip;
+			txt.innerHTML = tooltip.replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">");
 			ranks[i].appendChild(txt);
 			// Keep some properties for this rank indicator
 			this.ranks[i] = {
