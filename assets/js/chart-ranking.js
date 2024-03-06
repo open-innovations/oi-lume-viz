@@ -166,6 +166,8 @@
 		ranks = series.querySelectorAll('.marker');
 		// On live sites the content can sometimes be escaped - tidy that up here
 		tooltip = series.querySelector('title').innerHTML.replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">");
+		// Remove tags from existing title
+		series.querySelector('title').innerHTML = series.querySelector('title').innerHTML.replace(/<[^\>]+>/g,"");
 		var segments = 30;
 		this.points = [];
 		this.path = path;
