@@ -474,7 +474,7 @@ export default function (input: {
 			}
 			oldy = yv;
 			oldx = xv;
-			ttl += (i == 0 ? ' ':'; ')+'<br />'+options.columns[i].name+': '+(series[s].joint[i] ? "joint ":"")+(typeof rank==="number" ? getNumberWithOrdinal(rank) : (typeof options.columns[i].fillna!==undefined ? options.columns[i].fillna : '?'));
+			ttl += (i == 0 ? ' ':'; ')+'\n'+options.columns[i].name+': '+(series[s].joint[i] ? "joint ":"")+(typeof rank==="number" ? getNumberWithOrdinal(rank) : (typeof options.columns[i].fillna!==undefined ? options.columns[i].fillna : '?'));
 			oldrank = rank;
 		}
 		

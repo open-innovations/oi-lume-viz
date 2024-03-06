@@ -159,12 +159,12 @@
 	}
 	function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
 	function SeriesLine(series){
-		var len,i,path,bit,svg,ranks,tooltip;
+		var len,i,path,bit,svg,ranks,txt,tooltip;
 		path = series.querySelector('path');
 		svg = series.parentNode;
 		len = path.getTotalLength();
 		ranks = series.querySelectorAll('.oi-rank');
-		tooltip = series.querySelector('title').innerText;
+		tooltip = series.querySelector('title').innerHTML;
 		var segments = 30;
 		this.points = [];
 		this.path = path;
@@ -176,7 +176,9 @@
 		}
 		for(i = 0; i < ranks.length; i++){
 			// Add the tooltip text
-			ranks[i].setAttribute('title',tooltip);
+			txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+			txt.innerHTML = tooltip;
+			ranks[i].appendChild(txt);
 			// Keep some properties for this rank indicator
 			this.ranks[i] = {
 				'el': ranks[i],
