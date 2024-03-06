@@ -163,7 +163,7 @@
 		path = series.querySelector('path');
 		svg = series.parentNode;
 		len = path.getTotalLength();
-		ranks = series.querySelectorAll('.oi-rank');
+		ranks = series.querySelectorAll('.marker');
 		tooltip = series.querySelector('title').innerHTML;
 		var segments = 30;
 		this.points = [];
@@ -177,7 +177,7 @@
 		for(i = 0; i < ranks.length; i++){
 			// Add the tooltip text
 			txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-			txt.innerHTML = tooltip;
+			txt.innerText = tooltip;
 			ranks[i].appendChild(txt);
 			// Keep some properties for this rank indicator
 			this.ranks[i] = {

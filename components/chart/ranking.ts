@@ -380,11 +380,13 @@ export default function (input: {
 		lbl = svgEl('text');
 		lbl.innerHTML = series[s].title;
 		setAttr(lbl,{'dominant-baseline':'middle','text-anchor':'end','font-family':options['font-family']});
+		lbl.classList.add('label');
 		series[s].label = lbl;
 		g.appendChild(lbl);
 
 		path = svgEl('path');
 		setAttr(path,{'stroke-width':4,'stroke':defaultbg,'fill':'transparent'});
+		path.classList.add('line');
 		g.appendChild(path);
 		series[s].path = path;
 
@@ -460,7 +462,7 @@ export default function (input: {
 			// Always build circles as they are anchor points for tooltips
 			circle = svgEl('circle');
 			setAttr(circle,{'cx':xv.toFixed(2),'cy':yv.toFixed(2),'r':0.5,'opacity':0.01,'fill':bg});
-			circle.classList.add('oi-rank');
+			circle.classList.add('marker');
 			series[s].g.appendChild(circle);
 
 			// Only show rank values if rank is a number
