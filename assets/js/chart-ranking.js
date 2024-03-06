@@ -165,7 +165,6 @@
 		len = path.getTotalLength();
 		ranks = series.querySelectorAll('.marker');
 		tooltip = series.querySelector('title').innerHTML.replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">");
-		console.log(tooltip);
 		var segments = 30;
 		this.points = [];
 		this.path = path;
