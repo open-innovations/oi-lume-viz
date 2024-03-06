@@ -102,7 +102,7 @@ export default function (input: {
 		'circles': 0,
 		'stroke-width': 0.5,
 		'reverse':false,
-		'top': config.data.length,
+		'top': undefined,
 		'gap': 1,
 		'divider': {
 			'stroke': defaultbg,
@@ -190,21 +190,21 @@ export default function (input: {
 		columns[col] = sorted;
 	}
 
-	// Set the top x value if not set
-	if(!options.top || typeof options.top!=="number") options.top = data.length;
+	var maxrank = data.length;
+	if(typeof options.top==="number") maxrank = options.top;
+
 	
 	// Loop over all columns and find the series that are in the top x
 	var topx = {};
 	for(col = 0; col < columns.length; col++){
 		for(i = 0; i < columns[col].length; i++){
-			if(columns[col][i].rank <= options.top){
+			if(columns[col][i].rank <= maxrank){
 				topx[columns[col][i].name] = true;
 			}
 		}
 	}
 	// Get a sorted list of series names that are included in the top x
 	var names = Object.keys(topx).sort();
-	var topn = names.length;
 	
 	// Build an ordered series by looping over the first column and checking if it is in our top x
 	series = [];
@@ -255,10 +255,10 @@ export default function (input: {
 				if(i < columns[col].length-1 && columns[col][i].rank==columns[col][i+1].rank) joint = true;
 				series[s].joint[col] = joint;
 				if(typeof rank!=="number"){
-					series[s].position[col] = options.top + gap + pos;
+					series[s].position[col] = maxrank + gap + pos;
 					pos++;
 				}else{
-					if(rank <= options.top){
+					if(rank <= maxrank){
 						series[s].position[col] = rank;
 					}else{
 						if(rank > oldrank){
@@ -271,7 +271,7 @@ export default function (input: {
 							// If the rank is the same we add one to the group
 							group++;
 						}
-						series[s].position[col] = options.top + gap + pos;
+						series[s].position[col] = maxrank + gap + pos;
 					}
 				}
 				// Keep a reference to the original data row
@@ -282,11 +282,11 @@ export default function (input: {
 			}
 		}
 	}
-	if(options.top > series.length) options.top = series.length;
-	// Check if we have multiple items ranked equal to options.top
-	let endtop = 0;
+
+	// How many items are below or equal to maxrank in the first column
+	let endtop = 0;	
 	for(let s = endtop; s < series.length; s++){
-		if(series[s].rank[0]<=options.top){
+		if(series[s].rank[0]<=maxrank){
 			endtop++;
 		}
 	}
@@ -315,13 +315,15 @@ export default function (input: {
 	config.max = max;
 
 	// Calculate how many extra series we have to include
-	let extra = topn - options.top;
+	let extra = names.length - endtop;
 
 	// Calculate some dimensions
 	w = options.width;
 	h = options.height - yoff;
-	var ny = (options.top==data.length) ? data.length+1 : endtop;
-	dy = h / (ny + (extra > 0 ? extra + gap : 0));
+
+	var ny = endtop + (extra > 0 ? extra + gap : 0);
+
+	dy = h / ny;
 
 	radius = dy*options.circles*0.5;
 
@@ -362,7 +364,7 @@ export default function (input: {
 	let cs = (options.scale ? ColourScale(options.scale) : ColourScale(defaultbg+" 0%, "+defaultbg+" 100%"));
 
 	oldidx = -1;
-	let position,ranktxt,visible;
+	let position,ranktxt,visible,fillna;
 
 	// Update label positions, font size and build lines
 	for(let s = 0; s < series.length; s++){
@@ -476,7 +478,10 @@ export default function (input: {
 			}
 			oldy = yv;
 			oldx = xv;
-			ttl += (i == 0 ? ' ':'; ')+'\n'+options.columns[i].name+': '+(series[s].joint[i] ? "joint ":"")+(typeof rank==="number" ? getNumberWithOrdinal(rank) : (typeof options.columns[i].fillna!==undefined ? options.columns[i].fillna : '?'));
+			fillna = '?';
+			if(typeof options.fillna!=="undefined") fillna = options.fillna;
+			if(typeof options.columns[i].fillna!=="undefined") fillna = options.columns[i].fillna;
+			ttl += (i == 0 ? ' ':'; ')+'\n'+options.columns[i].name+': '+(series[s].joint[i] ? "joint ":"")+(typeof rank==="number" ? getNumberWithOrdinal(rank) : fillna);
 			oldrank = rank;
 		}
 		

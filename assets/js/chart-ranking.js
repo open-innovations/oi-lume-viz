@@ -169,7 +169,7 @@
 		// Remove tags from existing title
 		series.setAttribute('aria-label',tooltip.replace(/<[^\>]+>/g,""));
 		series.querySelector('title').remove();
-		var segments = 30;
+		var segments = ranks.length*3;
 		this.points = [];
 		this.path = path;
 		this.series = series;
@@ -185,8 +185,6 @@
 			ranks[i].appendChild(txt);
 			// Keep some properties for this rank indicator
 			this.ranks[i] = {
-				'el': ranks[i],
-				'text': tooltip,
 				'tooltip': OI.Tooltips.add(ranks[i],{'notab':true})
 			};
 		}
