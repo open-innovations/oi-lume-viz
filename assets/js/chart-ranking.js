@@ -164,7 +164,7 @@
 		svg = series.parentNode;
 		len = path.getTotalLength();
 		ranks = series.querySelectorAll('.oi-rank');
-		tooltip = series.querySelector('title').innerHTML;
+		tooltip = series.querySelector('title').innerText;
 		var segments = 30;
 		this.points = [];
 		this.path = path;
