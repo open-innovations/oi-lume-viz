@@ -165,6 +165,7 @@
 		len = path.getTotalLength();
 		ranks = series.querySelectorAll('.marker');
 		tooltip = series.querySelector('title').innerHTML;
+		console.log(tooltip);
 		var segments = 30;
 		this.points = [];
 		this.path = path;
@@ -176,9 +177,8 @@
 		}
 		for(i = 0; i < ranks.length; i++){
 			// Add the tooltip text
-			txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-			console.log(tooltip);
-			txt.innerHTML = tooltip.replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">");
+			txt = document.createElementNS('http://www.w3.org/2000/svg','title');
+			txt.innerHTML = tooltip;
 			ranks[i].appendChild(txt);
 			// Keep some properties for this rank indicator
 			this.ranks[i] = {
