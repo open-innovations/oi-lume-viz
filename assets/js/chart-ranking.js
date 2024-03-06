@@ -167,7 +167,8 @@
 		// On live sites the content can sometimes be escaped - tidy that up here
 		tooltip = series.querySelector('title').innerHTML.replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">");
 		// Remove tags from existing title
-		series.querySelector('title').innerHTML = tooltip.replace(/<[^\>]+>/g,"");
+		series.setAttribute('aria-label',tooltip.replace(/<[^\>]+>/g,""));
+		series.querySelector('title').remove();
 		var segments = 30;
 		this.points = [];
 		this.path = path;
