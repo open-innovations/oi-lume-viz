@@ -429,7 +429,7 @@ export default function (input: {
 
 		// Make path for this series
 		path = "";
-		ttl = series[s].title+':';
+		ttl = '<strong>'+series[s].title+'</strong>:';
 		oldrank = 0;
 
 		for(i = 0; i < series[s].rank.length; i++){
@@ -457,12 +457,16 @@ export default function (input: {
 				else path += 'C'+(oldx+(dx/2)*options.curvature).toFixed(2)+','+oldy.toFixed(2)+','+(xv-(dx/2)*options.curvature).toFixed(2)+','+yv.toFixed(2)+','+(xv).toFixed(2)+','+yv.toFixed(2);
 			}
 
-			// Only show circles if the rank is a number
+			// Always build circles as they are anchor points for tooltips
+			circle = svgEl('circle');
+			setAttr(circle,{'cx':xv.toFixed(2),'cy':yv.toFixed(2),'r':0.5,'opacity':0.01,'fill':bg});
+			circle.classList.add('oi-rank');
+			series[s].g.appendChild(circle);
+
+			// Only show rank values if rank is a number
 			if(options.circles && typeof rank==="number"){
-				circle = svgEl('circle');
-				setAttr(circle,{'cx':xv.toFixed(2),'cy':yv.toFixed(2),'r':radius.toFixed(2),'fill':bg});
-				series[s].g.appendChild(circle);
 				txt = svgEl('text');
+				setAttr(circle,{'r':radius.toFixed(2),'opacity':1});
 				txt.innerText = ranktxt;
 				setAttr(txt,{'fill':contrastColour(bg||"#000000"),'x':xv.toFixed(2),'y':yv.toFixed(2),'dominant-baseline':'central','text-anchor':'middle','font-size':(radius).toFixed(1)+'px','font-family':options['font-family']});
 				series[s].g.appendChild(txt);
@@ -470,7 +474,7 @@ export default function (input: {
 			}
 			oldy = yv;
 			oldx = xv;
-			ttl += '<br />'+(i == 0 ? ' ':'; ')+options.columns[i].name+': '+(series[s].joint[i] ? "joint ":"")+(typeof rank==="number" ? getNumberWithOrdinal(rank) : (typeof options.columns[i].fillna!==undefined ? options.columns[i].fillna : '?'));
+			ttl += (i == 0 ? ' ':'; ')+'<br />'+options.columns[i].name+': '+(series[s].joint[i] ? "joint ":"")+(typeof rank==="number" ? getNumberWithOrdinal(rank) : (typeof options.columns[i].fillna!==undefined ? options.columns[i].fillna : '?'));
 			oldrank = rank;
 		}
 		
@@ -492,7 +496,7 @@ export default function (input: {
 	}
 
 	var holder = new VisualisationHolder(config,{'name':'ranking chart'});
-	holder.addDependencies(['/js/chart-ranking.js','/css/charts.css']);
+	holder.addDependencies(['/js/chart-ranking.js','/css/charts.css','/js/tooltip.js']);
 	holder.addClasses(['oi-chart','oi-chart-ranking']);
 	return holder.wrap(svg.outerHTML);
 }

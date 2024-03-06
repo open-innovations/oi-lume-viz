@@ -36,8 +36,9 @@
 		near = 20;
 
 		function nearestLine(e){
-			var x,y,d,dist,idx,p,pt,s,bbox;
+			var x,y,d,dist,idx,p,pt,s,bbox,n;
 			idx = -1;
+			n = 1;
 			dist = Infinity;
 			// Just getting it initially isn't reliable given page layout shifts
 			bb = getAbsoluteBBox(svg);
@@ -60,8 +61,13 @@
 						}
 					}
 				}
+				// Trigger a tooltip
+				if(!locked && dist < near && idx >= 0){
+					// Find the nearest ranking indicator
+					n = Math.round((seriespoints[idx].ranks.length-1)*(x-xmin)/(bb.width-xmin));
+				}
 			}
-			return {'i':(dist < near ? idx : -1),'dist':dist};
+			return {'i':(dist < near ? idx : -1),'dist':dist,'n':n};
 		}
 
 		// Listen for mousemove on main canvas
@@ -69,7 +75,7 @@
 			var l = nearestLine(e);
 			if(l.dist < Infinity){
 				if(selected < 0){
-					if(l.i >= 0) focusLine(l.i);
+					if(l.i >= 0) focusLine(l.i,l.n);
 					else resetLines();
 				}
 			}
@@ -115,17 +121,27 @@
 				locked = true;
 			}
 		}
-		function focusLine(i){
+		function focusLine(i,n){
 			if(locked) return;
+
 			for(var s = 0; s < series.length; s++){
 				series[s].style = (i==s) ? 'cursor:pointer;' : 'filter:grayscale(100%);opacity:0.1;transition: 0.2s ease-in opacity;cursor:pointer;';
 			}
+			// If no n provided we'll default to the 2nd rank marker
+			if(typeof n!=="number") n = 1;
+			// Limit to an allowed index
+			if(n >= 0 && n < seriespoints[i].ranks.length){
+				// Show the tooltip
+				seriespoints[i].ranks[n].tooltip.show();
+			}
+
 		}
 		function resetLines(){
 			if(locked) return;
 			for(var s = 0; s < series.length; s++){
 				series[s].style = 'transition: 0.2s ease-in opacity;cursor:pointer;';
 			}
+			OI.Tooltips.clear();
 		}
 		for(var s = 0; s < series.length; s++) enableSeries(s,series[s]);
 
@@ -143,17 +159,30 @@
 	}
 	function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
 	function SeriesLine(series){
-		var len,i,path,bit,svg;
+		var len,i,path,bit,svg,ranks,tooltip;
 		path = series.querySelector('path');
 		svg = series.parentNode;
 		len = path.getTotalLength();
+		ranks = series.querySelectorAll('.oi-rank');
+		tooltip = series.querySelector('title').innerHTML;
 		var segments = 30;
 		this.points = [];
 		this.path = path;
 		this.series = series;
+		this.ranks = [];
 		for(i = 0; i <= segments; i++){
 			bit = path.getPointAtLength(i*len/segments);
 			this.points.push(bit);
+		}
+		for(i = 0; i < ranks.length; i++){
+			// Add the tooltip text
+			ranks[i].setAttribute('title',tooltip);
+			// Keep some properties for this rank indicator
+			this.ranks[i] = {
+				'el': ranks[i],
+				'text': tooltip,
+				'tooltip': OI.Tooltips.add(ranks[i])
+			};
 		}
 		this.getDistanceFromPoint = function(o){
 			var d = Infinity;
