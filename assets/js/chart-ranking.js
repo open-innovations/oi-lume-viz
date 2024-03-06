@@ -158,6 +158,14 @@
 					y: v.y + t * (w.y - v.y) });
 	}
 	function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
+	function htmlDecode(input){
+		if(DOMParser){
+			var doc = new DOMParser().parseFromString(input, "text/html");
+			return doc.documentElement.textContent;
+		}else{
+			return input;
+		}
+	}
 	function SeriesLine(series){
 		var len,i,path,bit,svg,ranks,txt,tooltip;
 		path = series.querySelector('path');
@@ -177,7 +185,7 @@
 		for(i = 0; i < ranks.length; i++){
 			// Add the tooltip text
 			txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-			txt.innerText = tooltip;
+			txt.innerHTML = htmlDecode(tooltip);
 			ranks[i].appendChild(txt);
 			// Keep some properties for this rank indicator
 			this.ranks[i] = {
