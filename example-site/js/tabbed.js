@@ -1,5 +1,5 @@
 /*
-	Open Innovations Tabbed Interface v0.2
+	Open Innovations Tabbed Interface v0.3
 	Helper function that find elements with the class "panes",
 	looks for elements with "pane" within them,
 	finds their <h3> elements, 
@@ -16,9 +16,11 @@
 			else document.addEventListener('DOMContentLoaded', fn);
 		};
 	}
+	var panelgroup = 0;
 	var idcontroller = {};
 	function TabbedInterface(el,opt){
 		var tabs,panes,li,p,h,b,l;
+		panelgroup++;
 		if(!opt) opt = {};
 		var scrollOffset = (opt.header) ? opt.header.offsetHeight + 4 : 0;
 		//var scrolloffset = document.getElementById('site-header').offsetHeight + 4;
@@ -52,20 +54,29 @@
 			}
 			return this;
 		};
-		this.enableTab = function(tab,t){
+		this.enableTab = function(tab,t,g){
 			var _obj = this;
 
 			// Set the tabindex of the tab panel
 			panes[t].setAttribute('tabindex',0);
-			
+			var id,pid;
+
 			if(panes[t].hasAttribute('id')){
 				// Move the ID to the tab rather than the pane
-				var id = panes[t].getAttribute('id');
-				tab.setAttribute('id',id);
-				panes[t].removeAttribute('id');
-				tab.style.scrollMarginTop = scrolloffset + 'px';
+				id = panes[t].getAttribute('id');
+				tab.style.scrollMarginTop = scrollOffset + 'px';
 				idcontroller[id] = {'interface':this,'tab':t};
+				// Set the pane to a new ID
+				pid += '-pane';
+			}else{
+				id = 'panels-'+g+'-pane-'+t+'-control';
+				pid = 'panels-'+g+'-pane-'+t;
 			}
+			tab.setAttribute('id',id);
+			panes[t].setAttribute('id',pid);
+			panes[t].setAttribute('role','tabpanel');
+			panes[t].setAttribute('aria-labelledby',id);
+			tab.setAttribute('aria-controls',id);
 			
 			// Add a click/focus event
 			tab.addEventListener('click',function(e){ e.preventDefault(); var t = parseInt((e.target.tagName.toUpperCase()==="BUTTON" ? e.target : e.target.closest('button')).getAttribute('data-tab')); _obj.selectTab(t,true); });
@@ -100,7 +111,7 @@
 		l = document.createElement('div');
 		l.classList.add('grid','tabs');
 		l.setAttribute('role','tablist');
-		l.setAttribute('aria-label','Visualisations');
+		l.setAttribute('aria-label',(el.getAttribute('data-title')||'Panels'));
 		panes = el.querySelectorAll('.pane');
 		for(p = 0; p < panes.length; p++){
 			h = panes[p].querySelector('.tab-title');
@@ -110,7 +121,7 @@
 			if(h) b.appendChild(h);
 			l.appendChild(b);
 			tabs[p] = {'tab':b,'pane':panes[p]};
-			this.enableTab(b,p);
+			this.enableTab(b,p,panelgroup);
 		}
 		el.insertAdjacentElement('beforebegin', l);
 		this.selectTab(0);
@@ -121,10 +132,8 @@
 
 	// Find any remaining `pane` on the page with an ID set
 	root.OI.UpdateIDs = function(header){
-
 		var ids = document.querySelectorAll('.pane[id]');
 		var scrolloffset = (header ? header.offsetHeight + 4 : 0);
-
 		for(var i = 0; i < ids.length; i++){
 			var id = ids[i].getAttribute('id');
 			if(!idcontroller[id]){
@@ -132,7 +141,6 @@
 				ids[i].style.scrollMarginTop = scrolloffset + 'px';
 			}
 		}
-
 	}
 
 	// Need to intercept and process initial hash and any changes
