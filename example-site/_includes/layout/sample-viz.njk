@@ -27,7 +27,7 @@ layout: layout/base.njk
 {% for example in examples %}
 	<section class="tallpadded">
 		{% set id %}example-{{ loop.index }}{% endset %}
-		<h3>{{ loop.index }}. {% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}{{ comp.anchor({ ref: id }) | safe }}</h3>
+		<h3>{{ loop.index }}. {% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}{{ comp.anchor({ ref: id, title: example.title }) | safe }}</h3>
 		<p><a href="{{ search.page('parent.url="' + url + '" index=' + loop.index ).data.url }}">Embeddable version</a></p>
 		{% if example.description %}
 		{{ example.description | md | safe }}
@@ -37,7 +37,7 @@ layout: layout/base.njk
 
 		<p>This example was made with <code>config</code>:</p>
 
-		<div class="panes tabbed" data-dependencies="/js/tabbed.js">
+		<div class="panes tabbed" data-dependencies="/js/tabbed.js" data-title="Code">
 			<div class="pane">
 				<span class="tab-title">YAML</span>
 				<pre><code class="hljs language-yaml">{{ example.config | yaml }}</code></pre>
