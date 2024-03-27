@@ -40,12 +40,8 @@ export function getColourScales(): Record<string, string> {
 }
 
 export function getColourScale(key: string): string {
-	try {
-		return namedColourScales[key];
-	} catch(e) {
-		console.error(e.message);
-		throw new Error('Invalid colour scale requested: ' + key);
-	}
+	if(key in namedColourScales) return namedColourScales[key];
+	else return undefined;
 }
 
 // Reverse a colour scale

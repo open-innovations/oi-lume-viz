@@ -1,5 +1,5 @@
 /*
-	Open Innovations Sortable Tables v0.1
+	Open Innovations Sortable Tables v0.2
 	Helper function to make any table with class="table-sort" sortable.
 	We would have used https://github.com/leewannacott/table-sort-js/ but it couldn't deal with merged rows
 */
@@ -217,13 +217,17 @@
 			buildTable(el,table);
 		}
 
-		// Add functions to columns
-		for(var c = 0; c < table.cols; c++){
-			if(!table.header[c].getAttribute('disable-sort')) this.columns[c] = new SortableColumn(el,table,c,{'_parent':this});
+		if(table.rows > 0){
+			// Add functions to columns
+			for(var c = 0; c < table.cols; c++){
+				if(!table.header[c].getAttribute('disable-sort')) this.columns[c] = new SortableColumn(el,table,c,{'_parent':this});
+			}
 		}
 
 		return this;
 	}
+	
+	OI.TableSort = function(e){ return new SortableTable(e); }
 
 	OI.ready(function(){
 		var tables = document.querySelectorAll('.table-sort');

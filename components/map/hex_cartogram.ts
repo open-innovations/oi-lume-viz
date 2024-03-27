@@ -588,7 +588,7 @@ export default function (input: { config: HexmapOptions }) {
 			data-type="hex-map"
 			vector-effect="non-scaling-stroke"
 			aria-labelledby="title-${uuid}">
-			<title id="title-${uuid}">${title}.</title>`;
+			<title id="title-${uuid}">${title}</title>`;
 	html += '<g class="data-layer" role="list">';
 	html += Object.values(hexes).map(drawHex).join("");
 	html += '</g>';
@@ -623,7 +623,7 @@ export default function (input: { config: HexmapOptions }) {
 			}
 			i++;
 		}
-		html += '<script>(function(root){ OI.SliderMap({"position":"'+(tools.slider.position || 'bottom')+'","width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'",'+(scale ? '"scale":"'+getColourScale(scale)+'"' : '')+',"named":'+JSON.stringify(namedColours.getCustom())+'},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
+		html += '<script>(function(root){ OI.SliderMap({"position":"'+(tools.slider.position || 'bottom')+'","width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'",'+(scale ? '"scale":"'+(getColourScale(scale)||scale)+'"' : '')+',"named":'+JSON.stringify(namedColours.getCustom()||{})+'},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
 	}
 
 	html += '</div>';
