@@ -531,7 +531,7 @@ export default function (input: { config: HexmapOptions }) {
 	let lines = "";
 
 	if(copyconfig.boundaries){
-		let n,n2,s,d,prevedge,edge,join,p;
+		let n,n2,s,d,prevedge,edge,join,p,bname,bstyle;
 		let boundarystyles = copyconfig.boundaries;
 		// Loop over boundarystyles and build any
 		for(n in boundarystyles){
@@ -541,7 +541,10 @@ export default function (input: { config: HexmapOptions }) {
 		
 		let boundaries = hexjson.boundaries;
 		for(n in boundaries){
-			if(n in boundarystyles){
+			// Work out the boundary style to use. It will either be explicit or defined using the boundary.type
+			bname = n;
+			if("type" in boundaries[n] && boundaries[n].type in boundarystyles) bname = boundaries[n].type;
+			if(bname in boundarystyles){
 				d = "";
 				prevedge = null;
 				// Do we have edges?
@@ -557,9 +560,9 @@ export default function (input: { config: HexmapOptions }) {
 				}
 				if(d){
 					lines += '<path data-name="'+n+'" d="'+d+'" fill="transparent" vector-effect="non-scaling-stroke"';
-					for(p in boundarystyles[n]){
-						if(p in boundarystyles[n]){
-							lines += ' '+p+'="'+boundarystyles[n][p]+'"';
+					for(p in boundarystyles[bname]){
+						if(p in boundarystyles[bname]){
+							lines += ' '+p+'="'+boundarystyles[bname][p]+'"';
 						}
 					}
 					lines += '></path>';

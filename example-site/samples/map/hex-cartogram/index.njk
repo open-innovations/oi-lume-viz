@@ -321,7 +321,8 @@ examples:
         Data: <a href="https://www.westyorks-ca.gov.uk/media/8790/lcr-housing-delivery-monitoring-report-2020-21-4.pdf">West Yorkshire Combined Authority</a>
   - title: "Draw boundaries"
     description: |
-      We can add styled `boundaries` to our hex map if our <a href="https://open-innovations.org/projects/hexmaps/hexjson">HexJSON</a> contains <code>boundaries</code>. To style the boundaries we build a dictionary `boundaries` where each dictionary item is either the properties to apply to that boundary or the name of another boundary (so we can re-use the same properties multiple times). If there are no properties for a particular style it won't be drawn.
+      We can add styled `boundaries` to our hex map if our <a href="https://open-innovations.org/projects/hexmaps/hexjson">HexJSON</a> contains <code>boundaries</code>. To style the boundaries we build a dictionary `boundaries` where each dictionary item is either:</p>
+      <ul><li>the properties to apply to a boundary sharing that key</li><li>a reference to another boundary key (so we can re-use the same properties multiple times)</li><li>a reference to the <code>type</code> property of a HexJSON boundary</li></ul><p>If there are no properties for a particular style it won't be drawn.
     config:
       hexjson:
         layout: odd-r
@@ -427,8 +428,6 @@ examples:
           stroke-width: 3
           stroke-dasharray: "7 5.65"
           stroke-linecap: "round"
-        sc-en: "country"
-        wa-en: "country"
 options: |
   <ul>
   <li><code>data</code> - (optional) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If used you will need to match this to the HexJSON IDs using <code>matchKey</code>.</li>

@@ -376,11 +376,13 @@ hexes:
   W06000023: {n: Powys, lad19nmw: Powys, q: -1, r: 9, region: W92000004, RGNNM: "Wales", colour: "#0DBC37"}
 boundaries:
   sc-en:
+    type: country
     edges:
       - {q: 4, r: 21, e: 3}
       - {q: 4, r: 20, e: 2}
       - {q: 4, r: 20, e: 3}
   wa-en:
+    type: country
     edges:
       - {q: 0, r: 11, e: 1}
       - {q: 0, r: 11, e: 2}
