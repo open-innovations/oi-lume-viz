@@ -12,7 +12,7 @@ To use this in your Lume project, include the following in your Lume `_config.js
 *WARNING*! This is strictly a pre-release version, and interfaces are very likely to change.
 
 ```js
-import oiLumeViz from "https://deno.land/x/oi_lume_viz@v0.13.14/mod.ts";
+import oiLumeViz from "https://deno.land/x/oi_lume_viz@v0.14.8/mod.ts";
 
 site.use(oiLumeViz({
   assetPath: 'assets/oi',
