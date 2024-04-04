@@ -92,7 +92,7 @@ export function ColourScale(gradient: string): ColourScale {
 	const max = 1;
 	if(namedColourScales[gradient]) gradient = namedColourScales[gradient];
 	const stops = extractColours(gradient);
-
+	
 	function getColour(v: number) {
 		const v2 = 100 * (v - min) / (max - min);
 		let cfinal: {
@@ -101,27 +101,36 @@ export function ColourScale(gradient: string): ColourScale {
 			b?: number;
 			alpha?: number;
 		} = {};
-		if (v == max) {
+		if (stops.length == 1) {
 			cfinal = {
-				"r": stops[stops.length - 1].c.rgb[0],
-				"g": stops[stops.length - 1].c.rgb[1],
-				"b": stops[stops.length - 1].c.rgb[2],
-				"alpha": stops[stops.length - 1].c.alpha,
+				"r": stops[0].c.rgb[0],
+				"g": stops[0].c.rgb[1],
+				"b": stops[0].c.rgb[2],
+				"alpha": parseFloat((v2 / 100).toFixed(3)),
 			};
 		} else {
-			if (stops.length == 1) {
+			if(v > max){
 				cfinal = {
-					"r": stops[0].c.rgb[0],
-					"g": stops[0].c.rgb[1],
-					"b": stops[0].c.rgb[2],
-					"alpha": parseFloat((v2 / 100).toFixed(3)),
+					"r": stops[stops.length-1].c.rgb[0],
+					"g": stops[stops.length-1].c.rgb[1],
+					"b": stops[stops.length-1].c.rgb[2],
+					"alpha": stops[stops.length-1].c.alpha,
 				};
-			} else {
+			}else if(v == max){
+				// If the last two stops are both 100 we will use the first of them
+				let j = (stops[stops.length-1].v==100 && stops[stops.length-2].v==100) ? stops.length-2 : stops.length-1;
+				cfinal = {
+					"r": stops[j].c.rgb[0],
+					"g": stops[j].c.rgb[1],
+					"b": stops[j].c.rgb[2],
+					"alpha": stops[j].c.alpha,
+				};
+			}else{
 				for (let c = 0; c < stops.length - 1; c++) {
 					if (v2 >= stops[c].v && v2 <= stops[c + 1].v) {
 						// On this colour stop
 						let pc = 100 * (v2 - stops[c].v) / (stops[c + 1].v - stops[c].v);
-						if (pc > 100) pc = 100; // Don't go above colour range
+						if (pc > 100) pc = 100; // Don't go above colour range (shouldn't be if here)
 						cfinal = getColourPercent(pc, stops[c].c, stops[c + 1].c);
 						continue;
 					}
