@@ -62,6 +62,9 @@
 					_obj.removeOutline();
 					_obj.addOutline(e.parentNode);
 				}
+				attr.clear = function(e){
+					_obj.removeOutline();
+				}
 			}
 			OI.Tooltips.add(pt[p],attr);
 		}

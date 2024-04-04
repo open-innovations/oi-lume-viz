@@ -208,7 +208,10 @@
 			return this;
 		}
 
-		this.clear = function(){ attr._parent.clear(); };
+		this.clear = function(){
+			attr._parent.clear();
+			if(typeof attr.clear==="function" && !attr._parent.locked) attr.clear.call(this,pt,attr);
+		};
 
 		if(!svg){
 			console.error('No SVG container for:',pt);
