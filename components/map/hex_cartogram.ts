@@ -12,7 +12,7 @@ import { VisualisationHolder } from '../../lib/holder.js';
 const defaultbg = getBackgroundColour();
 
 function roundNumber(v,prec){
-	if(typeof prec!=="number") prec = 3;
+	if(typeof prec!=="number") prec = 2;
 	if(typeof v==="number") return parseFloat(v.toFixed(prec));
 	else return v;
 }
@@ -115,6 +115,7 @@ export default function (input: { config: HexmapOptions }) {
 	// Resolve data if this is a string
 	let data;
 	let copyconfig = clone(input.config);
+
 	if (copyconfig.data) {
 
 		// Convert references into actual objects
@@ -521,7 +522,7 @@ export default function (input: { config: HexmapOptions }) {
 		fill = Colour(fill);
 
 		// TODO(@gilesdring) this only supports pointy-top hexes at the moment
-		var html = `<g id="${uuid}-hex-${hexId}" class="hex" transform="translate(${roundNumber(x)} ${roundNumber(y)})" data-value="${valuecol}" data-id="${config._id}" role="listitem" aria-label="${labelProp} value ${valuecol}">`;
+		var html = `<g class="hex" transform="translate(${roundNumber(x)} ${roundNumber(y)})" data-id="${config._id}" role="listitem">`;
 		html += `<path fill="${fill.hex}" d="${hexPath}"><title>${tooltipText}</title></path>`;
 		if(labelText) html += `<text fill="${fill.contast}" text-anchor="middle" dominant-baseline="middle" aria-hidden="true">${labelText}</text>`;
 		html += `</g>`;
@@ -612,14 +613,31 @@ export default function (input: { config: HexmapOptions }) {
 	}
 	if(tools.slider){
 		holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
+
+		// We don't need to send every field in the dataset
+		// 1. Extract which keys used for the tooltip
+		let fields = tooltip.match(/\{\{ *([^\}]*) *\}\}/g);
+		for(let m = 0; m < fields.length; m++){
+			fields[m] = fields[m].replace(/\{\{/g,"").replace(/\}\}/g,"").replace(/(^\s+|\s+$)/g,"").replace(/ \|.*/g,"");
+		}
+		// 2. Add the value field (so that we can work out the colour for each hex)
+		fields.push(value);
+		// 3. Add the _id (just in case)
+		fields.push('_id');
+		// 4. Add on the columns used for the slider
+		fields = fields.concat(tools.slider.columns);
+		// Limit to unique fields
+		fields = Array.from(new Set(fields));
+
+		// Remove any _value (because this will be calculated in the front-end
+		const index = fields.indexOf('_value');
+		if(index > -1) fields.splice(index, 1);
+
 		// Compress the data to save bandwidth
 		let temphexes = {};
-		let fields = [];
+		//let fields = [];
 		let i = 0;
 		for(let hex in hexes){
-			if(i == 0){
-				for(let f in hexes[hex]) fields.push(f);
-			}
 			temphexes[hex] = [];
 			for(let f = 0; f < fields.length; f++){
 				temphexes[hex].push(hexes[hex][fields[f]]);
