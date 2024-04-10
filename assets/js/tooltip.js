@@ -149,11 +149,13 @@
 		el.setAttribute('tabindex',0);
 		addEv('keydown',el,{this:this},function(e){
 			if(e.key == "ArrowLeft" || e.key == "ArrowRight"){
-				var idx = -1;
+				e.preventDefault();
+				e.stopPropagation();
+				var idx = -1,t;
 
 				// If a tip in this group is active we use that
 				if(_alltips.active){
-					for(var t = 0; t < this.tips.length; t++){
+					for(t = 0; t < this.tips.length; t++){
 						// Matched to an existing tip in this group
 						if(_alltips.active==this.tips[t]) idx = t;
 					}
@@ -166,6 +168,7 @@
 				// Limit range
 				if(idx < 0) idx += this.tips.length;
 				if(idx > this.tips.length-1) idx -= this.tips.length;
+
 
 				// Activate the tooltip
 				if(idx >= 0 && idx < this.tips.length){
@@ -192,11 +195,11 @@
 		};
 		this.clear = function(){
 			_alltips.clear();
-			if(!_alltips.locked){
+			//if(!_alltips.locked){
 				for(var t = 0; t < this.tips.length; t++){
 					if(this.tips[t]!==_alltips.active) this.tips[t].el.removeAttribute('tabindex');
 				}
-			}
+			//}
 			return this;
 		};
 		
@@ -269,6 +272,14 @@
 				console.warn('No tooltip content found for ',pt);
 				return this;
 			}
+			
+			if(attr._group){
+				for(t = 0; t < attr._group.tips.length; t++){
+					if(pt!=attr._group.tips[t].el) attr._group.tips[t].el.removeAttribute('tabindex');
+					else pt.setAttribute('tabindex',0);
+				}
+			}
+			pt.setAttribute('aria-label',tt.replace(/<[^\>]+>/g,' '));
 
 			wide = document.body.getBoundingClientRect().width;
 
