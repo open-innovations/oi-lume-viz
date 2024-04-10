@@ -264,6 +264,7 @@
 			// Get tooltip content
 			tt = "";
 			if(!tt && pt2.querySelector('title')) tt = pt2.querySelector('title').innerHTML;
+			if(!tt && pt.querySelector('title')) tt = pt.querySelector('title').innerHTML;
 			if(!tt) tt = pt.getAttribute('title');
 			if(!tt) tt = pt.getAttribute('aria-label');
 			if(!tt) tt = pt2.getAttribute('aria-label');
