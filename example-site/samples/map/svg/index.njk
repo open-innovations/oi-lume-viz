@@ -601,7 +601,7 @@ examples:
       min: 0
       columns:
         - name: Tooltip
-          template: "{{ name }}"
+          template: "<strong>{{ name | strftime('%e %b %Y') }}</strong><br />Distance: <strong>{{ geojson.properties.day_km }}</strong> ({{ geojson.properties.day_miles }})<br />Total distance: <strong>{{ geojson.properties.total_km }}</strong> ({{ geojson.properties.total_miles }})<br />Elevation gain: <strong>{{ geojson.properties.elevation_gain }}</strong><br />Total elevation gain: <strong>{{ geojson.properties.elevation_total }}</strong>"
         - name: colour
           template: "{{ geojson.properties.stroke }}"
       tooltip: Tooltip
