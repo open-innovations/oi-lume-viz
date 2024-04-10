@@ -436,7 +436,7 @@
 		addEv('click',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.toggleLock().toggle(); pt.focus(); });
 		addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.show(); });
 		addEv('mouseover',(attr['hover-element']||pt),{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); if(!attr._alltips.locked){ this.show(); } });
-		addEv('touchstart',pt,{'this':this},function(e){ this.toggle(); });
+		addEv('touchstart',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.toggle(); });
 
 		return this;
 	}	// End of tooltip class
