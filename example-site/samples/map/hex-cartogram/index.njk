@@ -270,7 +270,7 @@ examples:
       tools:
         filter:
           label: "filterLabel"
-      tooltip: "Median Private Sector Rents<br />{{ LAD21NM }} (2021): <strong>&pound;{{ 2021 | toLocaleString() }}</strong>"
+      tooltip: "<strong>{{ LAD21NM }}</strong><br />Median private sector rents (2021): <strong>&pound;{{ 2021 | toLocaleString() }}</strong>"
       attribution: |
         Data: <a href="https://www.westyorks-ca.gov.uk/media/8790/lcr-housing-delivery-monitoring-report-2020-21-4.pdf">West Yorkshire Combined Authority</a>
   - title: "Add an interactive slider"
@@ -316,7 +316,7 @@ examples:
         slider:
           columns: ['2016','2017','2018','2019','2020','2021']
           width: 500px
-      tooltip: "Median Private Sector Rents<br />{{ LAD21NM }} ({{ _value }}): <strong>&pound;{{ {{ _value }} | toLocaleString() }}</strong>"
+      tooltip: "<strong>{{ LAD21NM }}</strong><br />Median private sector rents ({{ _value }}): <strong>&pound;{{ {{ _value }} | toLocaleString() }}</strong>"
       attribution: |
         Data: <a href="https://www.westyorks-ca.gov.uk/media/8790/lcr-housing-delivery-monitoring-report-2020-21-4.pdf">West Yorkshire Combined Authority</a>
   - title: "Draw boundaries"
