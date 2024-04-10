@@ -102,10 +102,7 @@
 					e.stopPropagation();
 					r = a.getAttribute('data');
 					inp.value = "";
-					if(r in hexes){
-						var path = hexes[r].querySelector('path');
-						if(path) root.OI.Tooltips.activate(path);
-					}
+					if(r in hexes) root.OI.Tooltips.activate(hexes[r]);
 					// Remove the search results
 					results.innerHTML = "";
 					_obj.highlight();

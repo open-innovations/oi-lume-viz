@@ -41,8 +41,7 @@
 				}
 			}
 		}
-
-		uid = p.querySelector('svg.oi-map-inner').getAttribute('id');
+		uid = p.querySelector('svg.oi-map-svg').getAttribute('id');
 		as = p.querySelectorAll('.data-layer .hex');
 
 		areas = new Array(as.length);
@@ -51,8 +50,8 @@
 			id = as[a].getAttribute('data-id');
 			hexes[id] = {
 				'el':as[a],
-				'data':opt.data[id],
-				'label':as[a].querySelector('text'),
+				'data':opt.data[id]||{},
+				'label':as[a].querySelector('text')||'',
 				'path':as[a].querySelector('path')
 			};
 			hexes[id].title = hexes[id].path.querySelector('title');

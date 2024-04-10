@@ -16,19 +16,11 @@
 	}
 
 	function InteractiveSVGMap(el){
-		var svg,pt,p,_obj,typ,overlay;
+		var svg,_obj,typ,overlay;
 
-		if(el.tagName.toLowerCase()=="svg"){
-			// Used for markers
-			svg = el;
-			el = svg.parentNode;
-			typ = "svg-map";
-			pt = [svg.querySelector(':first-child')];
-		}else{
-			svg = el.querySelector(':scope > svg');
-			typ = svg.getAttribute('data-type');
-			pt = svg.querySelectorAll('.data-layer path');
-		}
+		svg = el.querySelector(':scope > svg');
+		typ = svg.getAttribute('data-type');
+
 		overlay = svg.querySelector('.overlay');
 		if(!overlay){
 			overlay = document.createElementNS('http://www.w3.org/2000/svg','g');
@@ -50,25 +42,27 @@
 			return this;
 		};
 		this.removeOutline = function(){
-			e = svg.querySelector('.data-layer');
+			var e = svg.querySelector('.data-layer');
 			if(e && overlay.querySelector('.outline')) overlay.querySelector('.outline').remove();
 			return this;
 		};
 		_obj = this;
-		for(p = 0; p < pt.length; p++){
-			attr = {};
-			if(typ == "hex-map" || typ == "svg-map"){
-				attr.show = function(e){
-					_obj.removeOutline();
-					_obj.addOutline(e.parentNode);
-				}
-				attr.clear = function(e){
-					_obj.removeOutline();
-				}
-			}
-			OI.Tooltips.add(pt[p],attr);
+		var attr = {};
+		if(typ == "hex-map" || typ == "svg-map"){
+			attr.show = function(e){
+				_obj.removeOutline();
+				if(!e.classList.contains('marker')) _obj.addOutline(e);
+			};
+			attr.clear = function(e){
+				_obj.removeOutline();
+			};
 		}
 
+		var groups = el.querySelectorAll('.data-layer .series, .oi-map-inner .markers');
+		// Add tooltip groups
+		for(var g = 0; g < groups.length; g++){
+			OI.Tooltips.addGroup(groups[g],'.area, .hex, .marker, .line',attr);
+		}
 		return this;
 	}
 
@@ -77,6 +71,6 @@
 })(window || this);
 
 OI.ready(function(){
-	var svgs = document.querySelectorAll('.oi-map.oi-map-svg .oi-map-inner, .oi-map.oi-map-hex .oi-map-inner, svg.marker');
+	var svgs = document.querySelectorAll('.oi-map.oi-map-svg .oi-map-inner, .oi-map.oi-map-hex .oi-map-inner');
 	for(var i = 0; i < svgs.length; i++) OI.InteractiveSVGMap(svgs[i]);
 });

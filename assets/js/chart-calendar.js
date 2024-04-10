@@ -16,6 +16,10 @@
 })(window || this);
 
 OI.ready(function(){
-	var days = document.querySelectorAll('.oi-calendar-chart rect.in-year.has-value');
-	for(var i = 0; i < days.length; i++) OI.Tooltips.add(days[i],{});
+	var years,days,y,d,i;
+	years = document.querySelectorAll('.oi-calendar-chart .year[role=row]');
+	for(y = 0; y < years.length; y++){
+		days = years[y].querySelectorAll('rect.in-year.has-value');
+		OI.Tooltips.addGroup(years[y],days,{});
+	}
 });

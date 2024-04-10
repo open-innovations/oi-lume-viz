@@ -89,7 +89,9 @@ export class TreeMap extends HierarchyVisualisation {
 
     // Create a group to hold the cells
     const treeCells = svg.append("g")
-      .attr("stroke-width", 1);
+      .attr("stroke-width", 1)
+	  .classed("data-layers",true)
+	  .attr("role","table");
 
     // Don't make interim levels
     // TODO(@gilesdring) maybe make this configurable?
@@ -103,6 +105,7 @@ export class TreeMap extends HierarchyVisualisation {
       .attr("data-depth", (d) => d.depth)
       .attr("data-height", (d) => d.height)
       .classed("series", true)
+	  .attr("role","row")
       .attr("transform", (d) => `translate(${d.x0 * this.ratio} ${d.y0})`);
 
     treeCell.append("rect")
@@ -110,6 +113,7 @@ export class TreeMap extends HierarchyVisualisation {
       .attr("width", (d) => (d.x1 - d.x0) * this.ratio)
       .attr("height", (d) => d.y1 - d.y0)
       .attr("fill", this.colourMapper)
+	  .attr("role","cell")
       .append("title")
       .text(this.titleMapper);
 

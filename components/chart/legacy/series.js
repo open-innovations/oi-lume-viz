@@ -29,7 +29,7 @@ export function Series(s,props,data,extra){
 
 	// Build group
 	this.el = svgEl("g");
-	o = {'clip-path':'url(#clip-'+id+')'};
+	o = {'clip-path':'url(#clip-'+id+')','aria-label':'Series: '+(props.title||s),'tabindex':0,'role':'row'};
 	o['data-series'] = (s+1);
 	setAttr(this.el,o);
 	addClasses(this.el,['series','series-'+(s+1)]);
@@ -69,7 +69,7 @@ export function Series(s,props,data,extra){
 			// Create an animation for the line
 			line.animate = new Animate(line.el,{'duration':opt.duration,'curvature':(opt.line && opt.line.curvature ? opt.line.curvature : 0)});
 		}
-		setAttr(line.el,{'style':(opt.line.show ? 'display:block':'display:none'),'stroke':opt.line.color,'stroke-width':this.getStyle('line','stroke-width'),'stroke-linecap':this.getStyle('line','stroke-linecap'),'stroke-linejoin':this.getStyle('line','stroke-linejoin'),'stroke-dasharray':this.getStyle('line','stroke-dasharray'),'fill':this.getStyle('line','fill'),'fill-opacity':this.getStyle('line','fill-opacity'),'vector-effect':'non-scaling-stroke'});
+		setAttr(line.el,{'style':(opt.line.show ? 'display:block':'display:none'),'role':'rowheader','stroke':opt.line.color,'stroke-width':this.getStyle('line','stroke-width'),'stroke-linecap':this.getStyle('line','stroke-linecap'),'stroke-linejoin':this.getStyle('line','stroke-linejoin'),'stroke-dasharray':this.getStyle('line','stroke-dasharray'),'fill':this.getStyle('line','fill'),'fill-opacity':this.getStyle('line','fill-opacity'),'vector-effect':'non-scaling-stroke'});
 
 		for(i = pts.length; i < data.length; i++){
 
@@ -95,7 +95,7 @@ export function Series(s,props,data,extra){
 				setAttr(pts[i].bar,datum);
 
 				// Update the bar with some default values
-				setAttr(pts[i].bar,{'data-series':(s+1),'tabindex':0,'x':0,'y':0,'width':0,'height':0,'class':'marker'});
+				setAttr(pts[i].bar,{'role':'cell','data-series':(s+1),'x':0,'y':0,'width':0,'height':0,'class':'marker'});
 
 
 				// Add the bar to the element
@@ -121,7 +121,7 @@ export function Series(s,props,data,extra){
 				pts[i].mark = new Marker(opt.points);
 				pts[i].mark.setAnimation({'duration':opt.duration});
 				pts[i].mark.setAttr(datum);
-				pts[i].mark.setAttr({'tabindex':0,'data-series':s+1}); // Update the point
+				pts[i].mark.setAttr({'data-series':s+1,'role':'cell'}); // Update the point
 				pts[i].mark.addClass('marker');
 				
 				// Add the marker element to the series element

@@ -29,10 +29,11 @@
 	function InteractiveChart(el){
 
 		var svg = el.querySelector('svg.oi-chart-main');
-		var key = el.querySelector('.oi-legend');
-
 		// No .oi-chart-main to attach to
 		if(!svg) return this;
+		var key = el.querySelector('.oi-legend');
+		var typ = svg.getAttribute('data-type');
+
 
 		var serieskey = svg.querySelectorAll('.series');
 		var s,i,p,sid;
@@ -44,21 +45,23 @@
 			if(i){
 				series[i] = {'shapes':[],'array':[],'i':parseInt(i)};
 				series[i].series = serieskey[s];
+				series[i].el = serieskey[s];
 			}
 		}
 		for(p = 0; p < pt.length; p++){
-			if(pt[p].querySelector('title')){
-				// Set the tabIndex on every selectable point
-				pt[p].setAttribute('tabindex',0);
-			}
 			// Get the series number
 			s = pt[p].getAttribute('data-series');
 			// Get the item within the series
 			i = parseInt(pt[p].getAttribute('data-i'));
-			pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.add(pt[p])};
+			if(typ=="waffle-chart"){
+				pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.add(pt[p],{})};
+			}else{
+				pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.addGroupItem(series[s].el,pt[p],{})};
+			}
 			if(!series[s]) series[s] = {'i':parseInt(s),'array':[],'shapes':[]};
 			if(!series[s].array[i]) series[s].array[i] = pts[p];
 		}
+		//for(i in series) OI.Tooltips.finishGroup(series[i].el);
 
 		this.locked = 0;
 
@@ -97,7 +100,7 @@
 			return this;
 		};
 		this.highlightSeries = function(e){
-			var selected,typ,origin,s,r,points;
+			var selected,origin,s,r,points;
 			selected = el.querySelector('.series-'+e.data.series);
 			typ = svg.getAttribute('data-type');
 			if(typ == "stacked-bar-chart"){
@@ -129,8 +132,6 @@
 								series[s].series.parentNode.appendChild(series[s].series);
 							}
 						}
-						// Make points selectable
-						for(p = 0; p < points.length; p++) points[p].setAttribute('tabindex',0);
 					}else{
 						// Fade the unselected series
 						series[s].series.style.opacity = 0.1;
@@ -138,19 +139,13 @@
 							series[s].key.classList.remove('oi-series-on');
 							series[s].key.classList.add('oi-series-off');
 						}
-						// Make points unselectable
-						for(p = 0; p < points.length; p++) points[p].removeAttribute('tabindex');
 					}
 
 				}else{
 					if(s==this.locked){
 						series[s].series.style.opacity = 1.0;
-						// Make points selectable
-						for(p = 0; p < points.length; p++) points[p].setAttribute('tabindex',0);
 					}else{
 						series[s].series.style.opacity = 0.1;
-						// Make points unselectable
-						for(p = 0; p < points.length; p++) points[p].removeAttribute('tabindex');
 					}
 				}
 				if(typ == "stacked-bar-chart"){
@@ -292,8 +287,6 @@
 })(window || this);
 
 OI.ready(function(){
-	var charts = document.querySelectorAll('.oi-chart');
-	for(var i = 0; i < charts.length; i++){
-		OI.InteractiveChart(charts[i]);
-	}
+	var charts = document.querySelectorAll('.oi-chart:not(.oi-chart-ranking)');
+	for(var i = 0; i < charts.length; i++) OI.InteractiveChart(charts[i]);
 });

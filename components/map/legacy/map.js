@@ -319,6 +319,7 @@ export function SVGMap(opts){
 			layerlist.push({
 				'id': 'data',
 				'class': 'data-layer',
+				'role':'table',
 				'data': config.layers[l].data,
 				'geojson': config.layers[l].geojson,
 				'options': mergeDeep({ 'color': '#b2b2b2' },config.layers[l].options||{}),

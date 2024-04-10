@@ -522,7 +522,7 @@ export default function (input: { config: HexmapOptions }) {
 		fill = Colour(fill);
 
 		// TODO(@gilesdring) this only supports pointy-top hexes at the moment
-		var html = `<g class="hex" transform="translate(${roundNumber(x)} ${roundNumber(y)})" data-id="${config._id}" role="listitem">`;
+		var html = `<g class="hex" transform="translate(${roundNumber(x)} ${roundNumber(y)})" data-id="${config._id}" role="cell">`;
 		html += `<path fill="${fill.hex}" d="${hexPath}"><title>${tooltipText}</title></path>`;
 		if(labelText) html += `<text fill="${fill.contast}" text-anchor="middle" dominant-baseline="middle" aria-hidden="true">${labelText}</text>`;
 		html += `</g>`;
@@ -579,7 +579,7 @@ export default function (input: { config: HexmapOptions }) {
 
 	var html = `<div class="oi-map-holder"><div class="oi-map-inner"><svg
 			id="hexes-${uuid}"
-			class="oi-map-inner"
+			class="oi-map-svg"
 			overflow="visible"
 			viewBox="
 				${-margin - qWidth / 2} ${-margin - hexSide}
@@ -593,9 +593,11 @@ export default function (input: { config: HexmapOptions }) {
 			vector-effect="non-scaling-stroke"
 			aria-labelledby="title-${uuid}">
 			<title id="title-${uuid}">${title}</title>`;
-	html += '<g class="data-layer" role="list">';
-	html += Object.values(hexes).map(drawHex).join("");
-	html += '</g>';
+	html += '<g class="data-layer" role="table"><g class="series" role="row" tabindex="0" aria-label="Hexagons">';
+	// Sort by name
+	let sorted = sortBy(Object.values(hexes),'n',true);
+	for(let i = 0; i < sorted.length; i++) html += drawHex(sorted[i])+"\n";
+	html += '</g></g>';
 	if(lines){
 		html += '<g class="boundaries">'+lines+'</g>';
 	}
@@ -606,7 +608,9 @@ export default function (input: { config: HexmapOptions }) {
 		if(!tools.filter.position) tools.filter.position = "top left";
 		holder.addDependencies(['/js/map-filter.js','/js/colours.js']);
 		var filterdata = {};
-		for(var id in hexes){
+		// We want to use a sorted version of the data that is filtered to just what we need
+		for(let i = 0; i < sorted.length; i++){
+			let id = sorted[i]._id;
 			filterdata[id] = (tools.filter.label && tools.filter.label in hexes[id] ? hexes[id][tools.filter.label] : tools.filter.label);
 		}
 		html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
@@ -635,7 +639,6 @@ export default function (input: { config: HexmapOptions }) {
 
 		// Compress the data to save bandwidth
 		let temphexes = {};
-		//let fields = [];
 		let i = 0;
 		for(let hex in hexes){
 			temphexes[hex] = [];
@@ -650,4 +653,10 @@ export default function (input: { config: HexmapOptions }) {
 	html += '</div>';
 
 	return holder.wrap(html);
+}
+
+function sortBy(arr,i,reverse){
+	return arr.sort(function (a, b) {
+		return (reverse ? -1 : 1)*(a[i] < b[i] ? 1 : -1);
+	});
 }

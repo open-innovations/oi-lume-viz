@@ -125,6 +125,7 @@ examples:
       key: Date
       scale: Viridis
       order: reverse
+      tooltip: '{{ Date | strftime("%e %B %Y") }} <br />{{ Counts }} counts'
   - title: "Set the first day of the week"
     description: |
       By default we start the week on a Monday but sometimes you may want to use a different day. You can set the `startofweek` value to `0` for Sunday, `1` for Monday etc. Let's start the week on a Sunday.

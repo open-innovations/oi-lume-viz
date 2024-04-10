@@ -198,9 +198,10 @@ export function Layer(attr,map,i){
 	if(typeof this.options.color!=="string") this.options.color = '#000000';
 	if(typeof this.options.useforboundscalc==="undefined") this.options.useforboundscalc = true;
 
-	var g = svgEl('g');
-	var gs;
+	var gs,series,g;
+	g = svgEl('g');
 	setAttr(g,{'class':this.class||attr.class||this.id});
+	if(attr.role) setAttr(g,{'role':attr.role});
 
 	if(map && map.svg){
 		if(typeof i==="number"){
@@ -217,10 +218,19 @@ export function Layer(attr,map,i){
 	this.update = function(){
 		// Clear existing layer
 		this.clear();
+		
 		// Find the map bounds and work out the scale
-		var f,feature,w,h,g2,p,c,d,xy,tspan,scale,cls,key;
+		var f,feature,w,h,g2,p,c,d,xy,tspan,scale,cls,key,series;
 		w = map.w;
 		h = map.h;
+
+		// If this layer has a role provided we'll create a series group to hold everything
+		if(attr.role){
+			series = svgEl('g');
+			series.setAttribute('role','row');
+			series.classList.add('series');
+			g.appendChild(series);
+		}
 
 		if(this.geojson && this.geojson.data && this.geojson.data.features){
 
@@ -375,9 +385,11 @@ export function Layer(attr,map,i){
 					}
 					
 					g2.classList.add(cls);
+					g2.setAttribute('role','cell');
 					if(p){
 						g2.appendChild(p);
-						g.appendChild(g2);
+						if(series) series.appendChild(g2);
+						else g.appendChild(g2);
 					}
 				}
 			}

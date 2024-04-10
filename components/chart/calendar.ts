@@ -6,6 +6,7 @@ import { VisualisationHolder } from '../../lib/holder.js';
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import { getFontFamily, getFontWeight, getFontSize } from '../../lib/font/fonts.ts';
+import { Grid } from '../../lib/util/grid.ts';
 
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
@@ -15,9 +16,12 @@ const fontSize = getFontSize();
 
 export const css = `
 /* OI calendar chart component */
-.oi-calendar-chart .year { fill: ${defaultbg}; }
+.oi-calendar-chart .year[role=row] { fill: ${defaultbg}; }
 .oi-calendar-chart .day { dominant-baseline: middle; text-anchor: middle; }
 .oi-calendar-chart rect.in-year:focus { outline: 0; }
+.oi-calendar-chart .year[role=row]:focus { outline: 0; }
+.oi-calendar-chart .outline { pointer-events: none; }
+.oi-calendar-chart .year[role=row]:focus .outline { stroke: black; stroke-width: 4px; }
 `;
 
 
@@ -134,7 +138,7 @@ function CalendarChart(input: {
 	let yr = (range.max.year - range.min.year)+1;
 	let h = (size*7)*yr + (yr > 0 ? space*(yr-1) : 0);
 
-	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 '+w.toFixed(3)+' '+h.toFixed(3)+'" vector-effect="non-scaling-stroke" preserveAspectRatio="xMidYMin meet" overflow="hidden" data-type="calendar-chart">';
+	let svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 '+w.toFixed(2)+' '+h.toFixed(2)+'" vector-effect="non-scaling-stroke" preserveAspectRatio="xMidYMin meet" overflow="visible" data-type="calendar-chart">';
 	let x = 0;
 	let y = 0;
 
@@ -151,12 +155,13 @@ function CalendarChart(input: {
 	
 	if(input.scale) props.scale = ColourScale(input.scale);
 
+	svg += '<g class="data-layer" role="table">';
 	if(input.order == "reverse"){
 		// For each year (starting at the lowest year)
 		for(let year = range.max.year, i = 0; year >= range.min.year; year--, i++){
 			y = (size*7 + space)*(i);
 			props.origin.y = y;
-			svg += '<g class="data-layer">';
+			svg += '<g class="year" role="row" aria-label="Year: '+year+'">';
 			svg += buildYear(year,props,input);
 			svg += '</g>\n';
 		}
@@ -165,11 +170,13 @@ function CalendarChart(input: {
 		for(let year = range.min.year, i = 0; year <= range.max.year; year++, i++){
 			y = (size*7 + space)*(i);
 			props.origin.y = y;
-			svg += '<g class="data-layer">';
+			svg += '<g class="year" role="row" aria-label="Year: '+year+'">';
 			svg += buildYear(year,props,input);
 			svg += '</g>\n';
 		}
 	}
+	svg += '</g>\n';
+	
 	svg += '</svg>\n';
 
 	return svg;
@@ -196,7 +203,7 @@ function ceilWeek(d: Date, firstdayofweek: number){
 
 function buildYear(year: number, opts: { min: number, max: number, origin: object, size: number, days: object, firstday: number}, input){
 
-	let i,x,y,iso,svg,v,d,sday,eday,syear,eyear,offx,offy,dat;
+	let i,x,y,iso,svg,v,d,sday,eday,syear,eyear,offx,offy,dat,cells,dx,dy;
 	
 	syear = new Date(year,0,1,12,0,0);	// Go to January 1st
 	eyear = new Date(year,11,31,12,0,0);	// Go to December 31st
@@ -206,13 +213,17 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 
 	x = opts.origin.x + opts.size;
 	y = opts.origin.y + 3.5*opts.size;
-	svg = '<text class="year" x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" transform="rotate(-90)" transform-origin="'+x.toFixed(3)+' '+y.toFixed(3)+'" text-anchor="middle" font-size="'+(opts.size*1.5).toFixed(3)+'" font-family="'+fontFamily+'" dominant-baseline="middle">'+year+'</text>';
+	svg = '<text class="year" x="'+x.toFixed(2)+'" y="'+y.toFixed(2)+'" transform="rotate(-90)" transform-origin="'+x.toFixed(2)+' '+y.toFixed(2)+'" text-anchor="middle" font-size="'+(opts.size*1.5).toFixed(2)+'" font-family="'+fontFamily+'" dominant-baseline="middle">'+year+'</text>';
+
+	cells = new Grid(Math.ceil(((eday - sday)/86400000)/7),7);
+	dx = (cells.ncols*opts.size).toFixed(2);
+	dy = (cells.nrows*opts.size).toFixed(2);
 
 	d = new Date(sday.getTime());
 	for(i = 0; i < 7; i++){
 		x = opts.origin.x + (2.5)*opts.size;
 		y = opts.origin.y + (i+0.5)*opts.size;
-		svg += '<text class="day" x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" font-size="'+(opts.size*0.75).toFixed(3)+'" font-family="'+fontFamily+'">'+d.toLocaleDateString("en-GB",{'weekday':'narrow'})+'</text>';
+		svg += '<text class="day" x="'+x.toFixed(2)+'" y="'+y.toFixed(2)+'" font-size="'+(opts.size*0.75).toFixed(2)+'" font-family="'+fontFamily+'">'+d.toLocaleDateString("en-GB",{'weekday':'narrow'})+'</text>';
 		d = (new Date(d.getTime() + 86400000));
 	}
 
@@ -251,16 +262,21 @@ function buildYear(year: number, opts: { min: number, max: number, origin: objec
 			tooltip = iso;
 		}
 
+		if(d >= syear && d <= eyear) cells.fill(offx,offy);
 		svg += '<rect class="'+(d >= syear && d <= eyear ? "in-year" : "not-in-year")+(tooltip ? " has-value" : "")+'"';
-		if(dat && dat[input.tooltip]) svg += '	tabindex="0"';
+		if(dat && dat[input.tooltip]) svg += ' ';
 		svg += '	fill="'+v+'"';
-		svg += '	x="'+x.toFixed(3)+'" y="'+y.toFixed(3)+'" width="'+opts.size.toFixed(3)+'" height="'+opts.size.toFixed(3)+'">';
+		svg += '	role="cell"';
+		svg += '	x="'+x.toFixed(2)+'" y="'+y.toFixed(2)+'" width="'+opts.size.toFixed(2)+'" height="'+opts.size.toFixed(2)+'">';
 		svg += '<title>'+tooltip+'</title>';
 		svg += '</rect>';
 
 		// Increment day
 		d = (new Date(d.getTime() + 86400000));
 	}
+	
+//	svg += '<path class="marker-group outline" d="M'+(opts.origin.x + 3*opts.size)+','+(opts.origin.y)+'h'+dx+'v'+dy+'h-'+dx+'z" fill="transparent"></path>'
+	svg += '<path class="marker-group outline" d="'+cells.getBoundary(opts.size,0,opts.origin.x + 3*opts.size,opts.origin.y)+'" fill="transparent"></path>';
 
 	return svg;
 }

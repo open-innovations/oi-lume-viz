@@ -96,7 +96,7 @@
 
 		function enableSeries(i,el){
 			el.setAttribute('tabindex',0);
-			seriespoints[i] = new SeriesLine(el);
+			seriespoints[i] = new SeriesLine(i,el);
 			// Detect events for this specific series
 			el.addEventListener('keydown',function(e){ if(e.keyCode==13){ selectLine(i); } });
 			el.addEventListener('focus',function(e){ focusLine(i); });
@@ -158,7 +158,7 @@
 					y: v.y + t * (w.y - v.y) });
 	}
 	function distToSegment(p, v, w) { return Math.sqrt(distToSegmentSquared(p, v, w)); }
-	function SeriesLine(series){
+	function SeriesLine(s,series){
 		var len,i,path,bit,svg,ranks,txt,tooltip;
 		path = series.querySelector('path');
 		svg = series.parentNode;
@@ -168,6 +168,7 @@
 		tooltip = series.querySelector('title').innerHTML.replace(/\&lt\;/g,"<").replace(/\&gt\;/g,">");
 		// Remove tags from existing title
 		series.setAttribute('aria-label',tooltip.replace(/<[^\>]+>/g,""));
+		series.setAttribute('data-series',s);
 		series.querySelector('title').remove();
 		var segments = ranks.length*3;
 		this.points = [];
@@ -184,9 +185,7 @@
 			txt.innerHTML = tooltip;
 			ranks[i].appendChild(txt);
 			// Keep some properties for this rank indicator
-			this.ranks[i] = {
-				'tooltip': OI.Tooltips.add(ranks[i],{'notab':true})
-			};
+			this.ranks[i] = { 'tooltip': OI.Tooltips.addGroupItem(this.series,ranks[i],{'notab':true}) };
 		}
 		this.getDistanceFromPoint = function(o){
 			var d = Infinity;
@@ -214,7 +213,5 @@
 
 OI.ready(function(){
 	var charts = document.querySelectorAll('.oi-chart-ranking');
-	for(var i = 0; i < charts.length; i++){
-		OI.InteractiveRankingChart(charts[i]);
-	}
+	for(var i = 0; i < charts.length; i++) OI.InteractiveRankingChart(charts[i]);
 });

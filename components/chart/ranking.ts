@@ -296,13 +296,17 @@ export default function (input: {
 	var svg = svgEl('svg');
 	svgopt = {'xmlns':ns,'version':'1.1','viewBox':'0 0 '+options.width+' '+options.height,'overflow':'visible','style':'max-width:100%;','preserveAspectRatio':'none'};
 	setAttr(svg,svgopt);
+	svg.classList.add('oi-chart-main');
 	clip = svgEl("clipPath");
 	setAttr(clip,{'id':'clip-'+id});
 	rect = svgEl("rect");
 	setAttr(rect,{'x':0,'y':0,'width':options.width,'height':options.height});
 	add(rect,clip);
+
 	seriesgroup = svgEl('g');
-	seriesgroup.classList.add('data');
+	seriesgroup.classList.add('data-layer');
+	seriesgroup.setAttribute('role','table');
+	svg.appendChild(seriesgroup);
 
 	// Set to the user-supplied values if they are numeric
 	if(typeof config.min=="number") min = config.min;
@@ -371,8 +375,9 @@ export default function (input: {
 		// Create the SVG elements for each series
 		g = svgEl('g');
 		g.classList.add('series');
+		g.setAttribute('role','row');
 		series[s].g = g;
-		svg.appendChild(g);
+		seriesgroup.appendChild(g);
 		
 		ttl = svgEl('title');
 		ttl.innerHTML = series[s].title;

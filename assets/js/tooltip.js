@@ -1,16 +1,16 @@
 /*
-	Open Innovations Tooltip v0.4.1
+	Open Innovations Tooltip v0.5.0
 	Helper function to add tooltips. A suitable candidate must:
-	  - be in an SVG
-	  - have a <title> child
-	  - the parent SVG must have a container
+		- be in an SVG
+		- have a <title> child
+		- the parent SVG must have a container
 */
 
 (function(root){
 
 	var styles = document.createElement('style');
 	styles.innerHTML = '.tooltip {z-index:10000;color:black;filter:drop-shadow(0px 1px 1px rgba(0,0,0,0.7));text-align:left;}.tooltip .inner { padding: 1em; }';
-	document.head.prepend(styles)
+	document.head.prepend(styles);
 
 	if(!root.OI) root.OI = {};
 	if(!root.OI.ready){
@@ -37,36 +37,238 @@
 		Element.prototype.furthest = function(s){
 			var el = this;
 			var anc = null;
-
 			while (el !== null && el.nodeType === 1) {
 				if (el.matches(s)) anc = el;
 				el = el.parentElement || el.parentNode;
 			}
 			return anc;
-		}
+		};
 	}
 
-	function Tooltip(pt,attr){
+	function Tooltips(){
+		var tips = [];
+		var tip;
+		var groups = [];
+		this.locked = false;
+		this.active = null;
 
-		var svg,holder,tt,typ;
-		svg = pt.furthest('svg');
-		holder = svg.parentNode;
-		tt = pt.querySelector('title');
-		if(!tt) tt = pt.parentNode.querySelector('title');
+		this.getGroup = function(el){
+			for(var g = 0; g < groups.length; g++){
+				if(groups[g].el==el) return groups[g];
+			}
+			return undefined;
+		};
+
+		this.makeGroup = function(el){
+			var group = this.getGroup(el);
+			if(group===undefined){
+				group = new TooltipGroup(this,el);
+				groups.push(group);
+			}
+			return group;
+		};
+
+		this.addGroup = function(el,selector,attr){
+			if(!attr) attr = {};
+			// Do we have this group?
+			var group = this.makeGroup(el);
+			// If it is a string we convert it into an array of elements
+			if(typeof selector==="string") selector = el.querySelectorAll(selector);
+			// Add the selector to the group and then add the defined tips to our array
+			tips.push.apply(tips, group.create(selector,attr));
+
+			return this;
+		};
 		
+		this.addGroupItem = function(el,selector,attr){
+			if(!attr) attr = {};
+			// Do we have this group?
+			var group = this.makeGroup(el);
+			// Add the selector to the group
+			var t = group.create([selector],attr);
+			// Add the defined tips to our array
+			tips.push.apply(tips, t);
+			return t[0];
+		};
+		
+		this.add = function(pt,attr){
+			if(!attr) attr = {};
+			attr._alltips = this;
+			var tip = new Tooltip(pt,attr);
+			tips.push(tip);
+			return tip;
+		};
+
+		this.create = function(){
+			if(!tip){
+				tip = document.createElement('div');
+				tip.innerHTML = '<div class="inner" style="background: #b2b2b2;position:relative;"></div><div class="arrow" style="position:absolute;width:0;height:0;border:0.5em solid transparent;border-bottom:0;left:50%;top:calc(100% - 1px);transform:translate3d(-50%,0,0);border-color:transparent;border-top-color:#aaaaaa;"></div>';
+				addClasses(tip,['tooltip']);
+			}
+			return tip;
+		};
+
+		this.get = function(el){
+			for(var t = 0; t < tips.length; t++){
+				if(tips[t].el == el) return tips[t];
+			}
+			return false;
+		};
+
+		this.activate = function(el){
+			var match = this.get(el);
+			if(match){
+				match.show();
+				match.el.focus();
+				match.lock();
+			}
+		};
+
+		this.getTips = function(){ return tips; };
+
+		this.update = function(){
+			if(this.active) this.active.show();
+		};
+
+		this.clear = function(){
+			if(!this.locked){
+				if(tip && tip.parentNode) tip.parentNode.removeChild(tip);
+				tip = null;
+				this.active = null;
+			}
+			return this;
+		};
+
+		return this;
+	}
+	
+	function TooltipGroup(_alltips,el){
+		this.el = el;
+		this.tips = [];
+		// Set a tab index on the group
+		el.setAttribute('tabindex',0);
+		addEv('keydown',el,{this:this},function(e){
+			if(e.key == "ArrowLeft" || e.key == "ArrowRight"){
+				var idx = -1;
+
+				// If a tip in this group is active we use that
+				if(_alltips.active){
+					for(var t = 0; t < this.tips.length; t++){
+						// Matched to an existing tip in this group
+						if(_alltips.active==this.tips[t]) idx = t;
+					}
+				}
+
+				// Increment
+				if(e.key == "ArrowLeft") idx--;
+				else if(e.key == "ArrowRight") idx++;
+
+				// Limit range
+				if(idx < 0) idx += this.tips.length;
+				if(idx > this.tips.length-1) idx -= this.tips.length;
+
+				// Activate the tooltip
+				if(idx >= 0 && idx < this.tips.length){
+					this.tips[idx].el.focus();
+					_alltips.activate(this.tips[idx].el);
+				}
+			}
+		});
+
+		this.create = function(pts,attr){
+			if(!attr) attr = {};
+			var added = [];
+			// Create placeholder tips
+			for(var t = 0; t < pts.length; t++) added.push(this.add(pts[t],attr));
+			return added;
+		};
+		this.add = function(pt,attr){
+			if(!attr) attr = {};
+			attr._group = this;
+			attr._alltips = _alltips;
+			var tip = new Tooltip(pt,attr);
+			this.tips.push(tip);
+			return tip;
+		};
+		this.clear = function(){
+			_alltips.clear();
+			if(!_alltips.locked){
+				for(var t = 0; t < this.tips.length; t++){
+					if(this.tips[t]!==_alltips.active) this.tips[t].el.removeAttribute('tabindex');
+				}
+			}
+			return this;
+		};
+		
+		return this;
+	}	// End of tooltip group class
+
+	// An array to keep check of if we've added a clear() event to the tooltip holder
+	var holders = [];
+
+	function Tooltip(pt,attr){
+		if(!pt){
+			console.error('No point to attach to');
+			return this;
+		}
+		this.el = pt;
+
+		var svg,holder,tt,typ = "";
+		svg = pt.furthest('svg');
+
 		// Find the "data-type"
-		typ = svg.getAttribute('data-type');
-		attr.type = typ;
+		if(svg) typ = svg.getAttribute('data-type');
+		else svg = pt;
 
-		// Change the cursor
-		pt.style.cursor = "pointer";
+		attr._type = typ;
+		holder = svg.parentNode;
 
-		this.el = function(){ return pt; };
+		// If not a group it gets its own tabindex so that it can be navigated to
+		if(!attr._group) this.el.setAttribute('tabindex',0);
+
+		// Do we need to add the clear event to the holder?
+		var added = false;
+		for(var h = 0; h < holders.length; h++){
+			if(holders[h]==holder) added = true;
+		}
+		if(!added){
+			addEv('mouseleave',holder,{'this':this},function(e){ this.clear(); });
+			holders.push(holder);
+		}
+
+		// If it isn't part of a group make it tabbable
+		if(!attr._group) pt.setAttribute('tabindex',0);
+
+		this.attr = attr;
+
+		this.setAttr = function(attrib){
+			if(!attrib) attrib = {};
+			for(var a in attrib) attr[a] = attrib[a];
+			return this;
+		};
+
+		this.getAttr = function(a){
+			if(a in attr) return attr[a];
+			return undefined;
+		};
+
 		this.show = function(){
-			var tip,j,title,fill,locked,bb,bbo,bbox,off,pad,box,arr,shift,wide;
+			var tip,title,fill,bb,bbo,bbox,off,pad,box,arr,shift,wide,pt2;
 
-			// It is locked but not to this tooltip
-			if(attr._parent.locked && attr._parent.locked!=this) return this;
+			pt2 = pt.querySelector('path,.marker');
+			if(!pt2) pt2 = pt;
+
+			// Get tooltip content
+			tt = "";
+			if(!tt && pt2.querySelector('title')) tt = pt2.querySelector('title').innerHTML;
+			if(!tt) tt = pt.getAttribute('title');
+			if(!tt) tt = pt.getAttribute('aria-label');
+			if(!tt) tt = pt2.getAttribute('aria-label');
+
+			if(!tt){
+				console.warn('No tooltip content found for ',pt);
+				return this;
+			}
 
 			wide = document.body.getBoundingClientRect().width;
 
@@ -74,23 +276,30 @@
 			holder.style.position = 'relative';
 
 			// Create the tip (only one can exist)
-			tip = attr._parent.create();
+			tip = attr._alltips.create();
 
 			// Add the tip to the holder
 			add(tip,holder);
 
-			// Get the fill colour
-			fill = pt.getAttribute('fill');
+
+			// Get the fill colour from the data-fill attribute
+			fill = pt.getAttribute('data-fill');
+			// If nothing, try the fill attribute
+			if(!fill) fill = pt.getAttribute('fill');
+			if(!fill && pt.querySelector('path,.marker')){
+				fill = pt.querySelector('path,.marker').getAttribute('data-fill');
+				if(!fill) fill = pt.querySelector('path,.marker').getAttribute('fill');
+			}
 			// If no fill try the fill of the nearest SVG element
-			if(!fill) fill = pt.closest('svg').getAttribute('fill');
+			if(!fill && pt2.closest('svg')) fill = pt2.closest('svg').getAttribute('fill');
 			// If the fill is "currentColor" we compute what that is
-			if(fill == "currentColor") fill = window.getComputedStyle(pt)['color'];
-			if(fill == "transparent" && pt.getAttribute('data-fill')) fill = pt.getAttribute('data-fill');
+			if(fill == "currentColor") fill = window.getComputedStyle(pt2).color;
+			if(fill == "transparent" && pt2.getAttribute('data-fill')) fill = pt2.getAttribute('data-fill');
 			// If the fill is empty try computing the fill
-			if(!fill) fill = window.getComputedStyle(pt)['fill'];
+			if(!fill) fill = window.getComputedStyle(pt2).fill;
 
 			// Get the contents now (in case they've been updated)
-			title = (tt ? tt.innerHTML : "").replace(/[\n\r]/g,'<br />');
+			title = (tt || "").replace(/[\n\r]/g,'<br />');
 
 			box = tip.querySelector('.inner');
 			arr = tip.querySelector('.arrow');
@@ -170,117 +379,57 @@
 			}
 
 			if(typeof attr.show==="function") attr.show.call(this,pt,attr);
-			attr._parent.active = this;
+			attr._alltips.active = this;
 
 			return this;
 		};
-		
-		this.toggle = function(){
-			// Always reset any existingly selected items and turn off sticky
-			if(this==attr._parent.active) this.clear();
-			else this.show();
-			return this;
-		};
-		
-		this.toggleLock = function(){
-			return attr._parent.locked ? this.unlock() : this.lock();
+
+		this.clear = function(){
+			if(attr._group) attr._group.clear();
+			else attr._alltips.clear();
+
+			if(typeof attr.clear==="function" && !attr._alltips.locked) attr.clear.call(this,pt,attr);
 		};
 
 		this.lock = function(){
 			// Unlock if necessary
-			if(attr._parent.locked) this.unlock();
+			if(attr._alltips.locked) this.unlock();
 			// Set this as locked
-			attr._parent.locked = this;
+			attr._alltips.locked = this;
 			// Add a class
 			pt.classList.add('selected');
 			svg.classList.add('locked');
 			return this;
 		};
 
-
 		this.unlock = function(){
-			attr._parent.locked = null;
+			attr._alltips.locked = null;
 			var els = svg.querySelectorAll('.selected');
-			for(var j = 0; j < els.length; j++){
-				els[j].classList.remove('selected');
-			}
+			for(var j = 0; j < els.length; j++) els[j].classList.remove('selected');
 			svg.classList.remove('locked');
 			return this;
-		}
-
-		this.clear = function(){
-			attr._parent.clear();
-			if(typeof attr.clear==="function" && !attr._parent.locked) attr.clear.call(this,pt,attr);
 		};
 
-		if(!svg){
-			console.error('No SVG container for:',pt);
+		this.toggle = function(){
+			// Always reset any existingly selected items and turn off sticky
+			if(this==attr._alltips.active) this.clear();
+			else this.show();
 			return this;
-		}
-		if(!tt){
-			//console.error('No <title> child within:',pt);
-			return this;
-		}
-
-		if(!attr.notab){
-			pt.setAttribute('tabindex',0);
-			addEv('click',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].toggleLock().toggle(); });
-			addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].show(); });
-			addEv('mouseover',(attr['hover-element']||pt),{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.data['this'].show(); });
-			addEv('mouseleave',holder,{'this':this},this.clear);
-			addEv('touchstart',pt,{'this':this},function(e){ e.data['this'].toggle(); });
-		}
+		};
 		
-		return this;
-	}
-
-	function Tooltips(){
-
-		var tips = [];
-		var tip;
-
-		this.clear = function(){
-			if(!this.locked){
-				if(tip && tip.parentNode) tip.parentNode.removeChild(tip);
-				tip = null;
-				this.active = null;
-			}
-			return this;
+		this.toggleLock = function(){
+			return attr._alltips.locked ? this.unlock() : this.lock();
 		};
 
-		this.create = function(){
-			if(!tip){
-				tip = document.createElement('div');
-				tip.innerHTML = '<div class="inner" style="background: #b2b2b2;position:relative;"></div><div class="arrow" style="position:absolute;width:0;height:0;border:0.5em solid transparent;border-bottom:0;left:50%;top:calc(100% - 1px);transform:translate3d(-50%,0,0);border-color:transparent;border-top-color:#aaaaaa;"></div>';
-				addClasses(tip,['tooltip']);
-			}
-			return tip;
-		};
-
-		this.add = function(pt,attr){
-			if(!attr) attr = {};
-			attr._parent = this;
-			tips.push(new Tooltip(pt,attr));
-			return tips[tips.length-1];
-		};
-
-		this.update = function(){
-			if(this.active) this.active.show();
-		};
-
-		this.activate = function(el){
-			var t,match;
-			for(t = 0; t < tips.length; t++){
-				if(tips[t].el() == el){
-					match = tips[t];
-					break;
-				}
-			}
-			if(match) match.lock().show();
-		};
+		// Add events
+		addEv('click',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.toggleLock().toggle(); pt.focus(); });
+		addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.show(); });
+		addEv('mouseover',(attr['hover-element']||pt),{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); if(!attr._alltips.locked){ this.show(); } });
+		addEv('touchstart',pt,{'this':this},function(e){ this.toggle(); pt.focus(); });
 
 		return this;
-	}
+	}	// End of tooltip class
+
 	if(!root.OI.Tooltips) root.OI.Tooltips = new Tooltips();
 
 	// Convert to sRGB colorspace
@@ -313,10 +462,7 @@
 	}
 	function contrastColour(c){
 		var rgb = colour2RGB(c);
-		var cols = {
-			"black": [0, 0, 0],
-			"white": [255, 255, 255],
-		};
+		var cols = { "black": [0, 0, 0], "white": [255, 255, 255] };
 		var maxRatio = 0;
 		var contrast = "white";
 		for(var col in cols){
@@ -330,11 +476,8 @@
 		}
 		if(maxRatio < 4.5){
 			console.warn('Text contrast poor ('+maxRatio.toFixed(1)+') for %c'+c+'%c','background:'+c+';color:'+contrast,'background:none;color:inherit;');
-		}else if(maxRatio < 7){
-			//console.warn('Text contrast good ('+maxRatio.toFixed(1)+') for %c'+c+'%c','background:'+c+';color:'+contrast,'background:none;color:inherit;');
 		}
 		return contrast;
 	}
 	if(!root.OI.contrastColour) root.OI.contrastColour = contrastColour;
-
 })(window || this);
