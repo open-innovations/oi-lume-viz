@@ -1,5 +1,5 @@
 /*
-	Open Innovations Sortable Tables v0.2
+	Open Innovations Sortable Tables v0.3
 	Helper function to make any table with class="table-sort" sortable.
 	We would have used https://github.com/leewannacott/table-sort-js/ but it couldn't deal with merged rows
 */
@@ -97,7 +97,7 @@
 						rowspan[c] = span-1;
 					}
 					id = findMatch(cells,rows[r][i])
-					mtable[r][c] = {'id':id,'v':cells[id].innerHTML};
+					mtable[r][c] = {'id':id,'v':cells[id].getAttribute('data-sort')||cells[id].innerHTML};
 					if(!coltype[c]) coltype[c] = {};
 					i++;
 				}
@@ -199,7 +199,8 @@
 		return this;
 	}
 
-	function SortableTable(el){
+	function SortableTable(el,attr){
+		if(!attr) attr = {};
 		var table = normaliseTable(el);
 		this.columns = new Array(table.cols);
 
@@ -215,6 +216,7 @@
 				if(c!=col) this.columns[c].setDirection("");
 			}
 			buildTable(el,table);
+			if(typeof attr.onsort==="function") attr.onsort.call(this);
 		}
 
 		if(table.rows > 0){
@@ -227,7 +229,7 @@
 		return this;
 	}
 	
-	OI.TableSort = function(e){ return new SortableTable(e); }
+	OI.TableSort = function(e,attr){ return new SortableTable(e,attr); }
 
 	OI.ready(function(){
 		var tables = document.querySelectorAll('.table-sort');
