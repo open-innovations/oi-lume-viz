@@ -59,10 +59,10 @@
 			return undefined;
 		};
 
-		this.makeGroup = function(el){
+		this.makeGroup = function(el,attr){
 			var group = this.getGroup(el);
 			if(group===undefined){
-				group = new TooltipGroup(this,el);
+				group = new TooltipGroup(this,el,attr);
 				groups.push(group);
 			}
 			return group;
@@ -71,7 +71,7 @@
 		this.addGroup = function(el,selector,attr){
 			if(!attr) attr = {};
 			// Do we have this group?
-			var group = this.makeGroup(el);
+			var group = this.makeGroup(el,attr);
 			// If it is a string we convert it into an array of elements
 			if(typeof selector==="string") selector = el.querySelectorAll(selector);
 			// Add the selector to the group and then add the defined tips to our array
@@ -142,41 +142,12 @@
 		return this;
 	}
 	
-	function TooltipGroup(_alltips,el){
+	function TooltipGroup(_alltips,el,attr){
 		this.el = el;
 		this.tips = [];
 		// Set a tab index on the group
 		el.setAttribute('tabindex',0);
-		addEv('keydown',el,{this:this},function(e){
-			if(e.key == "ArrowLeft" || e.key == "ArrowRight"){
-				e.preventDefault();
-				e.stopPropagation();
-				var idx = -1,t;
 
-				// If a tip in this group is active we use that
-				if(_alltips.active){
-					for(t = 0; t < this.tips.length; t++){
-						// Matched to an existing tip in this group
-						if(_alltips.active==this.tips[t]) idx = t;
-					}
-				}
-
-				// Increment
-				if(e.key == "ArrowLeft") idx--;
-				else if(e.key == "ArrowRight") idx++;
-
-				// Limit range
-				if(idx < 0) idx += this.tips.length;
-				if(idx > this.tips.length-1) idx -= this.tips.length;
-
-
-				// Activate the tooltip
-				if(idx >= 0 && idx < this.tips.length){
-					this.tips[idx].el.focus();
-					_alltips.activate(this.tips[idx].el);
-				}
-			}
-		});
 
 		this.create = function(pts,attr){
 			if(!attr) attr = {};
@@ -202,7 +173,15 @@
 			//}
 			return this;
 		};
-		
+
+		addEv('keydown',el,{this:this},function(e){
+			if(e.key in attr.keymap){
+				e.preventDefault();
+				e.stopPropagation();
+				attr.keymap[e.key].apply(this, [e, _alltips]);
+			}
+		});
+
 		return this;
 	}	// End of tooltip group class
 
@@ -255,8 +234,13 @@
 			return undefined;
 		};
 
+		if(attr.coord_attributes !== undefined) {
+			this.x = parseFloat(this.el.getAttribute(attr.coord_attributes[0]));
+			this.y = parseFloat(this.el.getAttribute(attr.coord_attributes[1]));
+		}
+
 		this.show = function(){
-			var tip,title,fill,bb,bbo,bbox,off,pad,box,arr,shift,wide,pt2;
+			var tip,title,fill,bb,bbo,bbox,off,pad,box,arr,shift,wide,pt2,tt;
 
 			pt2 = pt.querySelector('path,.marker');
 			if(!pt2) pt2 = pt;
