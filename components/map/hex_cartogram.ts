@@ -614,7 +614,9 @@ export default function (input: { config: HexmapOptions }) {
 		// We want to use a sorted version of the data that is filtered to just what we need
 		for(let i = 0; i < sorted.length; i++){
 			let id = sorted[i]._id;
-			filterdata[id] = (tools.filter.label && tools.filter.label in hexes[id] ? hexes[id][tools.filter.label] : tools.filter.label);
+			if(tools.filter.label && tools.filter.label in hexes[id]){
+				filterdata[id] = hexes[id][tools.filter.label];
+			}
 		}
 		html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
 	}
