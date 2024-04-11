@@ -58,12 +58,19 @@
 				_obj.removeOutline();
 			};
 		}
+		if(typ == "hex-map") {
+			attr.coord_attributes = ["data-q", "data-r"];
+		}
 
 		var groups = el.querySelectorAll('.data-layer .series, .oi-map-inner .markers');
 		// Add tooltip groups
 		for(var g = 0; g < groups.length; g++){
 			OI.Tooltips.addGroup(groups[g],'.area, .hex, .marker, .line',attr);
 		}
+
+		// Add description for keyboard navigation
+		svg.querySelector(':scope > desc').textContent += ' Use left and right arrow keys to move between cells. Hold shift and use arrow keys to move to adjacent cells.';
+
 		return this;
 	}
 

@@ -59,10 +59,10 @@
 			return undefined;
 		};
 
-		this.makeGroup = function(el){
+		this.makeGroup = function(el,attr){
 			var group = this.getGroup(el);
 			if(group===undefined){
-				group = new TooltipGroup(this,el);
+				group = new TooltipGroup(this,el,attr);
 				groups.push(group);
 			}
 			return group;
@@ -71,7 +71,7 @@
 		this.addGroup = function(el,selector,attr){
 			if(!attr) attr = {};
 			// Do we have this group?
-			var group = this.makeGroup(el);
+			var group = this.makeGroup(el,attr);
 			// If it is a string we convert it into an array of elements
 			if(typeof selector==="string") selector = el.querySelectorAll(selector);
 			// Add the selector to the group and then add the defined tips to our array
@@ -142,41 +142,71 @@
 		return this;
 	}
 	
-	function TooltipGroup(_alltips,el){
+	function TooltipGroup(_alltips,el,attr){
 		this.el = el;
 		this.tips = [];
 		// Set a tab index on the group
 		el.setAttribute('tabindex',0);
-		addEv('keydown',el,{this:this},function(e){
-			if(e.key == "ArrowLeft" || e.key == "ArrowRight"){
-				e.preventDefault();
-				e.stopPropagation();
-				var idx = -1,t;
 
-				// If a tip in this group is active we use that
-				if(_alltips.active){
-					for(t = 0; t < this.tips.length; t++){
-						// Matched to an existing tip in this group
-						if(_alltips.active==this.tips[t]) idx = t;
-					}
+		function arrow_move(e) {
+			var directions = {
+				"ArrowLeft": [-1,0],
+				"ArrowRight": [1,0],
+				"ArrowUp": [0,1],
+				"ArrowDown": [0,-1]
+			};
+
+			var direction = directions[e.key];
+			var dx = direction[0];
+			var dy = direction[1];
+
+			var idx = -1,t;
+
+			// If a tip in this group is active we use that
+			if(_alltips.active){
+				for(t = 0; t < this.tips.length; t++){
+					// Matched to an existing tip in this group
+					if(_alltips.active==this.tips[t]) idx = t;
 				}
+			}
+
+			if(e.shiftKey && this.tips[idx] && attr.coord_attributes !== undefined) {
+				var tip = this.tips[idx];
+				var x = tip.x + dx;
+				var y = tip.y + dy;
+				var closest = this.tips.map(function(t,i) {
+					return {t, i, d: [(t.x - x), (t.y - y)]};
+				}).filter(function(a) {
+					return dx != 0 ? a.d[0]*dx >= 0 : a.d[1]*dy >= 0;
+				})
+				.sort(function(a,b) {
+					var ax = a.d[0];
+					var ay = a.d[1];
+					var bx = b.d[0];
+					var by = b.d[1];
+					return dx != 0 ? (ay==by ? (ax-bx)*dx : Math.abs(ay)-Math.abs(by)) : (ax==bx ? (ay-by)*dy : Math.abs(ax) - Math.abs(bx));
+				});
+				if(closest.length > 0) {
+					idx = closest[0].i;
+				}
+			} else {
 
 				// Increment
 				if(e.key == "ArrowLeft") idx--;
 				else if(e.key == "ArrowRight") idx++;
-
-				// Limit range
-				if(idx < 0) idx += this.tips.length;
-				if(idx > this.tips.length-1) idx -= this.tips.length;
-
-
-				// Activate the tooltip
-				if(idx >= 0 && idx < this.tips.length){
-					this.tips[idx].el.focus();
-					_alltips.activate(this.tips[idx].el);
-				}
 			}
-		});
+
+			// Limit range
+			if(idx < 0) idx += this.tips.length;
+			if(idx > this.tips.length-1) idx -= this.tips.length;
+
+
+			// Activate the tooltip
+			if(idx >= 0 && idx < this.tips.length){
+				this.tips[idx].el.focus();
+				_alltips.activate(this.tips[idx].el);
+			}
+		}
 
 		this.create = function(pts,attr){
 			if(!attr) attr = {};
@@ -202,6 +232,20 @@
 			//}
 			return this;
 		};
+
+		var keymap = {
+			"ArrowLeft": arrow_move,
+			"ArrowRight": arrow_move,
+			"ArrowUp": arrow_move,
+			"ArrowDown": arrow_move,
+		}
+		addEv('keydown',el,{this:this},function(e){
+			if(e.key in keymap){
+				e.preventDefault();
+				e.stopPropagation();
+				keymap[e.key].apply(this, [e]);
+			}
+		});
 		
 		return this;
 	}	// End of tooltip group class
@@ -255,8 +299,13 @@
 			return undefined;
 		};
 
+		if(attr.coord_attributes !== undefined) {
+			this.x = parseFloat(this.el.getAttribute(attr.coord_attributes[0]));
+			this.y = parseFloat(this.el.getAttribute(attr.coord_attributes[1]));
+		}
+
 		this.show = function(){
-			var tip,title,fill,bb,bbo,bbox,off,pad,box,arr,shift,wide,pt2;
+			var tip,title,fill,bb,bbo,bbox,off,pad,box,arr,shift,wide,pt2,tt;
 
 			pt2 = pt.querySelector('path,.marker');
 			if(!pt2) pt2 = pt;

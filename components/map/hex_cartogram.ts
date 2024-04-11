@@ -71,6 +71,7 @@ type HexmapOptions = {
 	matchKey?: string;
 	title?: string;
 	titleProp: string;
+	desc?: string;
 	value?: string;
 	colourValueProp?: string;
 	tools?: { filter?: { label?: string; }, slider?: boolean; };
@@ -101,6 +102,7 @@ export default function (input: { config: HexmapOptions }) {
 		matchKey,
 		tooltip = (label: string, value) => `${label}`,
 		title = "Hexmap",
+		desc = "",
 		titleProp = "n",
 		value = "",
 		colourValueProp,
@@ -522,7 +524,7 @@ export default function (input: { config: HexmapOptions }) {
 		fill = Colour(fill);
 
 		// TODO(@gilesdring) this only supports pointy-top hexes at the moment
-		var html = `<g class="hex" transform="translate(${roundNumber(x)} ${roundNumber(y)})" data-id="${config._id}" role="cell">`;
+		var html = `<g class="hex" data-q="${config.q}" data-r="${config.r}" transform="translate(${roundNumber(x)} ${roundNumber(y)})" data-id="${config._id}" role="cell">`;
 		html += `<path fill="${fill.hex}" d="${hexPath}"><title>${tooltipText}</title></path>`;
 		if(labelText) html += `<text fill="${fill.contast}" text-anchor="middle" dominant-baseline="middle" aria-hidden="true">${labelText}</text>`;
 		html += `</g>`;
@@ -591,8 +593,9 @@ export default function (input: { config: HexmapOptions }) {
 			xmlns:xlink="http://www.w3.org/1999/xlink"
 			data-type="hex-map"
 			vector-effect="non-scaling-stroke"
-			aria-labelledby="title-${uuid}">
-			<title id="title-${uuid}">${title}</title>`;
+			aria-labelledby="title-${uuid} desc-${uuid}">
+			<title id="title-${uuid}">${title}</title>
+			<desc id="desc-${uuid}">${desc}</desc>`;
 	html += '<g class="data-layer" role="table"><g class="series" role="row" tabindex="0" aria-label="Hexagons">';
 	// Sort by name
 	let sorted = sortBy(Object.values(hexes),'n',true);
