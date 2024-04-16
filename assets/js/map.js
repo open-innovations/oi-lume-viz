@@ -84,6 +84,21 @@
 				}
 			}
 
+			// Find next hex
+			idx = getHexWithTooltip.apply(this, [e, _alltips, idx, dx, dy]);
+
+			while(!this.tips[idx].getTooltip()){
+				// Keep trying until we find a hex with a tooltip
+				idx = getHexWithTooltip.apply(this, [e, _alltips, idx, dx, dy]);
+			}
+			// Activate the tooltip
+			if(idx >= 0 && idx < this.tips.length){
+				this.tips[idx].el.focus();
+				_alltips.activate(this.tips[idx].el);
+			}
+		}
+
+		function getHexWithTooltip(e,_alltips,idx,dx,dy){
 			if(e.shiftKey && this.tips[idx] && attr.coord_attributes !== undefined) {
 				var tip = this.tips[idx];
 				var x = tip.x + dx;
@@ -100,11 +115,8 @@
 					var by = b.d[1];
 					return dx != 0 ? (ay==by ? (ax-bx)*dx : Math.abs(ay)-Math.abs(by)) : (ax==bx ? (ay-by)*dy : Math.abs(ax) - Math.abs(bx));
 				});
-				if(closest.length > 0) {
-					idx = closest[0].i;
-				}
-			} else {
-
+				if(closest.length > 0) idx = closest[0].i;
+			}else{
 				// Increment
 				if(e.key == "ArrowLeft" || e.key == "ArrowUp") idx--;
 				else if(e.key == "ArrowRight" || e.key == "ArrowDown") idx++;
@@ -113,13 +125,7 @@
 			// Limit range
 			if(idx < 0) idx += this.tips.length;
 			if(idx > this.tips.length-1) idx -= this.tips.length;
-
-
-			// Activate the tooltip
-			if(idx >= 0 && idx < this.tips.length){
-				this.tips[idx].el.focus();
-				_alltips.activate(this.tips[idx].el);
-			}
+			return idx;
 		}
 
 		attr.keymap = {

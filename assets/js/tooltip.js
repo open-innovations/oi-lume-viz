@@ -246,12 +246,7 @@
 			if(!pt2) pt2 = pt;
 
 			// Get tooltip content
-			tt = "";
-			if(!tt && pt2.querySelector('title')) tt = pt2.querySelector('title').innerHTML;
-			if(!tt && pt.querySelector('title')) tt = pt.querySelector('title').innerHTML;
-			if(!tt) tt = pt.getAttribute('title');
-			if(!tt) tt = pt.getAttribute('aria-label');
-			if(!tt) tt = pt2.getAttribute('aria-label');
+			tt = this.getTooltip(pt2);
 
 			if(!tt){
 				console.warn('No tooltip content found for ',pt);
@@ -378,6 +373,20 @@
 			attr._alltips.active = this;
 
 			return this;
+		};
+
+		this.getTooltip = function(pt2){
+			if(!pt2){
+				pt2 = pt.querySelector('path,.marker');
+				if(!pt2) pt2 = pt;
+			}
+			var tt = "";
+			if(!tt && pt2.querySelector('title')) tt = pt2.querySelector('title').innerHTML;
+			if(!tt && pt.querySelector('title')) tt = pt.querySelector('title').innerHTML;
+			if(!tt) tt = pt.getAttribute('title');
+			if(!tt) tt = pt.getAttribute('aria-label');
+			if(!tt) tt = pt2.getAttribute('aria-label');
+			return tt;
 		};
 
 		this.clear = function(){
