@@ -479,10 +479,9 @@ export default function (input: { config: HexmapOptions }) {
 		
 		const labelProp = <string> config[titleProp];
 		let labelText = labelProcessor(config, <string> (typeof label==="function" ? label(labelProp) : label));
-		let tooltipText = tooltipProcessor(config, <string> (typeof tooltip==="function" ? tooltip(labelProp, valuecol) : (config[value]===undefined ? "{{ n }}" : tooltip)));
+		let tooltipText = tooltipProcessor(config, <string> (typeof tooltip==="function" ? tooltip(labelProp, valuecol) : (config[value]===undefined ? "" : tooltip)));
 
-		const colourValue =
-			<number | string> config[colourValueProp || value] || valuecol;
+		const colourValue = <number | string> config[colourValueProp || value] || valuecol;
 
 		// Calculate the path based on the layout
 		let hexPath: string | undefined = undefined;
