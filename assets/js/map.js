@@ -62,7 +62,7 @@
 			attr.coord_attributes = ["data-q", "data-r"];
 		}
 
-		function arrow_move(e, _alltips) {
+		function arrow_move(e, _alltips){
 			var directions = {
 				"ArrowLeft": [-1,0],
 				"ArrowRight": [1,0],
@@ -92,10 +92,7 @@
 				idx = getHexWithTooltip.apply(this, [e, _alltips, idx, dx, dy]);
 			}
 			// Activate the tooltip
-			if(idx >= 0 && idx < this.tips.length){
-				this.tips[idx].el.focus();
-				_alltips.activate(this.tips[idx].el);
-			}
+			if(idx >= 0 && idx < this.tips.length) _alltips.activate(this.tips[idx].el);
 		}
 
 		function getHexWithTooltip(e,_alltips,idx,dx,dy){

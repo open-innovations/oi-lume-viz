@@ -28,7 +28,7 @@
 .oi-map .labels text { pointer-events: none; }
 
 .oi-map-svg svg.oi-map-map { width: 100%; }
-.oi-map-svg path:focus, .oi-map-svg .marker:focus { outline: none; }
+.oi-map-svg path:focus, .oi-map-svg .marker:focus, .oi-map-svg .area { outline: none; }
 .oi-map-svg .line .selected { stroke-width: 0.4%; }
 
 .oi-zoomable-map .marker:focus { outline: none; }

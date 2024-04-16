@@ -1,6 +1,7 @@
 import { recursiveLookup } from '../../../lib/util.js';
 import { svgEl, newEl, setAttr } from '../../../lib/util/dom.ts';
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
+import { applyReplacementFilters } from "../../../lib/util.js";
 import { Colour, ColourScale, Colours } from "../../../lib/colour/colours.ts";
 import { VisualisationHolder } from '../../../lib/holder.js';
 import { getBackgroundColour } from "../../../lib/colour/colour.ts";
@@ -279,6 +280,26 @@ export function SVGMap(opts){
 	let cs = ColourScale(config.scale);
 	let layerlist = [];
 	let min,max,v,i,l;
+	
+	
+	let tooltipProcessor = function(props,key){
+		var txt = key;
+		// See if this is just a straightforward key
+		if(typeof props[key]==="string") txt = props[key];
+
+		// Keep a dummy version of the value key
+		props._value = config.value;
+
+		if(config.tooltip){
+			// Process replacement filters 
+			txt = applyReplacementFilters(txt,props);
+		}else{
+			// The label is empty so keep it that way
+			txt = "";
+		}
+		return txt;
+	}
+
 
 	// If "bounds" have been sent as a GeoJSON object we'll find the bounds of it
 	config = updateBounds(config);
@@ -302,6 +323,10 @@ export function SVGMap(opts){
 			max = -1e100;
 			v;
 
+			if(config.layers[l].scale){
+				config.scale = config.layers[l].scale;
+				cs = ColourScale(config.scale);
+			}
 			if(config.layers[l].value){
 				for(i = 0; i < config.layers[l].data.length; i++){
 					v = recursiveLookup(config.layers[l].value,config.layers[l].data[i]);
@@ -313,8 +338,24 @@ export function SVGMap(opts){
 			}
 
 			// Override defaults if set
-			if(typeof config.layers[l].min=="number") min = config.layers[l].min;
-			if(typeof config.layers[l].max=="number") max = config.layers[l].max;
+			if(typeof config.layers[l].min=="number"){
+				config.min = config.layers[l].min;
+				min = config.min;
+			}
+			if(typeof config.layers[l].max=="number"){
+				config.max = config.layers[l].max;
+				max = config.max;
+			}
+			// Set some global values from the layer
+			if(typeof config.layers[l].value && typeof config.value==="undefined"){
+				config.value = config.layers[l].value;
+			}
+			if(typeof config.layers[l].key && typeof config.key==="undefined"){
+				config.key = config.layers[l].key;
+			}
+			if(config.layers[l].tooltip && typeof config.tooltip==="undefined"){
+				config.tooltip = config.layers[l].tooltip;
+			}
 
 			layerlist.push({
 				'id': 'data',
@@ -325,14 +366,21 @@ export function SVGMap(opts){
 				'options': mergeDeep({ 'color': '#b2b2b2' },config.layers[l].options||{}),
 				'values': { 'key': config.layers[l].key, 'geokey': config.layers[l].geojson.key||"", 'value': config.layers[l].value, 'label':config.layers[l].tooltip, 'min':min, 'max': max, 'data': config.layers[l].data, 'colour': 'red' },
 				'style': function(feature,el,type){
-					var v,code,i,title,row,val;
+					var v,code,i,title,row,val,valuecol,k;
 					v = this.attr.values;
+					valuecol = -1;
 					code = feature.properties[v.geokey];
 					row = {};
 
 					for(i = 0; i < v.data.length; i++){
-						if(v.data[i][v.key] == code) row = v.data[i];
+						if(v.data[i][v.key] == code) valuecol = i;
 					}
+					if(valuecol >= 0){
+						row = clone(v.data[valuecol]);
+						// Add geojson properties
+						row.geojson = {'properties':feature.properties||{}};
+					}
+
 
 					if(typeof v.value==="string"){
 						val = recursiveLookup(v.value,row);
@@ -353,16 +401,13 @@ export function SVGMap(opts){
 					if(row.colour === undefined) row.colour = defaultbg;
 
 					if(row){
-						if(typeof v.label==="string"){
-							val = recursiveLookup(v.label,row);
-							if(typeof val!=="string"){
-								//console.warn('The tooltip lookup "'+v.label+'" does not return a string.',val,row);
-								val = "";
-							}
-							if(val){
+						if(valuecol >= 0){
+							let tooltipText = tooltipProcessor(row, v.label);
+							if(typeof tooltipText!=="string") tooltipText = "";
+							if(tooltipText){
 								// Add a text label 
 								title = newEl('title');
-								title.innerHTML = val;
+								title.innerHTML = tooltipText;
 								el.appendChild(title);
 							}
 						}
@@ -547,7 +592,7 @@ function BasicMap(config,attr){
 				}
 			}
 			
-			html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
+			html += '\n<script>(function(root){ OI.FilterMap('+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
 		}
 		return holder.wrap('<div class="oi-map-holder"><div class="oi-map-inner">'+html+'</div></div>');
 	};

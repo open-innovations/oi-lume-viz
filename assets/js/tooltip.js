@@ -119,7 +119,7 @@
 			var match = this.get(el);
 			if(match){
 				match.show();
-				match.el.focus();
+				match.el.focus();//{preventScroll:true});
 				match.lock();
 			}
 		};
@@ -427,8 +427,17 @@
 		};
 
 		// Add events
-		addEv('click',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.toggleLock().toggle(); pt.focus(); });
-		addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.show(); });
+		addEv('click',pt,{'this':this,attr:attr},function(e){
+			e.preventDefault();
+			e.stopPropagation();
+			e.stopImmediatePropagation();
+			var samehex = (e.data.attr._alltips && "locked" in e.data.attr._alltips && typeof e.data.attr._alltips.locked==="object" && e.data.attr._alltips.locked!=null && this.el==e.data.attr._alltips.locked.el);
+			if(samehex) this.unlock();
+			this.toggle();
+			this.show();
+			if(!samehex) this.lock();
+		});
+		addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); this.show(); });
 		addEv('mouseover',(attr['hover-element']||pt),{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); if(!attr._alltips.locked){ this.show(); } });
 		addEv('touchstart',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.toggle(); });
 

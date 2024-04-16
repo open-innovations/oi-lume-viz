@@ -41,7 +41,7 @@
 				}
 			}
 		}
-		uid = p.querySelector('svg.oi-map-svg').getAttribute('id');
+		uid = p.querySelector('svg.oi-map-map').getAttribute('id');
 		as = p.querySelectorAll('.data-layer .hex');
 
 		areas = new Array(as.length);
@@ -294,7 +294,7 @@
 				}
 
 				// Use string if empty
-				if((typeof p1==="string" && !p1) || typeof p1==="null"){
+				if((typeof p1==="string" && !p1) || typeof p1==="null" || p1==null){
 					rtn = bits[b].match(/^\"([^\"]*)\"$/);
 					if(rtn) p1 = rtn[1];
 				}
