@@ -82,6 +82,7 @@ export default function (input: {
 				"value": (options.columns[col].name && typeof options.data[row][options.columns[col].name]!=="undefined" ? options.data[row][options.columns[col].name] : ""),
 				"done": false
 			};
+			cells[row]._data = options.data[row];
 			let v = cells[row][col].value;
 			if(scales[col].scale){
 				if(typeof v==="string") v = parseFloat(v);
@@ -92,8 +93,39 @@ export default function (input: {
 			}
 		}
 	}
+	if("sort" in options){
+		if(typeof options.sort==="string") options.sort = [options.sort];
+		let sortOrder = new Array(options.sort.length);
+		for(let s = 0; s < options.sort.length; s++){
+			for(let col = 0; col < options.columns.length; col++){
+				if(options.columns[col].name==options.sort[s]){
+					sortOrder[s] = col;
+				}
+			}
+		}
+		cells = cells.sort(function(a,b){
+			let r,s,col,f1,f2;
+			for(s = 0; s < sortOrder.length; s++){
+				col = sortOrder[s];
+				// Convert to a number if necessary
+				f1 = parseFloat(a[col].value);
+				f2 = parseFloat(b[col].value);
+				if(f1==a[col].value) a[col].value = f1;
+				if(f2==b[col].value) b[col].value = f2;
+				if(typeof a[col].value==="string"){
+					r = a[col].value.localeCompare(b[col].value);
+				}else{
+					if(a[col].value > b[col].value) r = 1;
+					else if(a[col].value < b[col].value) r = -1;
+					else r = 0;
+				}
+				if(r != 0) return r;
+			}
+			return 1;
+		});
+	}
 
-	if("order" in options && options.order == "reverse") cells = cells.reverse();
+	if("reverse" in options && options.reverse) cells = cells.reverse();
 
 	let sty = '';
 	if(options.width) sty += 'width:'+options.width+';';
@@ -121,7 +153,10 @@ export default function (input: {
 				if(n>0) cellprops += ' rowspan="'+(n+1)+'"';
 				let colour = "";
 				let sty = "";
-				if(options.columns[col].colour) colour = namedColours.get(options.columns[col].colour);
+				if(options.columns[col].colour){
+					if(options.columns[col].colour in cells[row]._data) colour = colour = namedColours.get(cells[row]._data[options.columns[col].colour]);
+					else colour = namedColours.get(options.columns[col].colour);
+				}
 				if(options.columns[col].scale){
 					let v = cells[row][col].value;
 					if(typeof v==="string") v = parseFloat(v);
