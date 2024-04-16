@@ -189,7 +189,7 @@ examples:
           min: 0
   - title: "Sort by column"
     description: |
-      If you would like to sort the table by a particular column, you can set `sort` to the column `name`. You can also `reverse` the direction of the sort. Note that `sort` is applied before `mergerows`.
+      If you would like to pre-sort the table by a particular column, you can set `sort` to the column `name`. You can also `reverse` the direction of the sort. Note that `sort` is applied before `mergerows`.
     config:
       width: "100%"
       data:
@@ -226,19 +226,16 @@ examples:
       columns:
         - name: "Local Authority"
           template: "{{ page }}"
-          sortable: true
         - name: "CO2 (g)"
           template: "{{ co2 | toFixed(2) }}"
           align: center
           scale: Heat_r
           min: 0
-          sortable: true
         - name: "Size (MB)"
           template: "{{ size | toFixed(2) }}"
           align: center
           scale: Heat_r
           min: 0
-          sortable: true
       sort: "Size (MB)"
       reverse: true
   - title: "Sortable columns"
