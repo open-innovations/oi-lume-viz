@@ -511,7 +511,7 @@ function BasicMap(config,attr){
 
 	// Add the SVG
 	this.svg = svgEl('svg');
-	setAttr(this.svg,{'class':'','xmlns':'http://www.w3.org/2000/svg','version':'1.1','width':this.w,'height':this.h,'viewBox':'-180 0 360 180','overflow':'hidden','style':'max-width:100%;max-height:100%;height:auto;background:'+(attr.background||"white")+';aspect-ratio:'+this.w+' / '+this.h+';','preserveAspectRatio':'xMidYMin meet'});
+	setAttr(this.svg,{'class':'oi-map-map','xmlns':'http://www.w3.org/2000/svg','version':'1.1','width':this.w,'height':this.h,'viewBox':'-180 0 360 180','overflow':'hidden','style':'width:'+(config.width ? config.width+"px" : "100%")+';max-width:100%;max-height:100%;margin:auto;height:auto;background:'+(attr.background||"white")+';aspect-ratio:'+this.w+' / '+this.h+';','preserveAspectRatio':'xMidYMin meet'});
 	if(config['data-type']) setAttr(this.svg,{'data-type':config['data-type']});
 	el.appendChild(this.svg);
 

@@ -1,5 +1,3 @@
-import { clone } from "../../lib/util/clone.ts";
-import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { SVGMap } from "./legacy/map.js";
 import { buildLayers } from "./legacy/layers.ts";
 import { Bounds, ColourScaleDefinition, GeoJson, dataLayer, backLayer, gratLayer, lablLayer, markLayer } from "./types.ts";

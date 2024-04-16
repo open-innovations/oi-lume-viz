@@ -7,9 +7,9 @@ import { Colour } from '../lib/colour/colours.ts';
 import { getColourScale } from '../lib/colour/colour-scale.ts';
 import { getSeriesColour } from '../lib/colour/colour.ts';
 
-import csvLoader from 'https://deno.land/x/oi_lume_utils@v0.3.0/loaders/csv-loader.ts';
+import csvLoader from 'https://deno.land/x/oi_lume_utils@v0.4.0/loaders/csv-loader.ts';
 import jsonLoader from "lume/core/loaders/json.ts";
-import autoDependency from 'https://deno.land/x/oi_lume_utils@v0.3.0/processors/auto-dependency.ts';
+import autoDependency from 'https://deno.land/x/oi_lume_utils@v0.4.0/processors/auto-dependency.ts';
 
 // Code highlighting
 import code_highlight from "lume/plugins/code_highlight.ts";
@@ -29,7 +29,7 @@ const site = lume({
 
 site.loadAssets([".css"]);
 site.loadAssets([".js"]);
-site.loadData(['.csv'], csvLoader);
+site.loadData(['.csv'], csvLoader({ basic: true }));
 site.loadData([".geojson"], jsonLoader);
 
 // TODO(@giles) Make this work in all the places!

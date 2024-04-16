@@ -230,7 +230,7 @@ export default function (input: { config: HexmapOptions }) {
 	for(var key in hexes){
 		hexes[key]["_id"] = key;
 	}
-	
+
 	// TODO All this colourscale handling needs to be placed in a utlity function or class
 	const cs = (typeof scale==="string") ? ColourScale(scale) : scale;
 
@@ -514,11 +514,12 @@ export default function (input: { config: HexmapOptions }) {
 				if(isNaN(config[colourValueProp || value])) fill = defaultbg;
 				else fill = fillColour(colourValue as never);
 			}
-			if(fill.indexOf('NaN')>0){
-				console.log(colourValueProp,value,config[colourValueProp || value],typeof config[colourValueProp || value],fill);
+			if(typeof fill==="string"){
+				if(fill.indexOf('NaN')>0){
+					console.log(colourValueProp,value,config[colourValueProp || value],typeof config[colourValueProp || value],fill);
+				}
 			}
 		}
-
 
 		// Make sure it is a valid colour at this point - defaults to background colour
 		fill = Colour(fill);
@@ -581,7 +582,7 @@ export default function (input: { config: HexmapOptions }) {
 
 	var html = `<div class="oi-map-holder"><div class="oi-map-inner"><svg
 			id="hexes-${uuid}"
-			class="oi-map-svg"
+			class="oi-map-map"
 			overflow="visible"
 			viewBox="
 				${-margin - qWidth / 2} ${-margin - hexSide}
