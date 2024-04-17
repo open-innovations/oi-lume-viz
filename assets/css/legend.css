@@ -18,8 +18,4 @@
 .oi-horizontal .oi-legend-item { transform: translate3d(50%,0,0); }
 .oi-vertical .oi-legend-item { transform: translate3d(0,-50%,0); }
 .oi-vertical .oi-legend-item:before { position: relative; content: ""; }
-/*
-.oi-left .oi-vertical .oi-legend-scale { order: 1; }
-.oi-left .oi-vertical .oi-legend-items { position: relative; }
-.oi-left .oi-vertical .oi-legend-item { right: 0; }
-*/
+.oi-zoomable-map .oi-continuous.oi-vertical { margin-top: 1em; }

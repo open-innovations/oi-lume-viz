@@ -168,7 +168,7 @@ examples:
   - title: "Add a legend"
     description: |
       The same hex layout as above but this time we colour the hexes by a defined <code>scale</code> with an optional <code>min</code> and <code>max</code>. The colour <code>scale</code> is a comma separated string of colour stops each of the form <code>rgb(r,g,b) x%</code> in the style of a CSS linear gradient.
-      We also define a <code>legend</code> with 5 levels - three of the levels are given labels. We customise the <code>tooltip</code> label to make sure it includes a percentage sign.
+      We also define a <code>legend</code> with 5 levels - three of the levels are given labels. We customise the <code>tooltip</code> labels.
     config:
       hexjson: hexjson.yorks
       data:
@@ -193,11 +193,11 @@ examples:
           - value: 160000
             label: 160k
           - value: 120000
-            label: 120k
+            label: ''
           - value: 80000
             label: 80k
           - value: 40000
-            label: 40k
+            label: ''
           - value: 0
             label: '0'
   - title: "Custom tooltips"
