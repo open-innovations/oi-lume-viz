@@ -6,3 +6,20 @@
 .oi-legend-inner .oi-legend-item svg.oi-legend-icon { display: table-cell; vertical-align: middle; float: none; }
 .oi-left .oi-legend-item, .oi-right .oi-legend-item { padding: 0; margin-right: 0; line-height: 1.25em; margin-bottom: 1px; display: grid; grid-template-columns: auto 1fr; }
 .oi-zoomable-map .oi-legend { margin: 0.5em; }
+
+.oi-continuous { display: flex; position: relative; margin: auto; }
+.oi-legend-inner.oi-vertical { flex-direction: row; }
+.oi-legend-inner.oi-horizontal { flex-direction: column; }
+.oi-horizontal .oi-legend-scale { height: 1.25em; }
+.oi-vertical .oi-legend-scale { width: 1.25em; }
+.oi-horizontal .oi-legend-items { height: 2em; }
+.oi-vertical .oi-legend-items { }
+.oi-legend-inner.oi-continuous .oi-legend-item { position:absolute; padding: 0.25em; }
+.oi-horizontal .oi-legend-item { transform: translate3d(50%,0,0); }
+.oi-vertical .oi-legend-item { transform: translate3d(0,-50%,0); }
+.oi-vertical .oi-legend-item:before { position: relative; content: ""; }
+/*
+.oi-left .oi-vertical .oi-legend-scale { order: 1; }
+.oi-left .oi-vertical .oi-legend-items { position: relative; }
+.oi-left .oi-vertical .oi-legend-item { right: 0; }
+*/
