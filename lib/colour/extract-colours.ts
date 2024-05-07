@@ -9,14 +9,14 @@ interface ColourScaleStop {
 
 export function extractColours(gradient: string): ColourScaleStop[] {
   const stops = gradient.match(
-    /(([a-z]{3,4}\([^\)]+\)|#[A-Fa-f0-9]{6}) \d+\%?)/g,
+    /(([a-z]{3,4}\([^\)]+\)|#[A-Fa-f0-9]{6}) [0-9\.]+\%?)/g,
   );
   if (stops === null) throw "Can't parse gradient string: \""+gradient+"\"";
   const cs: ColourScaleStop[] = [];
   for (let i = 0; i < stops.length; i++) {
     let v = Infinity;
     let aspercent = false;
-    stops[i] = stops[i].replace(/ (\d+\%?)$/, function (_, p1) {
+    stops[i] = stops[i].replace(/ ([0-9\.]+\%?)$/, function (_, p1) {
       if (p1.match("%")) aspercent = true;
       v = parseFloat(p1);
       return "";
