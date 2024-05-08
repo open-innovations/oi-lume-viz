@@ -302,6 +302,44 @@ examples:
             marker: triangle
             rotate: 180
             size: 32
+  - title: "Gaps in series"
+    description: |
+      This is a test to show what happens if data is missing in a series. In this case series 1 has no value at <code>x=0.52</code> and series 2 is missing values for <code>x=0.7</code> and <code>x=0.8</code>.
+    config:
+      legend:
+        show: true     # Default to false
+      data: test.data.scatter-chart-data
+      axis:
+        x:
+          grid:
+            show: true
+          tick:
+            spacing: 0.2
+        y:
+          grid:
+            show: true
+          tick:
+            spacing: 25
+          max: 100
+      series:
+        - title: Series 1
+          x: "value 1"
+          y: "Series 1"
+          points:
+            size: 8
+        - title: Series 2
+          x: "value 2"
+          y: "Series 2"
+          points:
+            marker: square
+            size: 16
+        - title: Series 3
+          x: "value 3"
+          y: "Series 3"
+          points:
+            marker: triangle
+            rotate: 180
+            size: 32
 options: |
   <ul>
   <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>

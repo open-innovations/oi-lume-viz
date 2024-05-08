@@ -27,15 +27,16 @@ function roundNumber(v,n){
 	if(typeof v==="string"){
 		// Try to parse it into a number
 		v = parseFloat(v);
-		if(isNaN(v)){
-			console.log('Not a number:',v,typeof v);
-			throw new TypeError('NaN in roundNumber()');
-		}
 	}
-	if(typeof v==="number" && !isNaN(v)){
-		return parseFloat(v.toFixed(n));
+	if(typeof v==="number"){
+		if(isNaN(v)){
+			console.warn('Not a number:',v,typeof v);
+			return '?';
+		}else{
+			return parseFloat(v.toFixed(n));
+		}
 	}else{
-		console.log('The value passed to roundNumber ('+v+') is of type '+(typeof v));
+		console.warn('The value passed to roundNumber ('+v+') is of type '+(typeof v));
 		throw new TypeError('Not a number');
 		return v;
 	}

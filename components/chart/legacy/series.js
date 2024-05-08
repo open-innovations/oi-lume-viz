@@ -115,20 +115,23 @@ export function Series(s,props,data,extra){
 				}
 			}
 
-			// Do we show the points
+			// Do we show the points?
 			if(opt.points.show){
 
-				pts[i].mark = new Marker(opt.points);
-				pts[i].mark.setAnimation({'duration':opt.duration});
-				pts[i].mark.setAttr(datum);
-				pts[i].mark.setAttr({'data-series':s+1,'role':'cell'}); // Update the point
-				pts[i].mark.addClass('marker');
-				
-				// Add the marker element to the series element
-				add(pts[i].mark.el,this.el);
+				// Only include a marker if both x and y values aren't NaN
+				if(!isNaN(data[i].x) && !isNaN(data[i].y)){
+					pts[i].mark = new Marker(opt.points);
+					pts[i].mark.setAnimation({'duration':opt.duration});
+					pts[i].mark.setAttr(datum);
+					pts[i].mark.setAttr({'data-series':s+1,'role':'cell'}); // Update the point
+					pts[i].mark.addClass('marker');
+					
+					// Add the marker element to the series element
+					add(pts[i].mark.el,this.el);
 
-				// Add the title to the marker
-				add(pts[i].title,pts[i].mark.el);
+					// Add the title to the marker
+					add(pts[i].title,pts[i].mark.el);
+				}
 			}
 
 		}

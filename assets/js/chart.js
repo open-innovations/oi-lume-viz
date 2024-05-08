@@ -185,43 +185,46 @@
 						d = -1;
 						idx = -1;
 						for(i = 0; i < series[sid].array.length; i++){
-							p = series[sid].array[i].el.getBoundingClientRect();
-							if(typ=="category-chart"){
-								dx = Math.abs((p.x+p.width/2)-e.clientX);	// Find distance from circle centre to cursor
-								dy = Math.abs((p.y+p.width/2)-e.clientY);
-								if(dy < min && dy < dist){
-									idx = i;
-									dist = dy;
-									d = Math.sqrt(dx*dx + dy*dy);
-								}
-							}else if(typ=="line-chart"){
-								dx = Math.abs((p.x+p.width/2)-e.clientX);	// Find distance from circle centre to cursor
-								dy = Math.abs((p.y+p.width/2)-e.clientY);
-								if(dx < min && dx < dist){
-									idx = i;
-									dist = dx;
-									d = Math.sqrt(dx*dx + dy*dy);
-								}
-							}else if(typ=="bar-chart"){
-								// As the bars run horizontally, we just check if the vertical position lines up with a bar
-								if(e.clientY >= p.top && e.clientY <= p.top+p.height){
-									idx = i;
-								}
-							}else if(typ=="stacked-bar-chart"){
-								if(s==this.selected){
-									// If only one is selected we just check the vertical position
-									if(e.clientY >= p.top && e.clientY <= p.top+p.height) idx = i;									
+							// Series may contain empty points
+							if(series[sid].array[i] && series[sid].array[i].el){
+								p = series[sid].array[i].el.getBoundingClientRect();
+								if(typ=="category-chart"){
+									dx = Math.abs((p.x+p.width/2)-e.clientX);	// Find distance from circle centre to cursor
+									dy = Math.abs((p.y+p.width/2)-e.clientY);
+									if(dy < min && dy < dist){
+										idx = i;
+										dist = dy;
+										d = Math.sqrt(dx*dx + dy*dy);
+									}
+								}else if(typ=="line-chart"){
+									dx = Math.abs((p.x+p.width/2)-e.clientX);	// Find distance from circle centre to cursor
+									dy = Math.abs((p.y+p.width/2)-e.clientY);
+									if(dx < min && dx < dist){
+										idx = i;
+										dist = dx;
+										d = Math.sqrt(dx*dx + dy*dy);
+									}
+								}else if(typ=="bar-chart"){
+									// As the bars run horizontally, we just check if the vertical position lines up with a bar
+									if(e.clientY >= p.top && e.clientY <= p.top+p.height){
+										idx = i;
+									}
+								}else if(typ=="stacked-bar-chart"){
+									if(s==this.selected){
+										// If only one is selected we just check the vertical position
+										if(e.clientY >= p.top && e.clientY <= p.top+p.height) idx = i;									
+									}else{
+										// Check if the vertical position lines up with a bar and the horizontal position is within the bar
+										if(e.clientY >= p.top && e.clientY <= p.top+p.height && e.clientX >= p.left && e.clientX <= p.left+p.width) idx = i;
+									}
 								}else{
-									// Check if the vertical position lines up with a bar and the horizontal position is within the bar
-									if(e.clientY >= p.top && e.clientY <= p.top+p.height && e.clientX >= p.left && e.clientX <= p.left+p.width) idx = i;
-								}
-							}else{
-								dx = Math.abs((p.x+p.width/2)-e.clientX);	// Find distance from circle centre to cursor
-								dy = Math.abs((p.y+p.width/2)-e.clientY);
-								d = Math.sqrt(dx*dx + dy*dy);
-								if(d < min && d < dist){
-									idx = i;
-									dist = d;
+									dx = Math.abs((p.x+p.width/2)-e.clientX);	// Find distance from circle centre to cursor
+									dy = Math.abs((p.y+p.width/2)-e.clientY);
+									d = Math.sqrt(dx*dx + dy*dy);
+									if(d < min && d < dist){
+										idx = i;
+										dist = d;
+									}
 								}
 							}
 						}

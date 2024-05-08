@@ -72,8 +72,10 @@ export function updateAxis (
 							if(!config.data[i][key+'__dummy']) config.data[i][key+'__dummy'] = v;
 						}
 						if(typeof v==="number"){
-							range.min = Math.min(range.min,v);
-							range.max = Math.max(range.max,v);
+							if(!isNaN(v)){
+								range.min = Math.min(range.min,v);
+								range.max = Math.max(range.max,v);
+							}
 						}else{
 							ncategories = config.data.length;
 						}

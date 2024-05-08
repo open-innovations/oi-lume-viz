@@ -69,8 +69,8 @@ export function Animate(e,attr){
 							}
 						}
 					}else{
-						for(i = 0; i < a.length; i++) a2 += (i>0 ? 'L':'M')+roundTo(a[i].x, 2)+','+roundTo(a[i].y, 2);
-						for(i = 0; i < b.length; i++) b2 += (i>0 ? 'L':'M')+roundTo(b[i].x, 2)+','+roundTo(b[i].y, 2);
+						a2 += buildLine(a);
+						b2 += buildLine(b);
 						if(a.length > 0 && a.length < b.length){
 							for(i = 0; i < b.length-a.length; i++) a2 += 'L'+roundTo(a[a.length-1].x, 2)+','+roundTo(a[a.length-1].y, 2);
 						}
@@ -102,4 +102,30 @@ export function Animate(e,attr){
 		return this;
 	};
 	return this;
+}
+
+
+function buildLine(arr,a,b){
+	let p = '',gap = 0,i,typ,num = new Array(arr.length),bad = false;
+	if(typeof a!=="number") a = 0;
+	if(typeof b!=="number") b = arr.length;
+	// First work out if the x and y values are numbers
+	for(i = a; i < b; i++){
+		num[i] = !(isNaN(arr[i].x) || isNaN(arr[i].y));
+		if(!num[i]) bad = true;
+	}
+	for(i = a; i < b; i++){
+		if(num[i]){
+			// Do we move or draw a line?
+			if(gap > 0) typ = 'M';
+			else typ = (p ? 'L':'M');
+			// reset the gap
+			gap = 0;
+			p += typ+roundTo(arr[i].x, 2)+','+roundTo(arr[i].y, 2)
+		}else{
+			typ = '';
+			gap++;
+		}
+	}
+	return p;
 }
