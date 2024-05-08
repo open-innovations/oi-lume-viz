@@ -30,7 +30,6 @@ export const components = [
   'chart/waffle.ts',
   'dashboard.ts',
   'table.ts',
-  'graph/line.ts',
   'hierarchy/treemap.ts',
   'map/hex_cartogram.ts',
   'map/svg.ts',
