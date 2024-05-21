@@ -115,11 +115,13 @@ export function Series(s,props,data,extra){
 				}
 			}
 
+			pts[i].valid = (typeof data[i].x==="number" && !isNaN(data[i].x) && typeof data[i].y==="number" && !isNaN(data[i].y));
+
 			// Do we show the points?
 			if(opt.points.show){
 
-				// Only include a marker if both x and y values aren't NaN
-				if(!isNaN(data[i].x) && !isNaN(data[i].y)){
+				// Only include a marker if we have real x and y values
+				if(pts[i].valid){
 					pts[i].mark = new Marker(opt.points);
 					pts[i].mark.setAnimation({'duration':opt.duration});
 					pts[i].mark.setAttr(datum);
@@ -167,8 +169,12 @@ export function Series(s,props,data,extra){
 			// Set some initial values for the bar
 			if(pts[i].bar) setAttr(pts[i].bar,{'r':r,'fill':data[i].colour||opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
 			
-			ps = opt.getXY(data[i].x,data[i].y);
-			p.push(ps);
+			if(pts[i].valid){
+				ps = opt.getXY(data[i].x,data[i].y);
+				p.push(ps);
+			}else{
+				p.push({'x':null,'y':null});
+			}
 
 			// Style error bars
 			if(pts[i].errorbar && data[i].error){
@@ -212,6 +218,7 @@ export function Series(s,props,data,extra){
 
 			// Store the calculated points
 			pts[i].old = ps;
+
 		}
 
 		// Update animation

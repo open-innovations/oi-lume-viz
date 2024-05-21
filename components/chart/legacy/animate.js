@@ -16,7 +16,7 @@ export function Animate(e,attr){
 		e.querySelectorAll('animate').forEach(function(ev){ ev.parentNode.removeChild(ev); });
 
 		c = 0;
-		if(typeof opt.curvature==="number" && opt.curvature > 0) c = Math.min(1,opt.curvature);
+		if(typeof opt.curvature==="number" && opt.curvature >= 0) c = Math.min(1,opt.curvature);
 
 		for(n in props){
 			if(n){
@@ -26,58 +26,9 @@ export function Animate(e,attr){
 				a2 = null;
 				b2 = null;
 				if(tag=="path"){
-					a2 = "";
-					b2 = "";
-					if(c > 0){
-						// Would join points with curves
-						for(i = 0; i < a.length; i++){
-							if(i==0){
-								a2 += 'M'+roundTo(a[i].x, 2)+','+roundTo(a[i].y, 2);
-							}else{
-								dx = (a[i].x - a[i-1].x)/2;
-								// Create a cubic bezier curve from the last point to the current point
-								a2 += (i==1 ? 'C'+roundTo(a[i-1].x + c*dx, 2)+','+roundTo(a[i-1].y, 2) : 'S');
-								a2 += ' '+roundTo(a[i].x - c*dx, 2)+','+roundTo(a[i].y, 2);
-								a2 += ' '+roundTo(a[i].x, 2)+','+roundTo(a[i].y, 2);
-							}
-						}
-						if(a.length > 0 && a.length < b.length){
-							j = a.length-1;
-							for(i = 0; i < b.length-a.length; i++){
-								a2 += (i==1 ? 'C'+roundTo(a[j-1].x + c*dx, 2)+','+roundTo(a[j-1].y, 2) : 'S');
-								a2 += ' '+roundTo(a[j].x - c*dx, 2)+','+roundTo(a[j].y, 2);
-								a2 += ' '+roundTo(a[j].x, 2)+','+roundTo(a[j].y, 2);
-							}
-						}
-						for(i = 0; i < b.length; i++){
-							if(i==0){
-								b2 += 'M'+roundTo(b[i].x, 2)+','+roundTo(b[i].y, 2);
-							}else{
-								dx = (b[i].x - b[i-1].x)/2;
-								// Create a cubic bezier curve from the last point to the current point
-								b2 += (i==1 ? 'C'+roundTo(b[i-1].x + c*dx, 2)+','+roundTo(b[i-1].y, 2) : 'S');
-								b2 += ' '+roundTo(b[i].x - c*dx, 2)+','+roundTo(b[i].y, 2);
-								b2 += ' '+roundTo(b[i].x, 2)+','+roundTo(b[i].y, 2);
-							}
-						}
-						if(b.length > 0 && b.length < a.length){
-							j = b.length-1;
-							for(i = 0; i < a.length-b.length; i++){
-								b2 += (i==1 ? 'C'+roundTo(b[j-1].x + c*dx, 2)+','+roundTo(b[j-1].y, 2) : 'S');
-								b2 += ' '+roundTo(b[j].x - c*dx, 2)+','+roundTo(b[j].y, 2);
-								b2 += ' '+roundTo(b[j].x, 2)+','+roundTo(b[j].y, 2);
-							}
-						}
-					}else{
-						a2 += buildLine(a);
-						b2 += buildLine(b);
-						if(a.length > 0 && a.length < b.length){
-							for(i = 0; i < b.length-a.length; i++) a2 += 'L'+roundTo(a[a.length-1].x, 2)+','+roundTo(a[a.length-1].y, 2);
-						}
-						if(b.length > 0 && b.length < a.length){
-							for(i = 0; i < a.length-b.length; i++) b2 += 'L'+roundTo(b[b.length-1].x, 2)+','+roundTo(b[b.length-1].y, 2);
-						}
-					}
+					a2 = buildLine(a,{'curvature':c})+finishLine(a,b,{'curvature':c});
+					b2 = buildLine(b,{'curvature':c})+finishLine(b,a,{'curvature':c});
+
 					if(!a2) a2 = null;
 				}else{
 					if(a) a2 = clone(a);
@@ -104,24 +55,66 @@ export function Animate(e,attr){
 	return this;
 }
 
+function finishLine(a,b,opt){
+	if(!opt) opt = {};
+	let c = (typeof opt.curvature==="number" ? opt.curvature : 0); 
+	let p = '';
+	if(c == 0){
+		if(a.length > 0 && a.length < b.length){
+			for(i = 0; i < b.length-a.length; i++) p += 'L'+roundTo(a[a.length-1].x, 2)+','+roundTo(a[a.length-1].y, 2);
+		}
+	}else{
+		if(a.length > 0 && a.length < b.length){
+			j = a.length-1;
+			for(i = 0; i < b.length-a.length; i++){
+				p += (i==1 ? 'C'+roundTo(a[j-1].x + c*dx, 2)+','+roundTo(a[j-1].y, 2) : 'S');
+				p += ' '+roundTo(a[j].x - c*dx, 2)+','+roundTo(a[j].y, 2);
+				p += ' '+roundTo(a[j].x, 2)+','+roundTo(a[j].y, 2);
+			}
+		}
+	}
+	return p;
+}
 
-function buildLine(arr,a,b){
-	let p = '',gap = 0,i,typ,num = new Array(arr.length),bad = false;
-	if(typeof a!=="number") a = 0;
-	if(typeof b!=="number") b = arr.length;
+
+function buildLine(arr,opt){
+	let a,b,c,p = '',gap = 0,i,typ,num = new Array(arr.length),prevgood = null,dx;
+	if(!opt) opt = {};
+	a = (typeof opt.a==="number" ? opt.a : 0);
+	b = (typeof opt.b==="number" ? opt.b : arr.length);
+	c = (typeof opt.curvature==="number" ? opt.curvature : 0); 
 	// First work out if the x and y values are numbers
 	for(i = a; i < b; i++){
-		num[i] = !(isNaN(arr[i].x) || isNaN(arr[i].y));
-		if(!num[i]) bad = true;
+		num[i] = (typeof arr[i].x==="number" && typeof arr[i].x==="number" && !isNaN(arr[i].x) && !isNaN(arr[i].y));
 	}
 	for(i = a; i < b; i++){
 		if(num[i]){
-			// Do we move or draw a line?
-			if(gap > 0) typ = 'M';
-			else typ = (p ? 'L':'M');
+			if(c == 0){
+				// No curvature
+
+				// Do we move or draw a line?
+				if(gap > 0) typ = 'M';
+				else typ = (p ? 'L':'M');
+				p += typ+roundTo(arr[i].x, 2)+','+roundTo(arr[i].y, 2)
+
+			}else{
+				// Curvature
+
+				// Join points with curves
+				if(!p || gap > 0 || !prevgood){
+					p += 'M'+roundTo(arr[i].x, 2)+','+roundTo(arr[i].y, 2);
+				}else{
+					dx = (arr[i].x - prevgood.x)/2;
+					// Create a cubic bezier curve from the last good point to the current point
+					p += (i==1 ? 'C'+roundTo(prevgood.x + c*dx, 2)+','+roundTo(prevgood.y, 2) : 'S');
+					p += ' '+roundTo(arr[i].x - c*dx, 2)+','+roundTo(arr[i].y, 2);
+					p += ' '+roundTo(arr[i].x, 2)+','+roundTo(arr[i].y, 2);
+				}
+				prevgood = arr[i];
+			}
 			// reset the gap
 			gap = 0;
-			p += typ+roundTo(arr[i].x, 2)+','+roundTo(arr[i].y, 2)
+
 		}else{
 			typ = '';
 			gap++;
