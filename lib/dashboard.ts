@@ -27,6 +27,7 @@ export type DashboardOptions = {
   note: string;
   /** */
   width: string;
+  fillna: string;
   /** */
   units: {
     prefix: string;
@@ -49,6 +50,7 @@ export function dashboard(config: DashboardOptions){
     note,
     width,
     units,
+	fillna,
     class: className,
   } = config;
 
@@ -120,8 +122,13 @@ export function dashboard(config: DashboardOptions){
     if(typeof panels[p].precision==="number") panel += ' data-precision="'+panels[p].precision+'"';
     panel += '>';
     panel += units?.prefix ? data[idx][units.prefix] || '' : ''
-    panel += (data[idx][value] as string).toLocaleString();
-    panel += units?.postfix ? data[idx][units.postfix] || '' : ''
+    if(typeof v.toLocalString==="function"){
+        panel += (data[idx][value] as string).toLocaleString();
+    }else{
+        if(v) panel += v;
+        else panel += (typeof fillna==="undefined") ? "&ndash;" : fillna;
+	}
+	panel += units?.postfix ? data[idx][units.postfix] || '' : ''
     panel += '</span>';
 
     if(note && data[idx][note])

@@ -121,7 +121,6 @@
 			if(typeof val!=="number"){
 				val = el.getAttribute('data')||el.innerHTML;
 				if(val) val = parseFloat(val);
-				el.innerHTML = '';
 			}
 			start = new Date();
 			pre = el.getAttribute('data-prefix')||'';
@@ -142,7 +141,7 @@
 				}
 			}
 			// If the value is a number we animate it
-			if(typeof val==="number") frame();
+			if(typeof val==="number" && !isNaN(val)) frame();
 			return;			
 		}
 		// Shorten big numbers
