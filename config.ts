@@ -3,6 +3,7 @@ export const assets = [
   'js/chart-calendar.js',
   'js/chart-ranking.js',
   'js/colours.js',
+  'js/contrast-colour.js',
   'js/dashboard.js',
   'js/map.js',
   'js/map-filter.js',
