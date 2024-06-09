@@ -609,7 +609,7 @@ export default function (input: { config: HexmapOptions }) {
 	if(!tools) tools = {};
 	if(tools.filter){
 		if(!tools.filter.position) tools.filter.position = "top left";
-		holder.addDependencies(['/js/contrast-colour.js','/js/map-filter.js']);
+		holder.addDependencies(['/js/map-filter.js']);
 		var filterdata = {};
 		// We want to use a sorted version of the data that is filtered to just what we need
 		for(let i = 0; i < sorted.length; i++){
