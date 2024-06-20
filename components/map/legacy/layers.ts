@@ -4,6 +4,7 @@ import { svgEl, setAttr } from "../../../lib/util/dom.ts";
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
 import { getIcons } from '../../../lib/icon/icons.ts';
+import { rewindFeature } from '../../../lib/external/geojson/rewind.ts';
 
 
 //const defaultbg = getBackgroundColour();
@@ -233,6 +234,11 @@ export function Layer(attr,map,i){
 		}
 
 		if(this.geojson && this.geojson.data && this.geojson.data.features){
+
+			// Fix any winding order issues before sending to D3
+			this.geojson.data.features = this.geojson.data.features.map(function(feature) {
+				return rewindFeature(feature,'d3');
+			})
 
 			for(f = 0; f < this.geojson.data.features.length; f++){
 				if(this.geojson.data.features[f]){
