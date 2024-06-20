@@ -260,6 +260,8 @@
 					if(typeof p1==="string"){
 						if(p1.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
 							p1 = parseInt(p1.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p2){ return (new Date(p2)).getTime(); }));
+						}else if(p1.match(/^[0-9]{4}-[0-9]{2}$/)){
+							p1 = parseInt(p1.replace(/([0-9]{4}-[0-9]{2})/,function(m,p2){ return (new Date(p2+"-01")).getTime(); }));
 						}else{
 							p1 = parseFloat(p1);
 						}
