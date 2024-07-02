@@ -163,7 +163,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 				tooltip = config.data[0][config.series[lst].tooltip];
 			}else{
 				let options = JSON.parse(JSON.stringify(config.data[0]));
-				tooltip = applyReplacementFilters(config.series[s].tooltip,options);
+				tooltip = applyReplacementFilters(config.series[lst].tooltip,options);
 			}
 			defaultbin.tooltip = tooltip;
 		}
@@ -190,7 +190,6 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	dw2 = dw * Math.sqrt(2);
 
 	for(let b = 0; b < bins.length; b++){
-
 
 		r = Math.floor(b / cols);
 		c = b % cols;
@@ -229,7 +228,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 
 		let mark = new Marker(bins[b].point);
 		let startSeries = (b==0 || (b > 0 && bins[b].series!=bins[b-1].series));
-		let endSeries = (b == bins.length-1 || (b > 0 && b < bins.length-1 && bins[b+1].series!=bins[b].series));
+		let endSeries = (b == bins.length-1 || (b < bins.length-1 && bins[b+1].series!=bins[b].series));
 
 		mark.setAttr({'fill':(namedColours.get(bins[b].colour)||defaultbg)}); // Update the point
 		mark.setPosition(x,y);
