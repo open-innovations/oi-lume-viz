@@ -147,6 +147,8 @@
 		// Shorten big numbers
 		function formatNumber(v,p){
 			if(typeof v !== "number") return v;
+			if (v > 1e10) return toPrecision(v / 1e9,(p ? p/1e9 : 1)) + "B";
+			if (v > 1e9) return toPrecision(v / 1e9,(p ? p/1e9 : 0.1)) + "B";
 			if (v > 1e7) return toPrecision(v / 1e6,(p ? p/1e6 : 1)) + "M";
 			if (v > 1e6) return toPrecision(v / 1e6,(p ? p/1e6 : 0.1)) + "M";
 			if (v > 1e4) return toPrecision(v / 1e3,(p ? p/1e3 : 1)) + "k";
