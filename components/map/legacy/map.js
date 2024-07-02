@@ -803,7 +803,7 @@ function Projection(p,w,h,defaultpadding){
 	proj.rotate([-lon_0,-lat_0]);
 	proj.translate([wide/2,tall/2]);
 
-	path = d3.geoPath().projection(proj).digits(1);
+	path = d3.geoPath().projection(proj).digits(2);
 
 	this.toPath = function(feature){
 		return path(feature);
@@ -811,11 +811,15 @@ function Projection(p,w,h,defaultpadding){
 
 	this.getBounds = function(geojson){
 		geojson = new GeoJSON(geojson);
-		return path.bounds(geojson.getData());
+		var bounds = path.bounds(geojson.getData());
+		// Fudge to deal with tiny y-values
+		if(Math.abs(bounds[0][1]) < 1e-6) bounds[0][1] = 0;
+		return bounds;
 	};
 
-	this.fitData = function(geojson){
-		geojson = new GeoJSON(geojson);
+	this.fitData = function(geo){
+		
+		var geojson = new GeoJSON(geo);
 		if(geojson.getData().features.length == 0) geojson.addFeature({ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [ [ [ -180.0, -90 ], [ -180.0, 90 ], [ 180, 90 ], [ -180, 90 ]]]} });
 
 		var p = [0,0,0,0];
@@ -849,6 +853,7 @@ function Projection(p,w,h,defaultpadding){
 		proj.clipExtent(this.metrics.bounds);
 
 		path = d3.geoPath().projection(proj).digits(1);
+
 		return this;
 	};
 

@@ -145,6 +145,7 @@
 	function TooltipGroup(_alltips,el,attr){
 		this.el = el;
 		this.tips = [];
+		if(!attr) attr = {};
 		// Set a tab index on the group
 		el.setAttribute('tabindex',0);
 
@@ -174,7 +175,7 @@
 			return this;
 		};
 
-		addEv('keydown',el,{this:this},function(e){
+		addEv('keydown',el,{this:this,attr:attr},function(e){
 			if(e.key in attr.keymap){
 				e.preventDefault();
 				e.stopPropagation();
@@ -426,20 +427,24 @@
 			return attr._alltips.locked ? this.unlock() : this.lock();
 		};
 
-		// Add events
-		addEv('click',pt,{'this':this,attr:attr},function(e){
-			e.preventDefault();
-			e.stopPropagation();
-			e.stopImmediatePropagation();
-			var samehex = (e.data.attr._alltips && "locked" in e.data.attr._alltips && typeof e.data.attr._alltips.locked==="object" && e.data.attr._alltips.locked!=null && this.el==e.data.attr._alltips.locked.el);
-			if(samehex) this.unlock();
-			this.toggle();
-			this.show();
-			if(!samehex) this.lock();
-		});
-		addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); this.show(); });
+
+		if(('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)){
+			// Touch to toggle a tooltip
+			addEv('touchstart',pt,{'this':this},function(e){ e.stopPropagation(); this.toggle(); });
+		}else{
+			// Add events
+			addEv('click',pt,{'this':this,attr:attr},function(e){
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				var samehex = (e.data.attr._alltips && "locked" in e.data.attr._alltips && typeof e.data.attr._alltips.locked==="object" && e.data.attr._alltips.locked!=null && this.el==e.data.attr._alltips.locked.el);
+				if(samehex) this.unlock();
+				this.toggle();
+				this.show();
+				if(!samehex) this.lock();
+			});
+		}
+		addEv('focus',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.show(); });
 		addEv('mouseover',(attr['hover-element']||pt),{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); if(!attr._alltips.locked){ this.show(); } });
-		addEv('touchstart',pt,{'this':this},function(e){ e.preventDefault(); e.stopPropagation(); this.toggle(); });
 
 		return this;
 	}	// End of tooltip class

@@ -21,6 +21,15 @@
 		svg = el.querySelector(':scope > svg');
 		typ = svg.getAttribute('data-type');
 
+		// On a touch device we allow a touch of the SVG object to close an open tooltip
+		if(('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)){
+			svg.addEventListener('touchstart',function(e){
+				e.stopImmediatePropagation();
+				if(attr._alltips.locked) attr._alltips.locked.unlock();
+				if(attr._alltips.active) attr._alltips.active.clear();
+			});
+		}
+
 		overlay = svg.querySelector('.overlay');
 		if(!overlay){
 			overlay = document.createElementNS('http://www.w3.org/2000/svg','g');

@@ -624,17 +624,27 @@ export default function (input: { config: HexmapOptions }) {
 		holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
 
 		// We don't need to send every field in the dataset
+		let fields = [];
+
 		// 1. Extract which keys used for the tooltip
-		let fields = tooltip.match(/\{\{ *([^\}]*) *\}\}/g);
-		for(let m = 0; m < fields.length; m++){
-			fields[m] = fields[m].replace(/\{\{/g,"").replace(/\}\}/g,"").replace(/(^\s+|\s+$)/g,"").replace(/ \|.*/g,"");
+		if(typeof tooltip!=="string"){
+			console.warn('Warning: No "tooltip" variable has been set for hex cartogram: ',input.config.hexjson);
+		}else{
+			fields = tooltip.match(/\{\{ *([^\}]*) *\}\}/g);
+			for(let m = 0; m < fields.length; m++){
+				fields[m] = fields[m].replace(/\{\{/g,"").replace(/\}\}/g,"").replace(/(^\s+|\s+$)/g,"").replace(/ \|.*/g,"");
+			}
 		}
 		// 2. Add the value field (so that we can work out the colour for each hex)
 		fields.push(value);
 		// 3. Add the _id (just in case)
 		fields.push('_id');
 		// 4. Add on the columns used for the slider
-		fields = fields.concat(tools.slider.columns);
+		if(typeof tools.slider.columns!=="object"){
+			console.warn('No "columns" set for slider.');
+		}else{
+			fields = fields.concat(tools.slider.columns);
+		}
 		// Limit to unique fields
 		fields = Array.from(new Set(fields));
 
@@ -645,6 +655,7 @@ export default function (input: { config: HexmapOptions }) {
 		// Compress the data to save bandwidth
 		let temphexes = {};
 		let i = 0;
+
 		for(let hex in hexes){
 			temphexes[hex] = [];
 			for(let f = 0; f < fields.length; f++){
@@ -654,7 +665,6 @@ export default function (input: { config: HexmapOptions }) {
 		}
 		html += '<script>(function(root){ OI.SliderMap({"position":"'+(tools.slider.position || 'bottom')+'","width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'",'+(scale ? '"scale":"'+(getColourScale(scale)||scale)+'"' : '')+',"named":'+JSON.stringify(namedColours.getCustom()||{})+'},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
 	}
-
 	html += '</div>';
 
 	return holder.wrap(html);
