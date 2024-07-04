@@ -618,7 +618,8 @@ export default function (input: { config: HexmapOptions }) {
 				filterdata[id] = hexes[id][tools.filter.label];
 			}
 		}
-		html += '<script>(function(root){ OI.FilterMap('+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
+		// Add a Filter object to the current script's node with the config and data
+		html += '<script>OI.FilterMap.add("'+uuid+'",document.currentScript.parentNode,'+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+');</script>\n';
 	}
 	if(tools.slider){
 		holder.addDependencies(['/js/map-slider.js','/js/colours.js']);

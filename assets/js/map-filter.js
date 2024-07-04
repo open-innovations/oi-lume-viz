@@ -16,7 +16,7 @@
 	styles.innerHTML = ':root {--filter-padding: 0.25em;}.oi-filter {position: relative; z-index:1010; min-height:2.5em;} .oi-filter label {position:absolute;display:block;z-index: 1013;}.oi-filter .oi-filter-button{cursor:pointer;padding:var(--filter-padding);text-align:center;line-height:0em;margin:0;width:calc(2em + var(--filter-padding)*2);height:calc(2em + var(--filter-padding)*2);background:black;color:white;}.oi-filter input {display:none;line-height:2em;font-size:1em;border:solid var(--filter-padding) black;line-height:2em;padding:0 0 0 calc(2em + var(--filter-padding)*2);position:relative;z-index: 1012;}.oi-filter.searching input{display:inline-block;}.oi-filter-results{display:none;position:absolute;z-index: 1010;min-width:100%;list-style:none;margin:0;}.oi-filter.searching .oi-filter-results{display:block;}.oi-filter-results li > *{padding:0.5em 1em;background:#dfdfdf;text-decoration:none;display:block;}.oi-filter-results li > *:visited{color:inherit;}.oi-viz .data-layer > *{transition: opacity 0.2s ease-in;}.oi-viz .data-layer .not-selected{opacity: 0.1;}.oi-filter-results button {width:100%;margin:0;text-align:left;}';
 	document.head.prepend(styles);
 
-	function FilterMap(p,opt,data){
+	function FilterMap(id,p,opt,data){
 
 		var viz,el,areas,a,as,btn,inp,results,title,firstlabel = "",hexes = {};
 		viz = p.closest('.oi-viz');
@@ -29,12 +29,10 @@
 		if(opt.position.match("bottom")) pos.push(".oi-bottom");
 		var pel = viz.querySelector(pos.join(" "))||p;
 
-		var id = "filter-" + Math.random().toString(16).slice(2);
-
 		if(!opt) opt = {};
 		if(!opt.max) opt.max = 8;
 
-		as = p.querySelectorAll('.data-layer .hex, .data-layer .area');
+		as = viz.querySelectorAll('.data-layer .hex, .data-layer .area');
 		if(as.length == 0) return this;
 		areas = new Array(as.length);
 
@@ -44,21 +42,45 @@
 			areas[a].id = as[a].getAttribute('data-id');
 			areas[a].data.value = as[a].getAttribute('data-value')||"";
 			title = as[a].querySelector('title');
-			areas[a].data.title = (title ? title.innerHTML||title.innerText : "")||"";
-			areas[a].data.label = (data && data[areas[a].id] ? data[areas[a].id] : areas[a].data.title);//.replace(/<br.*/,""));
-			areas[a].colour = areas[a].el.querySelector('path').getAttribute('fill');
-			areas[a].textcolour = (OI.contrastColour ? OI.contrastColour(areas[a].colour) : (areas[a].el.querySelector('text')||areas[a].el.querySelector('path')).getAttribute('fill'));
 			hexes[areas[a].id] = as[a];
 		}
-		el = p.querySelector('.oi-filter');
+
+		// Function for updating the data structure with new data
+		this.updateData = function(d){
+			data = d;
+
+			// Convert node list into an array with pre-parsed properties
+			for(a = 0; a < areas.length; a++){
+				// Only update if the ID exist in the passed data
+				if(areas[a].id in d){
+					areas[a].data.title = (title ? title.innerHTML||title.innerText : "")||"";
+					areas[a].data.label = (data && areas[a].id in data ? data[areas[a].id] : areas[a].data.title);//.replace(/<br.*/,""));
+					areas[a].colour = areas[a].el.querySelector('path').getAttribute('fill');
+					areas[a].textcolour = (OI.contrastColour ? OI.contrastColour(areas[a].colour) : (areas[a].el.querySelector('text')||areas[a].el.querySelector('path')).getAttribute('fill'));
+				}
+			}
+			
+			var filter = viz.querySelector('#oi-filter-'+id);
+			firstlabel = Object.values(data)[0];
+			if(filter) filter.setAttribute('placeholder',firstlabel);
+
+			return this;
+		};
+
+		this.updateData(data);
+
+		el = viz.querySelector('.oi-filter');
 		firstlabel = Object.values(data)[0];
 
-		if(!el){
-			el = document.createElement('div');
-			el.classList.add('oi-filter');
-			el.innerHTML = '<label for="oi-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-'+id+'" id="oi-'+id+'" value="" placeholder="e.g. '+firstlabel+'"><ul class="oi-filter-results"></ul>';
-			(opt.position.match("top") ? pel.prepend(el) : pel.append(el));
-		}
+		// Remove any existing filter
+		if(el) el.remove();
+
+		el = document.createElement('div');
+		el.setAttribute('data-id',id);
+		el.classList.add('oi-filter');
+		el.innerHTML = '<label for="oi-filter-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-filter-'+id+'" id="oi-filter-'+id+'" value="" placeholder="e.g. '+firstlabel+'"><ul class="oi-filter-results"></ul>';
+		(opt.position.match("top") ? pel.prepend(el) : pel.append(el));
+
 		btn = el.querySelector('.oi-filter-button');
 		inp = el.querySelector('input');
 		btn.addEventListener('click',function(e){
@@ -138,9 +160,25 @@
 		});
 	}
 
-	root.OI.FilterMap = function(opt,data){
-		var p = document.currentScript.parentNode;
-		return new FilterMap(p,opt,data);
-	};
+	// Create a visible list of filters so that 
+	// a filter can be updated later if necessary
+	function List(){
+		var arr = {};
+		this.add = function(id,el,opt,data){
+			if(id in arr){
+				console.warn('This filter already exists.');
+			}else{
+				arr[id] = new FilterMap(id,el,opt,data);
+			}
+			return this;
+		};
+		this.get = function(id){
+			if(id in arr) return arr[id];
+			return arr;
+		};
+		return this;
+	}
+
+	root.OI.FilterMap = new List();
 
 })(window || this);
