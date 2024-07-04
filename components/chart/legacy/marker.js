@@ -9,7 +9,7 @@ function drawPolygon(n,cx,cy,r){
 
 	var step = 360/n;
 	var cordeg = 0;
-	var p = "M"+roundNumber(cx)+","+roundNumber(cy);
+	var p = "";
 	var d2r = Math.PI/180;
 	// For even-numbered sides we offset the initial angle
 	var ginit = (n%2==0 ? -step/2 : 0);

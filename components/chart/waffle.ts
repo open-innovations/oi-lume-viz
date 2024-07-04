@@ -111,7 +111,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	let size = config.size;
 	let cols = size[0];	// Number of columns
 	let rows = size[1];	// Number of rows
-	let bins = new Array(size[0]*size[1]);
+	let bins = new Array(cols*rows);
 	let icon;
 	let bin = 0;
 	let nbins = bins.length;
@@ -175,7 +175,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	for(let i = bin; i < bins.length; i++) bins[i] = clone(defaultbin);
 
 	let w = config.width || 1080;
-	let h = config.height || (w*size[1]/size[0]);
+	let h = config.height || (w*rows/cols);
 	let p = config.padding || 4;	// Set the default spacing between bins
 
 	// Work out the width and height of each bin minus any spacing
@@ -191,13 +191,10 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 
 	for(let b = 0; b < bins.length; b++){
 
-		r = Math.floor(b / cols);
-		c = b % cols;
-
 		if(config.gravity=="bottom"){
 
 			i = (config.direction=="ltr" ? (b % cols) : (cols - 1 -(b % cols)) );
-			j = rows - 1 -Math.floor(b / cols);
+			j = rows - 1 - Math.floor(b / cols);
 
 		}else if(config.gravity=="top"){
 
@@ -206,13 +203,13 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 
 		}else if(config.gravity=="left"){
 
-			i = Math.floor(b / cols);
-			j = (config.direction=="ltr" ? (b % cols) : (cols - 1 - (b % cols)) );
+			i = Math.floor(b / rows);
+			j = (config.direction=="ltr" ? (b % rows) : (rows - 1 - (b % rows)) );
 
 		}else if(config.gravity=="right"){
 
-			i = rows - 1 - Math.floor(b / cols);
-			j = (config.direction=="ltr" ? (cols - 1 - (b % cols)) : (b % cols) );
+			i = cols - 1 - Math.floor(b / rows);
+			j = (config.direction=="ltr" ? (rows - 1 - (b % rows)) : (b % rows) );
 
 		}
 
