@@ -19,6 +19,8 @@ value: 1500
 	<li><code>contrastColour</code> - get a contrasting colour (black or white)</li>
 	<li><code>multiply(n)</code> - to multiply a value by n</li>
 	<li><code>strftime("%Y-%m-%d")</code> - convert an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO8601 date</a> or Unix timestamp into <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a></li>
+	<li><code>strptime("%Y-%m-%d")</code> - parse a date using <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. In this example it would parse and ISO8601 date. If no day is given it will default to <code>1</code>. Hours, minutes and seconds default to <code>0</code>.</li>
+	<li><code>decimalYear()</code> - calculate the decimal year value of a date.</li>
 	<li><code>toFixed(n)</code> - to limit a value to n decimal places</li>
 	<li><code>toLocaleString()</code> - to use the locale's (of the server) preferred formatting for a value</li>
 </ul>

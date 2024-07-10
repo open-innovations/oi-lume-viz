@@ -8,19 +8,25 @@ component: chart.line
 examples:
   - title: "Basic"
     description: |
-      This is a basic line chart with one data series showing unemployment over time for 16-17 year olds (data from the ONS's <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>). The graph is auto-scaled to the data using <code>axis → x → tick→ pacing</code> and <code>axis → y → tick→ spacing</code>. The tick marks for each <code>axis</code> are defined using those same properties and styled with <code>axis → x → grid</code>. 
+      This is a basic line chart with one data series showing unemployment over time for 16-17 year olds (data from the ONS's <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>). The graph is auto-scaled to the data using <code>axis → x → tick→ pacing</code> and <code>axis → y → tick→ spacing</code>. The tick marks for each <code>axis</code> are defined using those same properties and styled with <code>axis → x → grid</code>. To calculate the <code>x</code> values we take the <code>Date</code> column (e.g. "Mar-May 1992"), extract the end of the month range, and then convert the result to a decimal year.
     config:
       data: test.data.unemploymentByAge
+      columns:
+        - name: 'decimal_year'
+          template: '{{ Date | strptime("-%b %Y") | decimalYear() }}'
       series:
         - title: 16-17
-          x: Year
+          x: "decimal_year"
           y: "16-17→rate (%)1"
           colour: "#e52e36"
   - title: "Auto-generated grid"
     description: |
-      This is a basic line chart showing the same data as above. In this example we have auto-scaled each axis to the data using <code>axis → x → tick → spacing</code> and <code>axis → y → tick → spacing</code>. The <code>tick → spacing</code> values are used to auto generate tick marks which are styled with <code>axis → x → grid</code> and  <code>axis → y → grid</code>. 
+      This is a basic line chart showing the same data as above. In this example we have auto-scaled each axis to the data using <code>axis → x → tick → spacing</code> and <code>axis → y → tick → spacing</code>. The <code>tick → spacing</code> values are used to auto generate tick marks which are styled with <code>axis → x → grid</code> and  <code>axis → y → grid</code>.
     config:
       data: test.data.unemploymentByAge
+      columns:
+        - name: 'decimal_year'
+          template: '{{ Date | strptime("-%b %Y") | decimalYear() }}'
       axis:
         x:
           grid:
@@ -34,7 +40,7 @@ examples:
             spacing: 5
       series:
         - title: 16-17
-          x: Year
+          x: decimal_year
           y: "16-17→rate (%)1"
           colour: "#e52e36"
   - title: "Explicitly defined grid"
@@ -42,6 +48,9 @@ examples:
       This more complicated chart shows four different age groups from <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/summaryoflabourmarketstatistics">A01: Summary of labour market statistics</a>. We define titles for each axis. The x-axis range is explicitly limited to the years <code>2000</code> to <code>2022.5</code> with tick marks set every 2 years but only showing labels on the decades. The <code>tickSize</code> is defined per <code>tick</code>. The vertical lines (associated with ticks on the x-axis) have <code>stroke-dasharray</code> set to make them dashed and a <code>tick → size</code> set for the <code>axis</code> rather than for each tick. We can customise the <code>tooltip</code> for each <code>series</code> by providing a column/<a href="/documentation/virtual-columns/">virtual column</a> in the data or a <a href="/documentation/templates/">string template</a>. We also create an interactive legend.
     config:
       data: test.data.unemploymentByAge
+      columns:
+        - name: 'decimal_year'
+          template: '{{ Date | strptime("-%b %Y") | decimalYear() }}'
       legend:
         show: true     # Default to false
       axis:
@@ -132,22 +141,22 @@ examples:
             size: 5
       series:
         - title: 16-17
-          x: Year
+          x: decimal_year
           y: "16-17→rate (%)1"
           colour: "#e52e36"
           tooltip: "Age: 16-17<br />{{ Date }}: {{ 16-17→rate (%)1 | toFixed(1) }}%"
         - title: 18-24
-          x: Year
+          x: decimal_year
           y: "18-24→rate (%)1"
           colour: "#f7ab3d"
           tooltip: "Age: 18-24<br />{{ Date }}: {{ 18-24→rate (%)1 | toFixed(1) }}%"
         - title: 25-49
-          x: Year
+          x: decimal_year
           y: "25-49→rate (%)1"
           colour: "#c7b200"
           tooltip: "Age: 25-49<br />{{ Date }}: {{ 25-49→rate (%)1 | toFixed(1) }}%"
         - title: 50-64
-          x: Year
+          x: decimal_year
           y: "50 and over→rate (%)1"
           colour: "#005776"
           tooltip: "Age: 50 and over<br />{{ Date }}: {{ 50 and over→rate (%)1 | toFixed(1) }}%"
