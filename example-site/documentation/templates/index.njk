@@ -30,7 +30,7 @@ ul.examples li:last-child { margin-bottom: 0; }
 <p>Get a contrasting colour (e.g. black or white) for a given input colour.</p>
 
 
-<h3>decimalYear()<span class="version">v0.15.10</span>{{ comp.anchor({ ref: "decimalYear" }) | safe }}</h3>
+<h3>decimalYear() <span class="version">Since v0.15.10</span>{{ comp.anchor({ ref: "decimalYear" }) | safe }}</h3>
 <p>Calculate the decimal year value of a date. Example:</p>
 <ul class="examples">
 	<li><code>2024-07-01</code> would be converted to <code>2024.49727</code> because 1st July is 0.49727 of the way through the year 2024.</p>
@@ -41,7 +41,7 @@ ul.examples li:last-child { margin-bottom: 0; }
 <p>Use this to scale a value by <code>n</code>.</p>
 
 
-<h3>strftime("%Y-%m-%d"){{ comp.anchor({ ref: "strftime" }) | safe }}</h3>
+<h3>strftime("%Y-%m-%d") <span class="version">Since v0.11.0</span>{{ comp.anchor({ ref: "strftime" }) | safe }}</h3>
 <p>Convert an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO8601 date</a> or Unix timestamp into <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. Examples:</p>
 <ul class="examples">
 	<li>Convert a date to an ISO8601 string <code>2024-07-04</code> using <code>strftime("%Y-%m-%d")</code></li>
@@ -50,7 +50,7 @@ ul.examples li:last-child { margin-bottom: 0; }
 </ul>
 
 
-<h3>strptime("%Y-%m-%d")<span class="version">v0.15.10</span>{{ comp.anchor({ ref: "strptime" }) | safe }}</h3>
+<h3>strptime("%Y-%m-%d") <span class="version">Since v0.15.10</span>{{ comp.anchor({ ref: "strptime" }) | safe }}</h3>
 <p>Parse a date into a numeric representation using <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. This example would parse and ISO8601 date. If no day is given it will default to <code>1</code>. Hours, minutes and seconds default to <code>0</code>. Examples:</p>
 <ul class="examples">
 	<li>Convert a date of the form <code>Jul 2024</code>, into a numeric date representation using <code>{% raw %}{{ Jul 2024 | strptime("%b %Y") }}{% endraw %}</code></li>

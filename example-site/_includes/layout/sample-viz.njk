@@ -2,7 +2,7 @@
 layout: layout/base.njk
 ---
 
-<h1>{{ title }}</h1>
+<h1>{{ title }}{% if version %} <span class="version">Since {{ version }}</span>{% endif %}</h1>
 {% if description %}<p>{{ description | md | safe }}</p>{% endif %}
 
 {{ content | safe }}
