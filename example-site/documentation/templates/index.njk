@@ -14,46 +14,46 @@ value: 1500
 
 <p>You can also use the following filters:</p>
 
-<h3><code>colourScale(scale,min,max)</code>{{ comp.anchor({ ref: "colourScale" }) | safe }}</h3>
+<h3>colourScale(scale,min,max){{ comp.anchor({ ref: "colourScale" }) | safe }}</h3>
 <p>This function will convert a value into a colour using a named <code>scale</code> and the range <code>min</code> to <code>max</code>. This is useful to, for example, get a colour to use as a background style.</p>
 <ul>
 	<li><code class="hljs language-yaml">{% raw %}{{ value | colourScale("Viridis",0,100) }}{% endraw %}</code> will convert a value into the Viridis colour scale</li>
 </ul>
 
 
-<h3><code>contrastColour</code>{{ comp.anchor({ ref: "contrastColour" }) | safe }}</h3>
+<h3>contrastColour{{ comp.anchor({ ref: "contrastColour" }) | safe }}</h3>
 <p>Get a contrasting colour (e.g. black or white) for a given input colour.</p>
 
 
-<h3><code>multiply(n)</code>{{ comp.anchor({ ref: "multiply" }) | safe }}</h3>
+<h3>multiply(n){{ comp.anchor({ ref: "multiply" }) | safe }}</h3>
 <p>Use this to scale a value by <code>n</code>.</p>
 
 
-<h3><code>strftime("%Y-%m-%d")</code>{{ comp.anchor({ ref: "strftime" }) | safe }}</h3>
+<h3>strftime("%Y-%m-%d"){{ comp.anchor({ ref: "strftime" }) | safe }}</h3>
 <p>Convert an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO8601 date</a> or Unix timestamp into <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. Examples:</p>
 <ul></ul>
 
 
-<h3><code>strptime("%Y-%m-%d")</code>{{ comp.anchor({ ref: "strptime" }) | safe }}</h3>
-<p><span class="version">v0.15.10</span> Parse a date into a numeric representation using <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. This example would parse and ISO8601 date. If no day is given it will default to <code>1</code>. Hours, minutes and seconds default to <code>0</code>. Examples:</p>
+<h3>strptime("%Y-%m-%d")<span class="version">v0.15.10</span>{{ comp.anchor({ ref: "strptime" }) | safe }}</h3>
+<p>Parse a date into a numeric representation using <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. This example would parse and ISO8601 date. If no day is given it will default to <code>1</code>. Hours, minutes and seconds default to <code>0</code>. Examples:</p>
 <ul>
 	<li>Convert a date of the form <code>Jul 2024</code>, into a numeric date representation: <pre><code class="hljs language-yaml">{% raw %}{{ Jul 2024 | strptime("%b %Y") }}{% endraw %}</code></pre></li>
 	<li>Convert a date of the form <code>15/06/2024</code>, into a numeric date representation: <pre><code class="hljs language-yaml">{% raw %}{{ 15/06/2024 | strptime("%d/%m/%Y") }}{% endraw %}</code></pre></li>
 </ul>
 
 
-<h3><code>decimalYear()</code>{{ comp.anchor({ ref: "decimalYear" }) | safe }}</h3>
-<p><span class="version">v0.15.10</span> Calculate the decimal year value of a date. Example:</p>
+<h3>decimalYear()<span class="version">v0.15.10</span>{{ comp.anchor({ ref: "decimalYear" }) | safe }}</h3>
+<p>Calculate the decimal year value of a date. Example:</p>
 <ul>
 	<li><code>2024-07-01</code> would be converted to <code>2024.49727</code> because 1st July is 0.49727 of the way through the year 2024.</p>
 </ul>
 
 
-<h3><code>toFixed(n)</code>{{ comp.anchor({ ref: "toFixed" }) | safe }}</h3>
+<h3>toFixed(n){{ comp.anchor({ ref: "toFixed" }) | safe }}</h3>
 <p>To limit a value to <code>n</code> decimal places.</p>
 
 
-<h3><code>toLocaleString()</code>{{ comp.anchor({ ref: "toLocaleString" }) | safe }}</h3>
+<h3>toLocaleString(){{ comp.anchor({ ref: "toLocaleString" }) | safe }}</h3>
 <p>To use the locale's (of the server) preferred formatting for a value. Examples:</p>
 <ul>
 	<li>To convert <code>{% raw %}{{ {% endraw %} {{ value }}{% raw %} }}{% endraw %}</code></pre> to a locale string of the form <code>1,500</code>: <pre><code class="hljs language-yaml">{% raw %}{{ {% endraw %} {{ value }}{% raw %} | toLocaleString("en-GB") }}{% endraw %}</code></pre></li>
