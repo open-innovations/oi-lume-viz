@@ -3,11 +3,6 @@ layout: layout/base.njk
 title: String templates
 value: 1500
 ---
-<style>
-ul.examples { list-style: none; margin-left: 1em; }
-ul.examples li { border-left: 4px solid #2980b9; padding-left: 0.5em; margin-bottom: 1em; }
-ul.examples li:last-child { margin-bottom: 0; }
-</style>
 
 <h1>{{ title }}</h1>
 
@@ -51,7 +46,7 @@ ul.examples li:last-child { margin-bottom: 0; }
 
 
 <h3>strptime("%Y-%m-%d") <span class="version">Since v0.15.10</span>{{ comp.anchor({ ref: "strptime" }) | safe }}</h3>
-<p>Parse a date into a numeric representation using <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. This example would parse and ISO8601 date. If no day is given it will default to <code>1</code>. Hours, minutes and seconds default to <code>0</code>. Examples:</p>
+<p>Parse a date into a numeric representation using <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. This example would parse an ISO8601 date. If no day is given in the input string it will default to the 1st of the month. Hours, minutes and seconds default to <code>0</code>. Examples:</p>
 <ul class="examples">
 	<li>Convert a date of the form <code>Jul 2024</code>, into a numeric date representation using <code>{% raw %}{{ Jul 2024 | strptime("%b %Y") }}{% endraw %}</code></li>
 	<li>Convert a date of the form <code>15/06/2024</code>, into a numeric date representation using <code>{% raw %}{{ 15/06/2024 | strptime("%d/%m/%Y") }}{% endraw %}</code></li>
@@ -68,3 +63,8 @@ ul.examples li:last-child { margin-bottom: 0; }
 	<li>To convert <code>{% raw %}{{ {% endraw %} {{ value }}{% raw %} }}{% endraw %}</code> to a locale string of the form <code>1,500</code> using <code>{% raw %}{{ {% endraw %} {{ value }}{% raw %} | toLocaleString("en-GB") }}{% endraw %}</code></li>
 </ul>
 
+<style>
+ul.examples { list-style: none; margin-left: 1em; }
+ul.examples li { border-left: 4px solid #2980b9; padding-left: 0.5em; margin-bottom: 1em; }
+ul.examples li:last-child { margin-bottom: 0; }
+</style>
