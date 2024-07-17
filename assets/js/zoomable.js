@@ -17,13 +17,16 @@
 	// Store the map in an array for the page
 	if(!root.OI.maps) root.OI.maps = [];
 
-	function ZoomableMap(el,attr){
+	function ZoomableMap(id,el,attr){
 		
 		var list = [];
 		var map = L.map(el);
 		if(typeof attr.attribution==="string") map.attributionControl.setPrefix(attr.attribution);
 		map.setView([0, 0], 2);
 		var tiles;
+		this.id = id;
+		this.map = map;
+		this.layers = list;
 		
 		this.addLayer = function(props){
 			list.push(new Layer(props));
@@ -148,7 +151,7 @@
 				"pointToLayer": function(feature, latlng){
 					var d = getData(feature.properties[props.geo.key]);
 					var marker = props.defaultmarker;
-					var myIcon = L.divIcon({'html':marker.svg.replace(/currentColor/,d.colour),'iconSize':marker.size||[32,32],'iconAnchor':marker.anchor||[16,32],'popupAnchor':marker.popup||[0,-32]})
+					var myIcon = L.divIcon({'html':marker.svg.replace(/currentColor/,d.colour),'iconSize':marker.size||[32,32],'iconAnchor':marker.anchor||[16,32],'popupAnchor':marker.popup||[0,-32]});
 					return L.marker(latlng,{icon: myIcon});
 				}
 			}
@@ -197,7 +200,26 @@
 		return this;
 	}
 
-	if(!root.OI.ZoomableMap) root.OI.ZoomableMap = ZoomableMap;
+
+	// Create a visible list of filters so that 
+	// a filter can be updated later if necessary
+	function List(){
+		var arr = {};
+		this.add = function(id,el,opt){
+			if(id in arr){
+				console.warn('This map already exists.');
+			}else{
+				arr[id] = new ZoomableMap(id,el,opt);
+			}
+			return arr[id];
+		};
+		this.get = function(id){
+			if(id in arr) return arr[id];
+			return arr;
+		};
+		return this;
+	}
+
+	root.OI.ZoomableMap = new List();
 
 })(window || this);
-

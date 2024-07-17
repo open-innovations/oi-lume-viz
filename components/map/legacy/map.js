@@ -111,6 +111,7 @@ export function ZoomableMap(opts){
 
 	this.getHTML = function(){
 		var html,i,l,props,zIndex,attrib;
+		const myUUID = "zoomable-"+crypto.randomUUID().substr(0,8);
 
 		attrib = "";
 		if(typeof config.mapAttribution==="string") attrib = config.mapAttribution||"";
@@ -118,7 +119,7 @@ export function ZoomableMap(opts){
 		html = [];
 		html.push('(function(root){\n');
 		html.push('	var p = document.currentScript.parentNode;\n');
-		html.push('	var map = new OI.ZoomableMap(p.querySelector(".leaflet"),{"attribution":'+(attrib ? JSON.stringify(attrib) : '""')+'});\n');
+		html.push('	var map = OI.ZoomableMap.add("'+myUUID+'",p.querySelector(".leaflet"),{"attribution":'+(attrib ? JSON.stringify(attrib) : '""')+'});\n');
 
 		if(config.bounds){
 			// Create the bounds object required by Leaflet
@@ -252,10 +253,10 @@ export function ZoomableMap(opts){
 
 		html.push('})(window || this);\n');
 
-		var holder = new VisualisationHolder(config,{'name':'map'});
+		var holder = new VisualisationHolder(config,{'name':'map','id':myUUID});
 		holder.addDependencies(['/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/tooltip.js','/js/zoomable.js']);
 		holder.addClasses(['oi-map','oi-zoomable-map']);
-		return holder.wrap('<div class="leaflet"></div><script>'+html.join('')+'</script>');
+		return holder.wrap('<div class="leaflet" id="'+myUUID+'"></div><script>'+html.join('')+'</script>');
 	};
 	return this;
 }
