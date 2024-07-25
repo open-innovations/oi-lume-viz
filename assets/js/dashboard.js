@@ -1,13 +1,14 @@
 /*
-	Open Innovations Dashboard Interactivity v0.2
+	Open Innovations Dashboard Interactivity v0.3
 	Adds "animation" to numbers in ".oi-dashboard" elements of the form:
-	<div class="oi-dashboard">
-		<div class="oi-dashboard-inner">
-			<div class="panel">
-				<span class="bignum" data="37" data-prefix="£" data-postfix="p">£37p</span>
+		<div class="oi-dashboard">
+			<div class="oi-dashboard-inner">
+				<div class="panel">
+					<span class="bignum" data="37" data-prefix="£" data-postfix="p">£37p</span>
+				</div>
 			</div>
 		</div>
-	</div>
+	Also resizes each panel element to make sure they line up
 */
 (function(root){
 
@@ -175,6 +176,11 @@
 			if(prec < 1) v = v.toFixed(dp);
 			return v;
 		}
+		
+		TidyDashboards(dashboards);
+		// Add event listener to tidy dashboards if the page resizes
+		window.addEventListener('resize',function(){ TidyDashboards(dashboards) });
+
 		var monitor = new InView(dashboards);
 		monitor.on('activate',{'test':'blah'},function(e){
 			// Trigger the number animations on the panels
@@ -182,6 +188,37 @@
 			for(var p = 0; p < panels.length; p++) animateNumber(panels[p]);
 		});
 		monitor.init();
+	}
+	function TidyDashboards(dashboards){
+		for(d = 0; d < dashboards.length; d++){
+			if(dashboards[d].querySelector('.oi-dashboard-inner').getAttribute('data-align')){
+				TidyDashboard(dashboards[d]);
+			}
+		}
+	}
+	function TidyDashboard(el){
+		// Get an array of panels
+		var panels = el.querySelectorAll('.panel');
+		var bits = ['h3','.bignum','.footnote'];
+		var i,b,maxh,temp;
+		for(b = 0; b < bits.length; b++){
+			maxh = 0;
+			// Remove any existing heights that have been set
+			for(i = 0; i < panels.length; i++){
+				temp = panels[i].querySelector(bits[b]);
+				if(temp) temp.style.removeProperty('height');
+			}
+			// Find the largest height
+			for(i = 0; i < panels.length; i++){
+				temp = panels[i].querySelector(bits[b]);
+				if(temp) maxh = Math.max(maxh,temp.getBoundingClientRect().height);
+			}
+			// Set all the panels to the maximum height
+			for(i = 0; i < panels.length; i++){
+				temp = panels[i].querySelector(bits[b]);
+				if(temp) temp.style.height = maxh+'px';
+			}
+		}
 	}
 	root.OI.AugmentDashboards = AugmentDashboards;
 

@@ -104,7 +104,7 @@ examples:
           colour: "#08DEF9"
   - title: "Set the colours of panels using a colour scale"
     description: |
-      An example of 
+      An example of setting the panel backgrounds using a colour scale. For each panel we set `scale`, `min` and `max`.
     config:
       title: name
       value: numeric
@@ -135,7 +135,7 @@ examples:
     description: |
       Set the minimum width of a panel to `400px`. The panel will either be the specified width or will get larger to fit a whole number of columns.
     config:
-      title: name
+      title: title
       value: numeric
       units:
         prefix: pre
@@ -143,22 +143,22 @@ examples:
       note: footnote
       width: 400px
       data:
-        - name: Panel 1
+        - title: Panel 1
           numeric: 10
           post: "&thinsp;dB"
-        - name: Panel 2
+        - title: Panel 2
           numeric: 20
           post: "&thinsp;dB"
-        - name: Panel 3
+        - title: Panel 3
           numeric: 50
           post: "&thinsp;dB"
-        - name: Panel 4
+        - title: Panel 4
           numeric: 100
           post: "&thinsp;dB"
-        - name: Panel 5
+        - title: Panel 5
           numeric: 110
           post: "&thinsp;dB"
-        - name: Panel 6
+        - title: Panel 6
           numeric: 120
           post: "&thinsp;dB"
       panels:
@@ -170,6 +170,7 @@ examples:
           scale: Viridis
           min: 10
           max: 120
+          footnote: Some text making a footnote
         - name: Panel 3
           scale: Viridis
           min: 10
@@ -186,6 +187,36 @@ examples:
           scale: Viridis
           min: 10
           max: 120
+  - title: "Vertically aligning elements of a dashboard panel"
+    description: |
+      From <span class="version">v0.15.12</span> onwards, setting `align=true` will make sure that the parts of a panel (title, value and note) remain vertically aligned with their corresponding parts of other panels. For instance we can make sure that the "10dB" lines up with the "20dB" despite the titles taking up different amounts of space.
+    config:
+      title: name
+      value: numeric
+      units:
+        prefix: pre
+        postfix: post
+      note: footnote
+      align: true
+      data:
+        - name: Panel 1 has quite a long title that will likely continue onto another line
+          numeric: 10
+          post: "&thinsp;dB"
+        - name: Panel 2
+          numeric: 20
+          post: "&thinsp;dB"
+          footnote: "This is very quiet"
+      panels:
+        - name: Panel 1 has quite a long title that will likely continue onto another line
+          class: plum
+          scale: Viridis
+          min: 0
+          max: 25
+        - name: Panel 2
+          class: cyan
+          scale: Viridis
+          min: 0
+          max: 25
 options: |
   <ul>
   <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes.</li>
@@ -203,7 +234,7 @@ options: |
   	</ul>
   </li>
   <li>
-  	<code>panels</code> - An array of which panels will be displayed. They are in orderand each is of the form:
+  	<code>panels</code> - An array of which panels will be displayed. They are in order and each is of the form:
   	<ul>
   	<li><code>name</code> - (required) References a specific <code>title</code> value.</li>
   	<li><code>precision</code> - The level of precision to use for the number e.g. <code>0.1</code> would round the value to the nearest 0.1.</li>
