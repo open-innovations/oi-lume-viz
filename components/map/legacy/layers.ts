@@ -113,6 +113,13 @@ export function buildLayers(input){
 				config.layers[l].data,
 				input
 			));
+			// In case it was a CSV file loaded
+			if(config.layers[l].data.rows) config.layers[l].data = config.layers[l].data.rows;
+		}
+		
+		if(config.layers[l].data && !(typeof config.layers[l].data==="string" || Array.isArray(config.layers[l].data))){
+			console.log(config.layers[l].data);
+			throw new TypeError("Data is not an array or string. It is type:" + typeof config.layers[l].data);
 		}
 
 		// Simplify our complicated CSV structure
