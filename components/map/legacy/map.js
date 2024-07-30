@@ -549,6 +549,9 @@ function BasicMap(config,attr){
 	this.container = el;
 	el.innerHTML = "";
 	setAttr(this.container,{'style':'overflow:hidden'});
+	
+	// Generate a UUID to identify the hexes
+	var uuid = crypto.randomUUID().substr(0,8);
 
 	this.attr = attr;
 	this.projection = new Projection(config.projection||null,(config.width || attr.w),(config.height || attr.h),(config.padding || 0));
@@ -593,7 +596,7 @@ function BasicMap(config,attr){
 				}
 			}
 			
-			html += '\n<script>(function(root){ OI.FilterMap('+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
+			html += '\n<script>(function(root){ OI.FilterMap.add("'+uuid+'",document.currentScript.parentNode,'+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
 		}
 		return holder.wrap('<div class="oi-map-holder"><div class="oi-map-inner">'+html+'</div></div>');
 	};

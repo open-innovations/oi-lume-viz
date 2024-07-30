@@ -102,9 +102,11 @@
 				for(var a = 0; a < areas.length; a++){
 					id = areas[a].id;
 					score = 0;
-					if(areas[a].data.label.toLowerCase().indexOf(value.toLowerCase())==0) score += 1;
-					if(areas[a].data.label.toLowerCase().indexOf(value.toLowerCase())>0) score += 0.5;
-					tmp.push({'score':score,'id':id,'area':areas[a],'label':areas[a].data.label});
+					if(typeof areas[a].data.label==="string"){
+						if(areas[a].data.label.toLowerCase().indexOf(value.toLowerCase())==0) score += 1;
+						if(areas[a].data.label.toLowerCase().indexOf(value.toLowerCase())>0) score += 0.5;
+						tmp.push({'score':score,'id':id,'area':areas[a],'label':areas[a].data.label});
+					}
 					if(score > 0) regions[id] = true;
 				}
 				tmp = sortBy(sortBy(tmp,'label',true),'score');

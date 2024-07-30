@@ -65,10 +65,13 @@ type SVGmapOptions = {
  */
 export default function (input: { config: SVGmapOptions }) {
 
+	// In case it was a CSV file loaded
+	if("rows" in input.config.data) input.config.data = input.config.data.rows;
+
 	// Basic validation
 	if(input.config.data && !(typeof input.config.data==="string" || Array.isArray(input.config.data))){
 		console.log(input.config.data);
-		throw new TypeError("Data is not a array or string. It is type:" + typeof input.config.data);
+		throw new TypeError("Data is not an array or string. It is type:" + typeof input.config.data);
 	}
 
 	// Build the layer structure
