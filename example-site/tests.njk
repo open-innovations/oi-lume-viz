@@ -8,7 +8,7 @@ title: Tests
 <p>Some pages of tests</p>
 
 <ul>
-{% for sample in search.pages('test order>0', 'order') | data %}
+{% for sample in search.pages('test order>0', 'order') %}
   <li><a href="{{ sample.url }}">{{ sample.title }}</a></li>
 {% endfor %}
 </ul>

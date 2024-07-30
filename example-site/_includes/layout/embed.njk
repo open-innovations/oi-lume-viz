@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html><head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8" />
 <link rel="icon" href="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='640' height='640' overflow='auto' viewBox='-32 -32 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cmask id='oi-person'%3E%3Cpath d='m-32-32h64v64h-12v-24a4 4 0 0 0 -4 -4h-8a4 4 0 0 0 -4 4v24h-36zm44 27m-8 0a8 8 0 1 0 16 0 8 8 0 1 0-16 0' fill='%23fff'%3E%3C/path%3E%3C/mask%3E%3Cg id='oi-logo' fill='%23FF6700'%3E%3Ccircle r='32' mask='url(%23oi-person)'%3E%3C/circle%3E%3C/g%3E%3C/svg%3E" />
@@ -8,10 +11,11 @@
 .oi-map .leaflet { max-height: 100vh; min-height: 100vh; }
 
 </style>
+</head>
+<body>
+
 {{ content | safe }}
 
-
-<script src="/js/data-dependencies.js"></script>
 
 <script>
 /*
@@ -22,3 +26,7 @@ Version: 2022-01-25 https://open-innovations.org/resources/oi.log.js
 !function(t){t.OI||(t.OI={});var e=location;function n(t){return 50*Math.round(t/50)}t.OI.log=new function(){var t,r,o,u,f,s;return r="https://open-innovations.org/log",o=document.referrer,u=new RegExp(e.origin,"g"),0==o.indexOf(e.origin)&&(o=o.replace(u,"")),f=n(window.innerWidth)+"x"+n(window.innerHeight),this.setup=function(e){return e||(e={}),e.dest&&(r=e.dest),e.id&&(t=e.id),e.target&&(s=e.target),s="string"==typeof s?[s]:s,this},this.add=function(n,u){if("file:"==e.protocol)return this;if(!function(t){if("object"!=typeof t||t.length<=0)return!0;for(i=0;i<t.length;i++)if(t[i]==e.host)return!0;return!1}(s))return this;var d=new XMLHttpRequest;return d.open("POST",r,!0),d.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8"),"function"==typeof u&&(d.onload=u),d.send((t?"oid="+t+"&":"")+"url="+e.href+"&"+(o?"ref="+o+"&":"")+(f?"size="+f+"&":"")+n),this},this}}(window||this);
 OI.log.setup({'id':'odileeds','target':['open-innovations.github.io.github.io']}).add('action=view');
 </script>
+
+<!-- YES -->
+</body>
+</html>

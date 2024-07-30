@@ -1,15 +1,17 @@
 import * as path from 'std/path/mod.ts';
 import lume from "lume/mod.ts";
+import nunjucks from "lume/plugins/nunjucks.ts";
 import basePath from "lume/plugins/base_path.ts";
 import oiComponents from '../mod.ts';
 import { stringify as yamlStringify } from 'std/encoding/yaml.ts';
 import { Colour } from '../lib/colour/colours.ts';
 import { getColourScale } from '../lib/colour/colour-scale.ts';
 import { getSeriesColour } from '../lib/colour/colour.ts';
+import sitemap from "lume/plugins/sitemap.ts";		// To build a site map
 
-import csvLoader from 'https://deno.land/x/oi_lume_utils@v0.4.0/loaders/csv-loader.ts';
+import autoDependency from "https://deno.land/x/oi_lume_utils@v0.4.0/processors/auto-dependency.ts";
+import csvLoader from "https://deno.land/x/oi_lume_utils@v0.4.0/loaders/csv-loader.ts";
 import jsonLoader from "lume/core/loaders/json.ts";
-import autoDependency from 'https://deno.land/x/oi_lume_utils@v0.4.0/processors/auto-dependency.ts';
 
 // Code highlighting
 import code_highlight from "lume/plugins/code_highlight.ts";
@@ -20,13 +22,16 @@ import lang_powershell from "https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es
 import lang_bash from "https://unpkg.com/@highlightjs/cdn-assets@11.6.0/es/languages/bash.min.js";
 
 
-
 const site = lume({
 	location: new URL("https://open-innovations.github.io/oi-lume-viz/"),
 	src: '.',
 });
 
 
+site.use(nunjucks());
+site.use(sitemap({
+	query: "!draft"
+}));
 site.loadAssets([".css"]);
 site.loadAssets([".js"]);
 site.loadData(['.csv'], csvLoader({ basic: true }));
@@ -36,10 +41,8 @@ site.loadData([".geojson"], jsonLoader);
 import oiVizConfig from "./oi-viz-config.ts";
 site.use(oiComponents(oiVizConfig));
 
-// The autodependency processor needs to be registered before the base path plugin,
-// or else the autodepended paths will not be rewritten to include the path prefix
-// set in location passed to the lume constructor (above)
-site.process(['.html'], autoDependency);
+site.process([".html"], (pages) => pages.forEach(autoDependency));
+
 site.use(basePath());
 
 site.remoteFile('index.md', path.resolve('README.md'));

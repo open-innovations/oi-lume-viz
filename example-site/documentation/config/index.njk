@@ -7,7 +7,7 @@ title: Visualisation configuration
 <p>This page aims to be an overview of the configuration options available for each visualisation type.</p>
 
 
-{% for sample in search.pages('sample order>0', 'order') | data %}
+{% for sample in search.pages('sample order>0', 'order') %}
   <h2><a href="{{ sample.url }}">{{ sample.title }}</a></h2>
   {% if sample.description %}
   {{ sample.description }}

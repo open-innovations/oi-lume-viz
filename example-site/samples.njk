@@ -8,13 +8,13 @@ title: Samples
 <p>It is important to <a href="https://royal-statistical-society.github.io/datavisguide/docs/choosing.html">choose the correct visualisation type</a> depending on what you want people to be able to find out and who the audience is. To help, we have created several visualisation types that we render as HTML/SVG with Javascript only added for some interactivity. Our current visualisation types:</p>
 
 <ul class="grid-list">
-{% for sample in search.pages('sample order>0', 'order') | data %}
+{% for sample in search.pages('sample order>0', 'order') %}
   <li{% if sample.colour %} style="background:{{ sample.colour }};"{% endif %}><a href="{{ sample.url }}">{{ sample.title }}</a></li>
 {% endfor %}
 </ul>
 
 <div class="grid">
-  {% for page in search.pages('sample order>0', 'order') | data %}
+  {% for page in search.pages('sample order>0', 'order') %}
 	<div class="pane doublepadded">
 		<h2>{{ page.title }}</h2>
 		<!--<p>Component: <code>{{ page.component }}</code></p>-->

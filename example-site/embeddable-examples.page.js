@@ -12,7 +12,7 @@ export default function* ({ search }) {
     // Set the index to be 1
     let index = 1;
     // Grab the page url, component, example and title (as sampleTitle)
-    const { url, component, examples, title: parentTitle } = sample.data;
+    const { url, component, examples, title: parentTitle } = sample;
     // Iterate over each example
     for (const example of examples) {
       // Grab the title, description and config from the example
