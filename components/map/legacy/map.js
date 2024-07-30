@@ -525,7 +525,7 @@ export function SVGMap(opts){
 	var map = new BasicMap(config,{
 		'background': 'transparent',
 		'classes': 'oi-map-svg',
-		'dependencies': ['/js/map.js','/css/maps.css','/js/tooltip.js'],
+		'dependencies': ['/js/tooltip.js','/js/map.js','/css/maps.css'],
 		'layers': layerlist,
 		'complete': function(){
 			if(config.bounds){

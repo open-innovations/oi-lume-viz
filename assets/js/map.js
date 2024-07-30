@@ -141,11 +141,24 @@
 			"ArrowDown": arrow_move,
 		}
 
-		var groups = el.querySelectorAll('.data-layer .series, .oi-map-inner .markers');
-		// Add tooltip groups
-		for(var g = 0; g < groups.length; g++){
-			OI.Tooltips.addGroup(groups[g],'.area, .hex, .marker, .line',attr);
-		}
+		this._loadattempts = 0;
+		this.addTooltips = function(){
+			this._loadattempts++;
+			if(typeof OI.Tooltips==="object"){
+				var groups = el.querySelectorAll('.data-layer .series, .oi-map-inner .markers');
+				// Add tooltip groups
+				for(var g = 0; g < groups.length; g++) OI.Tooltips.addGroup(groups[g],'.area, .hex, .marker, .line',attr);
+			}else{
+				if(this._loadattempts < 5){
+					setTimeout(this.addTooltips,500);
+				}else{
+					console.warn("Failed to load OI.Tooltips");
+				}
+			}
+			
+		};
+
+		this.addTooltips();
 
 		// Add description for keyboard navigation
 		var desc = svg.querySelector(':scope > desc');
@@ -154,6 +167,9 @@
 		}
 
 		return this;
+	}
+	function addTooltips(){
+		
 	}
 
 	root.OI.InteractiveSVGMap = function(el){ return new InteractiveSVGMap(el); };
