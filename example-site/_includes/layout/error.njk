@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<link rel="icon" href="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='640' height='640' overflow='auto' viewBox='-32 -32 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cmask id='oi-person'%3E%3Cpath d='m-32-32h64v64h-12v-24a4 4 0 0 0 -4 -4h-8a4 4 0 0 0 -4 4v24h-36zm44 27m-8 0a8 8 0 1 0 16 0 8 8 0 1 0-16 0' fill='%23fff'%3E%3C/path%3E%3C/mask%3E%3Cg id='oi-logo' fill='%23FF6700'%3E%3Ccircle r='32' mask='url(%23oi-person)'%3E%3C/circle%3E%3C/g%3E%3C/svg%3E" />
+	<link rel="stylesheet" href="/styles/reset.css"/>
+	<link rel="stylesheet" href="/components.css"/>
+	<link rel="stylesheet" href="/styles/style.css"/>
+	<style>
+	.center-block {
+		top:50%;
+		left: 50%;
+		transform: translate3d(-50%,-50%, 0);
+		position: absolute;
+		text-align: center;
+		margin-right: -50%;
+	}
+	.center-block-big {
+		top: 0%;
+		margin-top: 32px;
+		left: 50%;
+		position: absolute;
+		text-align: center;
+		margin-right: -50%;
+		transform: translate3d(-50%,0%, 0);
+	}
+	</style>
+	<title>{% if title and title != "OI Lume Viz" %}{{ title }} | {% endif %}OI Lume Viz</title>
+</head>
+<body class="c6-bg">
+	<div class="center-block">
+		<svg class="oi-logo" overflow="auto" width="200" height="200" viewBox="-32 -32 64 64" xmlns="http://www.w3.org/2000/svg">
+			<title>Open Innovations</title>
+			<mask id="oi-person"><path d="m-32-32h64v64h-12v-24a4 4 0 0 0 -4 -4h-8a4 4 0 0 0 -4 4v24h-36zm44 27m-8 0a8 8 0 1 0 16 0 8 8 0 1 0-16 0" fill="#fff"></path></mask>
+			<g id="oi-logo" fill="black"><circle r="32" mask="url(#oi-person)"></circle></g>
+		</svg>
+		<h1>{{ title }}</h1>
+		<p class="message">"{{ message }}"</p>
+		<p>You could try the <a href="/">homepage</a>, <a href="/documentation/">documentation</a>, <a href="/samples/">samples</a>, or <a href="https://github.com/open-innovations/">github</a>.</p>
+	</div>
+
+	<script src="https://open-innovations.org/resources/oi.log.js"></script>
+	<script>
+	OI.log.setup({'id':'errors','target':['open-innovations.org']}).add('action=view&error=404');
+	</script>
+
+</body>
+</html>
