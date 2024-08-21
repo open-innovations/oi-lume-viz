@@ -5,6 +5,7 @@ import { clone } from "../../lib/util/clone.ts";
 import { VisualisationHolder } from '../../lib/holder.js';
 import { Colour, ColourScale } from "../../lib/colour/colours.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
+import { defaultColourScale } from "../../lib/colour/colour-scale.ts";
 import { getFontFamily, getFontWeight, getFontSize } from '../../lib/font/fonts.ts';
 import { Grid } from '../../lib/util/grid.ts';
 
@@ -152,8 +153,8 @@ function CalendarChart(input: {
 		'origin': {'x':x},
 		'startofweek': (typeof input.startofweek==="number" ? input.startofweek : 1)
 	};
-	
-	if(input.scale) props.scale = ColourScale(input.scale);
+
+	props.scale = ColourScale(input.scale||defaultColourScale());
 
 	svg += '<g class="data-layer" role="table">';
 	if(input.order == "reverse"){

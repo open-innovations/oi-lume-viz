@@ -1,5 +1,5 @@
 import { contrastColour } from './colour/contrast.ts';
-import { ColourScale } from './colour/colour-scale.ts';
+import { ColourScale, defaultColourScale } from './colour/colour-scale.ts';
 import { Colour } from "./colour/colour.ts";
 import { Colours } from './colour/colours.ts';
 import { parseColourString } from './colour/parse-colour-string.ts';
@@ -105,7 +105,7 @@ export function dashboard(config: DashboardOptions){
       // If a scale value has been given, use that instead of the value of the panel
       if(typeof panels[p]['scale-value']==="number") v = panels[p]['scale-value'];
       // Find the colour from the colour scale
-	  let cs = ColourScale(panels[p].scale||'Viridis');
+	  let cs = ColourScale(panels[p].scale||defaultColourScale());
       let min = panels[p].min||0;
 	  let max = panels[p].max||100
 	  col = cs((v-min)/(max-min));

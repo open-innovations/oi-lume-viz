@@ -2,14 +2,15 @@ import { recursiveLookup } from '../../../lib/util.js';
 import { svgEl, newEl, setAttr } from '../../../lib/util/dom.ts';
 import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { applyReplacementFilters } from "../../../lib/util.js";
-import { Colour, ColourScale, Colours } from "../../../lib/colour/colours.ts";
-import { VisualisationHolder } from '../../../lib/holder.js';
 import { getBackgroundColour } from "../../../lib/colour/colour.ts";
+import { Colour, ColourScale, Colours } from "../../../lib/colour/colours.ts";
+import { defaultColourScale } from "../../../lib/colour/colour-scale.ts";
+import { parseColourString } from '../../../lib/colour/parse-colour-string.ts';
+import { VisualisationHolder } from '../../../lib/holder.js';
 import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
 import { getTileLayer } from '../../../lib/tiles/layers.ts';
 import { getIcons } from '../../../lib/icon/icons.ts';
 import { d3, d3geo } from "../../../lib/external/d3.ts";
-import { parseColourString } from '../../../lib/colour/parse-colour-string.ts';
 import { Layer } from './layers.ts';
 
 const defaultbg = getBackgroundColour();
@@ -46,7 +47,7 @@ export function ZoomableMap(opts){
 	let i,l,min,max,v,cs,col;
 
 	var config = {
-		'scale': 'Viridis',
+		'scale': defaultColourScale(),
 		'places': [],
 		'markers': [],
 		'data-type': 'zoomable-map',
@@ -269,7 +270,7 @@ export function SVGMap(opts){
 	let csv = clone(opts.data);
 	let fs = getFontSize();
 	let config = {
-		'scale': 'Viridis',
+		'scale': defaultColourScale(),
 		'data-type':'svg-map',
 		'layers': []
 	};

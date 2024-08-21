@@ -6,6 +6,8 @@ import { getColourPercent } from "./get-colour-percent.ts";
 // Mako comes from https://github.com/sjmgarnier/viridisLite/blob/master/tests/testthat/test-palettes.R
 // PiPG/PRGn/PuOr/RdBu come from ColorBrewer 2.0 https://github.com/axismaps/colorbrewer/blob/9a37cbbfe7cde61c060c68ecdd1fd3a5095ef4a5/export/colorbrewer.js
 const namedColourScales: Record<string, string> = {
+	'Viridis': '#440154 0%, #482878 11.1%, #3e4989 22.2%, #31688e 33.333%, #26828e 44.444%, #1f9e89 55.555%, #35b779 66.666%, #6ece58 77.777%, #b5de2b 88.888%, #fde725 100%',
+	'Viridis-light': 'rgb(122,76,139) 0%, rgb(124,109,168) 12.5%, rgb(115,138,177) 25%, rgb(107,164,178) 37.5%, rgb(104,188,170) 50%, rgb(133,211,146) 62.5%, rgb(189,229,97) 75%, rgb(254,240,65) 87.5%, rgb(254,240,65) 100%',
 	'Cividis': '#00224e 0%, #123570 11.1%, #3b496c 22.222%, #575d6d 33.333%, #707173 44.444%, #8a8678 55.555%, #a59c74 66.666%, #c3b369 77.777%, #e1cc55 88.888%, #fee838 100%',
 	'Heat': 'rgb(0,0,0) 0%, rgb(128,0,0) 25%, rgb(255,128,0) 50%, rgb(255,255,128) 75%, rgb(255,255,255) 100%',
 	'Inferno': '#000004 0%, #1b0c41 11.1%, #4a0c6b 22.222%, #781c6d 33.333%, #a52c60 44.444%, #cf4446 55.555%, #ed6925 66.666%, #fb9b06 77.777%, #f7d13d 88.888%, #fcffa4 100%',
@@ -15,8 +17,6 @@ const namedColourScales: Record<string, string> = {
 	'Plasma': '#0d0887 0%, #46039f 11.1%, #7201a8 22.222%, #9c179e 33.333%, #bd3786 44.444%, #d8576b 55.555%, #ed7953 66.666%, #fb9f3a 77.777%, #fdca26 88.888%, #f0f921 100%',
 	'Rocket': '#03051A 0%, #CB1B4F 50%, #FAEBDD 100%',	
 	'Turbo': '#30123b 0%, #4145ab 7.143%, #4675ed 14.286%, #39a2fc 21.429%, #1bcfd4 28.571%, #24eca6 35.714%, #61fc6c 42.857%, #a4fc3b 50%, #d1e834 57.143%, #f3c63a 64.286%, #fe9b2d 71.429%, #f36315 78.571%, #d93806 85.714%, #b11901 92.857%, #7a0402 100%',
-	'Viridis': '#440154 0%, #482878 11.1%, #3e4989 22.2%, #31688e 33.333%, #26828e 44.444%, #1f9e89 55.555%, #35b779 66.666%, #6ece58 77.777%, #b5de2b 88.888%, #fde725 100%',
-	'Viridis-light': 'rgb(122,76,139) 0%, rgb(124,109,168) 12.5%, rgb(115,138,177) 25%, rgb(107,164,178) 37.5%, rgb(104,188,170) 50%, rgb(133,211,146) 62.5%, rgb(189,229,97) 75%, rgb(254,240,65) 87.5%, rgb(254,240,65) 100%',
 	'PiPG': '#8e0152 0%, #c51b7d 10%, #de77ae 20%, #f1b6da 30%, #fde0ef 40%, #f7f7f7 50%, #e6f5d0 60%, #b8e186 70%, #7fbc41 80%, #4d9221 90%, #276419 100%',
 	'PRGn': '#40004b 0%, #762a83 10%, #9970ab 20%, #c2a5cf 30%, #e7d4e8 40%, #f7f7f7 50%, #d9f0d3 60%, #a6dba0 70%, #5aae61 80%, #1b7837 90%, #00441b 100%',
 	'PuOr': '#7f3b08 0%, #b35806 10%, #e08214 20%, #fdb863 30%, #fee0b6 40%, #f7f7f7 50%, #d8daeb 60%, #b2abd2 70%, #8073ac 80%, #542788 90%, #2d004b 100%',
@@ -33,6 +33,10 @@ export function updateColourScales(key: string, scale: string) {
 	if(!namedColourScales[key+"_r"]){
 		namedColourScales[key+"_r"] = reverseColourScale(namedColourScales[key]);
 	}
+}
+
+export function defaultColourScale(): string {
+	return Object.keys(namedColourScales)[0];
 }
 
 export function getColourScales(): Record<string, string> {

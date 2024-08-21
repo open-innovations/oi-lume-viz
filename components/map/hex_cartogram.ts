@@ -4,7 +4,7 @@ import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale, Colours } from "../../lib/colour/colours.ts";
-import { getColourScale } from "../../lib/colour/colour-scale.ts";
+import { defaultColourScale, getColourScale } from "../../lib/colour/colour-scale.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
 import { VisualisationHolder } from '../../lib/holder.js';
@@ -94,7 +94,7 @@ export default function (input: { config: HexmapOptions }) {
 	// NB these are not cloned at this stage, as this loses information about functions passed in
 	let {
 		bgColour = "none",
-		scale = "Viridis",
+		scale = defaultColourScale(),
 		hexScale = 1,
 		width,
 		margin: marginScale = 0.25,
