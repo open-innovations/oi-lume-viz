@@ -83,9 +83,9 @@
 		this.addGroupItem = function(el,selector,attr){
 			if(!attr) attr = {};
 			// Do we have this group?
-			var group = this.makeGroup(el);
+			var group = this.makeGroup(el,attr);
 			// Add the selector to the group
-			var t = group.create([selector],attr);
+			var t = group.create([selector],{'notab':attr.notab||false});
 			// Add the defined tips to our array
 			tips.push.apply(tips, t);
 			return t[0];
@@ -176,6 +176,7 @@
 		};
 
 		addEv('keydown',el,{this:this,attr:attr},function(e){
+			if(!attr.keymap) attr.keymap = {};
 			if(e.key in attr.keymap){
 				e.preventDefault();
 				e.stopPropagation();
@@ -257,7 +258,9 @@
 			if(attr._group){
 				for(t = 0; t < attr._group.tips.length; t++){
 					if(pt!=attr._group.tips[t].el) attr._group.tips[t].el.removeAttribute('tabindex');
-					else pt.setAttribute('tabindex',0);
+					else{
+						if(!attr.notab) pt.setAttribute('tabindex',0);
+					}
 				}
 			}
 			pt.setAttribute('aria-label',tt.replace(/<[^\>]+>/g,' '));

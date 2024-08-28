@@ -26,20 +26,40 @@
 			fn.call(data.this||this,e);
 		});
 	}
+	function arrow_move(e, _alltips){
+		var idx = -1,t;
+		// If a tip in this group is active we use that
+		if(_alltips.active){
+			for(t = 0; t < this.tips.length; t++){
+				// Matched to an existing tip in this group
+				if(_alltips.active==this.tips[t]) idx = t;
+			}
+		}
+		// Increment
+		if(e.key == "ArrowLeft") idx--;
+		else if(e.key == "ArrowRight") idx++;
+		// Limit range
+		if(idx < 0) idx += this.tips.length;
+		if(idx > this.tips.length-1) idx -= this.tips.length;
+		// Activate the tooltip
+		if(idx >= 0 && idx < this.tips.length){
+			this.tips[idx].el.focus();
+			_alltips.activate(this.tips[idx].el);
+		}
+	}
+
 	function InteractiveChart(el){
 
-		var svg = el.querySelector('svg.oi-chart-main');
+		var svg,s,i,p,sid,pt,pts,series,key,typ,serieskey;
+		svg = el.querySelector('svg.oi-chart-main');
 		// No .oi-chart-main to attach to
 		if(!svg) return this;
-		var key = el.querySelector('.oi-legend');
-		var typ = svg.getAttribute('data-type');
-
-
-		var serieskey = svg.querySelectorAll('.series');
-		var s,i,p,sid;
-		var pt = el.querySelectorAll('.series .marker');
-		var pts = [];
-		var series = {};
+		key = el.querySelector('.oi-legend');
+		typ = svg.getAttribute('data-type');
+		serieskey = svg.querySelectorAll('.series');
+		pt = el.querySelectorAll('.series .marker');
+		pts = [];
+		series = {};
 		for(s = 0; s < serieskey.length; s++){
 			i = serieskey[s].getAttribute('data-series');
 			if(i){
@@ -53,15 +73,11 @@
 			s = pt[p].getAttribute('data-series');
 			// Get the item within the series
 			i = parseInt(pt[p].getAttribute('data-i'));
-			if(typ=="waffle-chart"){
-				pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.add(pt[p],{})};
-			}else{
-				pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.addGroupItem(series[s].el,pt[p],{})};
-			}
+			if(typ=="waffle-chart") pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.add(pt[p],{})};
+			else pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.addGroupItem(series[s].el,pt[p],{'keymap':{'ArrowLeft':arrow_move,'ArrowRight':arrow_move}})};
 			if(!series[s]) series[s] = {'i':parseInt(s),'array':[],'shapes':[]};
 			if(!series[s].array[i]) series[s].array[i] = pts[p];
 		}
-		//for(i in series) OI.Tooltips.finishGroup(series[i].el);
 
 		this.locked = 0;
 
