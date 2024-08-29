@@ -2,6 +2,7 @@ import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
 import { applyReplacementFilters } from '../../../lib/util.js';
+import { Where } from '../../../lib/util/where.js';
 import { mergeDeep } from './util.js';
 import { Colours } from '../../../lib/colour/colours.ts';
 
@@ -28,11 +29,11 @@ export function ScatterChart(config,csv){
 		'axis':{'x':{'padding':5,'tick':{'size':0.5},'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tick':{'size':0.5},'labels':{}}},
 		'duration': '0.3s',
 		'buildSeries': function(){
-			let s,i,labx,laby,x,y,label,datum,data,colour,colouri;
+			let s,i,labx,laby,x,y,label,datum,data,colour,colouri,keep,rowValidator;
 			// Build the series
 			for(s = 0; s < this.opt.series.length; s++){
 
-				colour = namedColours.get(this.opt.series[s].colour)||namedColours.get(this.opt.series[s].title)||null;
+				colour = namedColours.get(this.opt.series[s].colour)||namedColours.get(this.opt.series[s].title)||this.opt.series[s].colour||null;
 
 				// Over-write some series options
 				mergeDeep(this.opt.series[s],{
@@ -48,32 +49,42 @@ export function ScatterChart(config,csv){
 
 				// Build the data for this series
 				data = [];
+
+				// Is there a `where` modifier to this series?
+				if(typeof this.opt.series[s].where==="string"){
+					if(!rowValidator) rowValidator = Where();
+					rowValidator.set(this.opt.series[s].where);
+				}
+
 				for(i = 0; i < csv.rows.length; i++){
-					labx = x = csv.columns[this.opt.series[s].x][i];
-					laby = y = csv.columns[this.opt.series[s].y][i];
-					if(typeof x==="string") x = i;
-					if(typeof y==="string") y = i;
-					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
-						label = this.opt.series[s].title+"\n"+labx+': '+(laby);
-						colouri = colour;
-						if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
-
-						//if(this.opt.series[s].tooltip && csv.columns[this.opt.series[s].tooltip]) label = csv.columns[this.opt.series[s].tooltip][i];
-						if(this.opt.series[s].tooltip){
-							if(this.opt.series[s].tooltip in csv.columns){
-								label = csv.columns[this.opt.series[s].tooltip][i];
-							}else{
-								let options = JSON.parse(JSON.stringify(csv.rows[i]));
-								options._colour = colouri;
-								options._title = this.opt.series[s].title;
-								label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+					// Do we keep this row?
+					keep = (typeof this.opt.series[s].where==="string" ? rowValidator.isValid(csv.rows[i]) : true);
+					if(keep){
+						labx = x = csv.columns[this.opt.series[s].x][i];
+						laby = y = csv.columns[this.opt.series[s].y][i];
+						if(typeof x==="string") x = i;
+						if(typeof y==="string") y = i;
+						if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
+							label = this.opt.series[s].title+"\n"+labx+': '+(laby);
+							colouri = colour;
+							if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
+							colouri = namedColours.get(colouri)||colouri;
+							if(this.opt.series[s].tooltip){
+								if(this.opt.series[s].tooltip in csv.columns){
+									label = csv.columns[this.opt.series[s].tooltip][i];
+								}else{
+									let options = JSON.parse(JSON.stringify(csv.rows[i]));
+									options._colour = colouri;
+									options._title = this.opt.series[s].title;
+									label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+								}
 							}
+
+
+							datum = {'x':x,'y':y,'title':label,'colour':colouri};
+							datum.data = {'series':this.opt.series[s].title};
+							data.push(datum);
 						}
-
-
-						datum = {'x':x,'y':y,'title':label,'colour':colouri};
-						datum.data = {'series':this.opt.series[s].title};
-						data.push(datum);
 					}
 				}
 				this.series.push(new Series(s,this.opt.series[s],data));

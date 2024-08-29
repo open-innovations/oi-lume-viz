@@ -122,7 +122,7 @@ export function Chart(config,csv){
 		for(var s = 0; s < this.opt.series.length; s++){
 			this.opt.series[s].id = id;
 			this.opt.series[s].lbl = lbl;
-			if(this.opt.series[s].colour) this.opt.series[s].colour = namedColours.get(this.opt.series[s].colour);
+			if(this.opt.series[s].colour) this.opt.series[s].colour = namedColours.get(this.opt.series[s].colour)||this.opt.series[s].colour;
 		}
 
 		// Use a custom function to build the data series

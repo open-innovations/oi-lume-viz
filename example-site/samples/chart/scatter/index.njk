@@ -342,6 +342,44 @@ examples:
             marker: triangle
             rotate: 180
             size: 32
+  - title: "Limiting a series to specific rows"
+    version: "v0.15.14"
+    description: |
+      Sometimes you may have a big, stacked, file where you may want to use some rows for one series and other rows for another. We can limit a particular `series` to only use certain rows by using the option `where`. The `where` option uses a very basic SQL-like syntax that can parse simple comparisons `=`, `<`, `<=`, `>`, `>=` and the boolean operators `AND`, `OR`.
+
+      In the example below we have a dataset relating to housing that has a column `London borough` that can take the values `isLondon` and `notLondon`. We could limit a particular series to rows that contain the value `notLondon` by setting `where` to `"London borough"="notLondon"`.
+    config:
+      legend:
+        show: true     # Default to false
+      data: test.data.house-prices
+      axis:
+        x:
+          grid:
+            show: true
+          tick:
+            spacing: 5
+        y:
+          grid:
+            show: true
+          tick:
+            spacing: 25
+      series:
+        - title: Outside London
+          x: wage_ratio
+          y: vacants_per_thousand_dwellings
+          where: '"London borough"="notLondon" AND "vacants_per_thousand_dwellings"<50'
+        - title: London
+          x: wage_ratio
+          y: vacants_per_thousand_dwellings
+          where: '"London borough"="isLondon" AND "vacants_per_thousand_dwellings"<50'
+        - title: Empties outside London
+          x: wage_ratio
+          y: vacants_per_thousand_dwellings
+          where: '"London borough"="notLondon" AND "vacants_per_thousand_dwellings">=50'
+        - title: Empties in London
+          x: wage_ratio
+          y: vacants_per_thousand_dwellings
+          where: '"London borough"="isLondon" AND "vacants_per_thousand_dwellings">=50'
 options: |
   <ul>
   <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
