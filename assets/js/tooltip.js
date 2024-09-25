@@ -263,7 +263,7 @@
 					}
 				}
 			}
-			pt.setAttribute('aria-label',tt.replace(/<[^\>]+>/g,' '));
+			pt.setAttribute('aria-label',tt.replace(/<br[\\\s]*>/g,'; ').replace(/<[^\>]+>/g,' '));
 
 			wide = document.body.getBoundingClientRect().width;
 
