@@ -27,6 +27,25 @@ const site = lume({
 	src: '.',
 });
 
+/**
+* Run a shell command and return stdout.
+* Handles errors. Cannot handle pipes.
+*/
+function shell(command) {
+    const [ exec, ...args ] = command.split(/\s+/);
+    const process = new Deno.Command(exec, { args: args });
+    const { code, stdout, stderr } = process.outputSync();
+    const result = new TextDecoder().decode(stdout);
+    if (code !== 0) {
+        console.error(new TextDecoder().decode(stderr));
+        throw new Error(`Failed to run "${command}"`);
+    }
+    return result;
+}
+
+// Call shell directly, and deal with strings
+site.data('package_version', shell('git describe --tags').replace(/^v/,'').split('-')[0]);
+
 
 site.use(nunjucks());
 site.use(sitemap({
@@ -55,6 +74,22 @@ site.filter('parseColour', (value, options = {}) => { let cs = Colour(value); re
 site.filter('colourScaleGradient', (value, options = {}) => { return getColourScale(value)||""; });
 site.filter('seriesColour', (value, options = {}) => { return getSeriesColour(value)||""; });
 site.filter('contrastColour', (value, options = {}) => { let cs = Colour(value); return cs.contrast||value; });
+// 1992-93
+// 1992-3
+// 2022-23
+site.filter('parseEndYear', (value, options = {}) => {
+	let bits = value.split(/-/);
+	if(bits[0].length==4){
+		let sy = bits[0].substr(0,2);
+		let ey = bits[1];
+		if(ey.length==1){
+			ey = bits[0].substr(2,1)+ey;
+		}
+		return (sy+ey);
+	}else{
+		return "?";
+	}
+});
 
 
 

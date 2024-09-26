@@ -27,7 +27,7 @@ layout: layout/base.njk
 {% for example in examples %}
 	<section class="tallpadded">
 		{% set id %}example-{{ loop.index }}{% endset %}
-		<h3>{{ loop.index }}. {% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}{% if example.version %} <span class="version">Since {{ example.version }}</span>{% endif %}{{ comp.anchor({ ref: id, title: example.title }) | safe }}</h3>
+		<h3>{{ loop.index }}. {% if example.title %}{{ example.title }}{% else %}Example {% if examples | length > 1 %}{{ loop.index }}{% endif %}{% endif %}{% if example.version %} <span class="version">{% if example.version > package_version %}Coming in{% else %}Since{% endif %} {{ example.version }}</span>{% endif %}{{ comp.anchor({ ref: id, title: example.title }) | safe }}</h3>
 		<p><a href="{{ search.page('parent.url="' + url + '" index=' + loop.index ).url }}">Embeddable version</a></p>
 		{% if example.description %}
 		{{ example.description | md | safe }}
