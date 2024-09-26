@@ -97,7 +97,7 @@
 			return {
 				weight: (typeof props.options.weight==="number" ? props.options.weight : 0.5),
 				opacity: (typeof props.options.opacity==="number" ? props.options.opacity : 0.5),
-				color: "#ffffff",
+				color: (feature.geometry.type=="MultiLineString"||feature.geometry.type=="LineString" ? d.colour : "")||"#ffffff",
 				fillOpacity: (typeof props.options.fillOpacity==="number" ? props.options.fillOpacity : 1),
 				fillColor: d.colour||"transparent"
 			};

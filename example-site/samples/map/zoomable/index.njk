@@ -391,6 +391,60 @@ examples:
           min: -3
           max: -0.3
       mapAttribution: "OI"
+  - title: Display a line
+    description: |
+      So far we've been showing polygons but we can also show lines. Here's the routes of power transmission lines in the UK
+    version: "0.16.1"
+    config:
+      data:
+        - voltage: "110000"
+          name: "110kV"
+        - voltage: "132000"
+          name: "132kV"
+        - voltage: "220000"
+          name: "220kV"
+        - voltage: "275000"
+          name: "275kV"
+        - voltage: "320000"
+          name: "320kV"
+        - voltage: "400000"
+          name: "400kV"
+      geojson:
+        data: "geojson.HVPowerRoutesSimplified"
+        key: "voltage"
+      key: "voltage"
+      height: 1200
+      legend:
+        position: "top"
+        items:
+          - label: "400kV"
+            colour: "#aa014c"
+          - label: "320kV"
+            colour: "#cc6793"
+          - label: "275kV"
+            colour: "#d7501d"
+          - label: "220kV"
+            colour: "#df7349"
+          - label: "132kV"
+            colour: "#Feb300"
+          - label: "110kV"
+            colour: "#fec333"
+      options:
+        weight: 2
+        opacity: 1
+      tooltip: "name"
+      columns:
+        - name: "colour"
+          template: "{{ geojson.properties.stroke }}"
+      bounds:
+        lat:
+          min: 50
+          max: 60
+        lon:
+          min: -10
+          max: 2
+      mapAttribution: "OpenStreetMap (ODbL)"
+
   - title: Out of this world example
     description: |
       Let's journey to Mars. This example is inspired by <a href="https://mastodon.social/@65dBnoise/109849270626537378">maps by 65dBnoise</a> and shows locations in Kim Stanley Robinson's "Mars Trilogy".
