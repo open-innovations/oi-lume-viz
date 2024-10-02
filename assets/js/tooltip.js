@@ -324,7 +324,7 @@
 				off = off / scaleY;
 				tip.dataset.left=leftPos;
 				tip.dataset.top=topPos;
-				tip.setAttribute('style','position:absolute;left:'+(leftPos.toFixed(2))+'px;top:'+((topPos / scaleY).toFixed(2))+'px;display:'+(title ? 'block':'none')+';transform:translate3d(-50%,calc(-100% - '+off+'px),0);transition:all 0s;');
+				tip.setAttribute('style','position:absolute;left:'+(leftPos.toFixed(2))+'px;top:'+(topPos.toFixed(2))+'px;display:'+(title ? 'block':'none')+';transform:translate3d(-50%,calc(-100% - '+off+'px),0);transition:all 0s;');
 			}
 			box.style.background = fill;
 			box.style.transform = 'none';
