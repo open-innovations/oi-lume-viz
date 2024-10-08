@@ -4,7 +4,7 @@ import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { applyReplacementFilters } from "../../../lib/util.js";
 import { getBackgroundColour } from "../../../lib/colour/colour.ts";
 import { Colour, ColourScale, Colours } from "../../../lib/colour/colours.ts";
-import { defaultColourScale } from "../../../lib/colour/colour-scale.ts";
+import { defaultColourScale, getColourScale } from "../../../lib/colour/colour-scale.ts";
 import { parseColourString } from '../../../lib/colour/parse-colour-string.ts';
 import { VisualisationHolder } from '../../../lib/holder.js';
 import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
@@ -553,6 +553,7 @@ function BasicMap(config,attr){
 	
 	// Generate a UUID to identify the hexes
 	var uuid = crypto.randomUUID().substr(0,8);
+	const namedColours = Colours(config.colours);
 
 	this.attr = attr;
 	this.projection = new Projection(config.projection||null,(config.width || attr.w),(config.height || attr.h),(config.padding || 0));
@@ -561,7 +562,7 @@ function BasicMap(config,attr){
 
 	// Add the SVG
 	this.svg = svgEl('svg');
-	setAttr(this.svg,{'class':'oi-map-map','xmlns':'http://www.w3.org/2000/svg','version':'1.1','width':this.w,'height':this.h,'viewBox':'-180 0 360 180','overflow':'hidden','style':'width:'+(config.width ? config.width+"px" : "100%")+';max-width:100%;max-height:100%;margin:auto;height:auto;background:'+(attr.background||"white")+';aspect-ratio:'+this.w+' / '+this.h+';','preserveAspectRatio':'xMidYMin meet'});
+	setAttr(this.svg,{'id':'svg-'+uuid,'class':'oi-map-map','xmlns':'http://www.w3.org/2000/svg','version':'1.1','width':this.w,'height':this.h,'viewBox':'-180 0 360 180','overflow':'hidden','style':'width:'+(config.width ? config.width+"px" : "100%")+';max-width:100%;max-height:100%;margin:auto;height:auto;background:'+(attr.background||"white")+';aspect-ratio:'+this.w+' / '+this.h+';','preserveAspectRatio':'xMidYMin meet'});
 	if(config['data-type']) setAttr(this.svg,{'data-type':config['data-type']});
 	el.appendChild(this.svg);
 
@@ -598,6 +599,51 @@ function BasicMap(config,attr){
 			}
 			
 			html += '\n<script>(function(root){ OI.FilterMap.add("'+uuid+'",document.currentScript.parentNode,'+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
+		}
+		if(config.tools.slider){
+			holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
+
+			// We don't need to send every field in the dataset
+			let fields = [];
+
+			// 1. Extract which keys used for the tooltip
+			if(typeof config.tooltip!=="string"){
+				console.warn('Warning: No "tooltip" variable has been set for hex cartogram: ',config.hexjson);
+			}else{
+				fields = config.tooltip.match(/\{\{ *([^\}]*) *\}\}/g);
+				for(let m = 0; m < fields.length; m++){
+					fields[m] = fields[m].replace(/\{\{/g,"").replace(/\}\}/g,"").replace(/(^\s+|\s+$)/g,"").replace(/ \|.*/g,"");
+				}
+			}
+			// 2. Add the value field (so that we can work out the colour for each hex)
+			fields.push(config.value);
+			// 3. Add the _id (just in case)
+			fields.push('_id');
+			// 4. Add on the columns used for the slider
+			if(typeof config.tools.slider.columns!=="object"){
+				console.warn('No "columns" set for slider.');
+			}else{
+				fields = fields.concat(config.tools.slider.columns);
+			}
+			// Limit to unique fields
+			fields = Array.from(new Set(fields));
+
+			// Remove any _value (because this will be calculated in the front-end
+			const index = fields.indexOf('_value');
+			if(index > -1) fields.splice(index, 1);
+
+			// Compress the data to save bandwidth
+			let tempareas = {};
+			let i = 0,id;
+			for(let r = 0; r < config.data.length; r++){
+				id = config.data[r][config.key];
+				tempareas[id] = [];
+				for(let f = 0; f < fields.length; f++){
+					tempareas[id].push(config.data[r][fields[f]]);
+				}
+				i++;
+			}
+			html += '<script>(function(root){ OI.SliderMap({"position":"'+(config.tools.slider.position || 'bottom')+'","width":'+(config.tools.slider.width ? '"'+config.tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+config.value+'\","key":\"'+config.key+'\"'+(typeof config.min==="number" ? ',"min":'+config.min : '')+(typeof config.max==="number" ? ',"max":'+config.max : '')+',"colours":{"background":"'+defaultbg+'",'+(config.scale ? '"scale":"'+(getColourScale(config.scale)||config.scale)+'"' : '')+',"named":'+JSON.stringify(namedColours.getCustom()||{})+'},"tooltip": '+JSON.stringify(config.tooltip)+',"columns":'+JSON.stringify(config.tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(tempareas)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
 		}
 		return holder.wrap('<div class="oi-map-holder"><div class="oi-map-inner">'+html+'</div></div>');
 	};

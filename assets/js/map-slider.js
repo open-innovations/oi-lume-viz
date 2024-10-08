@@ -42,7 +42,7 @@
 			}
 		}
 		uid = p.querySelector('svg.oi-map-map').getAttribute('id');
-		as = p.querySelectorAll('.data-layer .hex');
+		as = p.querySelectorAll('.data-layer .hex,.data-layer .area');
 
 		areas = new Array(as.length);
 		// Convert node list into an array with pre-parsed properties
