@@ -265,7 +265,8 @@
 			}
 			pt.setAttribute('aria-label',tt.replace(/<br[\\\s]*>/g,'; ').replace(/<[^\>]+>/g,' '));
 
-			wide = document.body.getBoundingClientRect().width;
+			// Fix for situations where body is not full window width or has margins, this breaks tooltips.
+			wide = document.body.getBoundingClientRect().right;
 
 			// Set the position of the holder element
 			holder.style.position = 'relative';
