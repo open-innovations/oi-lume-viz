@@ -600,7 +600,7 @@ function BasicMap(config,attr){
 			
 			html += '\n<script>(function(root){ OI.FilterMap.add("'+uuid+'",document.currentScript.parentNode,'+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
 		}
-		if(config.tools.slider){
+		if(config.tools && config.tools.slider){
 			holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
 
 			// We don't need to send every field in the dataset
