@@ -265,7 +265,8 @@
 			}
 			pt.setAttribute('aria-label',tt.replace(/<br[\\\s]*>/g,'; ').replace(/<[^\>]+>/g,' '));
 
-			wide = document.body.getBoundingClientRect().width;
+			// Fix for situations where body is not full window width or has margins, this breaks tooltips.
+			wide = document.body.getBoundingClientRect().right;
 
 			// Set the position of the holder element
 			holder.style.position = 'relative';
@@ -314,7 +315,18 @@
 			if(typ=="calendar-chart") off = (bb.height/2);
 			if(typ=="waffle-chart") off = (bb.height/2);
 
-			tip.setAttribute('style','position:absolute;left:'+(bb.left + bb.width/2 - bbo.left).toFixed(2)+'px;top:'+(bb.top + bb.height/2 - bbo.top).toFixed(2)+'px;display:'+(title ? 'block':'none')+';transform:translate3d(-50%,calc(-100% - '+off+'px),0);transition:all 0s;');
+			// Set tooltip position, with awareness of element scaling
+			// In scoped block to avoid pollution of top-level namespace with new variables.
+			{
+				const scaleX = holder.getBoundingClientRect().width / holder.offsetWidth;
+				const scaleY = holder.getBoundingClientRect().height / holder.offsetHeight;
+				const leftPos = (bb.left + bb.width/2 - bbo.left) / scaleX;
+				const topPos = (bb.top + bb.height/2 - bbo.top) / scaleY;
+				off = off / scaleY;
+				tip.dataset.left=leftPos;
+				tip.dataset.top=topPos;
+				tip.setAttribute('style','position:absolute;left:'+(leftPos.toFixed(2))+'px;top:'+(topPos.toFixed(2))+'px;display:'+(title ? 'block':'none')+';transform:translate3d(-50%,calc(-100% - '+off+'px),0);transition:all 0s;');
+			}
 			box.style.background = fill;
 			box.style.transform = 'none';
 			arr.style['border-top-color'] = fill;
