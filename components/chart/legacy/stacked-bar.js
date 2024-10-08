@@ -88,6 +88,7 @@ export function StackedBarChart(config,csv){
 							let options = JSON.parse(JSON.stringify(csv.rows[i]));
 							options._colour = colouri;
 							options._title = this.opt.series[s].title;
+							if(this.opt.percent) options._percent = csv.columns[this.opt.series[s].value][i];
 							label = applyReplacementFilters(this.opt.series[s].tooltip,options);
 						}
 					}
