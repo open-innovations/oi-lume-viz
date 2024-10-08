@@ -4,9 +4,10 @@ import { counter } from "../../lib/util/counter.ts";
 import { clone } from "../../lib/util/clone.ts";
 import { isEven } from "../../lib/util/is-even.ts";
 import { Colour, ColourScale, Colours } from "../../lib/colour/colours.ts";
-import { defaultColourScale, getColourScale } from "../../lib/colour/colour-scale.ts";
+import { defaultColourScale } from "../../lib/colour/colour-scale.ts";
 import { getAssetPath } from "../../lib/util/paths.ts";
 import { getBackgroundColour } from "../../lib/colour/colour.ts";
+import { SliderContent } from '../../lib/chart-parts/slider.js';
 import { VisualisationHolder } from '../../lib/holder.js';
 
 const defaultbg = getBackgroundColour();
@@ -624,47 +625,18 @@ export default function (input: { config: HexmapOptions }) {
 	if(tools.slider){
 		holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
 
-		// We don't need to send every field in the dataset
-		let fields = [];
-
-		// 1. Extract which keys used for the tooltip
-		if(typeof tooltip!=="string"){
-			console.warn('Warning: No "tooltip" variable has been set for hex cartogram: ',input.config.hexjson);
-		}else{
-			fields = tooltip.match(/\{\{ *([^\}]*) *\}\}/g);
-			for(let m = 0; m < fields.length; m++){
-				fields[m] = fields[m].replace(/\{\{/g,"").replace(/\}\}/g,"").replace(/(^\s+|\s+$)/g,"").replace(/ \|.*/g,"");
-			}
-		}
-		// 2. Add the value field (so that we can work out the colour for each hex)
-		fields.push(value);
-		// 3. Add the _id (just in case)
-		fields.push('_id');
-		// 4. Add on the columns used for the slider
-		if(typeof tools.slider.columns!=="object"){
-			console.warn('No "columns" set for slider.');
-		}else{
-			fields = fields.concat(tools.slider.columns);
-		}
-		// Limit to unique fields
-		fields = Array.from(new Set(fields));
-
-		// Remove any _value (because this will be calculated in the front-end
-		const index = fields.indexOf('_value');
-		if(index > -1) fields.splice(index, 1);
-
-		// Compress the data to save bandwidth
-		let temphexes = {};
-		let i = 0;
-
-		for(let hex in hexes){
-			temphexes[hex] = [];
-			for(let f = 0; f < fields.length; f++){
-				temphexes[hex].push(hexes[hex][fields[f]]);
-			}
-			i++;
-		}
-		html += '<script>(function(root){ OI.SliderMap({"position":"'+(tools.slider.position || 'bottom')+'","width":'+(tools.slider.width ? '"'+tools.slider.width+'"' : '"100%"')+',"defaultbg":'+JSON.stringify(defaultbg)+',"value":\"'+value+'\","key":\"'+matchKey+'\"'+(typeof input.config.min==="number" ? ',"min":'+input.config.min : '')+(typeof input.config.max==="number" ? ',"max":'+input.config.max : '')+',"colours":{"background":"'+defaultbg+'",'+(scale ? '"scale":"'+(getColourScale(scale)||scale)+'"' : '')+',"named":'+JSON.stringify(namedColours.getCustom()||{})+'},"tooltip": '+JSON.stringify(tooltip)+',"columns":'+JSON.stringify(tools.slider.columns||[])+',"compresseddata":'+JSON.stringify(temphexes)+',"fields":'+JSON.stringify(fields)+'}); })(window || this);</script>';
+		html += SliderContent({
+			slider: tools.slider,
+			bg: defaultbg,
+			value: value,
+			key: matchKey,
+			min: input.config.min,
+			max: input.config.max,
+			scale: scale,
+			colours: namedColours,
+			tooltip: tooltip,
+			data: hexes
+		});
 	}
 	html += '</div>';
 
