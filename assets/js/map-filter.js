@@ -13,12 +13,12 @@
 	}
 
 	var styles = document.createElement('style');
-	styles.innerHTML = ':root {--filter-padding: 0.25em;}.oi-filter {position: relative; z-index:1010; min-height:2.5em;} .oi-filter label {position:absolute;display:block;z-index: 1013;}.oi-filter .oi-filter-button{cursor:pointer;padding:var(--filter-padding);text-align:center;line-height:0em;margin:0;width:calc(2em + var(--filter-padding)*2);height:calc(2em + var(--filter-padding)*2);background:black;color:white;}.oi-filter input {display:none;line-height:2em;font-size:1em;border:solid var(--filter-padding) black;line-height:2em;padding:0 0 0 calc(2em + var(--filter-padding)*2);position:relative;z-index: 1012;}.oi-filter.searching input{display:inline-block;}.oi-filter-results{display:none;position:absolute;z-index: 1010;min-width:100%;list-style:none;margin:0;}.oi-filter.searching .oi-filter-results{display:block;}.oi-filter-results li > *{padding:0.5em 1em;background:#dfdfdf;text-decoration:none;display:block;}.oi-filter-results li > *:visited{color:inherit;}.oi-viz .data-layer > *{transition: opacity 0.2s ease-in;}.oi-viz .data-layer .not-selected{opacity: 0.1;}.oi-filter-results button {width:100%;margin:0;text-align:left;}';
+	styles.innerHTML = ':root {--filter-padding: 0.25rem;}.oi-filter {position: relative; z-index:1010; min-height:2.5rem;} .oi-filter label {position:absolute;display:block;z-index: 1013;}.oi-filter .oi-filter-button{cursor:pointer;padding:var(--filter-padding);text-align:center;line-height:0em;margin:0;width:calc(2rem + var(--filter-padding)*2);height:calc(2rem + var(--filter-padding)*2);background:black;color:white;border:0;}.oi-filter input {display:none;line-height:2rem;font-size:1rem;border:solid var(--filter-padding) black;line-height:2rem;padding: 0 0 0 calc(2rem + var(--filter-padding)*2);position:relative;z-index: 1012;box-sizing:border-box;height:calc(2rem + var(--filter-padding)*2);}.oi-filter.searching input{display:inline-block;margin:0;}.oi-filter-results{display:none;position:absolute;z-index: 1010;list-style:none;margin:0;padding-left:0;width: 100%;}.oi-filter.searching .oi-filter-results{display:block;}.oi-filter-results li{padding:0.75em;background:#dfdfdf;text-decoration:none;display:block;cursor:pointer;margin:0;margin-left:calc(2rem + var(--filter-padding)*2);text-align:left;border:0;}.oi-filter-results li:focus {outline: 5px auto Highlight;outline:5px auto -webkit-focus-ring-color;}.oi-viz .data-layer > *{transition: opacity 0.2s ease-in;}.oi-viz .data-layer .not-selected{opacity: 0.1;}';
 	document.head.prepend(styles);
 
 	function FilterMap(id,p,opt,data){
 
-		var viz,el,areas,a,as,btn,inp,results,title,firstlabel = "",hexes = {};
+		var viz,el,areas,a,as,btn,inp,results,title,firstlabel = "",hexes = {},selected = null;
 		viz = p.closest('.oi-viz');
 
 		var pos = [];
@@ -78,11 +78,12 @@
 		el = document.createElement('div');
 		el.setAttribute('data-id',id);
 		el.classList.add('oi-filter');
-		el.innerHTML = '<label for="oi-filter-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-filter-'+id+'" id="oi-filter-'+id+'" value="" placeholder="e.g. '+firstlabel+'"><ul class="oi-filter-results"></ul>';
+		el.innerHTML = '<label for="oi-filter-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-filter-'+id+'" id="oi-filter-'+id+'" value="" placeholder="e.g. '+firstlabel+'"><ul role="menu" class="oi-filter-results"></ul>';
 		(opt.position.match("top") ? pel.prepend(el) : pel.append(el));
 
 		btn = el.querySelector('.oi-filter-button');
 		inp = el.querySelector('input');
+		inp.setAttribute('size',Math.max(0,inp.getAttribute('placeholder').length-4));
 		btn.addEventListener('click',function(e){
 			el.classList.toggle('searching');
 			if(el.classList.contains('searching')) inp.focus();
@@ -97,6 +98,7 @@
 			var n = 0;
 			var v,nm,a,id;
 			var tmp = [];
+			selected = null;
 			if(value.length > 0){
 				regions = {};
 				for(var a = 0; a < areas.length; a++){
@@ -113,13 +115,13 @@
 			}
 			for(var i = 0; i < Math.min(opt.max,tmp.length); i++){
 				if(tmp[i].score > 0){
-					li += '<li><button data="'+tmp[i].id+'" style="background-color:'+tmp[i].area.colour+';color:'+tmp[i].area.textcolour+';">'+tmp[i].area.data.label+'</button></li>';
+					li += '<li role="menuitem" data="'+tmp[i].id+'" style="background-color:'+tmp[i].area.colour+';color:'+tmp[i].area.textcolour+';" tabIndex="-1">'+tmp[i].area.data.label+'</li>';
 				}
 			}
 
 			// Add list of options
 			results.innerHTML = li;
-			as = results.querySelectorAll('li > *');
+			as = results.querySelectorAll('li');
 			as.forEach(function(a){
 				a.addEventListener('click',function(e){
 					e.preventDefault();
@@ -132,12 +134,42 @@
 					_obj.highlight();
 					el.classList.toggle('searching');
 				});
+				a.addEventListener('keydown',function(e){
+					e.preventDefault();
+					e.stopPropagation();
+				});
+				a.addEventListener('keyup',function(e){
+					if(e.key=="ArrowDown") navigateList(1);
+					else if(e.key=="ArrowUp") navigateList(-1);
+					else if(e.key=="Enter") a.click();
+				})
 			});
 			this.highlight(regions);
 			return this;
 		}
+
+		function navigateList(dir){
+			if(typeof selected!=="number"){
+				if(dir > 0) selected = -1;
+				else selected = 0;
+			}
+			selected += dir;
+			if(selected > as.length-1 || selected < 0){
+				inp.focus();
+				selected = null;
+				results.style['z-index'] = 1010;
+			}else{
+				as[selected].focus();
+				results.style['z-index'] = 1013;
+			}
+		}
+
 		inp.addEventListener('keyup',function(e){
-			_obj.search(e.target.value.toLowerCase());
+			e.preventDefault();
+			if(e.key=="ArrowDown") navigateList(1);
+			else if(e.key=="ArrowUp") navigateList(-1);
+			else if(e.key=="Enter" && selected >= 0) as[selected].click();
+			else _obj.search(e.target.value.toLowerCase());
 		});
 		
 		this.highlight = function(regions){
