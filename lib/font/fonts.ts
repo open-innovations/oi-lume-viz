@@ -28,7 +28,7 @@ const fontDefinitions: Record<string, FontOptions> = {
 };
 
 let defaultFont = 'Arial';
-let defaultFamily = 'Arial,sans-serif';
+let defaultFamily = '';
 let defaultWeight = 'normal';
 let defaultSize = 16;
 
@@ -55,7 +55,7 @@ export function getFont(key: string): FontOptions {
 }
 
 export function getFontFamily(): string {
-	return defaultFamily.replace(/\"/g,"'");
+	return (defaultFamily||"").replace(/\"/g,"'");
 }
 
 export function getFontWeight(): string {
@@ -83,7 +83,7 @@ export function setDefaultFonts({
 	}
 
 	// If we've provided a family we set the default
-	if(family){
+	if(typeof family==="string" && family!==""){
 		defaultFamily = family;
 		let f = getFontMatch(family)
 		if(f.font){
@@ -124,7 +124,7 @@ function getFontMatch(font){
 			return {'i':f,'font':fontparts[f],'fonts':fontparts};
 		}
 	}
-	return {'i':-1,'font':'','fonts':fontparts};	
+	return {'i':-1,'font':'','fonts':fontparts};
 }
 
 function knownFont(font){
@@ -138,7 +138,7 @@ function knownFont(font){
 */
 export function textLength(txt,fs,weight,font){
 
-	if(typeof font!=="string"){
+	if(typeof font!=="string" || font==""){
 		console.warn('No font specified so defaulting to '+defaultFont+'.');
 		font = defaultFont;
 	}
