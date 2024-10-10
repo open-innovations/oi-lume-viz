@@ -117,7 +117,7 @@
 		var dashboards = document.querySelectorAll(".oi-dashboard");
 		// A function to "animate" the number when first seen
 		function animateNumber(el,val,duration){
-			var start,pre,post,v,prec;
+			var start,pre,post,v,prec,nice;
 			// Get the number from the data attribute (or the HTML content if not set)
 			if(typeof val!=="number"){
 				val = el.getAttribute('data')||el.innerHTML;
@@ -127,6 +127,7 @@
 			pre = el.getAttribute('data-prefix')||'';
 			post = el.getAttribute('data-postfix')||'';
 			prec = el.getAttribute("data-precision") ? parseFloat(el.getAttribute("data-precision")) : "";
+			nice = el.getAttribute('data-compact-format') ? true : false;
 			if(typeof duration!=="number") duration = 500;
 			function frame(){
 				var now,f;
@@ -134,11 +135,11 @@
 				// Set the current time in milliseconds
 				f = (now - start)/duration;
 				if(f < 1){
-					v = formatNumber(Math.round(val*f),prec);
+					v = formatNumber(Math.round(val*f),prec,nice);
 					el.innerHTML = pre+v+post;
 					window.requestAnimFrame(frame);
 				}else{
-					el.innerHTML = (pre||"")+formatNumber(val,prec)+(post||"");
+					el.innerHTML = (pre||"")+formatNumber(val,prec,nice)+(post||"");
 				}
 			}
 			// If the value is a number we animate it
@@ -146,15 +147,19 @@
 			return;			
 		}
 		// Shorten big numbers
-		function formatNumber(v,p){
+		function formatNumber(v,p,nice){
 			if(typeof v !== "number") return v;
-			if (v > 1e10) return toPrecision(v / 1e9,(p ? p/1e9 : 1)) + "B";
-			if (v > 1e9) return toPrecision(v / 1e9,(p ? p/1e9 : 0.1)) + "B";
-			if (v > 1e7) return toPrecision(v / 1e6,(p ? p/1e6 : 1)) + "M";
-			if (v > 1e6) return toPrecision(v / 1e6,(p ? p/1e6 : 0.1)) + "M";
-			if (v > 1e4) return toPrecision(v / 1e3,(p ? p/1e3 : 1)) + "k";
-			if (v > 1e3) return toPrecision(v / 1e3,(p ? p/1e3 : 0.1)) + "k";
-			return toPrecision(v,p);
+			if(nice){
+				if (v > 1e10) return toPrecision(v / 1e9,(p ? p/1e9 : 1)) + "B";
+				if (v > 1e9) return toPrecision(v / 1e9,(p ? p/1e9 : 0.1)) + "B";
+				if (v > 1e7) return toPrecision(v / 1e6,(p ? p/1e6 : 1)) + "M";
+				if (v > 1e6) return toPrecision(v / 1e6,(p ? p/1e6 : 0.1)) + "M";
+				if (v > 1e4) return toPrecision(v / 1e3,(p ? p/1e3 : 1)) + "k";
+				if (v > 1e3) return toPrecision(v / 1e3,(p ? p/1e3 : 0.1)) + "k";
+				return toPrecision(v,p);
+			}else{
+				return toPrecision(v,p).toLocaleString();
+			}
 		}
 		function countDecimals(v){
 			var txt = v.toString();

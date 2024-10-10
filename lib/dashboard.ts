@@ -121,6 +121,7 @@ export function dashboard(config: DashboardOptions){
       if(units.postfix && data[idx][units.postfix]) panel += ' data-postfix="'+data[idx][units.postfix]+'"';
     }
     if(typeof panels[p].precision==="number") panel += ' data-precision="'+panels[p].precision+'"';
+    if(typeof panels[p]['compact-format']==="undefined" || panels[p]['compact-format']) panel += ' data-compact-format="true"';
     panel += '>';
     panel += units?.prefix ? data[idx][units.prefix] || '' : ''
     if(typeof v.toLocalString==="function"){

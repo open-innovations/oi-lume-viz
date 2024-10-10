@@ -5,7 +5,7 @@ order: 1
 showcase: 2
 component: dashboard
 layout: layout/sample-viz.njk
-version: v0.1.0
+version: 0.1.0
 examples:
   - title: "Simple panels"
     description: |
@@ -243,6 +243,7 @@ options: |
   	<li><code><a href="../../samples/dashboard/#example-4" aria-title="Set the colour scale of a dashbaord panel">scale</a></code> - A <a href="../colours/#scales">colour scale</a> to use to set the panel's background colour based on the <code>value</code>.</li>
   	<li><code>min</code> - Used with <code>scale</code> and <code>max</code> to define the colour scale.</li>
   	<li><code>max</code> - Used with <code>scale</code> and <code>min</code> to define the colour scale.</li>
+  	<li><code>compact-format</code><span class="version">0.16.3</span> - By default this will be set to true. It will show numbers to the nearest thousand, million, billion etc. So 1,500 will become 1.5k.</li>
   	</ul>
   </li>
   <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
