@@ -1,5 +1,5 @@
 /*
-	Open Innovations Tooltip v0.5.0
+	Open Innovations Tooltip v0.5.1
 	Helper function to add tooltips. A suitable candidate must:
 		- be in an SVG
 		- have a <title> child
@@ -197,7 +197,7 @@
 		}
 		this.el = pt;
 
-		var svg,holder,tt,typ = "";
+		var svg,holder,tt,typ = "",tip,title,fill;
 		svg = pt.furthest('svg');
 
 		// Find the "data-type"
@@ -242,7 +242,7 @@
 		}
 
 		this.show = function(){
-			var tip,title,fill,bb,bbo,bbox,off,pad,box,arr,shift,wide,pt2,tt;
+			var box,arr,pt2,t;
 
 			pt2 = pt.querySelector('path,.marker');
 			if(!pt2) pt2 = pt;
@@ -265,9 +265,6 @@
 			}
 			pt.setAttribute('aria-label',tt.replace(/<br[\\\s]*>/g,'; ').replace(/<[^\>]+>/g,' '));
 
-			// Fix for situations where body is not full window width or has margins, this breaks tooltips.
-			wide = document.body.getBoundingClientRect().right;
-
 			// Set the position of the holder element
 			holder.style.position = 'relative';
 
@@ -276,7 +273,6 @@
 
 			// Add the tip to the holder
 			add(tip,holder);
-
 
 			// Get the fill colour from the data-fill attribute
 			fill = pt.getAttribute('data-fill');
@@ -303,6 +299,37 @@
 			// Set the contents
 			box.innerHTML = (title);
 
+			box.style.background = fill;
+			box.style.transform = 'none';
+			arr.style['border-top-color'] = fill;
+
+			// If the colour is similar to black we need to change the tooltip filter
+			if(fill && contrastRatio(colour2RGB(fill),[0,0,0]) < 2){
+				box.style.border = "1px solid rgba(255,255,255,0.3)";
+				box.style.borderBottom = "0";
+			}else{
+				box.style.border = "0px";
+			}
+
+			tip.style.color = (fill && root.OI.contrastColour ? root.OI.contrastColour(fill) : "black");
+
+			this.position();
+
+			if(typeof attr.show==="function") attr.show.call(this,pt,attr);
+			attr._alltips.active = this;
+
+			return this;
+		};
+
+		// Update the position of the tooltip
+		this.position = function(){
+			var bb,bbo,bbox,box,arr,wide,off,pad,shift;
+			// Fix for situations where body is not full window width or has margins, this breaks tooltips.
+			wide = document.body.getBoundingClientRect().right;
+
+			box = tip.querySelector('.inner');
+			arr = tip.querySelector('.arrow');
+
 			// Position the tooltip
 			bb = pt.getBoundingClientRect();	// Bounding box of the element
 			bbo = holder.getBoundingClientRect(); // Bounding box of SVG holder
@@ -318,29 +345,17 @@
 			// Set tooltip position, with awareness of element scaling
 			// In scoped block to avoid pollution of top-level namespace with new variables.
 			{
-				const scaleX = holder.getBoundingClientRect().width / holder.offsetWidth;
-				const scaleY = holder.getBoundingClientRect().height / holder.offsetHeight;
-				const leftPos = (bb.left + bb.width/2 - bbo.left) / scaleX;
-				const topPos = (bb.top + bb.height/2 - bbo.top) / scaleY;
+				var scaleX = holder.getBoundingClientRect().width / holder.offsetWidth;
+				var scaleY = holder.getBoundingClientRect().height / holder.offsetHeight;
+				var leftPos = (bb.left + bb.width/2 - bbo.left) / scaleX;
+				var topPos = (bb.top + bb.height/2 - bbo.top) / scaleY;
 				off = off / scaleY;
 				tip.dataset.left=leftPos;
 				tip.dataset.top=topPos;
 				tip.setAttribute('style','position:absolute;left:'+(leftPos.toFixed(2))+'px;top:'+(topPos.toFixed(2))+'px;display:'+(title ? 'block':'none')+';transform:translate3d(-50%,calc(-100% - '+off+'px),0);transition:all 0s;');
 			}
-			box.style.background = fill;
-			box.style.transform = 'none';
-			arr.style['border-top-color'] = fill;
 
-			// If the colour is similar to black we need to change the tooltip filter
-			if(fill && contrastRatio(colour2RGB(fill),[0,0,0]) < 2){
-				box.style.border = "1px solid rgba(255,255,255,0.3)";
-				box.style.borderBottom = "0";
-			}else{
-				box.style.border = "0px";
-			}
 
-			tip.style.color = (fill && root.OI.contrastColour ? root.OI.contrastColour(fill) : "black");
-			
 			// Remove wrapping if the tip is wider than the page minus the padding
 			box.style.whiteSpace = (tip.offsetWidth > wide - 2*pad) ? 'none' : 'nowrap';
 
@@ -351,6 +366,7 @@
 			}else{
 				tip.style.width = '';
 			}
+
 
 			// Find out where the tooltip is now
 			bbox = tip.getBoundingClientRect();
@@ -384,9 +400,6 @@
 				arr.style['border-bottom'] = '0.5em solid '+fill;
 				arr.style['border-left'] = '0.5em solid transparent';
 			}
-
-			if(typeof attr.show==="function") attr.show.call(this,pt,attr);
-			attr._alltips.active = this;
 
 			return this;
 		};
@@ -465,6 +478,10 @@
 	}	// End of tooltip class
 
 	if(!root.OI.Tooltips) root.OI.Tooltips = new Tooltips();
+
+	window.addEventListener('resize',function(){
+		if(OI.Tooltips && OI.Tooltips.active) OI.Tooltips.active.position();
+	});
 
 	// Convert to sRGB colorspace
 	// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
