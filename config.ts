@@ -14,9 +14,9 @@ export const assets = [
   'js/tree-map.js',
   'js/zoomable.js',
   'css/holder.css',
-  'css/maps.css',
   'css/legend.css',
-  'css/charts.css',
+  'css/maps.css',
+  'css/waffle.css',
   'leaflet/leaflet.js',
   'leaflet/leaflet.css',
 ];

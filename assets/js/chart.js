@@ -15,6 +15,9 @@
 			else document.addEventListener('DOMContentLoaded', fn);
 		};
 	}
+	var styles = document.createElement('style');
+	styles.innerHTML = '.oi-chart { position: relative; }';
+	document.head.prepend(styles);
 
 	function setAttr(el,prop){
 		for(var p in prop) el.setAttribute(p,prop[p]);
@@ -271,6 +274,7 @@
 
 			for(s = 0; s < keyseries.length; s++){
 				keyitem = keyseries[s];
+				keyitem.classList.add('oi-series-on');
 				snum = keyseries[s].getAttribute('data-series');
 				if(series[snum]){
 					series[snum].key = keyitem;

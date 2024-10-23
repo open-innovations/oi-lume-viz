@@ -12,6 +12,10 @@
 			else document.addEventListener('DOMContentLoaded', fn);
 		};
 	}
+
+	var styles = document.createElement('style');
+	styles.innerHTML = '.oi-chart-ranking { position: relative; }';
+	document.head.prepend(styles);
 	
 	function getAbsoluteBBox(el){
 		var bb = el.getBoundingClientRect();

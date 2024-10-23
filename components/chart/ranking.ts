@@ -508,7 +508,7 @@ export default function (input: {
 	}
 
 	var holder = new VisualisationHolder(config,{'name':'ranking chart'});
-	holder.addDependencies(['/js/chart-ranking.js','/css/charts.css','/js/tooltip.js']);
+	holder.addDependencies(['/js/chart-ranking.js','/js/tooltip.js']);
 	holder.addClasses(['oi-chart','oi-chart-ranking']);
 	return holder.wrap(svg.outerHTML);
 }

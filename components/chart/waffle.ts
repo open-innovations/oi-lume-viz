@@ -17,14 +17,6 @@ const fontWeight = getFontWeight();
 const fontSize = getFontSize();
 
 
-export const css = `
-/* OI waffle chart component */
-.oi-waffle-chart { text-align: center; }
-.oi-waffle-chart .marker:hover, .oi-waffle-chart .marker:focus { outline: 4px solid black; }
-.oi-waffle-chart .marker-group:hover, .oi-waffle-chart .marker-group:focus { outline: none; stroke-width: 4px; stroke: black; }
-`;
-
-
 type WaffleChartOptions = {
 	/** The data holding the values to be used */
 	data: { [key: string]: unknown }[];
@@ -279,7 +271,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	}
 
 	var holder = new VisualisationHolder(config,{'name':'waffle chart'});
-	holder.addDependencies(['/js/chart.js','/css/charts.css','/js/tooltip.js']);
+	holder.addDependencies(['/js/chart.js','/css/waffle.css','/js/tooltip.js']);
 	holder.addClasses(['oi-chart','oi-waffle-chart']);
 
 	return holder.wrap(svg);

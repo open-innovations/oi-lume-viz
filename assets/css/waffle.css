@@ -1,0 +1,4 @@
+/* OI waffle chart component */
+.oi-waffle-chart { text-align: center; }
+.oi-waffle-chart .marker:hover, .oi-waffle-chart .marker:focus { outline: 4px solid black; }
+.oi-waffle-chart .marker-group:hover, .oi-waffle-chart .marker-group:focus { outline: none; stroke-width: 4px; stroke: black; }
