@@ -113,7 +113,7 @@ export function Axis(ax,from,to,attr){
 				if(!opt.labels[t]['font-weight']) opt.labels[t]['font-weight'] = "bold";
 				align = opt.labels[t].align||(ax=="x" ? "bottom" : "left");
 				talign = opt.labels[t]['text-anchor']||(ax=="y" ? (align=="left" ? "end":"start") : "middle");
-				baseline = (ax=="x" ? ((align=="bottom") ? "hanging" : "text-bottom") : "middle");
+				baseline = (ax=="x" ? ((align=="bottom") ? "hanging" : "") : "middle");
 				if(opt['dominant-baseline']) baseline = opt['dominant-baseline'];
 				tfs = opt.labels[t]['font-size']||fs;
 				len = (typeof opt.labels[t].tickSize==="number" ? opt.labels[t].tickSize : opt.tick.size);
@@ -157,24 +157,23 @@ export function Axis(ax,from,to,attr){
 						ticks[t].text.el.removeAttribute('style');
 					}
 					
+					let dy = 0;
+					if(baseline=="middle") dy = tfs*0.25;
+					if(baseline=="hanging") dy = tfs*0.72;
+
 					// Split the label by any new line characters and add each as a tspan
 					lines = (typeof opt.labels[t].label==="string" ? opt.labels[t].label.split(/\n/g) : "");
 					for(l = 0; l < lines.length; l++){
 						tspan = svgEl('tspan');
 						tspan.innerHTML = lines[l];
 						setAttr(tspan,{'font-family':opt['font-family']||fontFamily,'font-size':tfs});
-						if(ax=="x") setAttr(tspan,{'dy':tfs*l,'x':0,'y':ysign*(len+pd)});
-						if(ax=="y") setAttr(tspan,{'y':tfs*((l-(lines.length-1)/2)),'x':xsign*(len+pd)});
+						if(ax=="x") setAttr(tspan,{'dy':tfs*l + dy,'x':0,'y':ysign*(len+pd)});
+						if(ax=="y") setAttr(tspan,{'dy':dy,'y':tfs*((l-(lines.length-1)/2)),'x':xsign*(len+pd)});
 						add(tspan,ticks[t].text.el);
 					}
 
-					let dy = 0;
-					if(baseline=="middle") dy = '0.25em';
-					if(baseline=="hanging") dy = '0.72em';
-
 					// Set some text properties
-					//setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"#000000",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'dominant-baseline':baseline,'font-weight':opt.labels[t]['font-weight']||""});
-					setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"#000000",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'dy':dy,'font-weight':opt.labels[t]['font-weight']||""});
+					setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"#000000",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'font-weight':opt.labels[t]['font-weight']||""});
 
 					if(ticks[t].line){
 						// Set the position/size of the line
