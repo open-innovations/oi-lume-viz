@@ -34,20 +34,22 @@ fonts:
 		<pre><code class="hljs language-json">site.use(oiLumeViz({
   ...
   "font": {
-    "family": "Poppins, sans-serif"
+    "family": "ExampleFont, sans-serif"
   },
   ...
 }));</code></pre>
 		<p>When no <code>font-family</code> is set, the font metrics for <code>Arial</code> will be used for text placement. This may lead to positioning issues if the font chosen by a viewer's system is very different to Arial.</p>
 
 		<h2>Setting font metrics{{ comp.anchor({ ref: "customise-fonts" }) | safe }}</h3>
-		<p>If your visualisation text will be using a font other than {% for font in fonts %}{% if loop.index0 > 0 %}, {% endif %}"<span style="font-family:{{ font }}">{{ font }}"</span>{% endfor %} you will need to make sure that you provide the font metrics so that the lengths of text labels in SVG can be calculated. We have created the <a href="../tools/font-metrics/">font metrics tool</a> to help with that. Once you have generated your font metrics you can add it to the fonts list by updating <code>_config.[js|ts]</code>:</p>
+		<p>If your visualisation text will be using a font other than {% for font in fonts %}{% if loop.index0 > 0 %}, {% endif %}"<span style="font-family:{{ font }}">{{ font }}"</span>{% endfor %} you will need to update <code>_config.[js|ts]</code> with either:</p>
+		<h3>1) Font metrics</h3>
+		<p>Font metrics gives the width of every character for a given <code>font-size</code>. We have created the <a href="../tools/font-metrics/">font metrics tool</a> to help with creating static metrics.</p>
 		<pre><code class="hljs language-json">site.use(oiLumeViz({
   ...
   "font": {
-    "family": "Poppins, sans-serif",
+    "family": "ExampleFont, sans-serif",
     "fonts": {
-      "Poppins": {
+      "ExampleFont": {
         "normal": {"font-size":32,"widths":[0,...]},
         "bold":{"font-size":32,"widths":[0,...]}
       },
@@ -55,8 +57,21 @@ fonts:
   },
   ...
 }));</code></pre>
-
-
+		<h3>2) A function{{ comp.version({version:"0.16.3"}) | safe }}</h3>
+		<p>Alternatively you could provide a function that returns the width (in pixels) of a given text string. Here is an overly simplistic example function but you could easily use external libraries that calculate the string width using the original font files.</p>
+		<pre><code class="hljs language-json">site.use(oiLumeViz({
+ ...
+  "font": {
+    "family": "ExampleFont, sans-serif",
+    "fonts": {
+      "ExampleFont": {
+        "normal": function(txt,fs){ return txt.length * fs; },
+        "bold": function(txt,fs){ return 1.2 * txt.length * fs; }
+      },
+    },
+  },
+  ...
+}));</code></pre>
 
 		<h2>Setting font size{{ comp.anchor({ ref: "customise-size" }) | safe }}</h3>
 		<p>The default font size is set to <code>16</code>. You can change that in <code>_config.[js|ts]</code>:</p>
