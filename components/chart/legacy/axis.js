@@ -168,8 +168,13 @@ export function Axis(ax,from,to,attr){
 						add(tspan,ticks[t].text.el);
 					}
 
+					let dy = 0;
+					if(baseline=="middle") dy = '0.25em';
+					if(baseline=="hanging") dy = '0.72em';
+
 					// Set some text properties
-					setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"#000000",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'dominant-baseline':baseline,'font-weight':opt.labels[t]['font-weight']||""});
+					//setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"#000000",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'dominant-baseline':baseline,'font-weight':opt.labels[t]['font-weight']||""});
+					setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"#000000",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'dy':dy,'font-weight':opt.labels[t]['font-weight']||""});
 
 					if(ticks[t].line){
 						// Set the position/size of the line
