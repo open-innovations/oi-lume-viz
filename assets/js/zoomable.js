@@ -90,7 +90,7 @@
 		if(!props) props = {};
 		if(!props.options) props.options = {};
 		this.props = props;
-		var overlay;
+		var overlay,wrapper,outline;
 
 		// Set some functions for GeoJSON layers
 		function style(feature){
@@ -106,13 +106,21 @@
 		function highlightFeature(e){
 			const l = e.target;
 			if(typeof l.getLatLngs==="function"){
-				overlay = L.polygon(l.getLatLngs(),{color:"#000000",weight:4,fill:false,'className':'selected outline'});
+				overlay = L.polygon(l.getLatLngs(),{color:"currentColor",weight:4,fill:false});
 				overlay.addTo(props.layer);
 				overlay.bringToFront();
 				overlay.setStyle({'pointer-events':'none'});
+				wrapper = document.createElementNS('http://www.w3.org/2000/svg','g');
+				outline = document.createElementNS('http://www.w3.org/2000/svg','g');
+				wrapper.classList.add('overlay');
+				outline.classList.add('outline','selected');
+				overlay._path.parentNode.replaceChild(wrapper, overlay._path);
+				wrapper.append(outline);
+				outline.append(overlay._path);
 			}else console.warn('No layer to create overlay for',l);
 		}
 		function resetHighlight(e){
+			if(wrapper) wrapper.remove();
 			if(overlay) overlay.remove();
 		}
 		function getData(k){
