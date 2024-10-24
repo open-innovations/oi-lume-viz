@@ -1,4 +1,5 @@
 import { addVirtualColumns, thingOrNameOfThing } from "../../lib/helpers.ts";
+import { Where } from '../../lib/util/where.js';
 import { applyReplacementFilters } from '../../lib/util.js';
 import { getAssetPath } from "../../lib/util/paths.ts"
 import { clone } from "../../lib/util/clone.ts";
@@ -99,26 +100,37 @@ function CalendarChart(input: {
 	let minDate = "3000-01-01";
 	let maxDate = "0000-01-01";
 	let days = {};
+	let rowValidator;
+
+	// Is there a `where` modifier to this series?
+	if("where" in input && typeof input.where==="string"){
+		if(!rowValidator) rowValidator = Where();
+		rowValidator.set(input.where);
+	}else{
+		rowValidator = {'isValid':function(){return true;}};
+	}
 
 	for(let r = 0; r < input.data.length; r++){
 		let d,v;
-		// Expand min/max if the day field is a well-formatted string
-		if(typeof input.data[r][input.key]==="string" && input.data[r][input.key].match(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/)){
-			d = input.data[r][input.key];
-			if(d < minDate) minDate = d;
-			if(d > maxDate) maxDate = d;
-		}else{
-			throw("Value for '"+input.key+"' in row "+r+" doesn't look like 0000-00-00: "+JSON.stringify(input.data[r]));
+		if(rowValidator.isValid(input.data[r])){
+			// Expand min/max if the day field is a well-formatted string
+			if(typeof input.data[r][input.key]==="string" && input.data[r][input.key].match(/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}/)){
+				d = input.data[r][input.key];
+				if(d < minDate) minDate = d;
+				if(d > maxDate) maxDate = d;
+			}else{
+				throw("Value for '"+input.key+"' in row "+r+" doesn't look like 0000-00-00: "+JSON.stringify(input.data[r]));
+			}
+			if(typeof input.data[r][input.value]!=="undefined"){
+				v = input.data[r][input.value];
+			}
+			// Expand value min/max if the value field is a number 
+			if(typeof input.data[r][input.value]==="number"){
+				min = Math.min(min,v);
+				max = Math.max(max,v);
+			}
+			if(typeof d==="string" && typeof v!=="undefined") days[d] = input.data[r];
 		}
-		if(typeof input.data[r][input.value]!=="undefined"){
-			v = input.data[r][input.value];
-		}
-		// Expand value min/max if the value field is a number 
-		if(typeof input.data[r][input.value]==="number"){
-			min = Math.min(min,v);
-			max = Math.max(max,v);
-		}
-		if(typeof d==="string" && typeof v!=="undefined") days[d] = input.data[r];
 	}
 	if(typeof input.min==="number") min = input.min;
 	if(typeof input.max==="number") max = input.max;

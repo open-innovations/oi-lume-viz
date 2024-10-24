@@ -1,0 +1,30 @@
+---
+layout: layout/base.njk
+title: Limiting rows
+version: 0.16.5
+---
+
+<h1>{{ title }}{{ comp.version({ version:version }) | safe }}</h1>
+
+<p>Sometimes you may have a big, flat, data file where you may want to use some rows for one series and other rows for another. For series-based charts (e.g. scatter, line, bar, ridgeline) we can limit a particular <code>series</code> to only use certain rows by adding the <code>where</code> option to the <code>series</code>. This uses a very basic SQL-like syntax that can parse simple comparisons <code>=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> and the boolean operators <code>AND</code> and <code>OR</code>.</p>
+
+<p>For example, say we have a column titled <code>London borough</code> (that has the values either <code>isLondon</code> or <code>notLondon</code> in each row) and a numeric column titled <code>vacants_per_thousand_dwellings</code>. We can create multiple series from a flat file with something like the following:</p>
+
+<pre><code class="hljs language-yaml">series:
+  - title: Outside London
+    x: wage_ratio
+    y: vacants_per_thousand_dwellings
+    where: '"London borough"="notLondon" AND "vacants_per_thousand_dwellings"<50'
+  - title: London
+    x: wage_ratio
+    y: vacants_per_thousand_dwellings
+    where: '"London borough"="isLondon" AND "vacants_per_thousand_dwellings"<50'
+  - title: Empties outside London
+    x: wage_ratio
+    y: vacants_per_thousand_dwellings
+    where: '"London borough"="notLondon" AND "vacants_per_thousand_dwellings">=50'
+  - title: Empties in London
+    x: wage_ratio
+    y: vacants_per_thousand_dwellings
+    where: '"London borough"="isLondon" AND "vacants_per_thousand_dwellings">=50'
+</code></pre>

@@ -2,6 +2,7 @@ import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
 import { applyReplacementFilters } from '../../../lib/util.js';
+import { Where } from '../../../lib/util/where.js';
 import { Colours } from '../../../lib/colour/colours.ts';
 import { mergeDeep } from './util.js';
 
@@ -29,8 +30,10 @@ export function BarChart(config,csv){
 		'axis':{'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{},'tick':{'size':5}},'y':{'padding':10,'labels':{},'tick':{'size':5}}},
 		'duration': '0.3s',
 		'buildSeries': function(){
+
 			// Series
-			var data,datum,label,i,s,categoryoffset,seriesoffset,colour,colouri;
+			let data,datum,label,i,s,categoryoffset,seriesoffset,colour,colouri,rowValidator;
+
 			for(s = 0; s < this.opt.series.length; s++){
 
 				colour = namedColours.get(this.opt.series[s].colour)||namedColours.get(this.opt.series[s].title)||null;
@@ -45,47 +48,60 @@ export function BarChart(config,csv){
 				// Duplicate errors if only one error value given
 				if(this.opt.series[s].errors && this.opt.series[s].errors.length==1) this.opt.series[s].errors.push(this.opt.series[s].errors[0]);
 				data = [];
+
+				// Is there a `where` modifier to this series?
+				if(typeof this.opt.series[s].where==="string"){
+					if(!rowValidator) rowValidator = Where();
+					rowValidator.set(this.opt.series[s].where);
+				}else{
+					rowValidator = {'isValid':function(){return true;}};
+				}
+
 				for(i = 0; i < csv.rows.length; i++){
-					categoryoffset = csv.rows.length-i-1;
-					seriesoffset = ((this.opt.series.length/2)-s-0.5)*(0.8/this.opt.series.length);
-					label = this.opt.series[s].title+"\n"+(""+(csv.columns[this.opt.category][i]||"")).replace(/\\n/g,"")+': '+(isNaN(csv.columns[this.opt.series[s].value][i]) ? "?" : csv.columns[this.opt.series[s].value][i]);
-					// If the errors have values we add them to the label
-					if(this.opt.series[s].errors){
-						if(!isNaN(csv.columns[this.opt.series[s].errors[0]][i]) && !isNaN(csv.columns[this.opt.series[s].errors[1]][i])){
-							if(csv.columns[this.opt.series[s].errors[0]][i]==csv.columns[this.opt.series[s].errors[1]][i]){
-								label += (' ± '+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i]));
-							}else{
-								label += ' (+'+(isNaN(csv.columns[this.opt.series[s].errors[1]][i]) ? "0" : csv.columns[this.opt.series[s].errors[1]][i])+', -'+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i])+')';
+
+					// Do we keep this row?
+					if(rowValidator.isValid(csv.rows[i])){
+						categoryoffset = csv.rows.length-i-1;
+						seriesoffset = ((this.opt.series.length/2)-s-0.5)*(0.8/this.opt.series.length);
+						label = this.opt.series[s].title+"\n"+(""+(csv.columns[this.opt.category][i]||"")).replace(/\\n/g,"")+': '+(isNaN(csv.columns[this.opt.series[s].value][i]) ? "?" : csv.columns[this.opt.series[s].value][i]);
+						// If the errors have values we add them to the label
+						if(this.opt.series[s].errors){
+							if(!isNaN(csv.columns[this.opt.series[s].errors[0]][i]) && !isNaN(csv.columns[this.opt.series[s].errors[1]][i])){
+								if(csv.columns[this.opt.series[s].errors[0]][i]==csv.columns[this.opt.series[s].errors[1]][i]){
+									label += (' ± '+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i]));
+								}else{
+									label += ' (+'+(isNaN(csv.columns[this.opt.series[s].errors[1]][i]) ? "0" : csv.columns[this.opt.series[s].errors[1]][i])+', -'+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i])+')';
+								}
 							}
 						}
-					}
 
-					colouri = colour;
-					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
+						colouri = colour;
+						if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
 
-					if(this.opt.series[s].tooltip){
-						if(this.opt.series[s].tooltip in csv.columns){
-							label = csv.columns[this.opt.series[s].tooltip][i];
-						}else{
-							let options = JSON.parse(JSON.stringify(csv.rows[i]));
-							options._colour = colouri;
-							options._title = this.opt.series[s].title;
-							label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+						if(this.opt.series[s].tooltip){
+							if(this.opt.series[s].tooltip in csv.columns){
+								label = csv.columns[this.opt.series[s].tooltip][i];
+							}else{
+								let options = JSON.parse(JSON.stringify(csv.rows[i]));
+								options._colour = colouri;
+								options._title = this.opt.series[s].title;
+								label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+							}
 						}
+
+
+						datum = {
+							'x':(isNaN(csv.columns[this.opt.series[s].value][i]) ? null : csv.columns[this.opt.series[s].value][i]),
+							'y':categoryoffset+seriesoffset,
+							'title':label,
+							'colour': colouri
+						};
+
+						// Add errors if we have them
+						if(this.opt.series[s].errors) datum.error = {'x':[csv.columns[this.opt.series[s].errors[0]][i],csv.columns[this.opt.series[s].errors[1]][i]]};
+						datum.data = {'category':csv.columns[this.opt.category][i],'series':this.opt.series[s].title};
+						data.push(datum);
 					}
-
-
-					datum = {
-						'x':(isNaN(csv.columns[this.opt.series[s].value][i]) ? null : csv.columns[this.opt.series[s].value][i]),
-						'y':categoryoffset+seriesoffset,
-						'title':label,
-						'colour': colouri
-					};
-
-					// Add errors if we have them
-					if(this.opt.series[s].errors) datum.error = {'x':[csv.columns[this.opt.series[s].errors[0]][i],csv.columns[this.opt.series[s].errors[1]][i]]};
-					datum.data = {'category':csv.columns[this.opt.category][i],'series':this.opt.series[s].title};
-					data.push(datum);
 				}
 				this.series.push(new Series(s,this.opt.series[s],data,{'axis':this.opt.axis,'barsize':(this.opt.gap ? (1-Math.min(1,Math.max(0,parseFloat(this.opt.gap)))) : 1)*(0.8/this.opt.series.length)}));
 			}

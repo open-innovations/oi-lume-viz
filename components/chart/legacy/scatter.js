@@ -29,7 +29,7 @@ export function ScatterChart(config,csv){
 		'axis':{'x':{'padding':5,'tick':{'size':0.5},'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tick':{'size':0.5},'labels':{}}},
 		'duration': '0.3s',
 		'buildSeries': function(){
-			let s,i,labx,laby,x,y,label,datum,data,colour,colouri,keep,rowValidator;
+			let s,i,labx,laby,x,y,label,datum,data,colour,colouri,rowValidator;
 			// Build the series
 			for(s = 0; s < this.opt.series.length; s++){
 
@@ -54,12 +54,14 @@ export function ScatterChart(config,csv){
 				if(typeof this.opt.series[s].where==="string"){
 					if(!rowValidator) rowValidator = Where();
 					rowValidator.set(this.opt.series[s].where);
+				}else{
+					rowValidator = {'isValid':function(){return true;}};
 				}
 
 				for(i = 0; i < csv.rows.length; i++){
+
 					// Do we keep this row?
-					keep = (typeof this.opt.series[s].where==="string" ? rowValidator.isValid(csv.rows[i]) : true);
-					if(keep){
+					if(rowValidator.isValid(csv.rows[i])){
 						labx = x = csv.columns[this.opt.series[s].x][i];
 						laby = y = csv.columns[this.opt.series[s].y][i];
 						if(typeof x==="string") x = i;

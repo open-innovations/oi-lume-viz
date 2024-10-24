@@ -1,6 +1,7 @@
 import { Chart } from './chart.js';
 import { textLength, getFontSize } from '../../../lib/font/fonts.ts';
 import { applyReplacementFilters } from '../../../lib/util.js';
+import { Where } from '../../../lib/util/where.js';
 import { mergeDeep } from './util.js';
 import { Colours } from '../../../lib/colour/colours.ts';
 import { Series } from './series.js';
@@ -33,44 +34,62 @@ export function RidgeLineChart(config,csv){
 		'axis':{'x':{'padding':5,'tick':{'size':0.5},'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':5,'tick':{'size':0.5},'grid':{'show':false,'stroke':'#B2B2B2'},'labels':{}}},
 		'duration': '0.3s',
 		'buildSeries': function(){
-			let s,i,labx,laby,x,y,label,datum,data,options;
+
+			let s,i,labx,laby,x,y,label,datum,data,options,rowValidator;
 						
 			// Build the series
 			for(s = 0; s < this.opt.series.length; s++){
+
 				mergeDeep(this.opt.series[s],{
 					'line':{'show':true,'color': namedColours.get(this.opt.series[s].colour||this.opt.series[s].title),'fill':(this.opt.series[s].fill||'#ffffff'),'fill-opacity':(this.opt.series[s].fillOpacity||0.8),'curvature':(config.ridgeline && typeof config.ridgeline.curvature ? config.ridgeline.curvature : 0)},
 					'points':{'size':(this.opt.series[s].points && typeof this.opt.series[s].points.size==="number" ? this.opt.series[s].points.size : 1), 'color': namedColours.get(this.opt.series[s].colour||this.opt.series[s].title)}
 				});
+
 				data = [];
+
 				if(typeof this.opt.series[s].x==="undefined" || typeof this.opt.series[s].y==="undefined"){
 					throw new TypeError('Missing x/y values for series '+s);
 				}
+
+				// Is there a `where` modifier to this series?
+				if(typeof this.opt.series[s].where==="string"){
+					if(!rowValidator) rowValidator = Where();
+					rowValidator.set(this.opt.series[s].where);
+				}else{
+					rowValidator = {'isValid':function(){return true;}};
+				}
+
 				for(i = 0; i < csv.rows.length; i++){
-					labx = x = csv.columns[this.opt.series[s].x][i];
-					laby = y = csv.columns[this.opt.series[s].y][i];
-					// Convert to dates
-					if(typeof x==="string" && x.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
-						x = parseInt(x.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
-					}
-					if(typeof x==="string") x = i;
-					if(typeof y==="string") y = i;
-					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
-						label = this.opt.series[s].title+"\n"+labx+': '+(laby);
-						if(this.opt.series[s].tooltip){
-							if(this.opt.series[s].tooltip in csv.columns){
-								label = csv.columns[this.opt.series[s].tooltip][i];
-							}else{
-								options = JSON.parse(JSON.stringify(csv.rows[i]));
-								options._x = x;
-								options._y = y;
-								options._colour = namedColours.get(this.opt.series[s].colour||this.opt.series[s].title);
-								options._title = this.opt.series[s].title;
-								label = applyReplacementFilters(this.opt.series[s].tooltip,options);
-							}
+
+					// Do we keep this row?
+					if(rowValidator.isValid(csv.rows[i])){
+						labx = x = csv.columns[this.opt.series[s].x][i];
+						laby = y = csv.columns[this.opt.series[s].y][i];
+
+						// Convert to dates
+						if(typeof x==="string" && x.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
+							x = parseInt(x.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
 						}
-						datum = {'x':x,'y':(this.opt.series.length-1-s)+(ysize*(y-ymin)/yrange),'title':label};
-						datum.data = {'series':this.opt.series[s].title};
-						data.push(datum);
+						if(typeof x==="string") x = i;
+						if(typeof y==="string") y = i;
+						if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
+							label = this.opt.series[s].title+"\n"+labx+': '+(laby);
+							if(this.opt.series[s].tooltip){
+								if(this.opt.series[s].tooltip in csv.columns){
+									label = csv.columns[this.opt.series[s].tooltip][i];
+								}else{
+									options = JSON.parse(JSON.stringify(csv.rows[i]));
+									options._x = x;
+									options._y = y;
+									options._colour = namedColours.get(this.opt.series[s].colour||this.opt.series[s].title);
+									options._title = this.opt.series[s].title;
+									label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+								}
+							}
+							datum = {'x':x,'y':(this.opt.series.length-1-s)+(ysize*(y-ymin)/yrange),'title':label};
+							datum.data = {'series':this.opt.series[s].title};
+							data.push(datum);
+						}
 					}
 				}
 				this.series.push(new Series(s,this.opt.series[s],data));

@@ -2,6 +2,7 @@ import { mergeDeep } from '../../../lib/util/merge-deep.ts';
 import { Colours } from '../../../lib/colour/colours.ts';
 import { extractColours } from '../../../lib/colour/extract-colours.ts';
 import { applyReplacementFilters } from '../../../lib/util.js';
+import { Where } from '../../../lib/util/where.js';
 import { Axis } from './axis.js';
 import { Series } from './series.js';
 import { KeyItem } from './keyitem.js';
@@ -134,61 +135,82 @@ export function Chart(config,csv){
 		this.addSeries();
 		return this;
 	};
+
 	// Build the data series. For each series, it creates a data structure of the format:
 	// [{x:,y:,title:},{x:,y:,title:}]
 	this.buildSeries = function(){
-		let s,i,labx,laby,x,y,label,datum,data;
+
+		let s,i,labx,laby,x,y,label,datum,data,rowValidator;
+
 		// Build the series
 		for(s = 0; s < this.opt.series.length; s++){
+
 			mergeDeep(this.opt.series[s],{
 				'line':{'show':true,'color': namedColours.get(this.opt.series[s].colour||this.opt.series[s].title)},
 				'points':{'size':(this.opt.series[s].points && typeof this.opt.series[s].points.size==="number" ? this.opt.series[s].points.size : 1), 'color': namedColours.get(this.opt.series[s].colour||this.opt.series[s].title)}
 			});
+
 			data = [];
+
 			if(typeof this.opt.series[s].x==="undefined" || typeof this.opt.series[s].y==="undefined"){
 				console.log(this.opt.series[s]);
 				throw new TypeError('Missing x/y values for series '+s);
 			}
+
+			// Is there a `where` modifier to this series?
+			if(typeof this.opt.series[s].where==="string"){
+				if(!rowValidator) rowValidator = Where();
+				rowValidator.set(this.opt.series[s].where);
+			}else{
+				rowValidator = {'isValid':function(){return true;}};
+			}
+
 			for(i = 0; i < csv.rows.length; i++){
-				labx = x = csv.columns[this.opt.series[s].x][i];
-				laby = y = csv.columns[this.opt.series[s].y][i];
-				// Convert to dates
-				if(typeof x==="string" && x.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
-					x = parseInt(x.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
-				}
-				if(typeof y==="string" && y.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
-					y = parseInt(y.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
-				}
-				if(typeof x==="string") x = i;
-				if(typeof y==="string") y = i;
-				if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
-					label = this.opt.series[s].title+"\n"+labx+': '+(laby);
-					if(this.opt.series[s].tooltip){
-						if(this.opt.series[s].tooltip in csv.columns){
-							label = csv.columns[this.opt.series[s].tooltip][i];
-						}else{
-							let options = JSON.parse(JSON.stringify(csv.rows[i]));
-							options._x = x;
-							options._y = y;
-							options._colour = namedColours.get(this.opt.series[s].colour||this.opt.series[s].title);
-							options._title = this.opt.series[s].title;
-							label = applyReplacementFilters(this.opt.series[s].tooltip,options);
-						}
+
+				// Do we keep this row?
+				if(rowValidator.isValid(csv.rows[i])){
+					labx = x = csv.columns[this.opt.series[s].x][i];
+					laby = y = csv.columns[this.opt.series[s].y][i];
+					// Convert to dates
+					if(typeof x==="string" && x.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
+						x = parseInt(x.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
 					}
-					datum = {'x':x,'y':y,'title':label};
-					datum.data = {'series':this.opt.series[s].title};
-					data.push(datum);
+					if(typeof y==="string" && y.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)){
+						y = parseInt(y.replace(/([0-9]{4}-[0-9]{2}-[0-9]{2})/,function(m,p1){ return (new Date(p1)).getTime(); }));
+					}
+					if(typeof x==="string") x = i;
+					if(typeof y==="string") y = i;
+					if(x >= this.opt.axis.x.min && x <= this.opt.axis.x.max){
+						label = this.opt.series[s].title+"\n"+labx+': '+(laby);
+						if(this.opt.series[s].tooltip){
+							if(this.opt.series[s].tooltip in csv.columns){
+								label = csv.columns[this.opt.series[s].tooltip][i];
+							}else{
+								let options = JSON.parse(JSON.stringify(csv.rows[i]));
+								options._x = x;
+								options._y = y;
+								options._colour = namedColours.get(this.opt.series[s].colour||this.opt.series[s].title);
+								options._title = this.opt.series[s].title;
+								label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+							}
+						}
+						datum = {'x':x,'y':y,'title':label};
+						datum.data = {'series':this.opt.series[s].title};
+						data.push(datum);
+					}
 				}
 			}
 			this.series.push(new Series(s,this.opt.series[s],data));
 		}
 		return this;
 	}
+
 	this.getXY = function(x,y){
 		x = this.opt.left + ((x - this.xmin)/(this.xmax - this.xmin))*(this.w - this.opt.left - this.opt.right);
 		y = this.opt.top + (1-(y - this.ymin)/(this.ymax - this.ymin))*(this.h - this.opt.bottom - this.opt.top);
 		return {x:x,y:y};
 	};
+
 	this.updateRange = function(){
 		this.xmin = 1e100;
 		this.ymin = 1e100;
@@ -202,6 +224,7 @@ export function Chart(config,csv){
 		this.axes.x.updateRange(this.xmin,this.xmax,this.ymin,this.ymax);
 		this.axes.y.updateRange(this.xmin,this.xmax,this.ymin,this.ymax);
 	};
+
 	this.addAxes = function(){
 		this.axes = {x:new Axis("x",this.opt.left,this.w-this.opt.right-this.opt.left,this.opt.axis.x||{}),y:new Axis("y",this.opt.bottom,this.h-this.opt.top-this.opt.bottom,this.opt.axis.y||{})};
 		this.opt.axis.x.width = this.w;
@@ -227,6 +250,7 @@ export function Chart(config,csv){
 		}
 		return this;
 	};
+
 	this.addSeries = function(){
 		// Add getXY function for each series
 		for(var s = 0; s < this.series.length; s++){
@@ -240,7 +264,6 @@ export function Chart(config,csv){
 		this.draw();
 		return svg.outerHTML;
 	};
-
 
 	this.draw = function(){
 		var u,i,fs,pd,hkey,wkey,x,y,s,text,line,mark,p,cl,po,tspan,w,lbl;

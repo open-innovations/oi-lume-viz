@@ -159,6 +159,31 @@ examples:
           - value: 0
             label: "0"
       tooltip: '{{ Date | strftime("%e %B %Y") }} <br />{{ Counts }} counts'
+  - title: "Limit rows used"
+    version: 0.16.5
+    description: |
+      In this example we will [limit the data rows](/documentation/limit-rows/) to only include those `where` the `Date` value is on or after the 1st January 2021.
+    config:
+      data: test.data.cycle-100643-1
+      value: Counts
+      key: Date
+      scale: Viridis
+      min: 0
+      max: 300
+      legend:
+        show: true
+        position: top
+        items:
+          - value: 300
+            label: "300"
+          - value: 200
+            label: "200"
+          - value: 100
+            label: "100"
+          - value: 0
+            label: "0"
+      tooltip: '{{ Date | strftime("%e %B %Y") }} <br />{{ Counts }} counts'
+      where: '"Date">="2021-01-01"'
 options: |
   <ul>
   <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>

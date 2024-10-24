@@ -380,6 +380,36 @@ examples:
           line:
             stroke-dasharray: 4 6
             stroke-width: 3
+  - title: "Limiting a series to specific rows"
+    version: 0.16.5
+    description: |
+      Sometimes you may have a big, stacked, file where you may want to use some rows for one series and other rows for another. We can limit a particular `series` to [only use certain rows](/documentation/limit-rows/) by using the option `where`. In the example below we have a dataset relating to housing that has a column `geography_name_x` that contains English local authorities. We can create a series for just `Leeds` and another for just the `City of London`.
+    config:
+      legend:
+        show: true     # Default to false
+      data: test.data.house-prices
+      axis:
+        x:
+          grid:
+            show: true
+          tick:
+            spacing: 5
+        y:
+          grid:
+            show: true
+          tick:
+            spacing: 25
+          title:
+            label: Vacants per 1000 dwellings
+      series:
+        - title: Leeds
+          x: date
+          y: vacants_per_thousand_dwellings
+          where: '"geography_name_x"="Leeds"'
+        - title: City of London
+          x: date
+          y: vacants_per_thousand_dwellings
+          where: '"geography_name_x"="City of London"'
 options: |
   <ul>
   <li><code>data</code> - Either a reference to a CSV file in the Lume site or an array of rows with named attributes.</li>
@@ -411,6 +441,7 @@ options: |
   		<li><code>stroke-linecap</code> - The <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap">stroke-linecap</a></li>
   		</ul>
   	</li>
+    <li><code>where</code> - <a href="/documentation/limit-rows/">Limit the rows to include</a></li>
   	</ul>
   </li>
   <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>

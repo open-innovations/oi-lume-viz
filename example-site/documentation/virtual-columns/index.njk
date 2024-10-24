@@ -5,9 +5,7 @@ title: Virtual columns
 
 <h1>{{ title }}</h1>
 
-<p>Sometimes your data source may not be in quite the format you need for your visualisation. For instance, say that you'd like to include a functioning link in a table or tooltip. The solution is to create a "virtual column".</p>
-
-<p>A virtual column can be built from any existing values that exist as a column in the data. So, if your data source contains a column titled <code>Title</code> and a column titled <code>URL</code> you could build a new column named <code>Link</code> using e.g.:</p>
+<p>Sometimes you may need a column that uses combinations of columns in the data. Rather than create a new column in the data file, you can build a "virtual" column from any existing ones. For instance, say that you'd like to include a functioning link in a table or tooltip. If your data source contains a column titled <code>Title</code> and a column titled <code>URL</code> you could build a new column named <code>Link</code> using e.g.:</p>
 
 <pre><code class="hljs language-yaml">columns:
   - name: 'Link'
@@ -26,3 +24,4 @@ title: Virtual columns
 <p>This new column is built from existing <code>name</code> and <code>value</code> columns but we pass the <code>value</code> into the filter <code>toLocaleString()</code> to format it. The new column can be referenced elsewhere using <code>Tooltip contents</code> in the same way as you would any pre-existing column in the data. You could have achieved the same result by creating this content directly in the data file but using virtual columns may help to keep that file cleaner.</p>
 
 <p>Defining virtual <code>columns</code> is also a very simple way to rename an exisiting column heading if you need to.</p>
+

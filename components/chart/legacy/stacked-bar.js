@@ -1,6 +1,7 @@
 import { mergeDeep } from './util.js';
 import { textLength, getFontFamily, getFontWeight } from '../../../lib/font/fonts.ts';
 import { applyReplacementFilters } from '../../../lib/util.js';
+import { Where } from '../../../lib/util/where.js';
 import { Chart } from './chart.js';
 import { Series } from './series.js';
 import { Colours } from '../../../lib/colour/colours.ts';
@@ -32,8 +33,9 @@ export function StackedBarChart(config,csv){
 		'axis':{'x':{'padding':10,'grid':{'show':true,'stroke':'#B2B2B2'},'labels':{}},'y':{'padding':10,'labels':{}}},
 		'duration': '0.3s',
 		'buildSeries': function(){
+
 			// Series
-			var data,datum,label,i,s,categoryoffset,seriesoffset,x,xo,colour,colouri;
+			let data,datum,label,i,s,categoryoffset,seriesoffset,x,xo,colour,colouri,rowValidator,keep;
 			data = new Array(this.opt.series.length);
 
 			// First update the properties for each series
@@ -63,46 +65,57 @@ export function StackedBarChart(config,csv){
 
 				// Loop over each series
 				for(s = 0; s < this.opt.series.length; s++){
-					label = this.opt.series[s].title+"\n";
-					label += (""+(csv.columns[this.opt.category][i]||"")).replace(/\\n/g,"")+': ';
-					label += (isNaN(csv.columns[this.opt.series[s].value][i]) ? "?" : (this.opt.percent ? csv.columns[this.opt.series[s].value][i].toFixed(2)+"%" : csv.columns[this.opt.series[s].value][i]));
-					// If the errors have values we add them to the label
-					if(this.opt.series[s].errors){
-						if(!isNaN(csv.columns[this.opt.series[s].errors[0]][i]) && !isNaN(csv.columns[this.opt.series[s].errors[1]][i])){
-							if(csv.columns[this.opt.series[s].errors[0]][i]==csv.columns[this.opt.series[s].errors[1]][i]){
-								label += (' ± '+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i]));
-							}else{
-								label += ' (+'+(isNaN(csv.columns[this.opt.series[s].errors[1]][i]) ? "0" : csv.columns[this.opt.series[s].errors[1]][i])+', -'+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i])+')';
+					
+					keep = true;
+					// Is there a `where` modifier to this series?
+					if(typeof this.opt.series[s].where==="string"){
+						if(!rowValidator) rowValidator = Where();
+						rowValidator.set(this.opt.series[s].where);
+						keep = rowValidator.isValid(csv.rows[i]);
+					}
+
+					if(keep){
+						label = this.opt.series[s].title+"\n";
+						label += (""+(csv.columns[this.opt.category][i]||"")).replace(/\\n/g,"")+': ';
+						label += (isNaN(csv.columns[this.opt.series[s].value][i]) ? "?" : (this.opt.percent ? csv.columns[this.opt.series[s].value][i].toFixed(2)+"%" : csv.columns[this.opt.series[s].value][i]));
+						// If the errors have values we add them to the label
+						if(this.opt.series[s].errors){
+							if(!isNaN(csv.columns[this.opt.series[s].errors[0]][i]) && !isNaN(csv.columns[this.opt.series[s].errors[1]][i])){
+								if(csv.columns[this.opt.series[s].errors[0]][i]==csv.columns[this.opt.series[s].errors[1]][i]){
+									label += (' ± '+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i]));
+								}else{
+									label += ' (+'+(isNaN(csv.columns[this.opt.series[s].errors[1]][i]) ? "0" : csv.columns[this.opt.series[s].errors[1]][i])+', -'+(isNaN(csv.columns[this.opt.series[s].errors[0]][i]) ? "0" : csv.columns[this.opt.series[s].errors[0]][i])+')';
+								}
 							}
 						}
-					}
 
-					colouri = colour;
-					if(this.opt.series[s].colour) colouri = this.opt.series[s].colour;
-					if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
+						colouri = colour;
+						if(this.opt.series[s].colour) colouri = this.opt.series[s].colour;
+						if(this.opt.series[s].colour && csv.columns[this.opt.series[s].colour]) colouri = namedColours.get(csv.columns[this.opt.series[s].colour][i]);
 
-					if(this.opt.series[s].tooltip){
-						if(this.opt.series[s].tooltip in csv.columns){
-							label = csv.columns[this.opt.series[s].tooltip][i];
-						}else{
-							let options = JSON.parse(JSON.stringify(csv.rows[i]));
-							options._colour = colouri;
-							options._title = this.opt.series[s].title;
-							if(this.opt.percent) options._percent = csv.columns[this.opt.series[s].value][i];
-							label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+						if(this.opt.series[s].tooltip){
+							if(this.opt.series[s].tooltip in csv.columns){
+								label = csv.columns[this.opt.series[s].tooltip][i];
+							}else{
+								let options = JSON.parse(JSON.stringify(csv.rows[i]));
+								options._colour = colouri;
+								options._title = this.opt.series[s].title;
+								if(this.opt.percent) options._percent = csv.columns[this.opt.series[s].value][i];
+								label = applyReplacementFilters(this.opt.series[s].tooltip,options);
+							}
 						}
+
+						x = (isNaN(csv.columns[this.opt.series[s].value][i]) ? 0 : csv.columns[this.opt.series[s].value][i]);
+
+						// The final x-value is the current starting value plus the current value
+						datum = {'x':(typeof x==="null" ? null : x+xo),'xstart':xo,'y':categoryoffset,'title':label,'colour':colouri};
+
+						xo += x;
+						// Add errors if we have them
+						if(this.opt.series[s].errors) datum.error = {'x':[csv.columns[this.opt.series[s].errors[0]][i],csv.columns[this.opt.series[s].errors[1]][i]]};
+						datum.data = {'category':csv.columns[this.opt.category][i],'series':this.opt.series[s].title};
+						data[s].push(datum);
 					}
-
-					x = (isNaN(csv.columns[this.opt.series[s].value][i]) ? 0 : csv.columns[this.opt.series[s].value][i]);
-
-					// The final x-value is the current starting value plus the current value
-					datum = {'x':(typeof x==="null" ? null : x+xo),'xstart':xo,'y':categoryoffset,'title':label,'colour':colouri};
-
-					xo += x;
-					// Add errors if we have them
-					if(this.opt.series[s].errors) datum.error = {'x':[csv.columns[this.opt.series[s].errors[0]][i],csv.columns[this.opt.series[s].errors[1]][i]]};
-					datum.data = {'category':csv.columns[this.opt.category][i],'series':this.opt.series[s].title};
-					data[s].push(datum);
 				}
 			}
 			// Loop over adding each series to the chart

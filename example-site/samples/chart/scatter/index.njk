@@ -304,7 +304,7 @@ examples:
             rotate: 180
             size: 32
   - title: "Gaps in series"
-    version: "v0.15.1"
+    version: 0.15.1
     description: |
       This is a test to show what happens if data is missing in a series. In this case series 1 has no value at <code>x=0.52</code> and series 2 is missing values for <code>x=0.7</code> and <code>x=0.8</code>.
     config:
@@ -343,11 +343,9 @@ examples:
             rotate: 180
             size: 32
   - title: "Limiting a series to specific rows"
-    version: "v0.16.0"
+    version: 0.16.0
     description: |
-      Sometimes you may have a big, stacked, file where you may want to use some rows for one series and other rows for another. We can limit a particular `series` to only use certain rows by using the option `where`. The `where` option uses a very basic SQL-like syntax that can parse simple comparisons `=`, `<`, `<=`, `>`, `>=` and the boolean operators `AND`, `OR`.
-
-      In the example below we have a dataset relating to housing that has a column `London borough` that can take the values `isLondon` and `notLondon`. We could limit a particular series to rows that contain the value `notLondon` by setting `where` to `"London borough"="notLondon"`.
+      Sometimes you may have a big, stacked, file where you may want to use some rows for one series and other rows for another. We can limit a particular `series` to [only use certain rows](/documentation/limit-rows/) by using the option `where`. In the example below we have a dataset relating to housing that has a column `London borough` that can take the values `isLondon` and `notLondon`. We could limit a particular series to rows that contain the value `notLondon` by setting `where` to `"London borough"="notLondon"`.
     config:
       legend:
         show: true     # Default to false
@@ -403,6 +401,7 @@ options: |
   		<li><code>rotate</code> - How much to rotate the marker around its centre by, in degrees.</li>
   		</ul>
   	</li>
+    <li><code>where</code> - <a href="/documentation/limit-rows/">Limit the rows to include</a></li>
   	</ul>
   </li>
   <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>

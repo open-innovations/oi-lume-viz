@@ -291,6 +291,60 @@ examples:
           scale: Heat_r
           min: 0
           sortable: true
+  - title: "Limit the rows"
+    version: 0.16.5
+    description: |
+      We can [limit which rows are included](/documentation/limit-rows) using `where`.
+    config:
+      width: "100%"
+      data:
+        - page: Liverpool City Region
+          co2: 5.33
+          size: 21.2
+        - page: Tendring District Council
+          co2: 3.90
+          size: 15.5
+        - page: London Borough of Newham
+          co2: 2.99
+          size: 13.7
+        - page: Melton Borough Council
+          co2: 2.95
+          size: 13.5
+        - page: Welwyn Hatfield Council
+          co2: 2.68
+          size: 10.6
+        - page: Dacorum Council
+          co2: 2.68
+          size: 10.6
+        - page: Harborough District Council
+          co2: 2.59
+          size: 10.3
+        - page: Bridgend County Borough Council
+          co2: 2.53
+          size: 10.0
+        - page: Reading Borough Council
+          co2: 2.34
+          size: 9.3
+        - page: Bournemouth, Christchurch and Poole
+          co2: 2.27
+          size: 9.0
+      columns:
+        - name: "Local Authority"
+          template: "{{ page }}"
+          sortable: true
+        - name: "CO2 (g)"
+          template: "{{ co2 | toFixed(2) }}"
+          align: center
+          scale: Heat_r
+          min: 0
+          sortable: true
+        - name: "Size (MB)"
+          template: "{{ size | toFixed(2) }}"
+          align: center
+          scale: Heat_r
+          min: 0
+          sortable: true
+      where: '"co2">=2.7'
 options: |
   <ul>
   <li><code>data</code> - (required) Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
@@ -312,6 +366,7 @@ options: |
   <li><code>reverse</code> - (boolean) By default the order is from low to high but you can order from high to low if this is set to true.</li>
   <li><code>colours</code> - Define some <a href="/documentation/colours#specific-named-colours">visualisation-specific named colours</a>.</li>
   <li><code>width</code> - An optional minimum width (e.g. <code>100%</code>) for the table.</li>
+  <li><code>where</code> - <a href="/documentation/limit-rows/">Limit the rows to include</a></li>
   <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
   </ul>
   

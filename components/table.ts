@@ -1,4 +1,5 @@
 import { addVirtualColumns, thingOrNameOfThing } from "../lib/helpers.ts";
+import { Where } from '../lib/util/where.js';
 import { contrastColour } from '../lib/colour/contrast.ts';
 import { Colours } from '../lib/colour/colours.ts';
 import { ColourScale } from '../lib/colour/colour-scale.ts';
@@ -57,10 +58,19 @@ export default function (input: {
 	checkOptions(options);
 
 	// Create a structure to mimic the table (row indexing)
-	let cells = new Array(options.data.length);
+	let cells = [];
 	let scales = new Array(options.columns.length);
 	let sortable = false;
 	let merging = false;
+	let rowValidator;
+
+	// Is there a `where` modifier to this series?
+	if("where" in options && typeof options.where==="string"){
+		if(!rowValidator) rowValidator = Where();
+		rowValidator.set(options.where);
+	}else{
+		rowValidator = {'isValid':function(){return true;}};
+	}
 
 	for(let col = 0; col < options.columns.length; col++){
 		scales[col] = {};
@@ -74,25 +84,33 @@ export default function (input: {
 	// Can't sort tables with merged cells, sorry
 	//if(merging && sortable) sortable = false;
 
-	for(let row = 0; row < options.data.length; row++){
-		// Create an array of columns for this row
-		cells[row] = new Array(options.columns.length);
-		for(let col = 0; col < options.columns.length; col++){
-			cells[row][col] = {
-				"value": (options.columns[col].name && typeof options.data[row][options.columns[col].name]!=="undefined" ? options.data[row][options.columns[col].name] : ""),
-				"done": false
-			};
-			cells[row]._data = options.data[row];
-			let v = cells[row][col].value;
-			if(scales[col].scale){
-				if(typeof v==="string") v = parseFloat(v);
-				if(typeof v==="number" && !isNaN(v)){
-					scales[col].min = Math.min(scales[col].min,cells[row][col].value);
-					scales[col].max = Math.max(scales[col].max,cells[row][col].value);
+	for(let row = 0,r; row < options.data.length; row++){
+
+		// Do we keep this row?
+		if(rowValidator.isValid(options.data[row])){
+			// Create an array of columns for this row
+			let r = new Array(options.columns.length);
+			cells.push([]);
+			r = cells.length-1;
+			for(let col = 0; col < options.columns.length; col++){
+				cells[r][col] = {
+					"value": (options.columns[col].name && typeof options.data[row][options.columns[col].name]!=="undefined" ? options.data[row][options.columns[col].name] : ""),
+					"done": false,
+					"_row": row
+				};
+				cells[r]._data = options.data[row];
+				let v = cells[r][col].value;
+				if(scales[col].scale){
+					if(typeof v==="string") v = parseFloat(v);
+					if(typeof v==="number" && !isNaN(v)){
+						scales[col].min = Math.min(scales[col].min,cells[r][col].value);
+						scales[col].max = Math.max(scales[col].max,cells[r][col].value);
+					}
 				}
 			}
 		}
 	}
+
 	if("sort" in options){
 		if(typeof options.sort==="string") options.sort = [options.sort];
 		let sortOrder = new Array(options.sort.length);
@@ -135,7 +153,7 @@ export default function (input: {
 		html.push('<th'+(sortable && !options.columns[col].sortable ? ' class="disable-sort"':'')+''+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].name||"")+'</th>');
 	}
 	html.push('</tr>');
-	
+
 	let cs = {};
 	for(let row = 0; row < cells.length; row++){
 		html.push('<tr>');
