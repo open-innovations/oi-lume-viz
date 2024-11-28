@@ -455,8 +455,7 @@
 			return attr._alltips.locked ? this.unlock() : this.lock();
 		};
 
-
-		if(('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)){
+		if('ontouchstart' in window || navigator.msMaxTouchPoints){
 			// Touch to toggle a tooltip
 			addEv('touchstart',pt,{'this':this},function(e){ e.stopPropagation(); this.toggle(); });
 		}else{
