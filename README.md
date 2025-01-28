@@ -18,7 +18,7 @@ To use this in your Lume project, include the following in your Lume `_config.js
 You can include your config directly in your Lume `_config.js` or `_config.ts` file:
 
 ```js
-import oiLumeViz from "https://deno.land/x/oi_lume_viz@v0.15.12/mod.ts";
+import oiLumeViz from "https://deno.land/x/oi_lume_viz/mod.ts";
 
 site.use(oiLumeViz({
   assetPath: 'assets/oi',
@@ -29,7 +29,7 @@ site.use(oiLumeViz({
 Or move the OI Lume Viz config into an external file using:
 
 ```js
-import oiLumeViz from "https://deno.land/x/oi_lume_viz@v0.15.12/mod.ts";
+import oiLumeViz from "https://deno.land/x/oi_lume_viz/mod.ts";
 
 import oiVizConfig from "./oi-viz-config.ts";
 site.use(oiLumeViz(oiVizConfig));
