@@ -71,7 +71,7 @@ export function Chart(config,csv){
 		// Create SVG container
 		if(!svg){
 			svg = svgEl('svg');
-			svgopt = {'xmlns':ns,'version':'1.1','class':'oi-chart-main','viewBox':'0 0 '+this.w+' '+this.h,'overflow':'visible','style':'max-width:100%;width:100%','preserveAspectRatio':'xMidYMin meet','data-type':this.opt.type,'vector-effect':'non-scaling-stroke'};
+			svgopt = {'xmlns':ns,'version':'1.1','class':'oi-chart-main','viewBox':'0 0 '+this.w+' '+this.h,'overflow':'visible','style':'max-width:100%;width:100%;height:auto;','preserveAspectRatio':'xMidYMin meet','data-type':this.opt.type,'vector-effect':'non-scaling-stroke'};
 			if(this.opt.width) svgopt.width = this.opt.width;
 			if(this.opt.height) svgopt.height = this.opt.height;
 			setAttr(svg,svgopt);
