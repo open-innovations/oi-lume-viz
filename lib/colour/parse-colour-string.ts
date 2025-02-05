@@ -29,15 +29,14 @@ export function validateNumberList(list: number[], options: {
 	}
 }
 
-export function parseColourString(
-	input: string
-): Pick<Colour, "hsl" | "rgb" | "hex"> {
+export function parseColourString( input: string ): Pick<Colour, "hsl" | "rgb" | "hex"> {
 	if (typeof input !== "string"){
 		console.warn('WARNING: Trying to pass non-string to OI Lume Viz: hex cartogram: parseColourString',input,typeof input);
 		input = getBackgroundColour();
 	}
 
 	input = replaceNamedColours(input);
+	if(input == "null") return parseColourString(getBackgroundColour());
 	let expectedLength = 3;
 	let maxValues = [255, 255, 255];
 	let rgb,hsl,hex;

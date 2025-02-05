@@ -17,6 +17,7 @@
 .oi-vertical .oi-legend-items { }
 .oi-legend-inner.oi-continuous .oi-legend-item { position:absolute; padding: 0.25em; }
 .oi-horizontal .oi-legend-item { transform: translate3d(50%,0,0); }
+.oi-horizontal .oi-legend-item.oi-dummy { display: none; }
 .oi-vertical .oi-legend-item { transform: translate3d(0,-50%,0); }
 .oi-vertical .oi-legend-item:before { position: relative; content: ""; }
 .oi-zoomable-map .oi-continuous.oi-vertical { margin-top: 1em; }
