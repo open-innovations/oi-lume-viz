@@ -65,7 +65,8 @@
 		var idx = opt.columns.length-1;
 		// Work out which numbered column we are in
 		for(i = 0; i < opt.columns.length; i++){
-			if(opt.columns[i]==opt.value) idx = i;
+			if(typeof opt.columns[i]==="string") opt.columns[i] = {'value':opt.columns[i],'label':opt.columns[i]};
+			if(opt.columns[i].value==opt.value) idx = i;
 		}
 
 		if(!el){
@@ -91,8 +92,12 @@
 			range.addEventListener('input',function(e){ _obj.updateMap(e.target.value); });
 		}
 		if(!label){
+			let val = opt.value;
+			for(i = 0; i < opt.columns.length; i++){
+				if(opt.columns[i].value == opt.value) val = opt.columns[i].label;
+			}
 			label = document.createElement('label');
-			label.innerHTML = opt.value;
+			label.innerHTML = val;
 			label.setAttribute('for',uid+'-slider');
 			inner.append(label);
 		}
@@ -100,8 +105,8 @@
 			// Check if the value has changed. If not, stop.
 			if(i==previousvalue) return this;
 			previousvalue = i;
-			key = opt.columns[i];
-			label.innerHTML = key;
+			key = opt.columns[i].value;
+			label.innerHTML = opt.columns[i].label;
 			if(!opt.key) console.error('No key');
 			var min,max,v,id,colour,tt;
 			// Find range of data
