@@ -105,6 +105,8 @@ export function ZoomableMap(opts){
 				}
 				// Set a default colour if we don't have one
 				if(config.layers[l].data[i].colour === undefined) config.layers[l].data[i].colour = defaultbg;
+				// Remove some duplication
+				if(config.layers[l].data[i].geojson) delete config.layers[l].data[i].geojson;
 			}
 
 		}

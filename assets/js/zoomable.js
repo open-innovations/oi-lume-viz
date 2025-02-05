@@ -58,6 +58,14 @@
 			return this;
 		};
 
+		this.getLayer = function(i){
+			if(i < list.length){
+				return list[i];
+			}else{
+				console.warn("No list "+i);
+			}
+		};
+
 		this.fitBounds = function(bounds){
 			if(typeof bounds==="string" && bounds=="data"){
 				for(var i = 0; i < list.length; i++){
@@ -133,12 +141,44 @@
 			}
 		}
 
+		this.getIDs = function(){
+			var ids = [];
+			for(var i = 0; i < props.geo.json.features.length; i++){
+				ids.push(props.geo.json.features[i].properties[props.geo.key]);
+			}
+			return ids;
+		};
+
+		this.setProps = function(fn){
+			props.layer.eachLayer(function(layer){
+				if(layer.feature){
+					var d = getData(layer.feature.properties[props.geo.key]);
+					if(typeof fn==="function"){
+						var d2 = fn.call(this,layer.feature.properties[props.geo.key],layer.feature.properties,layer);
+						if(d.colour!=d2.colour){
+							// Update the colour
+							d.colour = d2.colour;
+							layer._path.setAttribute('fill',d2.colour);
+						}
+						if(d2.tooltip){
+							// Update the tooltip
+							d[props.toolkey] = d2.tooltip;
+							layer.setPopupContent(d2.tooltip);
+						}
+					}
+				}else{
+					console.warn('No layer:',layer);
+				}
+			});
+		};
+
 		if(props.geo && !props.layer){
 			var geoattrs = {
 				"style": style,
 				"onEachFeature": function(feature, layer){
 					var d = getData(feature.properties[props.geo.key]);
-					layer.bindPopup(d["Label"]||d[props.toolkey]||feature.properties[props.geo.key]).on("popupopen",function(ev){
+					layer.bindPopup(d["Label"]||d[props.toolkey]||feature.properties[props.geo.key]).on("popupopen",function(ev,f){
+						var d = getData(feature.properties[props.geo.key]);
 						var ps = ev.popup._container;
 						// Set the background colour of the popup
 						ps.querySelector(".leaflet-popup-content-wrapper").style["background-color"] = d.colour;
@@ -161,7 +201,6 @@
 			}
 
 			props.layer = L.geoJSON(props.geo.json,geoattrs);
-
 		}
 		
 		var marks = [];
