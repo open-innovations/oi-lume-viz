@@ -281,6 +281,8 @@ examples:
       Sometimes you may have multi-epoch data. If you want the person viewing the page to be able to see these different epochs on the same cartogram, you can add an interactive `slider`. To define which columns to use we pass an ordered array to `tools → slider → columns`. In this example we have numeric data for the years 2016 to 2021 so we will set it to `[2016,2017,2018,2019,2020,2021]`.
       
       In the previous example we used `2021` in the `tooltip` to reference the column that the `value` was taken from. But now the active column depends on the slider position. We need to refer to the current `value` differently; use the special replacement `{{ _value }}` to access the active data column.
+      
+      <span class="version">Since 0.16.8</span> The column heading may not be what you want to display on the page. If so, you can provide each column as an object containing a `value` and `label` e.g. `[{"value":2016,"label":"'16"},{"value":2017,"label":"2017 (mean)"},{"value":2018,"label":"2018 (mean)"},{"value":2019,"label":"2019 (mean)"},{"value":2020,"label":"2020 (mean)"},{"value":2021,"label":"2021 (mean)"}]`. The `label` will be what is displayed on the page and `value` is the title of a numeric column to use.
     config:
       width: 500
       hexjson:
