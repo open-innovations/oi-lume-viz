@@ -60,6 +60,11 @@
 	padding: 0;
 	}
 
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
 .leaflet-container.leaflet-touch-zoom {
 	-ms-touch-action: pan-x pan-y;
 	touch-action: pan-x pan-y;
@@ -267,7 +272,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 /* general typography */
 .leaflet-container {
-	font-family: inherit;
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-size: 0.75rem;
 	line-height: 1.5;
@@ -646,7 +651,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	}
 
 /* Printing */
-	
+
 @media print {
 	/* Prevent printers from removing background-images of controls. */
 	.leaflet-control {
