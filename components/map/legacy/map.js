@@ -144,6 +144,14 @@ export function ZoomableMap(opts){
 		for(l = 0; l < config.layers.length; l++){
 
 			if(!config.layers[l].options) config.layers[l].options = {};
+
+			// Change option names to be Leaflet-friendly versions
+			if(typeof config.layers[l].options['fill-opacity']==="number") config.layers[l].options.fillOpacity = config.layers[l].options['fill-opacity'];
+			if(typeof config.layers[l].options['stroke-width']==="number") config.layers[l].options.weight = config.layers[l].options['stroke-width'];
+			if(typeof config.layers[l].options['stroke-opacity']==="number") config.layers[l].options.opacity = config.layers[l].options['stroke-opacity'];
+			if(config.layers[l].options['line-join']) config.layers[l].options.lineJoin = config.layers[l].options['line-join'];
+			if(config.layers[l].options['dash-array']) config.layers[l].options.dashArray = config.layers[l].options['dash-array'];
+
 			if(typeof config.layers[l].options.fillOpacity!=="number") config.layers[l].options.fillOpacity = 1;
 
 			if(config.layers[l].type=="tile"){
@@ -416,11 +424,12 @@ export function SVGMap(opts){
 								el.appendChild(title);
 							}
 						}
-						el.setAttribute('fill-opacity',(type == "line" ? 0 : (typeof this.options.fillOpacity==="number" ? this.options.fillOpacity : 1)));
-						el.setAttribute('fill',row.colour);
-						el.setAttribute('stroke',(type == "line" ? row.colour : 'white'));
-						el.setAttribute('stroke-width',2);
-						el.setAttribute('stroke-opacity',(type == "line" ? 1 : 0.1));
+						if(typeof this.options.fillOpacity==="number") this.options['fill-opacity'] = this.options.fillOpacity;
+						el.setAttribute('fill-opacity',(type == "line" ? 0 : (typeof this.options['fill-opacity']==="number" ? this.options['fill-opacity'] : 1)));
+						el.setAttribute('fill',(this.options.fill || row.colour));
+						el.setAttribute('stroke',(this.options.stroke ? this.options.stroke : (type == "line" ? row.colour : 'white')));
+						el.setAttribute('stroke-width',(typeof this.options['stroke-width']==="number" ? this.options['stroke-width'] : 2));
+						el.setAttribute('stroke-opacity',(typeof this.options['stroke-opacity']==="number" ? this.options['stroke-opacity'] : (type == "line" ? 1 : 0.1)));
 					}else{
 						el.setAttribute('style','display:none');
 					}

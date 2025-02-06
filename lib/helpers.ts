@@ -22,7 +22,7 @@ export function resolveData<T = unknown>(
 }
 
 /**
- * Wrapper around resolveContext which checks if the ref is a string.
+ * Wrapper around resolveData which checks if the ref is a string.
  * If it is the function returns the resolved version.
  * If not a string, returns the original object.
  * 
