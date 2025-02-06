@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Build the site
-        uses: dringtech/lume-build@v1.1.0
+        uses: dringtech/lume-build@v3
         with:
           site-build-cmd: deno task lume
 
