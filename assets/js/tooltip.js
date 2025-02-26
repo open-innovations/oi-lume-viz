@@ -291,7 +291,7 @@
 			if(!fill) fill = window.getComputedStyle(pt2).fill;
 
 			// Get the contents now (in case they've been updated)
-			title = (tt || "").replace(/[\n\r]/g,'<br />');
+			title = (tt || "").replace(/[\n\r]/g,'<br />').replace(/\\n/g,'<br />');
 
 			box = tip.querySelector('.inner');
 			arr = tip.querySelector('.arrow');
