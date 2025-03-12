@@ -179,7 +179,7 @@ input[type="range"].oi-slider-control:focus::-moz-range-thumb{ outline: 4px soli
 .grid.tabs .tab[aria-selected=true] { background-color: #efefef; color: black; box-shadow: none; }
 
 
-.version { line-height: 1.5em; padding: 0 0.25em; color: #e7f2fa; background: #2980b9; display: inline-block; font-family: Poppins; }
+.version { line-height: 1.5em; padding: 0 0.25em; color: white; background: #2f529f; display: inline-block; font-family: Poppins; }
 header .version { position: absolute; top: 0; right: 0; }
 
 @media only screen and (max-width: 1080px) {
