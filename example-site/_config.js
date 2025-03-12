@@ -107,5 +107,6 @@ site.use(
 	})
 );
 
+site.copy('styles/fonts/');
 
 export default site;
