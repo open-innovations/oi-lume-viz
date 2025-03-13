@@ -123,7 +123,7 @@
 			if(typeof opt.min==="number") min = opt.min;
 			if(typeof opt.max==="number") max = opt.max;
 			for(id in hexes){
-
+				colour = opt.defaultbg||"#bbb";
 				// Update colours
 				if(typeof hexes[id].data[key]==="number"){
 					v = (hexes[id].data[key]-min)/(max-min);
