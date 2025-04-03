@@ -271,7 +271,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	}
 
 	var holder = new VisualisationHolder(config,{'name':'waffle chart'});
-	holder.addDependencies(['/js/chart.js','/css/waffle.css','/js/tooltip.js']);
+	holder.addDependencies(['/js/tooltip.js','/js/chart.js','/css/waffle.css']);
 	holder.addClasses(['oi-chart','oi-waffle-chart']);
 
 	return holder.wrap(svg);

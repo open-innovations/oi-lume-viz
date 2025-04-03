@@ -266,7 +266,7 @@ export function ZoomableMap(opts){
 		html.push('})(window || this);\n');
 
 		var holder = new VisualisationHolder(config,{'name':'map','id':myUUID});
-		holder.addDependencies(['/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/tooltip.js','/js/zoomable.js']);
+		holder.addDependencies(['/js/tooltip.js','/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/zoomable.js']);
 		holder.addClasses(['oi-map','oi-zoomable-map']);
 		return holder.wrap('<div class="leaflet" id="'+myUUID+'"></div><script>'+html.join('')+'</script>');
 	};

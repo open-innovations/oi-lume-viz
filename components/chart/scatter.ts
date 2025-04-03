@@ -70,7 +70,7 @@ export default function (input: {
   const chart = renderScatterChart(options);
 
   var holder = new VisualisationHolder(options,{'name':'scatter chart'});
-  holder.addDependencies(['/js/chart.js','/js/tooltip.js']);
+  holder.addDependencies(['/js/tooltip.js','/js/chart.js']);
   holder.addClasses(['oi-chart','oi-chart-scatter']);
   return holder.wrap(chart);
 

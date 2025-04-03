@@ -577,7 +577,7 @@ export default function (input: { config: HexmapOptions }) {
 
 
 	var holder = new VisualisationHolder(input.config,{'name':'hex cartogram'});
-	holder.addDependencies(['/js/map.js','/css/maps.css','/js/tooltip.js']);
+	holder.addDependencies(['/js/tooltip.js','/js/map.js','/css/maps.css']);
 	holder.addClasses('oi-map oi-map-hex');
 
 	var html = `<div class="oi-map-holder"><div class="oi-map-inner"><svg

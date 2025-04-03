@@ -85,7 +85,7 @@ export default function (input: {
 	const chart = CalendarChart(options);
 
 	var holder = new VisualisationHolder(config,{'name':'calendar chart'});
-	holder.addDependencies(['/js/chart-calendar.js','/js/tooltip.js']);
+	holder.addDependencies(['/js/tooltip.js','/js/chart-calendar.js']);
 	holder.addClasses(['oi-calendar-chart']);
 	return holder.wrap(chart);
 }

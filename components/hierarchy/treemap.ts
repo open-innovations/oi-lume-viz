@@ -149,7 +149,7 @@ export default function (options: { config: TreemapComponentOptions }) {
 
 
   var holder = new VisualisationHolder(config,{'name':'treemap'});
-  holder.addDependencies(['/js/tree-map.js','/js/tooltip.js']);
+  holder.addDependencies(['/js/tooltip.js','/js/tree-map.js']);
   holder.addClasses(['oi-tree-map']);
   return holder.wrap(treemap.render());
 }
