@@ -200,8 +200,9 @@ function floorWeek(d: Date, firstdayofweek: number){
 	let diff = 0;
 	let day = d.getDay();
 	if(day > firstdayofweek) diff = firstdayofweek - day;
-	else if(day < firstdayofweek) diff = day - firstdayofweek;
-	return (new Date(d.getTime() + diff*86400000));
+	else if(day < firstdayofweek) diff = -(day + 7 - firstdayofweek);
+	let newday = (new Date(d.getTime() + diff*86400000));
+	return newday;
 }
 function ceilWeek(d: Date, firstdayofweek: number){
 	if(typeof firstdayofweek==="undefined") firstdayofweek = 1;
