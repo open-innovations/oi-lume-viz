@@ -138,7 +138,11 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 						tooltip = applyReplacementFilters(config.series[s].tooltip,options);
 					}
 				}
-				bins[bin] = {'series':s,'icon':icon,'colour':namedColours.get(config.series[s].colour)||defaultbg,'tooltip':tooltip,'data':true,'point':clone(config.series[s].points)};
+				if(bin < nbins){
+					bins[bin] = {'series':s,'icon':icon,'colour':namedColours.get(config.series[s].colour)||defaultbg,'tooltip':tooltip,'data':true,'point':clone(config.series[s].points)};
+				}else{
+					console.warn("%cwarning%c: oi.chart.waffle series "+s+" falls outside the waffle chart due to rounding." + (config.rounding=="round" ? "You may want to try setting \"rounding: floor\"." : ""),"color:yellow","");
+				}
 				bin++;
 			}
 		}
@@ -164,7 +168,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 	
 
 	// Fill up the rest of the bins
-	for(let i = bin; i < bins.length; i++) bins[i] = clone(defaultbin);
+	for(let b = bin; b < bins.length; b++) bins[b] = clone(defaultbin);
 
 	let w = config.width || 1080;
 	let h = config.height || (w*rows/cols);
