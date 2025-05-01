@@ -12,6 +12,7 @@ export const assets = [
   'js/table-sort.js',
   'js/tooltip.js',
   'js/tree-map.js',
+  'js/util.js',
   'js/zoomable.js',
   'css/holder.css',
   'css/legend.css',

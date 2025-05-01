@@ -125,7 +125,7 @@
 				overlay._path.parentNode.replaceChild(wrapper, overlay._path);
 				wrapper.append(outline);
 				outline.append(overlay._path);
-			}else console.warn('No layer to create overlay for',l);
+			}// console.warn('No layer to create overlay for',l);
 		}
 		function resetHighlight(e){
 			if(wrapper) wrapper.remove();
@@ -177,6 +177,10 @@
 				"style": style,
 				"onEachFeature": function(feature, layer){
 					var d = getData(feature.properties[props.geo.key]);
+					// Update columns
+					for(var c = 0; c < props.columns.length; c++){
+						d[props.columns[c].name] = applyReplacementFilters(props.columns[c].template,d);
+					}
 					layer.bindPopup(d["Label"]||d[props.toolkey]||feature.properties[props.geo.key]).on("popupopen",function(ev,f){
 						var d = getData(feature.properties[props.geo.key]);
 						var ps = ev.popup._container;

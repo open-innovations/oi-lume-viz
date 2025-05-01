@@ -114,7 +114,7 @@ export function ZoomableMap(opts){
 
 
 	this.getHTML = function(){
-		var html,i,l,props,zIndex,attrib;
+		var html,i,l,props,zIndex,attrib,columns;
 		const myUUID = "zoomable-"+crypto.randomUUID().substr(0,8);
 
 		attrib = "";
@@ -182,6 +182,16 @@ export function ZoomableMap(opts){
 					html.push('		"toolkey": "' + (config.layers[l].tooltip||"") + '",\n');
 					html.push('		"defaultmarker": ' + JSON.stringify(icons["default"]) + ',\n');
 					html.push('		"options": ' + JSON.stringify(config.layers[l].options) + ',\n');
+					columns = config.layers[l].columns||config.columns||null;
+					if(columns){
+						html.push('		"columns": ' + JSON.stringify(columns) + ',\n');
+						// Remove any virtual columns as we'll rebuild these in the browser
+						for(let r = 0; r < config.layers[l].data.length; r++){
+							for(let c = 0; c < columns.length; c++){
+								delete config.layers[l].data[r][columns[c].name];
+							}
+						}
+					}
 					html.push('		"data": ' + JSON.stringify(config.layers[l].data) + ',\n');
 					if(config.layers[l].geojson){
 						html.push('		"geo": {\n');
@@ -266,7 +276,7 @@ export function ZoomableMap(opts){
 		html.push('})(window || this);\n');
 
 		var holder = new VisualisationHolder(config,{'name':'map','id':myUUID});
-		holder.addDependencies(['/js/tooltip.js','/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/zoomable.js']);
+		holder.addDependencies(['/js/tooltip.js','/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/util.js','/js/zoomable.js']);
 		holder.addClasses(['oi-map','oi-zoomable-map']);
 		return holder.wrap('<div class="leaflet" id="'+myUUID+'"></div><script>'+html.join('')+'</script>');
 	};
@@ -613,7 +623,7 @@ function BasicMap(config,attr){
 			html += '\n<script>(function(root){ OI.FilterMap.add("'+uuid+'",document.currentScript.parentNode,'+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
 		}
 		if(config.tools && config.tools.slider){
-			holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
+			holder.addDependencies(['/js/util.js','/js/map-slider.js','/js/colours.js']);
 
 			html += SliderContent({
 				slider: config.tools.slider,

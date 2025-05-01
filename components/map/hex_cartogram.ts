@@ -623,7 +623,7 @@ export default function (input: { config: HexmapOptions }) {
 		html += '<script>OI.FilterMap.add("'+uuid+'",document.currentScript.parentNode,'+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+');</script>\n';
 	}
 	if(tools.slider){
-		holder.addDependencies(['/js/map-slider.js','/js/colours.js']);
+		holder.addDependencies(['/js/util.js','/js/map-slider.js','/js/colours.js']);
 
 		html += SliderContent({
 			slider: tools.slider,

@@ -146,12 +146,7 @@ examples:
       mapAttribution: "OI"
   - title: Custom tooltips
     description: |
-      We will create a virtual column with the `name` "Tooltip label" to define the `tooltip` text. Virtual columns must have a `name` and `template` which can include existing columns from the data e.g. "{{ LAD21NM }}: {{ Aged 15 years and under }}" would use the `LAD21CD` and `Aged 15 years and under` values from the data. Replacement values (e.g. "{{ Aged 15 years and under }}") can use the following filters:
-        - `toFixed(n)` - to limit a value to `n` decimal places
-        - `multiply(n)` - to multiply a value by `n`
-        - `toLocaleString()` - to use the locale's (of the server) preferred formatting for a value
-        - `colourScale(scale,min,max)` - get a colour to, for example, use as a background style
-        - `contrastColour` - get a contrasting colour (black or white)
+      We will create a virtual column with the `name` "Tooltip label" to define the `tooltip` text. Virtual columns must have a `name` and `template` which can include existing columns from the data e.g. "{{ LAD21NM }}: {{ Aged 15 years and under }}" would use the `LAD21CD` and `Aged 15 years and under` values from the data. Replacement values (e.g. "{{ Aged 15 years and under }}") can use <a href="/documentation/templates/#filters">various filters</a>.
     config:
       data:
         - { LAD21CD: "E08000016", "LAD21NM":"Barnsley", colour: "#E6007C","Aged 15 years and under":44782 }
