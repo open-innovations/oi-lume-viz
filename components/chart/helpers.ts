@@ -168,8 +168,18 @@ export function calculateRange(
 
 // Simple function to count the number of decimals in a number
 function countDecimals(value) {
-	if(Math.floor(value) === value) return 0;
-	return value.toString().split(".")[1].length || 0;
+	if(typeof value==="number"){
+		if(Math.floor(value) === value) return 0;
+		value = value.toString();
+	}
+	if(typeof value==="string"){
+		if(value.indexOf(".") >= 0){
+			return value.split(".")[1].length || 0;
+		}
+	}else{
+		console.warn("countDecimals: value is not a string",value);
+	}
+	return 0;
 }
 
 
