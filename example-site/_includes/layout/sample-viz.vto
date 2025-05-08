@@ -1,0 +1,67 @@
+---
+layout: layout/base.njk
+---
+
+<h1>{{ title }}{{ comp.version({ version:version }) }}</h1>
+{{ if description }}<p>{{ description |> md }}</p>{{ endif }}
+
+{{ content }}
+
+<h2>Usage</h2>
+<p>To use this component in a Vento template you would add the following (assumes you've loaded OI Lume Viz into <code>componentNamespace: 'oi'</code>):</p>
+
+<div class="panes tabbed" data-dependencies="/js/tabbed.js" data-title="Code">
+	<div class="pane">
+		<span class="tab-title">Vento</span>
+		<pre><code>{{ echo }}{{ comp.oi.{{ /echo }}{{component}}{{ echo }}({ "config": config }) }}{{ /echo }}</code></pre>
+	</div>
+	<div class="pane">
+		<span class="tab-title">Nunjucks</span>
+		<pre><code>{{ echo }}{% comp 'oi.{{ /echo }}{{component}}{{ echo }}', { "config": config } %}{% endcomp %}{{ /echo }}</code></pre>
+	</div>
+</div>
+
+<p>where <code>config</code> is replaced by an object that contains some or all of these variables:</p>
+{{ options }}
+
+{{ if examples.length > 1 }}
+<h2 id="examples">Examples</h2>
+<ol>
+	{{> let loop = 0 }}
+	{{ for example of examples }}
+	{{> loop++ }}
+	<li><a href="#example-{{ loop }}">{{ if example.title }}{{ example.title }}{{ else }}Example {{ loop }}{{ /if }}</a></li>
+	{{ /for }}
+</ol>
+{{ /if }}
+
+{{> let loop = 0 }}
+{{ for example of examples }}
+	<section class="tallpadded">
+		{{> loop++ }}
+		{{ set id }}example-{{ loop }}{{ /set }}
+		<h3>{{ loop }}.&nbsp;{{ if example.title }}{{ example.title }}{{ else }}Example {{ if examples | length > 1 }}{{ loop }}{{ /if }}{{ /if }}{{ comp.version({ version: example.version }) }}{{ comp.anchor({ ref: id, title: example.title }) }}</h3>
+		<p><a href="{{ search.page('parent.url="' + url + '" index=' + loop ).url }}">Embeddable version</a></p>
+		{{ if example.description }}{{ example.description |> md }}{{ /if }}
+		{{ if example.config }}
+			{{ set bits = component.split("."); }}
+			{{ if bits.length==1 }}
+				{{ comp.oi[bits[0]]({ "config": example.config }) }}
+			{{ else if bits.length==2 }}
+				{{ comp.oi[bits[0]][bits[1]]({ "config": example.config }) }}
+			{{ /if}}
+
+			<p>This example was made with <code>config</code>:</p>
+			<div class="panes tabbed" data-dependencies="/js/tabbed.js" data-title="Code">
+				<div class="pane">
+					<span class="tab-title">YAML</span>
+					<pre><code class="hljs language-yaml">{{ example.config |> await yaml }}</code></pre>
+				</div>
+				<div class="pane">
+					<span class="tab-title">JSON</span>
+					<pre><code class="hljs language-js">{{ example.config |> await json }}</code></pre>
+				</div>
+			</div>
+		{{ /if }}
+	</section>
+{{ /for }}

@@ -102,7 +102,8 @@ site.use(
 			bash: lang_bash,
 		},
 		options: {
-			classPrefix: 'oi-'
+			classPrefix: 'oi-',
+			ignoreUnescapedHTML: true
 		}
 	})
 );
