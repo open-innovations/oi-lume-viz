@@ -1,0 +1,356 @@
+- title: "One series - minimal config with auto scaling and auto-ticks"
+  description: |
+    If you have regularly updated "live" data you may not know the scale that will be needed for the values in advance. In that case you can set a <code>axis &rarr; x &rarr; tick &rarr; spacing</code> and let the chart calculate an automatic range and tick marks.
+  config:
+    data:
+      - category: First category
+        series1: 20
+      - category: Second category
+        series1: 10
+      - category: Third category
+        series1: 43
+      - category: Fourth category
+        series1: 15
+    category: category
+    series:
+      - title: Series One
+        value: series1
+    axis:
+      x:
+        tick:
+          spacing: 7.5
+
+- title: "One series - defined scaling and ticks"
+  description: |
+    A simple one series bar chart showing four categories. The x-axis (value) can use a customised <code>axis &rarr; x &rarr; min</code>/<code>axis &rarr; x &rarr; max</code> and you can specify which tick marks are shown and what their labels are using <code>axis &rarr; x &rarr; ticks</code>. This gives the flexibility of very customised labels or no labels for ticks.
+  config:
+    data:
+      - category: First category
+        series1: 20
+      - category: Second category
+        series1: 10
+      - category: Third category
+        series1: 45
+      - category: Fourth category
+        series1: 15
+    legend:
+      show: true     # Default to false
+      position: "top"
+    axis:
+      x:
+        min: 0
+        max: 60
+        grid:
+          stroke-dasharray: "6 2"
+          stroke-width: 1
+        ticks:
+          - value: 10
+            label: 10%
+          - value: 20
+            label: 20%
+          - value: 30
+            label: 30%
+          - value: 40
+            label: 40%
+          - value: 50
+            label: 50%
+      y:
+        grid:
+          stroke-width: 0.5
+    category: category  # Category names come from 
+    series:
+      - title: Series One
+        value: series1
+- title: "Two series - customised tooltips"
+  description: |
+    Add two series to a horizontal bar chart. Each series gets its own colour. Javascript is used to make the legend interactive (hovering over a series will highlight that series).
+  config:
+    data:
+      - "Ethnic group": Ethnic Group A
+        "Aspect 1 (%)": 34
+        "Aspect 2 (%)": 23
+      - "Ethnic group": Ethnic Group B
+        "Aspect 1 (%)": 45
+        "Aspect 2 (%)": 35
+      - "Ethnic group": Ethnic Group C
+        "Aspect 1 (%)": 36
+        "Aspect 2 (%)": 10
+    legend:
+      show: true     # Default to false
+      position: "top"
+    axis:
+      x:
+        min: 15
+        max: 58
+        grid:
+          stroke-dasharray: "6 2"
+          stroke-width: 1
+        ticks:
+          - value: 20
+            label: "20%"
+          - value: 30
+            label: "30%"
+          - value: 40
+            label: "40%"
+          - value: 50
+            label: "50%"
+      y:
+        grid:
+          stroke-width: 0.5
+    category: "Ethnic group"  # Category names come from 
+    columns:
+      - name: "Aspect 1 Label"
+        template: "Aspect 1<br />{{ Ethnic group}}: {{ Aspect 1 (%) }}%"
+      - name: "Aspect 2 Label"
+        template: "Aspect 2<br />{{ Ethnic group}}: {{ Aspect 2 (%) }}%"
+    series:
+      - title: "Aspect 1"
+        value: "Aspect 1 (%)"
+        tooltip: "Aspect 1 Label"
+      - title: "Aspect 2"
+        value: "Aspect 2 (%)"
+        tooltip: "Aspect 2 Label"
+- title: "Multi series - customised colours"
+  description: |
+    Add spacing between series' bars as a fraction of the bar width. Explicitly set the colours of each series (as either a hex colour, an RGB colour or a named CSS colour).
+  config:
+    data:
+      - Reason: Reason 1
+        School: 10
+        College: 15
+        University: 20
+      - Reason: Reason 2
+        School: 10
+        College: 15
+        University: 20
+      - Reason: Reason 3 
+        School: 10
+        College: 15
+        University: 20
+    summary: "Employers were not asked separately about each type of placement"
+    legend:
+      show: true     # Default to false
+      position: "top"
+    axis:
+      x:
+        min: 0
+        max: 60
+        grid:
+          stroke-dasharray: "6 2"
+          stroke-width: 1
+        ticks:
+          - value: 10
+            label: "10%"
+          - value: 20
+            label: "20%"
+          - value: 30
+            label: "30%"
+          - value: 40
+            label: "40%"
+          - value: 50
+            label: "50%"
+      y:
+        grid:
+          stroke-width: 0.5
+    gap: 0.2
+    category: "Reason"  # Category names come from 
+    columns:
+      - name: "School Label"
+        template: "{{ Reason }}<br />School: {{ School }}%"
+      - name: "College Label"
+        template: "{{ Reason }}<br />College: {{ College }}%"
+      - name: "University Label"
+        template: "{{ Reason }}<br />University: {{ University }}%"
+    series:
+      - title: "School"
+        value: "School"
+        colour: "#E52E36"
+        tooltip: "School Label"
+      - title: "College"
+        value: "College"
+        colour: "#F7AB3D"
+        tooltip: "College Label"
+      - title: "University"
+        value: "University"
+        colour: "#69C2C9"
+        tooltip: "University Label"
+
+
+- title: "Stacked bar chart - auto scaling"
+  config:
+    data:
+      - Year: 2018
+        u19: 150
+        19-24: 15
+        25+: 20
+      - Year: 2019
+        u19: 190
+        19-24: 35
+        25+: 45
+      - Year: 2020
+        u19: 300
+        19-24: 65
+        25+: 55
+    stacked: true
+    legend:
+      show: true     # Default to false
+      position: "top"
+    axis:
+      x:
+        grid:
+          stroke-dasharray: "6 2"
+          stroke-width: 1
+        tick:
+          spacing: 100
+      y:
+        grid:
+          stroke-width: 0.5
+    category: "Year"  # Category labels come from 
+    series:
+      - title: "Under 19"
+        value: u19
+        colour: "#69C2C9"
+      - title: "19-24"
+        value: 19-24
+        colour: "#7D2248"
+      - title: "25+"
+        value: 25+
+        colour: "#4A783C"
+
+- title: "Stacked bar chart - defined scaling"
+  description: |
+    Rather than side-by-side bars, sometimes we need to stack bars. Stacked-bar charts don't do a good job of allowing you to compare any series other than the first so we use Javascript to make the legend interactive; hovering over a series will shift this series to the left of the chart to make comparison across categories easier.
+  config:
+    data:
+      - Year: 2018
+        u19: 150
+        19-24: 15
+        25+: 20
+      - Year: 2019
+        u19: 190
+        19-24: 35
+        25+: 45
+      - Year: 2020
+        u19: 300
+        19-24: 65
+        25+: 55
+    stacked: true
+    legend:
+      show: true     # Default to false
+      position: "top"
+    axis:
+      x:
+        min: 0
+        max: 600
+        grid:
+          stroke-dasharray: "6 2"
+          stroke-width: 1
+        ticks:
+          - value: 100
+            label: "100"
+          - value: 200
+            label: "200"
+          - value: 300
+            label: "300"
+          - value: 400
+            label: "400"
+          - value: 500
+            label: "500"
+          - value: 600
+            label: "600"
+      y:
+        grid:
+          stroke-width: 0.5
+    category: "Year"  # Category labels come from 
+    series:
+      - title: "Under 19"
+        value: u19
+        colour: "#69C2C9"
+      - title: "19-24"
+        value: 19-24
+        colour: "#7D2248"
+      - title: "25+"
+        value: 25+
+        colour: "#4A783C"
+
+- title: "Stacked bar chart - 100% chart"
+  description: |
+    Sometimes you want to show a part-to-whole relationship for each category i.e. you want the cumulative category bar to take up 100% of the chart width. This lets you see the relative contributions of each series to a category.
+    
+    One way to do this would be to create new columns in your data - one for each series - that contain the percentage contribution of that series' value to the total for the category. If you don't have the ability to control the input data file we can create those columns for you with the `percent: true` option. This will create a new virtual column of data for each series. These new columns will have the same name as the original columns but with `_percent` appended. This lets you refer to the original values and the normalised values in any tooltips that you create. Note that the normalised columns will be created <em>before</em> any virtual columns that you have created.
+    
+    In this example we will define the tooltip of the final series (`25+`) so that you can see how you would be able to include both the percentage and original values. The tooltips for the first two series are auto-generated.
+  config:
+    data:
+      - Year: 2018
+        u19: 150
+        19-24: 15
+        25+: 20
+      - Year: 2019
+        u19: 190
+        19-24: 35
+        25+: 45
+      - Year: 2020
+        u19: 300
+        19-24: 65
+        25+: 55
+    stacked: true
+    percent: true
+    legend:
+      show: true     # Default to false
+      position: "top"
+    axis:
+      x:
+        grid:
+          stroke-dasharray: "6 2"
+          stroke-width: 1
+        ticks:
+          - value: 20
+            label: "20"
+          - value: 40
+            label: "40"
+          - value: 60
+            label: "60"
+          - value: 80
+            label: "80"
+          - value: 100
+            label: "100"
+      y:
+        grid:
+          stroke-width: 0.5
+    category: "Year"  # Category labels come from 
+    columns:
+      - name: "25+ tooltip"
+        template: "25+\n{{ Year }}: {{ 25+_percent | toFixed(1) }}% ({{ 25+ }})\n"
+    series:
+      - title: "Under 19"
+        value: u19
+        colour: "#69C2C9"
+      - title: "19-24"
+        value: 19-24
+        colour: "#7D2248"
+      - title: "25+"
+        value: 25+
+        tooltip: "25+ tooltip"
+        colour: "#4A783C"
+
+- title: Data object
+  description: |
+    Get the data for the bar chart from an object
+  config: 
+    data: test.data.bar
+    category: category  # Category labels come from 
+    series:
+      - title: Test values
+        value: value
+    stacked: false
+    legend:
+      show: true
+      position: top
+    axis:
+      x:
+        tick:
+          spacing: 10
+      y:
+        grid:
+          stroke-width: 0.5
