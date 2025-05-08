@@ -4,7 +4,7 @@ title: Limiting rows
 version: 0.16.5
 ---
 
-<h1>{{ title }}{{ comp.version({ version:version }) | safe }}</h1>
+<h1>{{ title }}{{ comp.version({ version:version }) | await | safe }}</h1>
 
 <p>Sometimes you may have a big, flat, data file where you may want to use some rows for one series and other rows for another. For series-based charts (e.g. scatter, line, bar, ridgeline) we can limit a particular <code>series</code> to only use certain rows by adding the <code>where</code> option to the <code>series</code>. This uses a very basic SQL-like syntax that can parse simple comparisons <code>=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code> and the boolean operators <code>AND</code> and <code>OR</code>.</p>
 

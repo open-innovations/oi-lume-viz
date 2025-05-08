@@ -10,33 +10,33 @@ value: 1500
 
 <p>We've allowed pattern-based-strings to be defined which will take values from the data using a double curly braces syntax e.g. <code>{% raw %}{{ key }}{% endraw %}</code>. For instance, say the data rows for a visualisation contain the attributes/columns <code>ConstituencyName</code> and <code>population</code>. We can build a very simple tooltip string as <code>{% raw %}{{ ConstituencyName }}: {{ population }}{% endraw %}</code>. In this case <code>{% raw %}{{ ConstituencyName }}{% endraw %}</code> will be replaced by that row's <code>ConstituencyName</code> value and <code>{% raw %}{{ population }}{% endraw %}</code> by the <code>population</code> value.</p>
 
-<h2>Filter functions{{ comp.anchor({ ref: "filters" }) | safe }}</h2>
+<h2>Filter functions{{ comp.anchor({ ref: "filters" }) | await | safe }}</h2>
 
 <p>You can also use the following filters:</p>
 
-<h3>colourScale(scale,min,max){{ comp.anchor({ ref: "colourScale" }) | safe }}</h3>
+<h3>colourScale(scale,min,max){{ comp.anchor({ ref: "colourScale" }) | await | safe }}</h3>
 <p>This function will convert a value into a colour using a named <code>scale</code> and the range <code>min</code> to <code>max</code>. This is useful to, for example, get a colour to use as a background style.</p>
 <ul class="examples">
 	<li><code class="hljs language-yaml">{% raw %}{{ value | colourScale("Viridis",0,100) }}{% endraw %}</code> will convert a value into the Viridis colour scale</li>
 </ul>
 
 
-<h3>contrastColour{{ comp.anchor({ ref: "contrastColour" }) | safe }}</h3>
+<h3>contrastColour{{ comp.anchor({ ref: "contrastColour" }) | await | safe }}</h3>
 <p>Get a contrasting colour (e.g. black or white) for a given input colour.</p>
 
 
-<h3>decimalYear() <span class="version">Since v0.15.10</span>{{ comp.anchor({ ref: "decimalYear" }) | safe }}</h3>
+<h3>decimalYear() <span class="version">Since v0.15.10</span>{{ comp.anchor({ ref: "decimalYear" }) | await | safe }} safe }}</h3>
 <p>Calculate the decimal year value of a date. Example:</p>
 <ul class="examples">
 	<li><code>2024-07-01</code> would be converted to <code>2024.49727</code> because 1st July is 0.49727 of the way through the year 2024.</p>
 </ul>
 
 
-<h3>multiply(n){{ comp.anchor({ ref: "multiply" }) | safe }}</h3>
+<h3>multiply(n){{ comp.anchor({ ref: "multiply" }) | await | safe }}</h3>
 <p>Use this to scale a value by <code>n</code>.</p>
 
 
-<h3>strftime("%Y-%m-%d") <span class="version">Since v0.11.0</span>{{ comp.anchor({ ref: "strftime" }) | safe }}</h3>
+<h3>strftime("%Y-%m-%d") <span class="version">Since v0.11.0</span>{{ comp.anchor({ ref: "strftime" }) | await | safe }}</h3>
 <p>Convert an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO8601 date</a> or Unix timestamp into <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. Examples:</p>
 <ul class="examples">
 	<li>Convert a date to an ISO8601 string <code>2024-07-04</code> using <code>strftime("%Y-%m-%d")</code></li>
@@ -45,7 +45,7 @@ value: 1500
 </ul>
 
 
-<h3>strptime("%Y-%m-%d") <span class="version">Since v0.15.10</span>{{ comp.anchor({ ref: "strptime" }) | safe }}</h3>
+<h3>strptime("%Y-%m-%d") <span class="version">Since v0.15.10</span>{{ comp.anchor({ ref: "strptime" }) | await | safe }}</h3>
 <p>Parse a date into a numeric representation using <a href="https://www.tutorialspoint.com/posix-function-strftime-in-perl">a specific date format</a>. This example would parse an ISO8601 date. If no day is given in the input string it will default to the 1st of the month. Hours, minutes and seconds default to <code>0</code>. Examples:</p>
 <ul class="examples">
 	<li>Convert a date of the form <code>Jul 2024</code>, into a numeric date representation using <code>{% raw %}{{ Jul 2024 | strptime("%b %Y") }}{% endraw %}</code></li>
@@ -53,11 +53,11 @@ value: 1500
 </ul>
 
 
-<h3>toFixed(n){{ comp.anchor({ ref: "toFixed" }) | safe }}</h3>
+<h3>toFixed(n){{ comp.anchor({ ref: "toFixed" }) | await | safe }}</h3>
 <p>To limit a value to <code>n</code> decimal places.</p>
 
 
-<h3>toLocaleString(){{ comp.anchor({ ref: "toLocaleString" }) | safe }}</h3>
+<h3>toLocaleString(){{ comp.anchor({ ref: "toLocaleString" }) | await | safe }}</h3>
 <p>To use the locale's (of the server) preferred formatting for a value. Examples:</p>
 <ul class="examples">
 	<li>To convert <code>{% raw %}{{ {% endraw %} {{ value }}{% raw %} }}{% endraw %}</code> to a locale string of the form <code>1,500</code> using <code>{% raw %}{{ {% endraw %} {{ value }}{% raw %} | toLocaleString("en-GB") }}{% endraw %}</code></li>

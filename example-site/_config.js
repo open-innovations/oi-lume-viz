@@ -51,8 +51,8 @@ site.use(nunjucks());
 site.use(sitemap({
 	query: "!draft"
 }));
-site.loadAssets([".css"]);
-site.loadAssets([".js"]);
+site.add([".css"]);
+site.add([".js"]);
 site.loadData(['.csv'], csvLoader({ basic: true }));
 site.loadData([".geojson"], jsonLoader);
 
@@ -107,6 +107,6 @@ site.use(
 	})
 );
 
-site.copy('styles/fonts/');
+site.add('styles/fonts/');
 
 export default site;

@@ -1,11 +1,14 @@
 {
   "importMap": "import_map.json",
   "tasks": {
-    "lume": "echo \"import 'lume/cli.ts'\" | deno run --unstable -A - --config example-site/_config.js --src example-site",
+    "lume": "echo \"import 'lume/cli.ts'\" | deno run -A - --config example-site/_config.js --src example-site",
     "build": "deno task lume",
     "serve": "deno task lume -s",
-    "test": "deno test --allow-read --no-check --unstable"
+    "test": "deno test --allow-read --allow-env --no-check"
   },
+  "unstable": [
+    "temporal"
+  ],
   "lint": {
     "files": {
       "include": [

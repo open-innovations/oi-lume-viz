@@ -2,7 +2,6 @@ import Site from "lume/core/site.ts";
 import { dirname } from './deps.ts';
 import { assets, components } from "./config.ts";
 import { setAssetPrefix } from "./lib/util/paths.ts";
-import { keys } from "https://deno.land/x/nunjucks@3.2.3-2/src/lib.js";
 import { setDefaultColours } from "./lib/colour/colours.ts";
 import { setDefaultFonts } from "./lib/font/fonts.ts";
 import { setDefaultMap } from "./lib/tiles/layers.ts";
@@ -93,6 +92,23 @@ export default function (options?: Options) {
    * Return a function to be called by Lume when using this module.
    */
   return (site: Site) => {
+
+    // Helper function to allow flexible use of Lume 3 or Lume 2.
+    const addToSite = (...params) => {
+      // Try to use the site.add function added as part of Lume 3
+      try {
+        site.add(...params);
+      } catch(error: unknown) {
+        // If that fails as a result of a TypeError
+        if (error instanceof TypeError) {
+          // Use site.copy instead
+          site.copy(...params);
+          return;
+        }
+        throw error;
+      };
+    }
+
     // Iterate over the list of `assets` imported from `config.ts` in this module.
     // This is an array of path strings for assets to load.
     // These files will be copied over verbatim to the built site
@@ -111,7 +127,7 @@ export default function (options?: Options) {
       // Register the asset as a remoteFile in the Lume site using this module.
       site.remoteFile(localAssetPath, remoteAssetPath);
       // Just copy that file over intact
-      site.copy(localAssetPath);
+      addToSite(localAssetPath);
     }
 
     // Iterate over the list of `components` imported from `config.ts` in this module.

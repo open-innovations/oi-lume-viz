@@ -20,7 +20,7 @@ describe("module", () => {
 
   beforeEach(() => {
     fakeSite = new Site();
-    stubs = [stub(fakeSite, "remoteFile"), stub(fakeSite, "copy")];
+    stubs = [stub(fakeSite, "remoteFile"), stub(fakeSite, "add")];
   });
 
   afterEach(() => {
@@ -47,8 +47,8 @@ describe("module", () => {
 
     const calls = assets.length;
 
-    assertSpyCalls(<Stub> fakeSite.copy, calls);
-    assertSpyCallArg(<Stub> fakeSite.copy, 0, 0, `/assets/${assets[0]}`);
+    assertSpyCalls(<Stub> fakeSite.add, calls);
+    assertSpyCallArg(<Stub> fakeSite.add, 0, 0, `/assets/${assets[0]}`);
   });
 
   it("should allow asset path to be set", () => {
@@ -68,7 +68,7 @@ describe("module", () => {
       1,
       `${baseUrl}/assets/${assets[0]}`,
     );
-    assertSpyCallArg(<Stub> fakeSite.copy, 0, 0, `/fakePath/${assets[0]}`);
+    assertSpyCallArg(<Stub> fakeSite.add, 0, 0, `/fakePath/${assets[0]}`);
   });
 
   it("should allow remove trailing slashes from the asset path to be set", () => {
@@ -82,7 +82,7 @@ describe("module", () => {
       0,
       `/fakePath/${assets[0]}`,
     );
-    assertSpyCallArg(<Stub> fakeSite.copy, 0, 0, `/fakePath/${assets[0]}`);
+    assertSpyCallArg(<Stub> fakeSite.add, 0, 0, `/fakePath/${assets[0]}`);
   });
 
   it("should default the component namespace to `oi`", () => {
