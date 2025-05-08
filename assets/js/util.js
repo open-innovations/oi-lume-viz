@@ -56,26 +56,26 @@ function applyReplacementFilters(value,options){
 				bits[b] = "";
 			}
 
-			// multiply(n)
-			rtn = bits[b].match(/multiply\(([0-9\.\-\+]+)\)/);
+			// multiply(100) or multiply(100 / Total)
+			rtn = bits[b].match(/multiply\(([^\)]+)\)/);
 			if(p1 && rtn && rtn.length == 2){
 				if(typeof p1==="string") p1 = parseFloat(p1);
-				p1 = p1 * parseFloat(rtn[1]);
-				bits[b] = "";
-			}
+				if(isNaN(p1)){
+					p1 = "";
+				}else{
+					// Process any replacement values
+					for(var o in options){
+						rtn[1] = rtn[1].replace(new RegExp(o,'g'),options[o]);
+					}
+					try {
+						rtn[1] = eval(rtn[1]);
+					}catch{
+						throw new TypeError('Bad string to multiply: "'+rtn[1]+'"');
+					}
 
-			// multiply(100 / Total)
-			rtn = bits[b].match(/multiply\(([^\)]+)\)/);
-			if(rtn && rtn.length == 2){
-				// Process any replacement values
-				for(var o in options){
-					rtn[1] = rtn[1].replace(new RegExp(o,'g'),options[o]);
+					rtn[1] = parseFloat(rtn[1]);
+					if(!isNaN(rtn[1])) p1 = p1 * rtn[1];
 				}
-				if(rtn[1].match(/^[0-9\.\-\+\/\*\s]+$/)) rtn[1] = eval(rtn[1]);
-				else throw new TypeError('Bad string to multiply: "'+rtn[1]+'"');
-
-				if(typeof p1==="string") p1 = parseFloat(p1);
-				p1 = p1 * parseFloat(rtn[1]);
 				bits[b] = "";
 			}
 

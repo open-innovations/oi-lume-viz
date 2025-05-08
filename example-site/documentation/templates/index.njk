@@ -33,7 +33,7 @@ value: 1500
 
 
 <h3>multiply(n){{ comp.anchor({ ref: "multiply" }) | await | safe }}</h3>
-<p>Use this to scale a value by <code>n</code>.</p>
+<p>Use this to scale a value by <code>n</code>. The value can be a number, a column title, or even a simple calculation e.g. if there was a <code>Total</code> column you could do something like <code>multiply(100 / Total)</code>.</p>
 
 
 <h3>strftime("%Y-%m-%d") <span class="version">Since v0.11.0</span>{{ comp.anchor({ ref: "strftime" }) | await | safe }}</h3>
