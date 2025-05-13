@@ -188,7 +188,6 @@ export function Marker(attr){
 	// If a marker is defined and it isn't a string, process it
 	if(attr.marker && typeof attr.marker!=="string"){
 		var div = document.createElement('div');
-		div.classList.add('test');
 		div.innerHTML = attr.marker.svg||"";
 		this.el = div.firstChild;
 		markers.icon = attr.marker;
@@ -237,7 +236,7 @@ export function Marker(attr){
 		if(typeof markers[opts.marker].setPosition==="function"){
 			markers[opts.marker].setPosition.call(this,x,y);
 			origin = {'x':x,'y':y};
-			if(opts.rotate) setAttr(this.el,{'transform':'rotate('+opts.rotate+' '+origin.x+' '+origin.y+')'});
+			if(opts.rotate) setAttr(this.el,{'transform':'rotate('+opts.rotate+' '+roundNumber(origin.x,2)+' '+roundNumber(origin.y,2)+')'});
 		}
 		return this;
 	};

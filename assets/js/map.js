@@ -1,5 +1,5 @@
 /*
-	Open Innovations map Interactivity v0.2
+	Open Innovations map Interactivity v0.2.1
 	Helper function that find ".oi-map.oi-svg-map" or
 	".oi-map.oi-hex-map" elements and adds tooltips to them.
 */
@@ -43,11 +43,12 @@
 			outline.removeAttribute('tabindex');
 			if(outline.querySelector('text')) outline.querySelector('text').remove();
 			if(outline.querySelector('title')) outline.querySelector('title').remove();
-			outline.querySelector('path').setAttribute('fill','none');
-			outline.querySelector('path').setAttribute('vector-effect','non-scaling-stroke');
+			let path = outline.querySelector('path')||outline.querySelector('use');
+			path.setAttribute('fill','none');
+			path.setAttribute('vector-effect','non-scaling-stroke');
 			outline.removeAttribute('id');
 			outline.classList.add('outline');
-			outline.querySelector('path').removeAttribute('tabindex');
+			path.removeAttribute('tabindex');
 			overlay.appendChild(outline);
 			return this;
 		};
