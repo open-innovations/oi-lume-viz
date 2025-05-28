@@ -173,7 +173,7 @@ export function Axis(ax,from,to,attr){
 					}
 
 					// Set some text properties
-					setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"#000000",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'font-weight':opt.labels[t]['font-weight']||""});
+					setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'font-weight':opt.labels[t]['font-weight']||""});
 
 					if(ticks[t].line){
 						// Set the position/size of the line

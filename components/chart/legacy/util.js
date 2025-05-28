@@ -14,7 +14,10 @@ export function add(el,to){ return to.appendChild(el); }
 export function clone(a){ return JSON.parse(JSON.stringify(a)); }
 export function svgEl(t){ return document.createElement(t);/*return document.createElementNS(ns,t);*/ }
 export function setAttr(el,prop){
-	for(const p in prop) el.setAttribute(p,prop[p]);
+	for(const p in prop){
+		if(prop[p]===undefined ||(typeof prop[p]==="string" && prop[p]=="")) el.removeAttribute(p);
+		else el.setAttribute(p,prop[p]);
+	}
 	return el;
 }
 export function addClasses(el,cl){

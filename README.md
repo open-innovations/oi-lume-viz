@@ -92,18 +92,3 @@ We have a variety of visualisation types available:
   * [SVG maps](/samples/map/svg)
   * [Hex cartograms](/samples/map/hex-cartogram)
 
-## Testing
-
-Run a test with the following command. Replace the file path with the tests you want to run.
-If you provide a directory path and Deno will find any test files in the directory and it's sub-directories.
-
-```powershell
-deno test --unstable --allow-read --no-check components/chart/bar.test.ts
-```
-
-To make Deno continually run these tests, add the `--watch` flag. This will then run each time the input files change.
-
-```powershell
-deno test --unstable --allow-read --no-check --watch components/chart/bar.test.ts
-```
-

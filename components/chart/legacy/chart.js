@@ -15,7 +15,7 @@ export function Chart(config,csv){
 
 	var colours = {};
 	if(!config) config = {};
-	var lbl,id,svg,i,ax,key,seriesgroup,categoryoffset,seriesoffset;
+	var lbl,id,svg,i,ax,key,seriesgroup,categoryoffset,seriesoffset,addedToDefs = 0;
 	lbl = 'categorychart';
 	var fontFamily = getFontFamily();
 	var fontWeight = getFontWeight();
@@ -99,14 +99,16 @@ export function Chart(config,csv){
 							add(stop,grad);
 						}
 						add(grad,defs);
+						addedToDefs++;
 					}
 				}
 			}
 
-
 			seriesgroup = svgEl('g');
 			seriesgroup.classList.add('data-layer');
 			seriesgroup.setAttribute('role','table');
+
+			if(addedToDefs==0) defs.remove();
 		}
 
 		if(typeof this.opt.buildAxes==="function"){
@@ -195,7 +197,6 @@ export function Chart(config,csv){
 							}
 						}
 						datum = {'x':x,'y':y,'title':label};
-						datum.data = {'series':this.opt.series[s].title};
 						data.push(datum);
 					}
 				}

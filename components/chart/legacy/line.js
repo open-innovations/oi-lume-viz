@@ -9,7 +9,7 @@ export function LineChart(config,csv){
 
 	const basefs = getFontSize();
 
-	var opt = {
+	const opt = {
 		'type': 'line-chart',
 		'padding':{'left':0,'top':0,'right':0,'bottom':0},
 		'left':0,

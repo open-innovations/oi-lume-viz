@@ -1,5 +1,5 @@
 /*
-	Open Innovations Chart Interactivity v0.3.0
+	Open Innovations Chart Interactivity v0.3.1
 	Helper function that find ".oi-chart" elements 
 	finds ".oi-legend" within them, and makes the 
 	data series interactive with tooltips.
@@ -73,7 +73,7 @@
 		}
 		for(p = 0; p < pt.length; p++){
 			// Get the series number
-			s = pt[p].getAttribute('data-series');
+			s = pt[p].parentNode.getAttribute('data-series');
 			// Get the item within the series
 			i = parseInt(pt[p].getAttribute('data-i'));
 			if(typ=="waffle-chart") pts[p] = {'el':pt[p],'series':s,'i':i,'tooltip':OI.Tooltips.add(pt[p],{})};

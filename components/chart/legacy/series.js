@@ -95,7 +95,7 @@ export function Series(s,props,data,extra){
 				setAttr(pts[i].bar,datum);
 
 				// Update the bar with some default values
-				setAttr(pts[i].bar,{'role':'cell','data-series':(s+1),'x':0,'y':0,'width':0,'height':0,'class':'marker'});
+				setAttr(pts[i].bar,{'role':'cell','x':0,'y':0,'width':0,'height':0,'class':'marker'});
 
 
 				// Add the bar to the element
@@ -125,7 +125,7 @@ export function Series(s,props,data,extra){
 					pts[i].mark = new Marker(opt.points);
 					pts[i].mark.setAnimation({'duration':opt.duration});
 					pts[i].mark.setAttr(datum);
-					pts[i].mark.setAttr({'data-series':s+1,'role':'cell'}); // Update the point
+					pts[i].mark.setAttr({'role':'cell'}); // Update the point
 					pts[i].mark.addClass('marker');
 					
 					// Add the marker element to the series element
@@ -167,7 +167,7 @@ export function Series(s,props,data,extra){
 				pts[i].mark.setSize(r);
 			}
 			// Set some initial values for the bar
-			if(pts[i].bar) setAttr(pts[i].bar,{'r':r,'fill':data[i].colour||opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.points.stroke,'stroke-width':opt.points['stroke-width']});
+			if(pts[i].bar) setAttr(pts[i].bar,{'r':r,'fill':data[i].colour||opt.points.color,'fill-opacity':opt.points['fill-opacity'],'stroke':opt.bars.stroke,'stroke-width':opt.bars['stroke-width']});
 			
 			if(pts[i].valid){
 				ps = opt.getXY(data[i].x,data[i].y);
