@@ -1,5 +1,5 @@
 /*
-	Open Innovations Sortable Tables v0.3
+	Open Innovations Sortable Tables v0.3.1
 	Helper function to make any table with class="table-sort" sortable.
 	We would have used https://github.com/leewannacott/table-sort-js/ but it couldn't deal with merged rows
 */
@@ -72,7 +72,7 @@
 
 		// Convert into an array
 		for(r = 0; r < rows.length; r++){
-			cols = rows[r].querySelectorAll('td');
+			cols = rows[r].querySelectorAll('td,th');
 			rows[r] = [];
 			mtable[r] = [];
 			for(c = 0,i = 0; c < cols.length; c++){

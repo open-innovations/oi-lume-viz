@@ -46,6 +46,7 @@ export default function (input: {
 
 	// We can optionally set defaults in this
 	const defaults: Partial<TableOptions> = {
+		head: {}
 	};
 
 	// This might be a fragile merge!
@@ -63,7 +64,7 @@ export default function (input: {
 	let sortable = false;
 	let merging = false;
 	let rowValidator;
-
+	
 	// Is there a `where` modifier to this series?
 	if("where" in options && typeof options.where==="string"){
 		if(!rowValidator) rowValidator = Where();
@@ -148,11 +149,11 @@ export default function (input: {
 	let sty = '';
 	if(options.width) sty += 'width:'+options.width+';';
 
-	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+(sortable ? ' class="table-sort table-arrows"':'')+'><tr>'];
+	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+(sortable ? ' class="table-sort table-arrows"':'')+'><thead'+("class" in options.head ? ' class="'+options.head.class+'"' : '')+'><tr>'];
 	for(let col = 0; col < options.columns.length; col++){
-		html.push('<th'+(sortable && !options.columns[col].sortable ? ' class="disable-sort"':'')+''+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].name||"")+'</th>');
+		html.push('<th'+(sortable && !options.columns[col].sortable ? ' class="disable-sort"':'')+''+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].label||options.columns[col].name||"")+'</th>');
 	}
-	html.push('</tr>');
+	html.push('</tr></thead><tbody>');
 
 	let cs = {};
 	for(let row = 0; row < cells.length; row++){
@@ -169,6 +170,7 @@ export default function (input: {
 				}
 				let cellprops = '';
 				if(n>0) cellprops += ' rowspan="'+(n+1)+'"';
+				if(typeof options.columns[col].class==="string") cellprops += ' class="'+options.columns[col].class+'"';
 				let colour = "";
 				let sty = "";
 				if(options.columns[col].colour){
@@ -177,22 +179,23 @@ export default function (input: {
 				}
 				if(options.columns[col].scale){
 					let v = cells[row][col].value;
+					let range = scales[col].max - scales[col].min;
 					if(typeof v==="string") v = parseFloat(v);
-					if(typeof v==="number" && !isNaN(v)) colour = scales[col].scale((cells[row][col].value - scales[col].min)/(scales[col].max - scales[col].min));
+					if(typeof v==="number" && !isNaN(v)) colour = (range == 0) ? scales[col].scale(1) : scales[col].scale((cells[row][col].value - scales[col].min)/(scales[col].max - scales[col].min));
 				}
 				if(colour) sty += "background:"+colour+";color:"+contrastColour(colour)+";";
 				if(options.columns[col].align) sty += 'text-align:'+options.columns[col].align+';';
 				if(sty) cellprops += ' style="'+sty+'"';
 
-				html.push('<td'+cellprops+'>');
+				html.push('<'+(options.columns[col].th ? 'th scope="row"':'td')+cellprops+'>');
 				html.push(cells[row][col].value);
-				html.push('</td>');
+				html.push('</'+(options.columns[col].th ? 'th':'td')+'>');
 				cells[row][col].done = true;
 			}
 		}
 		html.push('</tr>');
 	}
-	html.push('</table>');
+	html.push('</tbody></table>');
 
 	const table = html.join('');
 
@@ -216,6 +219,9 @@ export type TableOptions = {
 		template?: string,
 		mergerows?: boolean
 	}[];
+	head?: {
+		class: string
+	};
 	/** The property in the data holding the panel name */
 	title?: string;
 	/** The property in the data set holding the value */
