@@ -527,7 +527,7 @@ export default function (input: { config: HexmapOptions }) {
 		// TODO(@gilesdring) this only supports pointy-top hexes at the moment
 		var html = `<g class="hex" data-q="${config.q}" data-r="${config.r}" transform="translate(${roundNumber(x)} ${roundNumber(y)})" data-id="${config._id}" role="cell">`;
 		html += `<path fill="${fill.hex}" d="${hexPath}"><title>${tooltipText}</title></path>`;
-		if(labelText) html += `<text fill="${fill.contast}" text-anchor="middle" dominant-baseline="middle" aria-hidden="true">${labelText}</text>`;
+		if(labelText) html += `<text fill="${fill.contrast}" text-anchor="middle" dominant-baseline="middle" aria-hidden="true">${labelText}</text>`;
 		html += `</g>`;
 		return html;
 	};
