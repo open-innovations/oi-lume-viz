@@ -242,11 +242,11 @@ export function Chart(config,csv){
 		for(ax in this.opt.axis){
 			if(this.opt.axis[ax]){
 				if(!this.opt.axis[ax].ticks){
-					console.log('no ticks',ax);
-					throw new TypeError('no ticks');
+					console.warn('no ticks for '+ax+' axis');
+				}else{
+					this.opt.axis[ax].labels = {};
+					for(i = 0; i < this.opt.axis[ax].ticks.length; i++) this.opt.axis[ax].labels[this.opt.axis[ax].ticks[i].value] = this.opt.axis[ax].ticks[i];
 				}
-				this.opt.axis[ax].labels = {};
-				for(i = 0; i < this.opt.axis[ax].ticks.length; i++) this.opt.axis[ax].labels[this.opt.axis[ax].ticks[i].value] = this.opt.axis[ax].ticks[i];
 			}
 		}
 		return this;
