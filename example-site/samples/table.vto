@@ -347,22 +347,22 @@ examples:
       where: '"co2">=2.7'
 options: |
   <ul>
-  <li><code>data</code> - (required) Either a reference to a CSV file in the Lume site or an array of rows with named attributes</li>
+  <li><code>data</code> - (required) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If a row in the data contains the property <code>_class</code> (not <code>class</code> - to avoid clashing with more likely cell headings) this row will get the class applied.</li>
   <li>
   	<code>columns</code> - An ordered array of columns to use to build the table. You could also create a <a href="/documentation/virtual-columns/">virtual column</a> here. Each is of the form:
   	<ul>
   	<li><code>name</code> - (required) The title of the column in the data.</li>
   	<li><code>align</code> - Set the text alignment of the column e.g. <code>left</code>, <code>center</code>, or <code>right</code></li>
   	<li><code>class</code><span class="version">Since 0.17.3</span> - An optional <code>class</code> to apply to the cells in this column.</li>
-  	<li><code><a href="../../samples/table/#example-3" aria-title="Set the column colour in a table">colour</a></code> - A hex colour to use for the background colour of the cells in this column.</li>
-    <li><code>label</code> - An optional label for the column. If not given the column header will be the <code>name</code>.</li>
+	<li><code><a href="../../samples/table/#example-3" aria-title="Set the column colour in a table">colour</a></code> - A hex colour to use for the background colour of the cells in this column.</li>
+	<li><code>header</code><span class="version">Since 0.17.4</span> - Set <code>true</code> to use <a href="https://webaim.org/techniques/tables/data"><code>scope="row"</code></a> on this cell in every row.</li>
+	<li><code>label</code> - An optional label for the column. If not given the column header will be the <code>name</code>.</li>
   	<li><code>max</code> - Used with <code>scale</code> and <code>min</code> to define the colour scale. If not included, the maximum value of the column will be used.</li>
   	<li><code><a href="../../samples/table/#example-2" aria-title="Set if rows should be merged in a table">mergerows</a></code> - (boolean) if this column contains neighbouring rows with the same value, these will be merged into one cell.</li>
   	<li><code>min</code> - Used with <code>scale</code> and <code>max</code> to define the colour scale. If not included, the minimum value of the column will be used.</li>
   	<li><code><a href="samples/table/#example-5" aria-title="Set a table column's background using a scale">scale</a></code> - A <a href="../colours/#scales">colour scale</a> to use to set a cell's background colour based on the cell value.</li>
   	<li><code><a href="../../samples/table/#example-7" aria-title="Set if a table column is sortable">sortable</a></code> - (boolean) if this column will be made sortable by the viewer. Note that it isn't possible to make a column sortable if <code>mergerows</code> has been used on any column.</li>
   	<li><code>template</code> - A <a href="../virtual-columns/">virtual column</a> can be created from other columns in the data.</li>
-  	<li><code>th</code><span class="version">Since 0.17.2</span> - Set <code>true</code> to make the cells in this column use <code>&lt;th scope="row"&gt;</code> rather than <code>&lt;td&gt;</code>.</li>
   	</ul>
   </li>
   <li><code>head</code><span class="version">Since 0.17.2</span> - A structure of the form:

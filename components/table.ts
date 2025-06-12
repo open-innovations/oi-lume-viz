@@ -13,16 +13,6 @@ export const css = `
 `;
 
 
-/**
- * @param options Options to validate
- */
-function checkOptions(options: TableOptions): void {
-	if (options.data === undefined) throw new TypeError("Data not provided");
-	if (options.data.length === 0) {
-		throw new TypeError("Data provided has no entries");
-	}
-}
-
 export default function (input: {
 	config: Partial<TableOptions>;
 }): string {
@@ -53,8 +43,8 @@ export default function (input: {
 		...config,
 	} as TableOptions;
 
-	// Error checking
-	checkOptions(options);
+	// If no data create an empty array
+	if (options.data === undefined) options.data = [];
 
 	// Create a structure to mimic the table (row indexing)
 	let cells = [];
@@ -95,8 +85,10 @@ export default function (input: {
 				cells[r][col] = {
 					"value": (options.columns[col].name && typeof options.data[row][options.columns[col].name]!=="undefined" ? options.data[row][options.columns[col].name] : ""),
 					"done": false,
-					"_row": row
+					"_row": row,
 				};
+				// If an _class is set for this row we add it to the columns
+				if("_class" in options.data[row]) cells[r][col]['_class'] = options.data[row]['_class'];
 				cells[r]._data = options.data[row];
 				let v = cells[r][col].value;
 				if(scales[col].scale){
@@ -149,13 +141,13 @@ export default function (input: {
 
 	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+(sortable ? ' class="table-sort table-arrows"':'')+'><thead'+("head" in options && "class" in options.head ? ' class="'+options.head.class+'"' : '')+'><tr>'];
 	for(let col = 0; col < options.columns.length; col++){
-		html.push('<th'+(sortable && !options.columns[col].sortable ? ' class="disable-sort"':'')+''+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].label||options.columns[col].name||"")+'</th>');
+		html.push('<th'+(sortable && !options.columns[col].sortable ? ' scope="col" class="disable-sort"':'')+''+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].label||options.columns[col].name||"")+'</th>');
 	}
 	html.push('</tr></thead><tbody>');
 
 	let cs = {};
 	for(let row = 0; row < cells.length; row++){
-		html.push('<tr>');
+		html.push('<tr '+(cells[row][0]['_class'] ? ' class="' + cells[row][0]['_class'] + '"' : '')+'>');
 		for(let col = 0; col < cells[row].length; col++){
 			if(!cells[row][col].done){
 				let n = 0;
@@ -166,9 +158,10 @@ export default function (input: {
 						cells[mrow][col].done = true
 					}
 				}
+
 				let cellprops = '';
 				if(n>0) cellprops += ' rowspan="'+(n+1)+'"';
-				if(typeof options.columns[col].class==="string") cellprops += ' class="'+options.columns[col].class+'"';
+				if(typeof options.columns[col]['class']==="string") cellprops += ' class="'+options.columns[col]['class']+'"';
 				let colour = "";
 				let sty = "";
 				if(options.columns[col].colour){
@@ -185,9 +178,9 @@ export default function (input: {
 				if(options.columns[col].align) sty += 'text-align:'+options.columns[col].align+';';
 				if(sty) cellprops += ' style="'+sty+'"';
 
-				html.push('<'+(options.columns[col].th ? 'th scope="row"':'td')+cellprops+'>');
+				html.push('<'+(options.columns[col].header ? 'th scope="row"':'td')+cellprops+'>');
 				html.push(cells[row][col].value);
-				html.push('</'+(options.columns[col].th ? 'th':'td')+'>');
+				html.push('</'+(options.columns[col].header ? 'th':'td')+'>');
 				cells[row][col].done = true;
 			}
 		}

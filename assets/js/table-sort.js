@@ -69,6 +69,7 @@
 		for(c = 0; c < ncol; c++) rowspan[c] = 0;
 		var mtable = new Array(rows.length);
 		var coltype = new Array(ncol);
+		var cls = "";
 
 		// Convert into an array
 		for(r = 0; r < rows.length; r++){
@@ -84,6 +85,7 @@
 
 		for(r = 0; r < rows.length; r++){
 			row = [];
+			cls = rows[r][0].closest('tr').getAttribute('class');
 			for(c = 0,i = 0; c < ncol; c++){
 				if(rowspan[c] > 0){
 					// Keep a reference to the previous row/col
@@ -98,6 +100,7 @@
 					}
 					id = findMatch(cells,rows[r][i])
 					mtable[r][c] = {'id':id,'v':cells[id].getAttribute('data-sort')||cells[id].innerHTML};
+					if(cls) mtable[r][c].class = cls;
 					if(!coltype[c]) coltype[c] = {};
 					i++;
 				}
@@ -105,14 +108,9 @@
 				typ = "string";
 				// Remove any quotes around the column value
 				v = v.replace(/^\"|\"$/g,"");
-				if(v.match(/^[\-\+0-9]+\.[0-9]+$/)){
-					typ = "float";
-				}else if(v.match(/^[0-9]+$/)){
-					typ = "integer";
-				}else if(!isNaN(Date.parse(v))){
-					// The value parses as a date
-					typ = "datetime";
-				}
+				if(v.match(/^[\-\+0-9\,]+\.[0-9]+$/)) typ = "float";
+				else if(v.match(/^([0-9]+|[0-9\,]+\,[0-9]{3})$/)) typ = "integer";
+				else if(!isNaN(Date.parse(v))) typ = "datetime";
 				if(!coltype[c][typ]) coltype[c][typ] = 0;
 				coltype[c][typ]++;
 
@@ -124,8 +122,8 @@
 				if(coltype[c][typ]==rows.length){
 					for(r = 0; r < rows.length; r++){
 						v = mtable[r][c].v;
-						if(typ=="float") v = parseFloat(v);
-						if(typ=="integer") v = parseInt(v);
+						if(typ=="float") v = parseFloat(v.replace(/,/g,''));
+						if(typ=="integer") v = parseInt(v.replace(/,/g,''));
 						if(typ=="datetime") v = (new Date(v)).getTime();
 						mtable[r][c].v = v;
 					}
@@ -146,13 +144,14 @@
 
 	function buildTable(el,table){
 
-		var r,tr,id;
+		var r,tr,id,cls;
 		var cells = table.cells;
 		var newbody = document.createElement('tbody');
 
 		// Build the sorted table
 		for(var r = 0; r < table.rows; r++){
 			tr = document.createElement('tr');
+			if(table.table[r][0].class) tr.setAttribute('class',table.table[r][0].class);
 			for(var c = 0; c < table.cols; c++){
 				id = table.table[r][c].id;
 				td = cells[id].cloneNode(true);
@@ -203,7 +202,6 @@
 		if(!attr) attr = {};
 		var table = normaliseTable(el);
 		this.columns = new Array(table.cols);
-
 		this.sortColumn = function(col){
 			dir = this.columns[col].toggleDirection();
 			
