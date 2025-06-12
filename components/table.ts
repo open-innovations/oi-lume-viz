@@ -45,9 +45,7 @@ export default function (input: {
 	config.data = addVirtualColumns(config);
 
 	// We can optionally set defaults in this
-	const defaults: Partial<TableOptions> = {
-		head: {}
-	};
+	const defaults: Partial<TableOptions> = {};
 
 	// This might be a fragile merge!
 	const options = {
@@ -149,7 +147,7 @@ export default function (input: {
 	let sty = '';
 	if(options.width) sty += 'width:'+options.width+';';
 
-	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+(sortable ? ' class="table-sort table-arrows"':'')+'><thead'+("class" in options.head ? ' class="'+options.head.class+'"' : '')+'><tr>'];
+	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+(sortable ? ' class="table-sort table-arrows"':'')+'><thead'+("head" in options && "class" in options.head ? ' class="'+options.head.class+'"' : '')+'><tr>'];
 	for(let col = 0; col < options.columns.length; col++){
 		html.push('<th'+(sortable && !options.columns[col].sortable ? ' class="disable-sort"':'')+''+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].label||options.columns[col].name||"")+'</th>');
 	}
