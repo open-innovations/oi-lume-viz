@@ -172,8 +172,13 @@ export function Axis(ax,from,to,attr){
 						add(tspan,ticks[t].text.el);
 					}
 
-					// Set some text properties
-					setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'font-weight':opt.labels[t]['font-weight']||""});
+					if(ticks[t].text.el.innerText.length == 0){
+						// Remove the text element if it is empty
+						ticks[t].text.el.remove();
+					}else{
+						// Set some text properties
+						setAttr(ticks[t].text.el,{'stroke':opt.labels[t].stroke||"",'stroke-width':opt.labels[t]['stroke-width']||0,'fill':opt.labels[t].fill||"#000000",'font-weight':opt.labels[t]['font-weight']||""});
+					}
 
 					if(ticks[t].line){
 						// Set the position/size of the line
