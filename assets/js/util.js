@@ -367,3 +367,20 @@ function strftime(sFormat, date) {
 		}[sMatch] || '') + '') || sMatch;
 	});
 }
+
+function recursiveLookup(key,data){
+		if(typeof key==="string"){
+			var bits = key.split(/\./);
+			var d = data;
+			for(var b = 0; b < bits.length; b++){
+				if(typeof d[bits[b]]==="undefined"){
+					return d;
+				}else{
+					d = d[bits[b]];
+				}
+			}	
+		}else{
+			console.warn('Bad key "'+key+'" to look up in data:',data);
+		}
+		return d;
+	}
