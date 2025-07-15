@@ -14,6 +14,9 @@ function applyReplacementFilters(value,options){
 		});
 	}
 
+	// If the value is a key in options we use that
+	if(value in options) return options[value];
+
 	// For each {{ value }} we will parse it to see if we recognise it
 	value = value.replace(/\{\{ *(.*?) *\}\}/g,function(m,p1){
 
@@ -369,18 +372,15 @@ function strftime(sFormat, date) {
 }
 
 function recursiveLookup(key,data){
-		if(typeof key==="string"){
-			var bits = key.split(/\./);
-			var d = data;
-			for(var b = 0; b < bits.length; b++){
-				if(typeof d[bits[b]]==="undefined"){
-					return d;
-				}else{
-					d = d[bits[b]];
-				}
-			}	
-		}else{
-			console.warn('Bad key "'+key+'" to look up in data:',data);
-		}
-		return d;
+	var d = data;
+	if(typeof key==="string"){
+		var bits = key.split(/\./);
+		for(var b = 0; b < bits.length; b++){
+			if(typeof d[bits[b]]==="undefined") return d;
+			else d = d[bits[b]];
+		}	
+	}else{
+		console.warn('Bad key "'+key+'" to look up in data:',data);
 	}
+	return d;
+}
