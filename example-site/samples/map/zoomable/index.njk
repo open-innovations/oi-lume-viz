@@ -28,10 +28,7 @@ examples:
         key: LAD21CD
         data: geojson.leeds_city_region
       key: code
-      columns:
-        - name: Tooltip label
-          template: name 
-      tooltip: Tooltip label
+      tooltip: name
       mapAttribution: "OI"
   - title: Colour a map - defined colours
     description: |
@@ -52,10 +49,7 @@ examples:
         key: LAD21CD
         data: geojson.leeds_city_region
       key: code
-      columns:
-        - name: Tooltip label
-          template: name 
-      tooltip: Tooltip label
+      tooltip: name
       value: colour
       mapAttribution: "OI"
   - title: Colour a map - using a defined scale
@@ -79,10 +73,7 @@ examples:
       key: LAD21CD
       value: Aged 15 years and under
       scale: Viridis
-      columns:
-        - name: Tooltip label
-          template: LAD21NM 
-      tooltip: Tooltip label
+      tooltip: LAD21NM
       mapAttribution: "OI"
   - title: Set the opacity of the data layer
     description: |
@@ -110,10 +101,7 @@ examples:
         "stroke-width": 5
         "stroke-opacity": 0.6
         stroke: "red"
-      columns:
-        - name: Tooltip label
-          template: LAD21NM 
-      tooltip: Tooltip label
+      tooltip: LAD21NM
       mapAttribution: "OI"
   - title: Add a legend
     description: |
@@ -211,10 +199,7 @@ examples:
         key: LAD21CD
         data: geojson.leeds_city_region
       key: code
-      columns:
-        - name: Tooltip label
-          template: name 
-      tooltip: Tooltip label
+      tooltip: name
       places:
           - name: Bradford
             text-anchor: end
@@ -270,10 +255,7 @@ examples:
         key: LAD21CD
         data: geojson.leeds_city_region
       key: code
-      columns:
-        - name: Tooltip label
-          template: name 
-      tooltip: Tooltip label
+      tooltip: name
       markers:
         - icon:
             svg: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-award-fill" viewBox="0 0 16 16"><path d="m8 0 1.669.864 1.858.282.842 1.68 1.337 1.32L13.4 6l.306 1.854-1.337 1.32-.842 1.68-1.858.282L8 12l-1.669-.864-1.858-.282-.842-1.68-1.337-1.32L2.6 6l-.306-1.854 1.337-1.32.842-1.68L6.331.864 8 0z"/><path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/></svg>'
@@ -334,10 +316,7 @@ examples:
         key: LAD21CD
         data: geojson.leeds_city_region
       key: code
-      columns:
-        - name: Tooltip label
-          template: name 
-      tooltip: Tooltip label
+      tooltip: name
       value: colour
       tileLayer: "CartoDB.DarkMatter"
       mapAttribution: "OI"
@@ -360,10 +339,7 @@ examples:
         key: LAD21CD
         data: geojson.leeds_city_region
       key: code
-      columns:
-        - name: Tooltip label
-          template: LAD21NM 
-      tooltip: Tooltip label
+      tooltip: LAD21NM
       value: "Aged 15 years and under"
       scale: Viridis
       background:
@@ -413,10 +389,7 @@ examples:
           min: -3
           max: -0.3
       mapAttribution: "OI"
-      columns:
-        - name: Tooltip label
-          template: name 
-      tooltip: Tooltip label
+      tooltip: name
   - title: Display a line
     description: |
       So far we've been showing polygons but we can also show lines. Here's the routes of power transmission lines in the UK
