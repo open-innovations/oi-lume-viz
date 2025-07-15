@@ -47,8 +47,14 @@ function applyReplacementFilters(value,options){
 			// toFixed(n)
 			rtn = bits[b].match(/toFixed\(([0-9]+)\)/);
 			if(p1 && rtn && rtn.length == 2){
-				if(typeof p1==="string") p1 = parseFloat(p1);
-				if(typeof p1==="number") p1 = p1.toFixed(rtn[1]);
+				let p2 = p1;
+				if(typeof p2==="string") p2 = parseFloat(p2);
+				if(typeof p2==="number"){
+					// Set back to original
+					if(isNaN(p2)) p2 = p1;
+					else if(typeof p2==="number") p2 = p2.toFixed(rtn[1]);
+					p1 = p2;
+				}
 				bits[b] = "";
 			}
 
@@ -160,6 +166,7 @@ function applyReplacementFilters(value,options){
 			if((typeof p1==="string" && !p1) || typeof p1==="null" || p1==null){
 				rtn = bits[b].match(/^\"([^\"]*)\"$/);
 				if(rtn) p1 = rtn[1];
+				else p1 = "";
 			}
 
 		}

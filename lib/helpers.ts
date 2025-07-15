@@ -64,7 +64,7 @@ export function addVirtualColumns (
 					// Convert to a float?
 					if(typeof v==="string"){
 						v2 = parseFloat(v);
-						if(v == v2+"") v = v2;
+						if(v!="" && v == v2+"") v = v2;
 					}
 					config.data[r][config.columns[c].name] = v;
 				}

@@ -168,8 +168,8 @@ export default function (input: {
 					if(options.columns[col].colour in cells[row]._data) colour = colour = namedColours.get(cells[row]._data[options.columns[col].colour]);
 					else colour = namedColours.get(options.columns[col].colour);
 				}
+				let v = cells[row][col].value;
 				if(options.columns[col].scale){
-					let v = cells[row][col].value;
 					let range = scales[col].max - scales[col].min;
 					if(typeof v==="string") v = parseFloat(v);
 					if(typeof v==="number" && !isNaN(v)) colour = (range == 0) ? scales[col].scale(1) : scales[col].scale((cells[row][col].value - scales[col].min)/(scales[col].max - scales[col].min));
