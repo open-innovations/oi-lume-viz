@@ -102,7 +102,7 @@
 
 		// Set some functions for GeoJSON layers
 		function style(feature){
-			var d = getData(feature.properties[props.geo.key]);
+			var d = updateData(feature,props);
 			return {
 				weight: (typeof props.options.weight==="number" ? props.options.weight : 0.5),
 				opacity: (typeof props.options.opacity==="number" ? props.options.opacity : 0.5),
@@ -140,7 +140,17 @@
 				return {};
 			}
 		}
-
+		function updateData(feature,props){
+			var d = getData(feature.properties[props.geo.key]);
+			d.geojson = feature;
+			if("columns" in props){
+				// Update columns
+				for(var c = 0; c < props.columns.length; c++){
+					d[props.columns[c].name] = applyReplacementFilters(props.columns[c].template,d);
+				}
+			}
+			return d;
+		}
 		this.getIDs = function(){
 			var ids = [];
 			for(var i = 0; i < props.geo.json.features.length; i++){
@@ -152,7 +162,7 @@
 		this.setProps = function(fn){
 			props.layer.eachLayer(function(layer){
 				if(layer.feature){
-					var d = getData(layer.feature.properties[props.geo.key]);
+					var d = updateData(layer.feature,props);
 					if(typeof fn==="function"){
 						var d2 = fn.call(this,layer.feature.properties[props.geo.key],layer.feature.properties,layer);
 						if(d.colour!=d2.colour){
@@ -176,13 +186,13 @@
 			var geoattrs = {
 				"style": style,
 				"onEachFeature": function(feature, layer){
-					var d = getData(feature.properties[props.geo.key]);
-					// Update columns
-					for(var c = 0; c < props.columns.length; c++){
-						d[props.columns[c].name] = applyReplacementFilters(props.columns[c].template,d);
-					}
-					layer.bindPopup(d["Label"]||d[props.toolkey]||feature.properties[props.geo.key]).on("popupopen",function(ev,f){
-						var d = getData(feature.properties[props.geo.key]);
+					var d = updateData(feature,props);
+					var lbl = "";
+					if("geo" in props && "key" in props.geo && props.geo.key in feature.properties) lbl = feature.properties[props.geo.key];
+					if("toolkey" in props && props.toolkey in d) lbl = d[props.toolkey];
+					if("Label" in d) lbl = d["Label"];
+					layer.bindPopup(lbl).on("popupopen",function(ev,f){
+						var d = updateData(feature,props)
 						var ps = ev.popup._container;
 						// Set the background colour of the popup
 						ps.querySelector(".leaflet-popup-content-wrapper").style["background-color"] = d.colour;
@@ -197,7 +207,7 @@
 					});
 				},
 				"pointToLayer": function(feature, latlng){
-					var d = getData(feature.properties[props.geo.key]);
+					var d = updateData(feature,props)
 					var marker = props.defaultmarker;
 					var myIcon = L.divIcon({'html':marker.svg.replace(/currentColor/,d.colour),'iconSize':marker.size||[32,32],'iconAnchor':marker.anchor||[16,32],'popupAnchor':marker.popup||[0,-32]});
 					return L.marker(latlng,{icon: myIcon});

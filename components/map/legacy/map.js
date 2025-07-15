@@ -276,9 +276,9 @@ export function ZoomableMap(opts){
 		html.push('})(window || this);\n');
 
 		var holder = new VisualisationHolder(config,{'name':'map','id':myUUID});
-		holder.addDependencies(['/js/tooltip.js','/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/util.js','/js/zoomable.js']);
+		holder.addDependencies(['/js/util.js','/js/tooltip.js','/leaflet/leaflet.js','/leaflet/leaflet.css','/css/maps.css','/css/legend.css','/js/zoomable.js']);
 		holder.addClasses(['oi-map','oi-zoomable-map']);
-		return holder.wrap('<div class="leaflet" id="'+myUUID+'"></div><script>'+html.join('')+'</script>');
+		return holder.wrap('<div class="leaflet" id="'+myUUID+'" style="--defaultbg:'+defaultbg+'"></div><script>'+html.join('')+'</script>');
 	};
 	return this;
 }
@@ -596,7 +596,7 @@ function BasicMap(config,attr){
 	this.getHTML = function(){
 
 		var holder = new VisualisationHolder(config,{'name':'map'});
-		holder.addDependencies(attr.dependencies||['/css/legend.css','/css/maps.css','/js/tooltip.js']);
+		holder.addDependencies(attr.dependencies||['/js/util.js','/css/legend.css','/css/maps.css','/js/tooltip.js']);
 		holder.addClasses('oi-map');
 		holder.addClasses(attr.classes);
 
