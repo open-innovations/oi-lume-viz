@@ -142,11 +142,11 @@ examples:
       total: Total
       columns:
         - name: "F tooltip"
-          template: "Appearances: female\n{{ Female | toLocaleString() }} ({{ Female | multiply(100 / Total) | toFixed(1) }}%)"
+          template: "Appearances: female\n{{ Female | toLocaleString() }} ({{ Female | multiply(100 / Total) | toFixed(1) | parseFloat }}%)"
         - name: "M tooltip"
-          template: "Appearances: male\n{{ Male | toLocaleString() }} ({{ Male | multiply(100 / Total) | toFixed(1) }}%)"
+          template: "Appearances: male\n{{ Male | toLocaleString() }} ({{ Male | multiply(100 / Total) | toFixed(1) | parseFloat }}%)"
         - name: "O tooltip"
-          template: "Appearances: diverse/non-binary genders\n{{ Other/diverse | toLocaleString() }} ({{ Other/diverse | multiply(100 / Total) | toFixed(1) }}%)"
+          template: "Appearances: diverse/non-binary genders\n{{ Other/diverse | toLocaleString() }} ({{ Other/diverse | multiply(100 / Total) | toFixed(1) | parseFloat }}%)"
       series:
         - value: "Female"
           colour: "#722EA5"

@@ -57,6 +57,10 @@ value: 1500
 <p>To limit a value to <code>n</code> decimal places.</p>
 
 
+<h3>parseFloat{{ comp.anchor({ ref: "parseFloat" }) | await | safe }}</h3>
+<p>To parse a string into a number. May be useful to use after <code>toFixed()</code> to remove trailing zeros.</p>
+
+
 <h3>toLocaleString(){{ comp.anchor({ ref: "toLocaleString" }) | await | safe }}</h3>
 <p>To use the locale's (of the server) preferred formatting for a value. Examples:</p>
 <ul class="examples">
