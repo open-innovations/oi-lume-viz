@@ -52,6 +52,8 @@ const namespaceToPath = (namespace: string) =>
 export default function (options?: Options) {
   // Work out where this file is imported from (it'll be local path or url) and create a new URL
   const baseUrl = new URL(import.meta.url);
+  console.log(import.meta.url, baseUrl);
+
   // Strip the filename from the baseUrl path - giving the import root of this module
   baseUrl.pathname = dirname(baseUrl.pathname);
 
