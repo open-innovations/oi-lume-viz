@@ -40,6 +40,7 @@ function applyReplacementFilters(value,options){
 			}
 		}
 		if(typeof p1=="number" && isNaN(p1)) p1 = "";
+		if(typeof p1==="null") p1 = "";
 
 		// Process each filter in turn
 		for(b = 1; b < bits.length; b++){
