@@ -38,7 +38,7 @@
 		}
 
 		this.addOutline = function(e){
-			// Create an outline version of the hex that sits on top
+			// Create an outline version of the shape that sits on top
 			var outline = e.cloneNode(true);
 			outline.removeAttribute('tabindex');
 			if(outline.querySelector('text')) outline.querySelector('text').remove();

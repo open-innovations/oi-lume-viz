@@ -30,8 +30,8 @@ function applyReplacementFilters(value,options){
 		p1 = bits[0];
 
 		if(options){
+			// Get the value from the table if one exists
 			if(typeof options[p1]!=="undefined"){
-				// Get the value from the table if one exists
 				p1 = options[p1];
 			}else{
 				v = recursiveLookup(p1,options);
@@ -40,7 +40,7 @@ function applyReplacementFilters(value,options){
 			}
 		}
 		if(typeof p1=="number" && isNaN(p1)) p1 = "";
-		if(typeof p1==="null") p1 = "";
+		if(typeof p1==="null" || p1 == null) p1 = "";
 
 		// Process each filter in turn
 		for(b = 1; b < bits.length; b++){
