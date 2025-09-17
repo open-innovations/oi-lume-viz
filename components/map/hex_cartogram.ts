@@ -261,10 +261,14 @@ export default function (input: { config: HexmapOptions }) {
 		let colour = undefined;
 		if (typeof input === "string") colour = input;
 		else if (typeof input === "number"){
-			if(min != Infinity && max != -Infinity){
-				let c = (input - min) / (max - min);
-				if(c < 0) c = 0;
-				if(!isNaN(c)) colour = cs(c);
+			if(min==max){
+				colour = cs(0);
+			}else{
+				if(min != Infinity && max != -Infinity){
+					let c = (input - min) / (max - min);
+					if(c < 0) c = 0;
+					if(!isNaN(c)) colour = cs(c);
+				}
 			}
 		}else{
 			// How did we get here???
