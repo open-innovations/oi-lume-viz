@@ -86,11 +86,11 @@ export default function (options?: Options) {
    */
   function getRemotePath(prefix: string, name: string) {
     const assetUrl = new URL(baseUrl.toString());
-    console.log({
-      prefix, name, assetPath
-    });
     assetUrl.hash = "";
     assetUrl.pathname = [baseUrl.pathname, prefix, name].join("/");
+    console.log('getRemotePath:',assetUrl.toString(),{
+      prefix, name, assetPath
+    });
     return assetUrl.toString();
   }
 
