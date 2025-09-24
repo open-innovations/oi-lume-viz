@@ -91,6 +91,8 @@ export default function (input: { config: HexmapOptions }) {
 		throw new TypeError('No options provided for hex cartogram');
 	}
 
+	if(input.config.debug) console.log('Input config',input.config);
+
 	// Take a copy of parameters as constants, with defaults.
 	// NB these are not cloned at this stage, as this loses information about functions passed in
 	let {

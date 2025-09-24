@@ -27,6 +27,8 @@ export default function (input: {
 
 	const config = clone(input.config);
 
+	if(config.debug) console.log('Input config',config);
+
 	if (!config.data) throw "No data source provided";
 
 	// Convert references into actual objects
@@ -40,6 +42,8 @@ export default function (input: {
 
 	// Create any defined columns
 	config.data = addVirtualColumns(config);
+
+	if(config.debug) console.log('Pre render config',config);
 
 	const html = dashboard(config);
 

@@ -68,6 +68,8 @@ export default function (input: { config: SVGmapOptions }) {
 	// Build the layer structure
 	var config = buildLayers(input);
 
+	if(config.debug) console.log('Input config',config);
+
 	const map = new SVGMap(config);
 
 	return map.getHTML();

@@ -19,6 +19,8 @@ export default function (input: {
 
 	const config = clone(input.config);
 
+	if(config.debug) console.log('Input config',config);
+
 	// Define some colours
 	const namedColours = Colours(config.colours);
 
@@ -45,6 +47,8 @@ export default function (input: {
 
 	// If no data create an empty array
 	if (options.data === undefined) options.data = [];
+
+	if(options.debug) console.log('Pre render config',options);
 
 	// Create a structure to mimic the table (row indexing)
 	let cells = [];

@@ -77,6 +77,8 @@ export default function (input: {
 
 	const config = clone(input.config);
 
+	if(config.debug) console.log('Input config',config);
+
 	// Define some colours
 	const namedColours = Colours(config.colours);
 
@@ -125,6 +127,8 @@ export default function (input: {
 
 	// Error checking
 	checkOptions(options);
+
+	if(options.debug) console.log('Pre render config',options);
 
 	const ns = 'http://www.w3.org/2000/svg';
 	// Create a random ID number

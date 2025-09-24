@@ -10,18 +10,18 @@ import { clone } from "../../lib/util/clone.ts";
  * Options provided to the Bar Chart
  */
 export interface BarChartOptions {
-  /** Whether the bar chart is stacked or not */
-  stacked: boolean;
-  /** Data provided to the chart is expected to be an array of objects (mandatory) */
-  data: Record<string, unknown>[] | string;
-  /** Name of the category (mandatory) */
-  category: string;
-  /** Configuration of each of the series (mandatory) */
-  series: Partial<SeriesOptions>[];
-  /** Configuration of the axes */
-  axis: {
-    x: Partial<AxisOptions>;
-  };
+	/** Whether the bar chart is stacked or not */
+	stacked: boolean;
+	/** Data provided to the chart is expected to be an array of objects (mandatory) */
+	data: Record<string, unknown>[] | string;
+	/** Name of the category (mandatory) */
+	category: string;
+	/** Configuration of each of the series (mandatory) */
+	series: Partial<SeriesOptions>[];
+	/** Configuration of the axes */
+	axis: {
+		x: Partial<AxisOptions>;
+	};
 }
 
 
@@ -44,72 +44,75 @@ function checkOptions(options: BarChartOptions): void {
 }
 
 export default function (input: {
-  config: Partial<BarChartOptions>;
+	config: Partial<BarChartOptions>;
 }): string {
-  const config = clone(input.config);
-  
-  // Convert references into actual objects
-  config.data = thingOrNameOfThing<TableData<string | number>>(
-    config.data,
-    input,
-  );
+	const config = clone(input.config);
 
-  // In case it was a CSV file loaded
-  if(config.data.rows) config.data = config.data.rows;
+	if(config.debug) console.log('Input config',config);
 
-  // Optionally use normalised (to 100%) values
-  if(config.stacked && config.percent){
-    
-    // Find the totals for each category
-    var totals = new Array(config.data.length);
-    for(let r = 0; r < config.data.length; r++){
-      totals[r] = 0;
-      for(let s = 0; s < config.series.length; s++){
-        totals[r] += config.data[r][config.series[s].value];
-      }
-    }
+	// Convert references into actual objects
+	config.data = thingOrNameOfThing<TableData<string | number>>(
+		config.data,
+		input,
+	);
 
-    // For each series create a percentage-based version
-    for(let s = 0; s < config.series.length; s++){
-      // Construct a new series ID
-      let id = config.series[s].value+"_percent";
-      // If the new series doesn't exist in the data...
-      if(!config.data[0][id]){
-        // For each row in the data
-        for(let r = 0; r < config.data.length; r++){
-          config.data[r][id] = (100*config.data[r][config.series[s].value]/totals[r]);
-        }
-        // Replace the series reference to the dummy column we have created
-        config.series[s].value = id;
-      }
-    }
-  }
-  
-  // Create any defined columns
-  config.data = addVirtualColumns(config);
+	// In case it was a CSV file loaded
+	if(config.data.rows) config.data = config.data.rows;
 
+	// Optionally use normalised (to 100%) values
+	if(config.stacked && config.percent){
+		
+		// Find the totals for each category
+		var totals = new Array(config.data.length);
+		for(let r = 0; r < config.data.length; r++){
+			totals[r] = 0;
+			for(let s = 0; s < config.series.length; s++){
+				totals[r] += config.data[r][config.series[s].value];
+			}
+		}
 
-  // We can optionally set defaults in this
-  const defaults: Partial<BarChartOptions> = {
-    stacked: false,
-    axis: {
-      x: {},
-    }
-  };
-  // This might be a fragile merge!
-  const options = {
-    ...defaults,
-    ...config,
-  } as BarChartOptions;
+		// For each series create a percentage-based version
+		for(let s = 0; s < config.series.length; s++){
+			// Construct a new series ID
+			let id = config.series[s].value+"_percent";
+			// If the new series doesn't exist in the data...
+			if(!config.data[0][id]){
+				// For each row in the data
+				for(let r = 0; r < config.data.length; r++){
+					config.data[r][id] = (100*config.data[r][config.series[s].value]/totals[r]);
+				}
+				// Replace the series reference to the dummy column we have created
+				config.series[s].value = id;
+			}
+		}
+	}
+	
+	// Create any defined columns
+	config.data = addVirtualColumns(config);
 
-  // Error checking
-  checkOptions(options);
+	// We can optionally set defaults in this
+	const defaults: Partial<BarChartOptions> = {
+		stacked: false,
+		axis: {
+			x: {},
+		}
+	};
+	// This might be a fragile merge!
+	const options = {
+		...defaults,
+		...config,
+	} as BarChartOptions;
 
-  // Call the bar render function
-  const chart = renderBarChart(options);
+	// Error checking
+	checkOptions(options);
 
-  var holder = new VisualisationHolder(options,{'name':'bar chart'});
-  holder.addDependencies(['/js/tooltip.js','/js/chart.js']);
-  holder.addClasses(['oi-chart','oi-chart-bar']);
-  return holder.wrap(chart);
+	if(options.debug) console.log('Pre render config',options);
+
+	// Call the bar render function
+	const chart = renderBarChart(options);
+
+	var holder = new VisualisationHolder(options,{'name':'bar chart'});
+	holder.addDependencies(['/js/tooltip.js','/js/chart.js']);
+	holder.addClasses(['oi-chart','oi-chart-bar']);
+	return holder.wrap(chart);
 }

@@ -56,6 +56,8 @@ export default function (input: {
 }): string {
 	const config = clone(input.config);
 
+	if(config.debug) console.log('Input config',config);
+
 	// Convert references into actual objects
 	config.data = thingOrNameOfThing<TableData<string | number>>(
 		config.data,
@@ -87,6 +89,8 @@ export default function (input: {
 
 	// Error checking
 	checkOptions(options);
+
+	if(options.debug) console.log('Pre render config',options);
 
 	return WaffleChart(options);
 }

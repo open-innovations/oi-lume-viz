@@ -43,6 +43,8 @@ export default function (input: { config: ZoomablemapOptions }) {
 	// Build the layer structure
 	var config = buildLayers(input);
 
+	if(config.debug) console.log('Input config',config);
+
 	const map = new ZoomableMap(config);
 
 	return map.getHTML();
