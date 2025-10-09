@@ -76,25 +76,28 @@ export default function (input: {
 
 	// Can't sort tables with merged cells, sorry
 	//if(merging && sortable) sortable = false;
-
-	for(let row = 0,r; row < options.data.length; row++){
+	let v,r,row,col;
+	for(row = 0,r; row < options.data.length; row++){
 
 		// Do we keep this row?
 		if(rowValidator.isValid(options.data[row])){
 			// Create an array of columns for this row
-			let r = new Array(options.columns.length);
+			r = new Array(options.columns.length);
 			cells.push([]);
 			r = cells.length-1;
-			for(let col = 0; col < options.columns.length; col++){
+			for(col = 0; col < options.columns.length; col++){
+				v = ("value" in options.columns[col] && typeof options.data[row][options.columns[col].value]!=="undefined" ? 
+						options.data[row][options.columns[col].value] : (options.columns[col].name && typeof options.data[row][options.columns[col].name]!=="undefined" ? options.data[row][options.columns[col].name] : ""));
 				cells[r][col] = {
-					"value": (options.columns[col].name && typeof options.data[row][options.columns[col].name]!=="undefined" ? options.data[row][options.columns[col].name] : ""),
+					"value": v,
+					"name": (options.columns[col].name && typeof options.data[row][options.columns[col].name]!=="undefined" ? options.data[row][options.columns[col].name] : ""),
 					"done": false,
 					"_row": row,
 				};
 				// If an _class is set for this row we add it to the columns
 				if("_class" in options.data[row]) cells[r][col]['_class'] = options.data[row]['_class'];
 				cells[r]._data = options.data[row];
-				let v = cells[r][col].value;
+				v = cells[r][col].value;
 				if(scales[col].scale){
 					if(typeof v==="string") v = parseFloat(v);
 					if(typeof v==="number" && !isNaN(v)){
@@ -181,9 +184,10 @@ export default function (input: {
 				if(colour) sty += "background:"+colour+";color:"+contrastColour(colour)+";";
 				if(options.columns[col].align) sty += 'text-align:'+options.columns[col].align+';';
 				if(sty) cellprops += ' style="'+sty+'"';
+				if(cells[row][col].name != cells[row][col].value) cellprops += ' data-sort="'+cells[row][col].value+'"';
 
 				html.push('<'+(options.columns[col].header ? 'th scope="row"':'td')+cellprops+'>');
-				html.push(cells[row][col].value);
+				html.push(cells[row][col].name);
 				html.push('</'+(options.columns[col].header ? 'th':'td')+'>');
 				cells[row][col].done = true;
 			}

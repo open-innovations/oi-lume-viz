@@ -345,6 +345,98 @@ examples:
           min: 0
           sortable: true
       where: '"co2">=2.7'
+  - title: "Not-quite-numeric cell values"
+    version: 0.17.10
+    description: |
+      There can be times when you want to have a numeric column that contains units or wording along with the numbers. But doing this will probably break any cell colouring and/or column sorting. To get around this we explicitly give a purely numeric representation by e.g. setting `value` to `co2` and use `template` to create a displayed value that includes the units inline (rather than in the column header).
+
+      If you aren't lucky enough to have a plain numeric representation in your input data, you could update the data object in the Lume template. For example,  `data.map(x => ({ ...x, new_column: parseFloat(input_column) }))` would create `new_column` by parsing a number from `input_column`.
+    config:
+      width: "100%"
+      data:
+        - page: Liverpool City Region
+          co2: 5.33
+          size: 21.2
+        - page: Tendring District Council
+          co2: 3.90
+          size: 15.5
+        - page: London Borough of Newham
+          co2: 2.99
+          size: 13.7
+        - page: Melton Borough Council
+          co2: 2.95
+          size: 13.5
+        - page: Welwyn Hatfield Council
+          co2: 2.68
+          size: 10.6
+        - page: Dacorum Council
+          co2: 2.68
+          size: 10.6
+        - page: Harborough District Council
+          co2: 2.59
+          size: 10.3
+        - page: Bridgend County Borough Council
+          co2: 2.53
+          size: 10.0
+        - page: Reading Borough Council
+          co2: 2.34
+          size: 9.3
+        - page: Bournemouth, Christchurch and Poole
+          co2: 2.27
+          size: 9.0
+      columns:
+        - name: "Local Authority"
+          template: "{{ page }}"
+          sortable: true
+        - name: "CO2"
+          template: "{{ co2 }}g"
+          value: "co2"
+          align: center
+          scale: Heat_r
+          min: 0
+          sortable: true
+        - name: "Size"
+          template: "{{ size }} MB"
+          value: "size"
+          align: center
+          scale: Heat_r
+          min: 0
+          sortable: true
+  - title: "Tweak sorting order"
+    version: 0.17.10
+    description: |
+      There may be cases where you have a string value in a table cell but you don't want a simple alphabetical sorting of that column. For instance, if the displayed cell values were `First`, `Second`, `Third`, `Fourth`, `Fifth`, alphabetical sorting would lead to `Fifth`, `First`, `Fourth`, `Second`, `Third`. But what if we want them to stay in a logical order instead? In that case we set a `column`'s `value` to an ordered attribute in each row.
+    config:
+      width: "100%"
+      data:
+        - label: First
+          order: 1
+          value: 87
+        - label: Second
+          order: 2
+          value: 19
+        - label: Third
+          order: 3
+          value: 23
+        - label: Fourth
+          order: 4
+          value: 54
+        - label: Fifth
+          order: 5
+          value: 36
+      columns:
+        - name: "Label"
+          template: "label"
+          sortable: true
+          value: "order"
+          scale: Viridis_r
+          min: 0
+        - name: "Value"
+          template: "value"
+          align: center
+          scale: Viridis_r
+          min: 0
+          sortable: true
 options: |
   <ul>
   <li><code>data</code> - (required) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If a row in the data contains the property <code>_class</code> (not <code>class</code> - to avoid clashing with more likely cell headings) this row will get the class applied.</li>
@@ -352,6 +444,7 @@ options: |
   	<code>columns</code> - An ordered array of columns to use to build the table. You could also create a <a href="/documentation/virtual-columns/">virtual column</a> here. Each is of the form:
   	<ul>
   	<li><code>name</code> - (required) The title of the column in the data.</li>
+    <li><code>value</code><span class="version">Since 0.17.10</span> - Set a numeric column (in the data) to use for calculating heat map colours and/or sorting.</li>
   	<li><code>align</code> - Set the text alignment of the column e.g. <code>left</code>, <code>center</code>, or <code>right</code></li>
   	<li><code>class</code><span class="version">Since 0.17.3</span> - An optional <code>class</code> to apply to the cells in this column.</li>
   	<li><code><a href="../../samples/table/#example-3" aria-title="Set the column colour in a table">colour</a></code> - A hex colour to use for the background colour of the cells in this column.</li>
