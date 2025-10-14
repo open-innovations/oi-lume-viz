@@ -348,9 +348,9 @@ examples:
   - title: "Not-quite-numeric cell values"
     version: 0.17.10
     description: |
-      There can be times when you want to have a numeric column that contains units or wording along with the numbers. But doing this will probably break any cell colouring and/or column sorting. To get around this we explicitly give a purely numeric representation by e.g. setting `value` to `co2` and use `template` to create a displayed value that includes the units inline (rather than in the column header).
+      Perhaps you really need to have a a numeric column that contains units or wording along with the numbers. But having a non-numeric value will break cell colouring (and probably the column sorting). To get around this we can give a purely numeric representation by setting `value` and send the non-numeric value with `name` or `template`.
 
-      If you aren't lucky enough to have a plain numeric representation in your input data, you could update the data object in the Lume template. For example,  `data.map(x => ({ ...x, new_column: parseFloat(input_column) }))` would create `new_column` by parsing a number from `input_column`.
+      If you aren't lucky enough to have a basic numeric representation in your input data, you could update the data object within your Lume template before passing it to OI Lume Viz. For example, `data.map(x => ({ ...x, new_column: parseFloat(input_column) }))` would create `new_column` by parsing a number from `input_column`. You could then set `name` to `input_column` and `value` to `new_column`.
     config:
       width: "100%"
       data:
