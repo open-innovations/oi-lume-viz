@@ -123,6 +123,7 @@ export function ZoomableMap(opts){
 		html = [];
 		html.push('(function(root){\n');
 		html.push('	var p = document.currentScript.parentNode;\n');
+		html.push('	OI.ready(function(){\n');
 		html.push('	var map = OI.ZoomableMap.add("'+myUUID+'",p.querySelector(".leaflet"),{"attribution":'+(attrib ? JSON.stringify(attrib) : '""')+'});\n');
 
 		if(config.bounds){
@@ -273,6 +274,7 @@ export function ZoomableMap(opts){
 
 		if(!config.bounds) html.push('	map.fitBounds("data");\n');
 
+		html.push('});\n');	// End of OI.ready
 		html.push('})(window || this);\n');
 
 		var holder = new VisualisationHolder(config,{'name':'map','id':myUUID});
@@ -603,40 +605,53 @@ function BasicMap(config,attr){
 		var html = this.svg.outerHTML;
 		var l,filterdata,i,datum,id,filter;
 
-		if(config.tools && config.tools.filter){
-			holder.addDependencies(['/js/map-filter.js','/js/colours.js']);
+		if(config.tools){
+			if(config.tools.filter || config.tools.panzoom){
+				html += '\n<script>(function(root){ let parentNode = document.currentScript.parentNode; OI.ready(function(){';
+			}
+			if(config.tools.filter){
+				holder.addDependencies(['/js/map-filter.js','/js/colours.js']);
 
-			filter = config.tools.filter;
-			filterdata = {};
-			for(l = 0; l < config.layers.length; l++){
-				if(config.layers[l].type=="data"){
-					for(i = 0; i < config.layers[l].data.length; i++){
-						datum = config.layers[l].data[i];
-						if(config.key in datum){
-							id = datum[config.key];
-							filterdata[id] = (filter.label && filter.label in datum ? datum[filter.label] : filter.label);
+				filter = config.tools.filter;
+				filterdata = {};
+				for(l = 0; l < config.layers.length; l++){
+					if(config.layers[l].type=="data"){
+						for(i = 0; i < config.layers[l].data.length; i++){
+							datum = config.layers[l].data[i];
+							if(config.key in datum){
+								id = datum[config.key];
+								filterdata[id] = (filter.label && filter.label in datum ? datum[filter.label] : filter.label);
+							}
 						}
 					}
 				}
+				
+				html += 'OI.FilterMap.add("'+uuid+'",parentNode,'+JSON.stringify(filter)+','+JSON.stringify(filterdata)+');';
 			}
-			
-			html += '\n<script>(function(root){ OI.FilterMap.add("'+uuid+'",document.currentScript.parentNode,'+JSON.stringify(filter)+','+JSON.stringify(filterdata)+'); })(window || this);</script>\n';
-		}
-		if(config.tools && config.tools.slider){
-			holder.addDependencies(['/js/util.js','/js/map-slider.js','/js/colours.js']);
+			if(config.tools.panzoom){
+				holder.addDependencies(['/js/svg-pan-zoom.js']);
+				html += 'console.log("test",'+JSON.stringify(config.tools)+');'
+				html += 'OI.SVGPanZoom.add("'+uuid+'",parentNode,'+JSON.stringify(config.tools.panzoom)+');';
+			}
+			if(config.tools.filter || config.tools.panzoom){
+				html += '}); })(window || this);</script>\n';
+			}
+			if(config.tools.slider){
+				holder.addDependencies(['/js/util.js','/js/map-slider.js','/js/colours.js']);
 
-			html += SliderContent({
-				slider: config.tools.slider,
-				bg: defaultbg,
-				value: config.value,
-				key: config.key,
-				min: config.min,
-				max: config.max,
-				scale: config.scale,
-				colours: namedColours,
-				tooltip: config.tooltip,
-				data: config.data
-			});
+				html += SliderContent({
+					slider: config.tools.slider,
+					bg: defaultbg,
+					value: config.value,
+					key: config.key,
+					min: config.min,
+					max: config.max,
+					scale: config.scale,
+					colours: namedColours,
+					tooltip: config.tooltip,
+					data: config.data
+				});
+			}
 		}
 		return holder.wrap('<div class="oi-map-holder"><div class="oi-map-inner">'+html+'</div></div>');
 	};

@@ -626,7 +626,9 @@ export default function (input: { config: HexmapOptions }) {
 			}
 		}
 		// Add a Filter object to the current script's node with the config and data
-		html += '<script>OI.FilterMap.add("'+uuid+'",document.currentScript.parentNode,'+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+');</script>\n';
+		html += '<script>(function(root){ let parentNode = document.currentScript.parentNode; OI.ready(function(){';
+		html += 'OI.FilterMap.add("'+uuid+'",parentNode,'+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+');';
+		html += '}); })(window || this);</script>\n';
 	}
 	if(tools.slider){
 		holder.addDependencies(['/js/util.js','/js/map-slider.js','/js/colours.js']);

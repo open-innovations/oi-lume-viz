@@ -1,5 +1,5 @@
 /*
-	Open Innovations Tooltip v0.5.2
+	Open Innovations Tooltip v0.5.3
 	Helper function to add tooltips. A suitable candidate must:
 		- be in an SVG
 		- have a <title> child
@@ -205,7 +205,7 @@
 		else svg = pt;
 
 		attr._type = typ;
-		holder = svg.parentNode;
+		holder = svg.parentNode.parentNode;
 
 		// If not a group it gets its own tabindex so that it can be navigated to
 		if(!attr._group) this.el.setAttribute('tabindex',0);
