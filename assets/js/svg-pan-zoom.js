@@ -139,7 +139,6 @@
 			let xPropW = (pt.x - viewBox.x)/width;
 			let yPropH = (pt.y - viewBox.y)/height;
 			let scale = Math.pow(2,zoom-1);
-			console.log(zoom,z,scale);
 			let w2 = orig.width/scale;
 			let h2 = orig.height/scale;
 
