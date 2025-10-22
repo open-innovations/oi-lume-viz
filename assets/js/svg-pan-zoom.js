@@ -38,7 +38,7 @@
 
 		let viz = p.closest('.oi-viz');
 		let pel = viz.querySelector(pos.join(""))||p;
-		let inner = viz.querySelector('.oi-map-inner');
+		let holder = viz.querySelector('.oi-map-holder');
 		let svg = viz.querySelector('svg.oi-map-map');
 		
 		if(!opt.draggable && !opt.zoomable) return this;
@@ -70,8 +70,8 @@
 			if(active){
 				root.OI.Tooltips.update();
 				let tt = active.el.getBoundingClientRect();
-				let bb = inner.getBoundingClientRect();
-				if(tt.left > bb.right || tt.right < bb.left || tt.bottom < bb.top || tt.top > bb.bottom) active.unlock().clear();
+				let bb = holder.getBoundingClientRect();
+				if(tt.left+tt.width/2 > bb.right || tt.right-tt.width/2 < bb.left || tt.bottom-tt.height/2 < bb.top || tt.top+tt.height/2 > bb.bottom) active.unlock().clear();
 				else active.show();
 			}
 		}
@@ -206,7 +206,7 @@
 			var point = svg.createSVGPoint();
 
 			if(opt.zoomable && opt.scrollWheelZoom){
-				inner.addEventListener('wheel',function(e){
+				holder.addEventListener('wheel',function(e){
 					e.preventDefault();
 					Zoom((e.deltaY < 0 ? 1 : -1),getPointFromEvent(e));
 				});
@@ -215,20 +215,20 @@
 			if(opt.draggable){
 				// If browser supports pointer events
 				if(window.PointerEvent) {
-					inner.addEventListener('pointerdown', onPointerDown);
-					inner.addEventListener('pointerup', onPointerUp);
-					inner.addEventListener('pointerleave', onPointerUp);
-					inner.addEventListener('pointermove', onPointerMove);
+					holder.addEventListener('pointerdown', onPointerDown);
+					holder.addEventListener('pointerup', onPointerUp);
+					holder.addEventListener('pointerleave', onPointerUp);
+					holder.addEventListener('pointermove', onPointerMove);
 				}else{
 					// Add all mouse events listeners fallback
-					inner.addEventListener('mousedown', onPointerDown);
-					inner.addEventListener('mouseup', onPointerUp);
-					inner.addEventListener('mouseleave', onPointerUp);
-					inner.addEventListener('mousemove', onPointerMove);
+					holder.addEventListener('mousedown', onPointerDown);
+					holder.addEventListener('mouseup', onPointerUp);
+					holder.addEventListener('mouseleave', onPointerUp);
+					holder.addEventListener('mousemove', onPointerMove);
 					// Add all touch events listeners fallback
-					inner.addEventListener('touchstart', onPointerDown);
-					inner.addEventListener('touchend', onPointerUp);
-					inner.addEventListener('touchmove', onPointerMove);
+					holder.addEventListener('touchstart', onPointerDown);
+					holder.addEventListener('touchend', onPointerUp);
+					holder.addEventListener('touchmove', onPointerMove);
 				}
 			}
 			updateControls();

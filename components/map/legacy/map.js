@@ -630,7 +630,6 @@ function BasicMap(config,attr){
 			}
 			if(config.tools.panzoom){
 				holder.addDependencies(['/js/svg-pan-zoom.js']);
-				html += 'console.log("test",'+JSON.stringify(config.tools)+');'
 				html += 'OI.SVGPanZoom.add("'+uuid+'",parentNode,'+JSON.stringify(config.tools.panzoom)+');';
 			}
 			if(config.tools.filter || config.tools.panzoom){
