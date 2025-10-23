@@ -80,6 +80,7 @@
 			isPointerDown = true; // We set the pointer as down
 			active = OI.Tooltips.active;
 			updateTooltip(false);
+			clearAnimation();
 			// We get the pointer position so we can get the value once the user starts to drag
 			origin = getPoint(e);
 			evCache.push(e);
@@ -101,14 +102,13 @@
 					const a = getPoint(evCache[0]);
 					const b = getPoint(evCache[1]);
 					const mid = {x:(a.x+b.x)/2,y:(a.y+b.y)/2};
-					if(curDiff > prevDiff) Zoom(0.05,mid);
-					else if(curDiff < prevDiff) Zoom(-0.05,mid);
+					if(curDiff > prevDiff) Zoom(0.05,mid,0);
+					else if(curDiff < prevDiff) Zoom(-0.05,mid,0);
 				}
 				// Cache the distance for the next move event
 				prevDiff = curDiff;
 			}else{
 				// Just one pointer
-				clearAnimation();
 				e.preventDefault();
 				// Get the pointer position as an SVG Point
 				var pos = getPoint(e);
@@ -131,13 +131,6 @@
 		function Zoom(z,pt,s){
 			// If it is already animating
 			if(timeout) clearTimeout(timeout);
-			if(target){
-				viewBox.x = target.x;
-				viewBox.y = target.y;
-				viewBox.width = target.width;
-				viewBox.height = target.height;
-				target = null;
-			}
 
 			// Update the zoom factor
 			zoom += z;
@@ -213,7 +206,6 @@
 			if(opt.zoomable && opt.scrollWheelZoom){
 				holder.addEventListener('wheel',function(e){
 					e.preventDefault();
-					if(timeout) clearTimeout(timeout);
 					Zoom((e.deltaY < 0 ? 1 : -1),getPoint(e));
 				});
 			}
@@ -242,7 +234,13 @@
 			console.warn('No SVG element to attach zoom to');
 		}
 
-		function clearAnimation(){
+		function clearAnimation(vb){
+			if(vb){
+				viewBox.x = vb.x;
+				viewBox.y = vb.y;
+				viewBox.width = vb.width;
+				viewBox.height = vb.height;
+			}
 			if(anim){
 				anim.remove();
 				anim = null;
@@ -256,20 +254,19 @@
 			return this;
 		};
 
-		this.setViewBox = function(vb,s,fn){
-			target = vb;
-			// Set a default zoom time
-			if(typeof s!=="number") s = 0.2;
+		function doneAnimate(){
+			if(timeout) clearTimeout(timeout);
+			clearAnimation(target);
+			updateControls();
+			updateTooltip(true);
+			return this;
+		};
 
-			function done(){
-				viewBox.x = vb.x;
-				viewBox.y = vb.y;
-				viewBox.width = vb.width;
-				viewBox.height = vb.height;
-				updateControls();
-				updateTooltip(true);
-				if(typeof fn==="function") fn.call();
-			}
+		this.setViewBox = function(vb,s){
+			// Set a default zoom time
+			if(typeof s!=="number") s = 0.1;
+
+			target = vb;
 
 			if(s > 0){
 				// Create an <animate> element
@@ -281,9 +278,9 @@
 				setAttr(anim,{'attributeName':'viewBox','to':vb.x+' '+vb.y+' '+vb.width+' '+vb.height,'dur':s+'s','fill':'freeze'});
 				anim.beginElement();
 				// Set a timeout to update the viewBox variable at the end of the animation
-				timeout = setTimeout(done,s*1000);
+				timeout = setTimeout(function(){ doneAnimate(); },s*1000);
 			}else{
-				done();
+				doneAnimate();
 			}
 			return this;
 		};
