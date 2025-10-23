@@ -213,6 +213,7 @@
 			if(opt.zoomable && opt.scrollWheelZoom){
 				holder.addEventListener('wheel',function(e){
 					e.preventDefault();
+					if(timeout) clearTimeout(timeout);
 					Zoom((e.deltaY < 0 ? 1 : -1),getPoint(e));
 				});
 			}
@@ -258,7 +259,7 @@
 		this.setViewBox = function(vb,s,fn){
 			target = vb;
 			// Set a default zoom time
-			if(typeof s!=="number") s = 0.3;
+			if(typeof s!=="number") s = 0.2;
 
 			function done(){
 				viewBox.x = vb.x;
