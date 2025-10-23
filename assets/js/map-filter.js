@@ -1,5 +1,5 @@
 /*
-	Open Innovations map filtering v0.2.2
+	Open Innovations map filtering v0.2.3
 */
 (function(root){
 
@@ -22,14 +22,10 @@
 
 		if(!opt) opt = {};
 		if(!opt.position) opt.position = "top left";
-		if(opt.position.match("top")) pos.push(".oi-top");
-		if(opt.position.match("bottom")) pos.push(".oi-bottom");
-		if(opt.position.match("left")) pos.push(".oi-left");
-		if(opt.position.match("right")) pos.push(".oi-right");
 		if(!opt.max) opt.max = 8;
 
 		let viz = p.closest('.oi-viz');
-		let pel = viz.querySelector(pos.join(""))||p;
+		let pel = viz.querySelector(opt.position.replace(/(^|\s)(top|bottom|left|right)/g,function(m,p1,p2){ return p1+".oi-"+p2; }))||p;
 
 		as = viz.querySelectorAll('.data-layer .hex, .data-layer .area');
 		if(as.length == 0) return this;

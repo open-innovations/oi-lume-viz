@@ -1,5 +1,5 @@
 /*
-	Open Innovations SVG interactivity v0.1.1
+	Open Innovations SVG interactivity v0.1.2
 */
 (function(root){
 
@@ -35,7 +35,7 @@
 		let svg = viz.querySelector('svg.oi-map-map');
 
 		// Find out where to attach the controls
-		let pel = viz.querySelector(opt.position.replace(/(^|\s)(top|bottom|left|right)/g,function(m,p1,p2){ return ".oi-"+p2; }))||p;
+		let pel = viz.querySelector(opt.position.replace(/(^|\s)(top|bottom|left|right)/g,function(m,p1,p2){ return p1+".oi-"+p2; }))||p;
 
 		if(!opt.draggable && !opt.zoomable) return this;
 

@@ -431,6 +431,59 @@ examples:
           stroke-width: 3
           stroke-dasharray: "7 5.65"
           stroke-linecap: "round"
+  - title: "Pan and zoom"
+    version: 0.18.0
+    description: |
+      It is possible to make a hex cartogram pannable and zoomable.
+    config:
+      label: ""
+      attribution: |
+        Credit: Open Innovations
+      columns:
+        - name: "filterLabel"
+          template: "{{ n }} ({{ RGNNM }})"
+      tooltip: "{{ n }}<br />{{ _id }}"
+      legend:
+        title: "Key"
+        position: top
+        items:
+          - value: "#FF6700"
+            label: "East Anglia"
+          - value: "#00B6FF"
+            label: "East Midlands"
+          - value: "#D73058"
+            label: "London"
+          - value: "#D60303"
+            label: "North East"
+          - value: "#1DD3A7"
+            label: "North West"
+          - value: "#722EA5"
+            label: "Northern Ireland"
+          - value: "#2254F4"
+            label: "Scotland"
+          - value: "#67E767"
+            label: "South East"
+          - value: "#178CFF"
+            label: "South West"
+          - value: "#F9BC26"
+            label: "Yorkshire and the Humber"
+          - value: "#0DBC37"
+            label: "Wales"
+          - value: "#E6007C"
+            label: "West Midlands"
+      hexjson: hexjson.localauthorities
+      value: colour
+      tools:
+        filter:
+          label: "filterLabel"
+        panzoom:
+          maxZoom: 6
+      boundaries:
+        country:
+          stroke: "white"
+          stroke-width: 3
+          stroke-dasharray: "7 5.65"
+          stroke-linecap: "round"
 options: |
   <ul>
   <li><code>data</code> - (optional) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If used you will need to match this to the HexJSON IDs using <code>matchKey</code>.</li>
