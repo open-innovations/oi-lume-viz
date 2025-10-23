@@ -1,5 +1,5 @@
 /*
-	Open Innovations Tooltip v0.5.3
+	Open Innovations Tooltip v0.5.4
 	Helper function to add tooltips. A suitable candidate must:
 		- be in an SVG
 		- have a <title> child
@@ -44,6 +44,7 @@
 			return anc;
 		};
 	}
+	let disabled = false;
 
 	function Tooltips(){
 		var tips = [];
@@ -129,6 +130,9 @@
 		this.update = function(){
 			if(this.active) this.active.show();
 		};
+
+		this.disable = function(){ disabled = true; };
+		this.enable = function(){ disabled = false; };
 
 		this.clear = function(){
 			if(!this.locked){
@@ -445,6 +449,7 @@
 		};
 
 		this.toggle = function(){
+			if(disabled) return this;
 			// Always reset any existingly selected items and turn off sticky
 			if(this==attr._alltips.active) this.clear();
 			else this.show();

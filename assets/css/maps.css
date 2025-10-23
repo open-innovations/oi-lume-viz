@@ -23,7 +23,7 @@
 .oi-map .overlay > .outline > * { stroke: currentColor; stroke-width: 4px; stroke-opacity: 1; outline: none; }
 .oi-map .boundaries > * { pointer-events: none; }
 
-.oi-map .oi-map-inner { text-align:center; overflow: hidden; }
+.oi-map .oi-map-inner { text-align:center; overflow: hidden; line-height: 0; }
 
 .oi-map .labels text { pointer-events: none; }
 

@@ -1,26 +1,24 @@
 /*
-	Open Innovations SVG interactivity v0.1
+	Open Innovations SVG interactivity v0.1.1
 */
 (function(root){
 
 	if(!root.OI) root.OI = {};
-	if(!root.OI.ready){
-		root.OI.ready = function(fn){
-			// Version 1.1
-			if(document.readyState != 'loading') fn();
-			else document.addEventListener('DOMContentLoaded', fn);
-		};
-	}
+
+	// Version 1.1
+	if(!root.OI.ready) root.OI.ready = function(fn){ if(document.readyState != 'loading'){ fn(); }else{ document.addEventListener('DOMContentLoaded', fn); } };
 
 	// Add some CSS styling
-	var styles = document.createElement('style');
-	styles.innerHTML = '.oi-map-inner { touch-action: none; } .oi-zoom-control { display: inline-block; border: 0.125rem solid rgba(0,0,0,0.2); background: rgba(0,0,0,0.2); background-clip: padding-box; } .oi-zoom-control button { display: block; width: 2.25rem; height: 2.25rem; border: 0; padding: 0; font-size: 1.5rem; line-height: 1em; margin-top: 0; } .oi-zoom-control button:not([disabled=true]) { cursor: pointer; } .oi-zoom-control button + button { margin-top: 1px; } .oi-draggable .oi-map-inner { cursor: move; }';
-	document.head.prepend(styles);
+	document.head.prepend(createEl('style',{'html':'.oi-map-inner { touch-action: none; } .oi-panzoom { display: inline-block; border: 0.125rem solid rgba(0,0,0,0.2); background: rgba(0,0,0,0.2); background-clip: padding-box; } .oi-panzoom button { display: block; width: 2.25rem; height: 2.25rem; border: 0; padding: 0; font-size: 1.5rem; line-height: 1em; margin-top: 0; } .oi-panzoom button:not([disabled=true]) { cursor: pointer; } .oi-panzoom button + button { margin-top: 1px; } .oi-draggable .oi-map-inner { cursor: move; }'}));
+
+	// Global vars to cache event state
+	const evCache = [];
+	let prevDiff = -1;
 
 	function SVGPanZoom(id,p,opt){
 
 		let _obj = this;
-		let el,viewBox,orig,anim,zoom,timeout,target,isPointerDown = false,pointerOrigin,zi,zo,rt,active,pos = [];
+		let el,viewBox,orig,anim,zoom,timeout,target,isPointerDown = false,origin,zi,zo,rt,active;
 
 		if(!opt) opt = {};
 		if(typeof opt.draggable!=="boolean") opt.draggable = true;
@@ -31,30 +29,27 @@
 		if(typeof opt.maxZoom!=="number") opt.maxZoom = 4;
 
 		if(!opt.position) opt.position = "top left";
-		if(opt.position.match("top")) pos.push(".oi-top");
-		if(opt.position.match("bottom")) pos.push(".oi-bottom");
-		if(opt.position.match("left")) pos.push(".oi-left");
-		if(opt.position.match("right")) pos.push(".oi-right");
 
 		let viz = p.closest('.oi-viz');
-		let pel = viz.querySelector(pos.join(""))||p;
 		let holder = viz.querySelector('.oi-map-holder');
 		let svg = viz.querySelector('svg.oi-map-map');
-		
+
+		// Find out where to attach the controls
+		let pel = viz.querySelector(opt.position.replace(/(^|\s)(top|bottom|left|right)/g,function(m,p1,p2){ return ".oi-"+p2; }))||p;
+
 		if(!opt.draggable && !opt.zoomable) return this;
 
 		zoom = opt.zoom;
 
-		// This function returns an object with X & Y values from the pointer event
-		function getPointFromEvent(event){
-		  
-		  // If even is triggered by a touch event, we get the position of the first finger
-			if(event.targetTouches){
-				point.x = event.targetTouches[0].clientX;
-				point.y = event.targetTouches[0].clientY;
+		// This function returns an object with x/y values from the pointer event
+		function getPoint(e){
+			// If event is triggered by a touch event, we get the position of the first finger
+			if(e.targetTouches){
+				point.x = e.targetTouches[0].clientX;
+				point.y = e.targetTouches[0].clientY;
 			}else{
-				point.x = event.clientX;
-				point.y = event.clientY;
+				point.x = e.clientX;
+				point.y = e.clientY;
 			}
 		  
 			// We get the current transformation matrix of the SVG and we inverse it
@@ -63,54 +58,76 @@
 			return point.matrixTransform(invertedSVGMatrix);
 		}
 
-		function updateTooltip(){
-			if(root.OI.Tooltips && root.OI.Tooltips.active){
-				active = root.OI.Tooltips.active;
-			}
-			if(active){
-				root.OI.Tooltips.update();
-				let tt = active.el.getBoundingClientRect();
-				let bb = holder.getBoundingClientRect();
-				if(tt.left+tt.width/2 > bb.right || tt.right-tt.width/2 < bb.left || tt.bottom-tt.height/2 < bb.top || tt.top+tt.height/2 > bb.bottom) active.unlock().clear();
-				else active.show();
+		// Update any active tooltips
+		function updateTooltip(state){
+			if(OI && OI.Tooltips){
+				if(typeof state==="boolean"){
+					if(state) OI.Tooltips.enable();
+					else OI.Tooltips.disable();
+				}
+				if(active){
+					OI.Tooltips.update();
+					let tt = active.el.getBoundingClientRect();
+					let bb = holder.getBoundingClientRect();
+					if(tt.left+tt.width/2 > bb.right || tt.right-tt.width/2 < bb.left || tt.bottom-tt.height/2 < bb.top || tt.top+tt.height/2 > bb.bottom) active.unlock().clear();
+					else active.show();
+				}
 			}
 		}
 
 		// Function called by the event listeners when user start pressing/touching
-		function onPointerDown(event){
+		function onPointerDown(e){
 			isPointerDown = true; // We set the pointer as down
-			updateTooltip();
-			// We get the pointer position on click/touchdown so we can get the value once the user starts to drag
-			pointerOrigin = getPointFromEvent(event);
+			active = OI.Tooltips.active;
+			updateTooltip(false);
+			// We get the pointer position so we can get the value once the user starts to drag
+			origin = getPoint(e);
+			evCache.push(e);
 		}
 
 		// Function called by the event listeners when user start moving/dragging
-		function onPointerMove(event){
+		function onPointerMove(e){
 			// Only run this function if the pointer is down
 			if(!isPointerDown) return;
 
-			clearAnimation();
+			// Find this event in the cache and update its record with this event
+			evCache[evCache.findIndex( (cachedEv) => cachedEv.pointerId === e.pointerId )] = e;
 
-			// This prevent user to do a selection on the page
-			event.preventDefault();
-
-			// Get the pointer position as an SVG Point
-			var pointerPosition = getPointFromEvent(event);
-
-			// Update the viewBox variable with the distance from origin and current position
-			// We don't need to take care of a ratio because this is handled in the getPointFromEvent function
-			viewBox.x -= (pointerPosition.x - pointerOrigin.x);
-			viewBox.y -= (pointerPosition.y - pointerOrigin.y);
-
+			if(evCache.length === 2){
+				// Pinch gestures
+				// Calculate the distance between the two pointers
+				const curDiff = Math.sqrt(Math.pow(evCache[0].clientX - evCache[1].clientX,2) + Math.pow(evCache[0].clientY - evCache[1].clientY,2));
+				if(prevDiff > 0){
+					const a = getPoint(evCache[0]);
+					const b = getPoint(evCache[1]);
+					const mid = {x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+					if(curDiff > prevDiff) Zoom(0.05,mid);
+					else if(curDiff < prevDiff) Zoom(-0.05,mid);
+				}
+				// Cache the distance for the next move event
+				prevDiff = curDiff;
+			}else{
+				// Just one pointer
+				clearAnimation();
+				e.preventDefault();
+				// Get the pointer position as an SVG Point
+				var pos = getPoint(e);
+				// Update the viewBox with the distance from origin and current position
+				viewBox.x -= (pos.x - origin.x);
+				viewBox.y -= (pos.y - origin.y);
+			}
 			updateTooltip();
 			updateControls();
 		}
 
-		function onPointerUp(){
-			// The pointer is no longer considered as down
+		function onPointerUp(e){
 			isPointerDown = false;
+			// Remove this pointer from the cache
+			removeEvent(e);
+			// If the number of pointers down is less than two then reset diff tracker
+			if(evCache.length < 2) prevDiff = -1;
 		}
-		
+
 		function Zoom(z,pt,s){
 			// If it is already animating
 			if(timeout) clearTimeout(timeout);
@@ -134,10 +151,8 @@
 			// Use the centre if no point given
 			if(typeof pt==="undefined") pt = {x:viewBox.width/2 + viewBox.x,y:viewBox.height/2 + viewBox.y};
 
-			let width = viewBox.width;
-			let height = viewBox.height;
-			let xPropW = (pt.x - viewBox.x)/width;
-			let yPropH = (pt.y - viewBox.y)/height;
+			let xPropW = (pt.x - viewBox.x)/viewBox.width;
+			let yPropH = (pt.y - viewBox.y)/viewBox.height;
 			let scale = Math.pow(2,zoom-1);
 			let w2 = orig.width/scale;
 			let h2 = orig.height/scale;
@@ -166,40 +181,31 @@
 		}
 
 		if(svg){
-			
 			// We save the original values from the viewBox
 			viewBox = svg.viewBox.baseVal;
 			orig = {'x':viewBox.x,'y':viewBox.y,'width':viewBox.width,'height':viewBox.height};
 
 			if(opt.draggable) viz.classList.add('oi-draggable');
 
-			el = viz.querySelector('.oi-zoom-control');
+			el = viz.querySelector('.oi-panzoom');
 			// Remove any existing controls
 			if(el) el.remove();
 
-			el = document.createElement('div');
-			el.classList.add('oi-zoom-control');
+			el = createEl('div',{'class':'oi-panzoom'});
 			if(opt.zoomable){
-				zi = document.createElement('button');
-				zi.innerHTML = '+';
-				zi.classList.add('oi-zoom-in');
+				zi = createEl('button',{'html':'+','class':'oi-zoom-in','attr':{'title':'Zoom in','aria-label':'Zoom in'}});
 				el.appendChild(zi);
 				zi.addEventListener('click',function(){ Zoom(1); });
 			}
-			rt = document.createElement('button');
-			rt.innerHTML = '&#10226;';
-			rt.classList.add('oi-zoom-reset');
+			rt = createEl('button',{'html':'&#10226;','class':'oi-zoom-reset','attr':{'title':'Reset view','aria-label':'Reset view'}});
 			rt.addEventListener('click',function(){ _obj.reset(); });
 			el.appendChild(rt);
 			if(opt.zoomable){
-				zo = document.createElement('button');
-				zo.innerHTML = '&minus;';
-				zo.classList.add('oi-zoom-out');
+				zo = createEl('button',{'html':'&minus;','class':'oi-zoom-out','attr':{'title':'Zoom out','aria-label':'Zoom out'}});
 				el.appendChild(zo);
 				zo.addEventListener('click',function(){ Zoom(-1); });
 			}
 			pel.append(el);
-
 
 			// Create an SVG point that contains x & y values
 			var point = svg.createSVGPoint();
@@ -207,7 +213,7 @@
 			if(opt.zoomable && opt.scrollWheelZoom){
 				holder.addEventListener('wheel',function(e){
 					e.preventDefault();
-					Zoom((e.deltaY < 0 ? 1 : -1),getPointFromEvent(e));
+					Zoom((e.deltaY < 0 ? 1 : -1),getPoint(e));
 				});
 			}
 
@@ -260,7 +266,7 @@
 				viewBox.width = vb.width;
 				viewBox.height = vb.height;
 				updateControls();
-				updateTooltip();
+				updateTooltip(true);
 				if(typeof fn==="function") fn.call();
 			}
 
@@ -271,10 +277,7 @@
 					svg.prepend(anim);
 				}
 				// Set the attributes
-				anim.setAttribute('attributeName','viewBox');
-				anim.setAttribute('to',vb.x+' '+vb.y+' '+vb.width+' '+vb.height);
-				anim.setAttribute('dur',s+'s');
-				anim.setAttribute('fill','freeze');
+				setAttr(anim,{'attributeName':'viewBox','to':vb.x+' '+vb.y+' '+vb.width+' '+vb.height,'dur':s+'s','fill':'freeze'});
 				anim.beginElement();
 				// Set a timeout to update the viewBox variable at the end of the animation
 				timeout = setTimeout(done,s*1000);
@@ -287,12 +290,32 @@
 		return this;
 	}
 
-	// Create a visible list of filters so that 
-	// a filter can be updated later if necessary
+	function setAttr(el,prop){
+		for(var p in prop) el.setAttribute(p,prop[p]);
+		return el;
+	}
+
+	function createEl(typ,o){
+		if(!o) o = {};
+		let el = (o.ns ? document.createElementNS(o.ns,typ) : document.createElement(typ));
+		if(typeof o.class==="string") el.classList.add(...(o.class.split(/ /)));
+		if(typeof o.style==="object") Object.assign(el.style,o.style);
+		if(typeof o.attr==="object") setAttr(el,o.attr);
+		if(typeof o.html==="string") el.innerHTML = o.html;
+		return el;
+	}
+
+	function removeEvent(ev) {
+		// Remove this event from the target's cache
+		const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
+		evCache.splice(index, 1);
+	}
+
+	// Create a visible list of filters so that a filter can be updated later if necessary
 	function List(){
 		var arr = {};
 		this.add = function(id,el,opt){
-			if(id in arr) console.warn('The zoom already exists for '+id);
+			if(id in arr) console.warn('Pan/zoom controls already exist for '+id);
 			else arr[id] = new SVGPanZoom(id,el,opt);
 			return this;
 		};
