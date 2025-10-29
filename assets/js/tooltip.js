@@ -209,7 +209,7 @@
 		else svg = pt;
 
 		attr._type = typ;
-		holder = svg.parentNode.parentNode;
+		holder = attr.attachTo||svg.furthest('.oi-viz')||svg.parentNode;
 
 		// If not a group it gets its own tabindex so that it can be navigated to
 		if(!attr._group) this.el.setAttribute('tabindex',0);
