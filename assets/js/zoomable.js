@@ -27,7 +27,7 @@
 		this.id = id;
 		this.map = map;
 		this.layers = list;
-
+		
 		this.addLayer = function(props){
 			list.push(new Layer(props));
 			lastlayer = list[list.length-1];
@@ -53,7 +53,6 @@
 						el.querySelector(".leaflet-popup-close-button").setAttribute("style",style);
 					});
 				}
-				
 			}
 			return this;
 		};
@@ -84,7 +83,7 @@
 		};
 
 		// Function to update a Leaflet map's size if it has been hidden
-		this.update = function(){
+		this.updateVisible = function(){
 			this.map.invalidateSize(false);
 			if(oldbounds){
 				this.fitBounds(oldbounds);
