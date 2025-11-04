@@ -20,14 +20,14 @@
 	function ZoomableMap(id,el,attr){
 		
 		var list = [];
-		var map = L.map(el);
-		if(typeof attr.attribution==="string") map.attributionControl.setPrefix(attr.attribution);
+		var map = L.map(el,attr);
+		if(typeof attr.attribution==="string" && map.attributionControl) map.attributionControl.setPrefix(attr.attribution);
 		map.setView([0, 0], 2);
-		var tiles;
+		var tiles,oldbounds = {};
 		this.id = id;
 		this.map = map;
 		this.layers = list;
-		
+
 		this.addLayer = function(props){
 			list.push(new Layer(props));
 			lastlayer = list[list.length-1];
@@ -76,11 +76,23 @@
 				}
 			}
 			if(typeof bounds==="string") console.warn('Bad bounds',bounds);
-			else map.fitBounds(bounds);
-
+			else if(typeof bounds==="object"){
+				map.fitBounds(bounds);
+				oldbounds = bounds;
+			}
 			return this;
 		};
-		
+
+		// Function to update a Leaflet map's size if it has been hidden
+		this.update = function(){
+			this.map.invalidateSize(false);
+			if(oldbounds){
+				this.fitBounds(oldbounds);
+				oldbounds = null;
+			}
+			return this;
+		};
+
 		this.setTiles = function(idx,props,zIndex){
 			if(typeof zIndex==="number"){
 				var pane = 'tiles-'+idx;

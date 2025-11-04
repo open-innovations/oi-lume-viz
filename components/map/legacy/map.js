@@ -117,14 +117,15 @@ export function ZoomableMap(opts){
 		var html,i,l,props,zIndex,attrib,columns;
 		const myUUID = "zoomable-"+crypto.randomUUID().substr(0,8);
 
+		var options = config['mapOptions']||{};
 		attrib = "";
-		if(typeof config.mapAttribution==="string") attrib = config.mapAttribution||"";
+		if(typeof config.mapAttribution==="string") options.attribution = config.mapAttribution||"";
 
 		html = [];
 		html.push('(function(root){\n');
 		html.push('	var p = document.currentScript.parentNode;\n');
 		html.push('	OI.ready(function(){\n');
-		html.push('	var map = OI.ZoomableMap.add("'+myUUID+'",p.querySelector(".leaflet"),{"attribution":'+(attrib ? JSON.stringify(attrib) : '""')+'});\n');
+		html.push('	var map = OI.ZoomableMap.add("'+myUUID+'",p.querySelector(".leaflet"),'+(typeof options==="object" ? JSON.stringify(options) : '{}')+');\n');
 
 		if(config.bounds){
 			// Create the bounds object required by Leaflet

@@ -547,6 +547,31 @@ examples:
           latitude: -52
           longitude: 110
       mapAttribution: "OI"
+  - title: Set Leaflet options
+    description: |
+      The zoomable map uses Leaflet. You can set `mapOptions` to pass in any extra options such as `scrollWheelZoom: true`.
+    config:
+      data:
+        - { code: "E08000016", name: "Barnsley" }
+        - { code: "E08000032", name: "Bradford" }
+        - { code: "E08000033", name: "Calderdale" }
+        - { code: "E07000163", name: "Craven" }
+        - { code: "E07000165", name: "Harrogate" }
+        - { code: "E08000034", name: "Kirklees" }
+        - { code: "E08000035", name: "Leeds" }
+        - { code: "E07000169", name: "Selby" }
+        - { code: "E08000036", name: "Wakefield" }
+        - { code: "E06000014", name: "York" }
+      geojson:
+        key: LAD21CD
+        data: geojson.leeds_city_region
+      key: code
+      tooltip: name
+      mapAttribution: "OI"
+      mapOptions:
+        scrollWheelZoom: false
+        attributionControl: false
+      debug: true
 options: |
   <ul>
   <li><code>data</code> - (optional) Either a reference to a CSV file in the Lume site or an array of rows with named attributes. If used you will need to match this to the GeoJSON properties using <code>key</code>.</li>
@@ -639,6 +664,6 @@ options: |
   <li><code>padding</code> - Set the padding between the data layer and the map edges. The value is given in the pixel scale of the generated map (which may not be the same as the pixels the map takes up on screen).</li>
   <li><code>legend</code> - Define the <a href="/documentation/chart-furniture/#legends">legend</a>.</li>
   <li><code>mapAttribution</code> - Add some text before the tileset credit.</li>
-  <li><code>attribution</code> - Add a line of <a href="/documentation/chart-furniture/#attribution">attribution text</a> under the visualisation.</li>
+  <li><code>mapOptions</code> - Pass an object of <a href="https://leafletjs.com/reference.html#map-example">Map options for Leaflet</a>.</li>
   </ul>
 ---

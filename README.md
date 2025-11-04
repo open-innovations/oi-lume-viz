@@ -88,7 +88,7 @@ We have a variety of visualisation types available:
   * [Ranking charts](https://open-innovations.github.io/oi-lume-viz/samples/chart/ranking)
   * [Waffle charts](https://open-innovations.github.io/oi-lume-viz/samples/chart/waffle)
 * Maps:
-  * [Zoomable maps](https://open-innovations.github.io/oi-lume-viz/samples/map/leaflet)
+  * [Zoomable maps](https://open-innovations.github.io/oi-lume-viz/samples/map/zoomable)
   * [SVG maps](https://open-innovations.github.io/oi-lume-viz/samples/map/svg)
   * [Hex cartograms](https://open-innovations.github.io/oi-lume-viz/samples/map/hex-cartogram)
 
