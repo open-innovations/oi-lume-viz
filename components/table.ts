@@ -6,12 +6,6 @@ import { ColourScale } from '../lib/colour/colour-scale.ts';
 import { clone } from "../lib/util/clone.ts";
 import { VisualisationHolder } from '../lib/holder.js';
 
-export const css = `
-/* OI table component */
-.oi-table { display: block; overflow-x: auto; }
-.oi-table table { border-collapse: collapse; max-width: 100%; }
-`;
-
 
 export default function (input: {
 	config: Partial<TableOptions>;

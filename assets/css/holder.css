@@ -36,3 +36,6 @@
 .oi-top .oi-left, .oi-top .oi-right { top: 100%; }
 .oi-bottom .oi-left, .oi-bottom .oi-right { transform: translate3d(0,-100%,0); top: 0; }
 .oi-top > *, .oi-bottom > * { display: inline-block; }
+/* OI table component */
+.oi-table { display: block; overflow-x: auto; }
+.oi-table table { border-collapse: collapse; max-width: 100%; }
