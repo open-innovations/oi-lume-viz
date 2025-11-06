@@ -587,7 +587,7 @@ function BasicMap(config,attr){
 
 	// Add the SVG
 	this.svg = svgEl('svg');
-	setAttr(this.svg,{'id':'svg-'+uuid,'class':'oi-map-map','xmlns':'http://www.w3.org/2000/svg','version':'1.1','width':this.w,'height':this.h,'viewBox':'-180 0 360 180','overflow':'hidden','style':'width:'+(config.width ? config.width+"px" : "100%")+';max-width:100%;max-height:100%;margin:auto;height:auto;background:'+(attr.background||"white")+';aspect-ratio:'+this.w+' / '+this.h+';','preserveAspectRatio':'xMidYMin meet'});
+	setAttr(this.svg,{'id':'svg-'+uuid,'class':'oi-map-map','xmlns':'http://www.w3.org/2000/svg','version':'1.1','width':this.w,'height':this.h,'viewBox':'-180 0 360 180','overflow':'visible','style':'width:'+(config.width ? config.width+"px" : "100%")+';max-width:100%;max-height:100%;margin:auto;height:auto;background:'+(attr.background||"white")+';aspect-ratio:'+this.w+' / '+this.h+';','preserveAspectRatio':'xMidYMin meet'});
 	if(config['data-type']) setAttr(this.svg,{'data-type':config['data-type']});
 	el.appendChild(this.svg);
 
@@ -608,7 +608,7 @@ function BasicMap(config,attr){
 
 		if(config.tools){
 			if(config.tools.filter || config.tools.panzoom){
-				html += '\n<script>(function(root){ let parentNode = document.currentScript.parentNode; OI.ready(function(){';
+				html += "\n<script>(function(root){ let parentNode = document.currentScript.parentNode; OI.ready(function(){\n";
 			}
 			if(config.tools.filter){
 				holder.addDependencies(['/js/map-filter.js','/js/colours.js']);
@@ -634,7 +634,7 @@ function BasicMap(config,attr){
 				html += 'OI.SVGPanZoom.add("'+uuid+'",parentNode,'+JSON.stringify(config.tools.panzoom)+");\n";
 			}
 			if(config.tools.filter || config.tools.panzoom){
-				html += '}); })(window || this);</script>\n';
+				html += "\n}); })(window || this);</script>\n";
 			}
 			if(config.tools.slider){
 				holder.addDependencies(['/js/util.js','/js/map-slider.js','/js/colours.js']);
