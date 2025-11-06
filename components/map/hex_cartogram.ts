@@ -614,6 +614,10 @@ export default function (input: { config: HexmapOptions }) {
 	html += '</svg>';
 	html += '</div>';
 	if(!tools) tools = {};
+
+	if(tools.filter || tools.panzoom){
+		html += '<script>(function(root){ let parentNode = document.currentScript.parentNode; OI.ready(function(){';
+	}
 	if(tools.filter){
 		if(!tools.filter.position) tools.filter.position = "top left";
 		holder.addDependencies(['/js/map-filter.js']);
@@ -625,9 +629,15 @@ export default function (input: { config: HexmapOptions }) {
 				filterdata[id] = hexes[id][tools.filter.label];
 			}
 		}
+
 		// Add a Filter object to the current script's node with the config and data
-		html += '<script>(function(root){ let parentNode = document.currentScript.parentNode; OI.ready(function(){';
-		html += 'OI.FilterMap.add("'+uuid+'",parentNode,'+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+');';
+		html += 'OI.FilterMap.add("'+uuid+'",parentNode,'+JSON.stringify(tools.filter)+','+JSON.stringify(filterdata)+');\n';
+	}
+	if(tools.panzoom){
+		holder.addDependencies(['/js/svg-pan-zoom.js']);
+		html += 'OI.SVGPanZoom.add("'+uuid+'",parentNode,'+JSON.stringify(tools.panzoom)+');\n';
+	}
+	if(tools.filter || tools.panzoom){
 		html += '}); })(window || this);</script>\n';
 	}
 	if(tools.slider){

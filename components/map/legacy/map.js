@@ -627,11 +627,11 @@ function BasicMap(config,attr){
 					}
 				}
 				
-				html += 'OI.FilterMap.add("'+uuid+'",parentNode,'+JSON.stringify(filter)+','+JSON.stringify(filterdata)+');';
+				html += 'OI.FilterMap.add("'+uuid+'",parentNode,'+JSON.stringify(filter)+','+JSON.stringify(filterdata)+");\n";
 			}
 			if(config.tools.panzoom){
 				holder.addDependencies(['/js/svg-pan-zoom.js']);
-				html += 'OI.SVGPanZoom.add("'+uuid+'",parentNode,'+JSON.stringify(config.tools.panzoom)+');';
+				html += 'OI.SVGPanZoom.add("'+uuid+'",parentNode,'+JSON.stringify(config.tools.panzoom)+");\n";
 			}
 			if(config.tools.filter || config.tools.panzoom){
 				html += '}); })(window || this);</script>\n';
