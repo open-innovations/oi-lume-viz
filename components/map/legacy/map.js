@@ -608,7 +608,7 @@ function BasicMap(config,attr){
 
 		if(config.tools){
 			if(config.tools.filter || config.tools.panzoom){
-				html += "\n<script>(function(root){ let parentNode = document.currentScript.parentNode; OI.ready(function(){\n";
+				html += "\n<script>(function(root){ let parentNode = document.currentScript.parentNode; if(typeof OI===\"undefined\"){ OI = {}; } if(!OI.ready){ OI.ready = function(fn){ if(document.readyState != 'loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }; } OI.ready(function(){\n";
 			}
 			if(config.tools.filter){
 				holder.addDependencies(['/js/map-filter.js','/js/colours.js']);
