@@ -62,7 +62,7 @@ export default function (input: {
 	for(let col = 0; col < options.columns.length; col++){
 		scales[col] = {};
 		if(options.columns[col].scale){
-			scales[col] = {'scale':ColourScale(options.columns[col].scale),'min':(typeof options.columns[col].min==="number" ? options.columns[col].min : Infinity),'max':(typeof options.columns[col].max=="number" ? options.columns[col].max : -Infinity)};
+			scales[col] = {'scale':ColourScale(options.columns[col].scale),'min':(typeof options.columns[col].min==="number" ? options.columns[col].min : Infinity),'max':(typeof options.columns[col].max==="number" ? options.columns[col].max : -Infinity)};
 		}
 		if(options.columns[col].sortable) sortable = true;
 		if(options.columns[col].mergerows) merging = true;
@@ -95,8 +95,9 @@ export default function (input: {
 				if(scales[col].scale){
 					if(typeof v==="string") v = parseFloat(v);
 					if(typeof v==="number" && !isNaN(v)){
-						scales[col].min = Math.min(scales[col].min,cells[r][col].value);
-						scales[col].max = Math.max(scales[col].max,cells[r][col].value);
+						// Only update the min/max if they aren't explicitly set
+						if(typeof options.columns[col].min!=="number") scales[col].min = Math.min(scales[col].min,cells[r][col].value);
+						if(typeof options.columns[col].max!=="number") scales[col].max = Math.max(scales[col].max,cells[r][col].value);
 					}
 				}
 			}
