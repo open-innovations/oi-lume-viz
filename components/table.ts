@@ -143,7 +143,13 @@ export default function (input: {
 
 	const html = ['<table'+(sty ? ' style="'+sty+'"' : '')+(sortable ? ' class="table-sort table-arrows"':'')+'><thead'+("head" in options && "class" in options.head ? ' class="'+options.head.class+'"' : '')+'><tr>'];
 	for(let col = 0; col < options.columns.length; col++){
-		html.push('<th'+(sortable && !options.columns[col].sortable ? ' scope="col" class="disable-sort"':'')+''+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].label||options.columns[col].name||"")+'</th>');
+		let cls = options.columns[col]['class'] || "";
+		let extra = "";
+		if(sortable && !options.columns[col].sortable){
+			cls += (cls ? ' ':'')+'disable-sort';
+			extra += 'scope="col"';
+		}
+		html.push('<th'+(cls ? ' class="'+cls+'"' : '')+(extra ? ' '+extra : '')+("width" in options.columns[col] ? ' width="'+options.columns[col].width+'"' : '')+'>'+(options.columns[col].label||options.columns[col].name||"")+'</th>');
 	}
 	html.push('</tr></thead><tbody>');
 
