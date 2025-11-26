@@ -11,8 +11,10 @@ import { VisualisationHolder } from '../../../lib/holder.js';
 import { getFontFamily, getFontWeight, getFontSize } from '../../../lib/font/fonts.ts';
 import { getTileLayer } from '../../../lib/tiles/layers.ts';
 import { getIcons } from '../../../lib/icon/icons.ts';
-import { d3, d3geo } from "../../../lib/external/d3.ts";
+import { d3 } from "../../../lib/external/d3.ts";
+import { geoAitoff, geoCylindricalEqualArea, geoMollweide } from "../../../lib/external/d3geo.ts";
 import { Layer } from './layers.ts';
+
 
 const defaultbg = getBackgroundColour();
 const fontFamily = getFontFamily();
@@ -799,7 +801,7 @@ function Projection(p,w,h,defaultpadding){
 
 	if(p.name=="aitoff"){
 
-		proj = d3geo.geoAitoff();
+		proj = geoAitoff();
 		if(typeof w!=="number") wide = defaultwidth;
 		if(typeof h!=="number") tall = wide/2;
 
@@ -817,14 +819,14 @@ function Projection(p,w,h,defaultpadding){
 
 	}else if(p.name=="gall-peters"){
 
-		proj = d3geo.geoCylindricalEqualArea();
+		proj = geoCylindricalEqualArea();
 		if(typeof w!=="number") wide = defaultwidth;
 		if(typeof h!=="number") tall = Math.round(wide * 2/Math.PI);
 		proj.parallel(45);
 
 	}else if(p.name=="mollweide"){
 
-		proj = d3geo.geoMollweide();
+		proj = geoMollweide();
 		if(typeof w!=="number") wide = defaultwidth;
 		if(typeof h!=="number") tall = wide/2;
 

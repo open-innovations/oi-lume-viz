@@ -1,4 +1,4 @@
-import { d3, d3types } from "../../../lib/external/d3.ts";
+import { d3 } from "../../../lib/external/d3.ts";
 
 export type TableData<T> = Record<string, T>[];
 export type UsefulFunction = (d: unknown) => unknown;
@@ -12,7 +12,7 @@ export interface HierarchyVisualisationOptions {
 
 export abstract class HierarchyVisualisation {
   readonly options: HierarchyVisualisationOptions;
-  root: d3types.HierarchyNode<unknown>;
+  root: d3.HierarchyNode<unknown>;
   constructor(options: HierarchyVisualisationOptions) {
     if (options.data === undefined) {
       throw new Error("Treemap options does not include a table");
