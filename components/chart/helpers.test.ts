@@ -1,5 +1,5 @@
-import { beforeEach, describe, it } from "std/testing/bdd.ts";
-import { assertEquals } from "std/testing/asserts.ts";
+import { beforeEach, describe, it } from "@std/testing/bdd";
+import { assertEquals } from "@std/asserts";
 import { calculateRange, resolveData } from "./helpers.ts";
 
 describe("calculateRange", () => {

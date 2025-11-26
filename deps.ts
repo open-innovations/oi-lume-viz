@@ -1,1 +1,1 @@
-export { dirname } from "https://deno.land/std@0.201.0/path/mod.ts";
+export { dirname } from "jsr:@std/path@1.1.3";

@@ -1,9 +1,9 @@
-import * as path from 'std/path/mod.ts';
+import * as path from '@std/path';
 import lume from "lume/mod.ts";
 import nunjucks from "lume/plugins/nunjucks.ts";
 import basePath from "lume/plugins/base_path.ts";
 import oiComponents from '../mod.ts';
-import { stringify as yamlStringify } from 'std/encoding/yaml.ts';
+import { stringify as yamlStringify } from '@std/yaml';
 import { Colour } from '../lib/colour/colours.ts';
 import { getColourScale } from '../lib/colour/colour-scale.ts';
 import { getSeriesColour } from '../lib/colour/colour.ts';

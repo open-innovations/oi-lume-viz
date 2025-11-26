@@ -1,5 +1,5 @@
-import { describe, it } from "std/testing/bdd.ts";
-import { assertEquals, assertThrows } from "std/testing/asserts.ts";
+import { describe, it } from "@std/testing/bdd";
+import { assertEquals, assertThrows } from "@std/asserts";
 
 import { splitStringToNumbers } from "./split-string-to-numbers.ts";
 

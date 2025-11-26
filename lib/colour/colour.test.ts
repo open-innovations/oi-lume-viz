@@ -1,5 +1,5 @@
-import { describe, it } from "std/testing/bdd.ts";
-import { assertEquals } from "std/testing/asserts.ts";
+import { describe, it } from "@std/testing/bdd";
+import { assertEquals } from "@std/asserts";
 import { Colour } from "./colour.ts";
 
 describe('colour contrasts', () => {

@@ -1,12 +1,12 @@
 import Site from "lume/core/site.ts";
 import { dirname } from "./deps.ts";
-import { afterEach, beforeEach, describe, it } from "std/testing/bdd.ts";
+import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 import {
   assertSpyCallArg,
   assertSpyCalls,
   Stub,
   stub,
-} from "std/testing/mock.ts";
+} from "@std/testing/mock";
 // TODO mock this call out
 import { assets, components } from "./config.ts";
 

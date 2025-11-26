@@ -1,5 +1,5 @@
-import { describe, it } from "std/testing/bdd.ts";
-import { assert, assertThrows } from "std/testing/asserts.ts";
+import { describe, it } from "@std/testing/bdd";
+import { assert, assertThrows } from "@std/asserts";
 
 import { validateNumberList } from "./parse-colour-string.ts";
 

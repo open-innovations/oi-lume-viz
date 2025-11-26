@@ -19,7 +19,6 @@ name: Build site
       - 'test/data/**'
       - 'example-site/**'
       - 'deno.json'
-      - 'import_map.json'
 
 jobs:
   build:

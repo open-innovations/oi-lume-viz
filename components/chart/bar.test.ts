@@ -1,6 +1,6 @@
-import { beforeEach, describe, it } from "std/testing/bdd.ts";
-import { assertThrows } from "std/testing/asserts.ts";
-import { parse as yamlParse } from "std/encoding/yaml.ts";
+import { beforeEach, describe, it } from "@std/testing/bdd";
+import { assertThrows } from "@std/assert";
+import { parse as yamlParse } from "@std/yaml";
 import bar, { BarChartOptions } from "./bar.ts";
 
 const testData = yamlParse(
