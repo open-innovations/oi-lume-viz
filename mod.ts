@@ -88,9 +88,9 @@ export default function (options?: Options) {
     const assetUrl = new URL(baseUrl.toString());
     assetUrl.hash = "";
     assetUrl.pathname = [baseUrl.pathname, prefix, name].join("/");
-    console.log('getRemotePath:',assetUrl.toString(),{
+    /*console.log('getRemotePath:',assetUrl.toString(),{
       prefix, name, assetPath
-    });
+    });*/
     return assetUrl.toString();
   }
 

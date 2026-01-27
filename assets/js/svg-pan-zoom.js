@@ -1,5 +1,5 @@
 /*
-	Open Innovations SVG interactivity v0.1.2
+	Open Innovations SVG interactivity v0.1.3
 */
 (function(root){
 
@@ -78,8 +78,10 @@
 		// Function called by the event listeners when user start pressing/touching
 		function onPointerDown(e){
 			isPointerDown = true; // We set the pointer as down
-			active = OI.Tooltips.active;
-			updateTooltip(false);
+			if(OI && OI.Tooltips){
+				active = OI.Tooltips.active;
+				updateTooltip(false);
+			}
 			clearAnimation();
 			// We get the pointer position so we can get the value once the user starts to drag
 			origin = getPoint(e);
@@ -259,6 +261,7 @@
 			clearAnimation(target);
 			updateControls();
 			updateTooltip(true);
+			if(opt && opt.onzoom && typeof opt.onzoom==="function") opt.onzoom.call(_obj,{'viewBox':viewBox});
 			return this;
 		};
 
@@ -315,6 +318,10 @@
 		this.add = function(id,el,opt){
 			if(id in arr) console.warn('Pan/zoom controls already exist for '+id);
 			else arr[id] = new SVGPanZoom(id,el,opt);
+			return this;
+		};
+		this.remove = function(id){
+			if(id in arr) delete arr[id];
 			return this;
 		};
 		this.get = function(id){

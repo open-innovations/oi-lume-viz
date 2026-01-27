@@ -207,7 +207,7 @@
 			dir = this.columns[col].toggleDirection();
 
 			table.table = table.table.sort(function(a,b){
-				if(a[col].v == b[col].v) return false;
+				if(a[col].v == b[col].v) return 0;
 				return (dir == "up" ? -1: 1)*(a[col].v > b[col].v ? 1 : -1);
 			});
 			// Loop over columns changing indicators
