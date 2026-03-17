@@ -273,6 +273,7 @@ function WaffleChart(config: Partial<WaffleChartOptions>): unknown {
 			if(!config.legend.items[s]) config.legend.items[s] = {};
 			config.legend.items[s].colour = config.series[s].colour||defaultbg;
 			config.legend.items[s].label = keyitem.label;
+			config.legend.items[s].index = s+1;
 
 			config.legend.items[s].icon = keyitem.getSVG();
 		}

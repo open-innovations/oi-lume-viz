@@ -167,6 +167,19 @@ export function Chart(config,csv){
 				rowValidator = {'isValid':function(){return true;}};
 			}
 
+			if(!(this.opt.series[s].x in csv.columns)){
+				console.error("No x-column "+this.opt.series[s].x+" in CSV",csv.columns);
+			}
+			if(!(this.opt.series[s].y in csv.columns)){
+				console.error("No y-column "+this.opt.series[s].y+" in CSV",csv.columns);
+			}
+			if(typeof csv.columns[this.opt.series[s].x]==="undefined"){
+				console.error("No x-values for \""+this.opt.series[s].x+"\"");
+			}
+			if(typeof csv.columns[this.opt.series[s].y]==="undefined"){
+				console.error("No y-values for \""+this.opt.series[s].y+"\"");
+			}
+
 			for(i = 0; i < csv.rows.length; i++){
 
 				// Do we keep this row?
@@ -297,6 +310,7 @@ export function Chart(config,csv){
 				}
 				config.legend.items[s].colour = namedColours.get(keyitem.colour);
 				config.legend.items[s].label = keyitem.label;
+				config.legend.items[s].index = s+1;
 
 				if(this.opt.type == "scatter-chart" || this.opt.type == "line-chart"){
 					config.legend.items[s].icon = keyitem.getSVG();
