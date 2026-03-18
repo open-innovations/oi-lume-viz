@@ -73,7 +73,7 @@
 		el = document.createElement('div');
 		el.setAttribute('data-id',id);
 		el.classList.add('oi-filter');
-		el.innerHTML = '<label for="oi-filter-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-filter-'+id+'" id="oi-filter-'+id+'" value="" placeholder="e.g. '+firstlabel+'"><ul role="menu" class="oi-filter-results"></ul>';
+		el.innerHTML = '<label for="oi-filter-'+id+'" aria-label="Filter areas"><button class="oi-filter-button" aria-label="Filter areas"><svg xmlns="https://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 13"><g stroke-width="2" stroke="white" fill="none"><path d="M11.29 11.71l-4-4"></path><circle cx="5" cy="5" r="4"></circle></g></svg></button></label><input type="text" name="oi-filter-'+id+'" id="oi-filter-'+id+'" value="" placeholder="e.g. '+firstlabel+'"><ul class="oi-filter-results"></ul>';
 		(opt.position.match("top") ? pel.prepend(el) : pel.append(el));
 
 		btn = el.querySelector('.oi-filter-button');
@@ -117,6 +117,8 @@
 			// Add list of options
 			results.innerHTML = li;
 			as = results.querySelectorAll('li');
+			if(as.length > 0) results.setAttribute('role','menu');
+			else results.removeAttribute('role');
 			as.forEach(function(a){
 				a.addEventListener('click',function(e){
 					e.preventDefault();
