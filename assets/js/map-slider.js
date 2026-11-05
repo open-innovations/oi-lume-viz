@@ -1,5 +1,5 @@
 /*
-	Open Innovations map slider v0.1
+	Open Innovations map slider v0.1.1
 */
 (function(root){
 
@@ -145,7 +145,11 @@
 				hexes[id].data._value = key;
 
 				// Update tooltip
-				hexes[id].title.innerHTML = applyReplacementFilters(tt,hexes[id].data);
+				if(hexes[id].title){
+					hexes[id].title.innerHTML = applyReplacementFilters(tt,hexes[id].data);
+				}else{
+					console.warning('No title element for hex '+id,hexes[id]);
+				}
 			}
 			if(OI.Tooltips) OI.Tooltips.update();
 			return this;
